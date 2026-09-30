@@ -24,7 +24,6 @@ class HomeControllerTest {
                 .andExpect(content().string(containsString("/css/style.css")));
 
         mockMvc.perform(get("/css/style.css"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString(".card")));
+                .andExpect(status().isOk());
     }
 }

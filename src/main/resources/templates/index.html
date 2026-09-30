@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CourtTime</title>
+    <title>CourtTime | Sobre o projeto</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
 <body>
-    <main class="card">
-        <p class="eyebrow">ETEC Professor Armando José Farinazzo · Fernandópolis/SP · 2026</p>
-        <h1>CourtTime</h1>
-        <p class="description">Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas</p>
-        <p class="status">Projeto em desenvolvimento.</p>
+    <header th:replace="~{fragments/header :: siteHeader}"></header>
+
+    <main id="conteudo" class="container main-content">
+        <section class="hero" aria-labelledby="page-title">
+            <p class="eyebrow">TCC · Técnico em Informática para Internet</p>
+            <h1 id="page-title">CourtTime</h1>
+            <p class="hero__lead">Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas</p>
+            <p class="hero__text">Um projeto em desenvolvimento para apoiar a organização do uso da quadra da ETEC Professor Armando José Farinazzo.</p>
+        </section>
+
+        <div class="content-grid">
+            <section class="content-block" aria-labelledby="about-title">
+                <h2 id="about-title">Sobre o projeto</h2>
+                <p>A proposta do CourtTime é centralizar as informações relacionadas ao processo de reserva da quadra em um único sistema, pensado para a realidade da escola.</p>
+            </section>
+            <section class="content-block" aria-labelledby="progress-title">
+                <h2 id="progress-title">Projeto em desenvolvimento</h2>
+                <p>Esta página apresenta o projeto. As funcionalidades do sistema ainda estão sendo construídas.</p>
+            </section>
+        </div>
     </main>
+
+    <footer th:replace="~{fragments/footer :: siteFooter}"></footer>
 </body>
 </html>
