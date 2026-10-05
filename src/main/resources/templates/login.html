@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Entrar</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner">
+            <a class="brand" th:href="@{/}">CourtTime</a>
+            <span class="site-header__note">TCC · 2026</span>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container main-content auth-main">
+        <section class="auth-card" aria-labelledby="page-title">
+            <p class="eyebrow">Acesso ao sistema</p>
+            <h1 id="page-title">Entrar</h1>
+
+            <p class="form-message form-message--error" th:if="${param.erro}">
+                Email ou senha inválidos.
+            </p>
+            <p class="form-message form-message--success" th:if="${param.logout}">
+                Logout realizado.
+            </p>
+
+            <form class="auth-form" th:action="@{/login}" method="post">
+                <div>
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" autocomplete="username" required autofocus>
+                </div>
+                <div>
+                    <label for="senha">Senha</label>
+                    <input id="senha" name="password" type="password" autocomplete="current-password" required>
+                </div>
+                <button class="button" type="submit">Entrar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p>CourtTime · TCC 2026</p>
+            <p>ETEC Professor Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>

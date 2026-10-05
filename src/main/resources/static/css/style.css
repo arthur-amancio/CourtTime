@@ -74,6 +74,12 @@ a:focus-visible {
     white-space: nowrap;
 }
 
+.site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .skip-link {
     position: absolute;
     z-index: 1;
@@ -158,6 +164,100 @@ h1 {
 .content-block p {
     margin: 0;
     color: var(--muted);
+}
+
+.button {
+    display: inline-block;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--accent);
+    border-radius: 0.5rem;
+    background: var(--accent);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #0f4932;
+}
+
+.button:focus-visible,
+input:focus-visible {
+    outline: 3px solid #a85b00;
+    outline-offset: 3px;
+}
+
+.button--small {
+    padding: 0.45rem 0.85rem;
+}
+
+.auth-main {
+    display: grid;
+    place-items: center;
+}
+
+.auth-card {
+    width: min(32rem, 100%);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--surface);
+}
+
+.auth-card h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.auth-form {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 2rem;
+}
+
+.auth-form div {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.auth-form label {
+    font-weight: 700;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #9aada2;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: var(--text);
+    font: inherit;
+}
+
+.form-message {
+    margin: 1.5rem 0 0;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+}
+
+.form-message--error {
+    background: #fde8e8;
+    color: #8a1c1c;
+}
+
+.form-message--success {
+    background: var(--hero);
+    color: var(--accent);
+}
+
+.account-info {
+    margin: 1.5rem 0 0;
+    color: var(--muted);
+}
+
+.logout-form {
+    margin-top: 2rem;
 }
 
 .site-footer {

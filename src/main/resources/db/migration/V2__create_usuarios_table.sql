@@ -1,0 +1,11 @@
+CREATE TABLE usuarios (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    email VARCHAR(254) NOT NULL UNIQUE,
+    senha VARCHAR(100) NOT NULL,
+    perfil VARCHAR(20) NOT NULL,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT ck_usuarios_perfil CHECK (
+        perfil IN ('ALUNO', 'ADMINISTRADOR', 'SECRETARIA', 'SEGURANCA')
+    )
+);
