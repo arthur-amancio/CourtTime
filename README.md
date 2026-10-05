@@ -72,3 +72,7 @@ Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha co
 .\mvnw.cmd clean test
 .\mvnw.cmd clean verify
 ```
+
+## Integração contínua
+
+O GitHub Actions executa automaticamente os testes do projeto em pushes para a `main` e em Pull Requests destinados à `main`.
