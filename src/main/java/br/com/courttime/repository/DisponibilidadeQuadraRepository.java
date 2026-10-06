@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface DisponibilidadeQuadraRepository extends JpaRepository<DisponibilidadeQuadra, Long> {
 
-    List<DisponibilidadeQuadra> findByQuadraAndAtivaTrueOrderByDiaSemanaAscHorarioInicioAsc(Quadra quadra);
+    List<DisponibilidadeQuadra> findByQuadraAndAtivaTrue(Quadra quadra);
 }
