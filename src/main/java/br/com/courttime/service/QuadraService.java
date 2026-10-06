@@ -7,6 +7,7 @@ import br.com.courttime.repository.QuadraRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -31,6 +32,10 @@ public class QuadraService {
     @Transactional(readOnly = true)
     public List<DisponibilidadeQuadra> obterDisponibilidadesAtivas(Quadra quadra) {
         return disponibilidadeQuadraRepository
-                .findByQuadraAndAtivaTrueOrderByDiaSemanaAscHorarioInicioAsc(quadra);
+                .findByQuadraAndAtivaTrue(quadra)
+                .stream()
+                .sorted(Comparator.comparing(DisponibilidadeQuadra::getDiaSemana)
+                        .thenComparing(DisponibilidadeQuadra::getHorarioInicio))
+                .toList();
     }
 }
