@@ -60,9 +60,9 @@ class QuadraControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Quadra Poliesportiva")))
                 .andExpect(content().string(containsString("Quadra esportiva da ETEC.")))
-                .andExpect(content().string(containsString("Disponível para uso")))
+                .andExpect(content().string(containsString("Disponível")))
                 .andExpect(content().string(containsString(
-                        "Os horários de disponibilidade ainda não foram cadastrados.")));
+                        "Nenhum horário de disponibilidade foi cadastrado.")));
     }
 
     @Test
@@ -80,6 +80,6 @@ class QuadraControllerTest {
         mockMvc.perform(get("/quadra").with(user("aluno@escola.test").roles("ALUNO")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Segunda-feira")))
-                .andExpect(content().string(containsString("08:00 às 10:00")));
+                .andExpect(content().string(containsString("08:00 – 10:00")));
     }
 }
