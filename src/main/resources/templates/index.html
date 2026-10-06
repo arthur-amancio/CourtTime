@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CourtTime | Sobre o projeto</title>
+    <title>CourtTime | Gerenciamento da quadra</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
 <body>
@@ -11,37 +11,50 @@
         <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
         <div class="container site-header__inner">
             <a class="brand" th:href="@{/}">CourtTime</a>
-            <div class="site-header__actions">
-                <span class="site-header__note">TCC · 2026</span>
-                <a class="button button--small" th:href="@{/login}">Entrar</a>
-            </div>
+            <a class="button button--small" th:href="@{/login}">Entrar</a>
         </div>
     </header>
 
     <main id="conteudo" class="container main-content">
         <section class="hero" aria-labelledby="page-title">
-            <p class="eyebrow">TCC · Técnico em Informática para Internet</p>
-            <h1 id="page-title">CourtTime</h1>
-            <p class="hero__lead">Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas</p>
-            <p class="hero__text">Um projeto em desenvolvimento para apoiar a organização do uso da quadra da ETEC Professor Armando José Farinazzo.</p>
+            <div class="hero__content">
+                <p class="eyebrow">Gerenciamento da quadra</p>
+                <h1 id="page-title">Organize o uso da quadra de forma simples</h1>
+                <p class="hero__text">Consulte a situação da quadra e os horários de disponibilidade cadastrados em um só lugar.</p>
+                <a class="button hero__action" th:href="@{/login}">Consultar quadra</a>
+            </div>
         </section>
 
-        <div class="content-grid">
-            <section class="content-block" aria-labelledby="about-title">
-                <h2 id="about-title">Sobre o projeto</h2>
-                <p>A proposta do CourtTime é centralizar as informações relacionadas ao processo de reserva da quadra em um único sistema, pensado para a realidade da escola.</p>
-            </section>
-            <section class="content-block" aria-labelledby="progress-title">
-                <h2 id="progress-title">Projeto em desenvolvimento</h2>
-                <p>Esta página apresenta o projeto. As funcionalidades do sistema ainda estão sendo construídas.</p>
-            </section>
-        </div>
+        <section class="benefits" aria-labelledby="benefits-title">
+            <div class="section-heading">
+                <p class="eyebrow">Facilidade no dia a dia</p>
+                <h2 id="benefits-title">Informações claras para planejar o uso da quadra</h2>
+            </div>
+
+            <div class="content-grid">
+                <article class="content-block">
+                    <span class="content-block__number" aria-hidden="true">01</span>
+                    <h3>Consulte a disponibilidade</h3>
+                    <p>Veja os dias e horários cadastrados para utilização da quadra.</p>
+                </article>
+                <article class="content-block">
+                    <span class="content-block__number" aria-hidden="true">02</span>
+                    <h3>Confira a situação da quadra</h3>
+                    <p>Encontre de forma rápida as informações atuais sobre o espaço.</p>
+                </article>
+                <article class="content-block">
+                    <span class="content-block__number" aria-hidden="true">03</span>
+                    <h3>Acesse com segurança</h3>
+                    <p>Entre com suas credenciais para consultar as informações disponíveis.</p>
+                </article>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
         <div class="container site-footer__inner">
-            <p>CourtTime · TCC 2026</p>
-            <p>ETEC Professor Armando José Farinazzo</p>
+            <p class="site-footer__brand">CourtTime</p>
+            <p>Sistema de gerenciamento e agendamento da quadra</p>
         </div>
     </footer>
 </body>
