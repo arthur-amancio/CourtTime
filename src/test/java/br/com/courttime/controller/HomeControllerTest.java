@@ -44,6 +44,7 @@ class HomeControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("CourtTime")))
+                .andExpect(content().string(containsString("Consulta e agendamento da quadra")))
                 .andExpect(content().string(containsString("/css/style.css")));
     }
 
@@ -69,7 +70,9 @@ class HomeControllerTest {
         mockMvc.perform(get("/inicio").with(user(usuario.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Ana")))
-                .andExpect(content().string(containsString("ALUNO")));
+                .andExpect(content().string(containsString("ALUNO")))
+                .andExpect(content().string(containsString("Acesso rápido")))
+                .andExpect(content().string(containsString("Quadra e horários")));
     }
 
     @Test
