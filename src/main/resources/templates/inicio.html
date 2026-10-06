@@ -10,29 +10,41 @@
     <header class="site-header">
         <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
         <div class="container site-header__inner">
-            <a class="brand" th:href="@{/}">CourtTime</a>
-            <span class="site-header__note">Área autenticada</span>
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <span class="site-header__note">Área do usuário</span>
         </div>
     </header>
 
-    <main id="conteudo" class="container main-content auth-main">
-        <section class="auth-card" aria-labelledby="page-title">
-            <p class="eyebrow">CourtTime</p>
-            <h1 id="page-title">Olá, <span th:text="${nome}">Usuário</span></h1>
-            <p class="account-info">Perfil: <strong th:text="${perfil}">ALUNO</strong></p>
+    <main id="conteudo" class="container main-content dashboard-main">
+        <section class="dashboard" aria-labelledby="page-title">
+            <div class="dashboard__welcome">
+                <div>
+                    <p class="eyebrow">Área do usuário</p>
+                    <h1 id="page-title">Olá, <span th:text="${nome}">Usuário</span></h1>
+                    <p class="dashboard__intro">Consulte abaixo as informações disponíveis sobre a quadra.</p>
+                </div>
+                <p class="account-info">Perfil <strong th:text="${perfil}">ALUNO</strong></p>
+            </div>
 
-            <a class="button account-action" th:href="@{/quadra}">Consultar quadra</a>
+            <section class="dashboard-action" aria-labelledby="court-action-title">
+                <div>
+                    <p class="dashboard-action__label">Acesso rápido</p>
+                    <h2 id="court-action-title">Consultar quadra</h2>
+                    <p>Veja a situação da quadra e os horários de disponibilidade cadastrados.</p>
+                </div>
+                <a class="button" th:href="@{/quadra}">Acessar consulta</a>
+            </section>
 
             <form class="logout-form" th:action="@{/logout}" method="post">
-                <button class="button" type="submit">Sair</button>
+                <button class="button button--secondary" type="submit">Sair</button>
             </form>
         </section>
     </main>
 
     <footer class="site-footer">
         <div class="container site-footer__inner">
-            <p>CourtTime · TCC 2026</p>
-            <p>ETEC Professor Armando José Farinazzo</p>
+            <p class="site-footer__brand">CourtTime</p>
+            <p>Sistema de gerenciamento e agendamento da quadra</p>
         </div>
     </footer>
 </body>
