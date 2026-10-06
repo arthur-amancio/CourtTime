@@ -6,7 +6,7 @@ O sistema possui uma página pública e autenticação por sessão com Spring Se
 
 ## Stack
 
-Java 17, Spring Boot 3.5.16, Maven Wrapper, Thymeleaf, Spring Security, PostgreSQL, Spring Data JPA e Flyway.
+Java 17, Spring Boot 3.5.16, Maven Wrapper, Thymeleaf, Spring Security, PostgreSQL e Spring Data JPA.
 
 ## Pré-requisitos
 
@@ -37,7 +37,7 @@ Remove-Variable senha
 .\mvnw.cmd spring-boot:run
 ```
 
-As variáveis `COURTTIME_DB_URL` e `COURTTIME_DB_USERNAME` são opcionais quando os valores padrão servem. O Flyway cria e atualiza a tabela `usuarios`, e o Hibernate apenas valida o esquema.
+As variáveis `COURTTIME_DB_URL` e `COURTTIME_DB_USERNAME` são opcionais quando os valores padrão servem. Durante o desenvolvimento, o JPA/Hibernate cria e atualiza as tabelas no PostgreSQL com base nas entidades da aplicação.
 
 ## Usuário local para desenvolvimento
 
