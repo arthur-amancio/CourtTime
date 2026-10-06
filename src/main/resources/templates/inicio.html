@@ -21,6 +21,8 @@
             <h1 id="page-title">Olá, <span th:text="${nome}">Usuário</span></h1>
             <p class="account-info">Perfil: <strong th:text="${perfil}">ALUNO</strong></p>
 
+            <a class="button account-action" th:href="@{/quadra}">Consultar quadra</a>
+
             <form class="logout-form" th:action="@{/logout}" method="post">
                 <button class="button" type="submit">Sair</button>
             </form>
