@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Quadra</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <span class="site-header__note">Área autenticada</span>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container main-content">
+        <section class="quadra-card" aria-labelledby="page-title">
+            <p class="eyebrow">Quadra da ETEC</p>
+            <h1 id="page-title" th:text="${quadra.nome}">Quadra Poliesportiva</h1>
+            <p class="quadra-description" th:text="${quadra.descricao}">Quadra esportiva da ETEC.</p>
+            <p class="quadra-status">
+                Situação:
+                <strong th:if="${quadra.ativa}">Disponível para uso</strong>
+                <strong th:unless="${quadra.ativa}">Indisponível para uso</strong>
+            </p>
+
+            <section class="availability" aria-labelledby="availability-title">
+                <h2 id="availability-title">Horários de disponibilidade</h2>
+                <p class="empty-message" th:if="${#lists.isEmpty(disponibilidades)}">
+                    Os horários de disponibilidade ainda não foram cadastrados.
+                </p>
+                <ul class="schedule-list" th:unless="${#lists.isEmpty(disponibilidades)}">
+                    <li th:each="disponibilidade : ${disponibilidades}">
+                        <strong th:text="${disponibilidade.diaSemana.descricao}">Segunda-feira</strong>
+                        <span th:text="|${disponibilidade.horarioInicio} às ${disponibilidade.horarioFim}|">
+                            08:00 às 10:00
+                        </span>
+                    </li>
+                </ul>
+            </section>
+
+            <a class="button" th:href="@{/inicio}">Voltar ao início</a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p>CourtTime · TCC 2026</p>
+            <p>ETEC Professor Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>
