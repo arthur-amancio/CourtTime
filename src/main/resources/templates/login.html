@@ -11,14 +11,14 @@
         <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
         <div class="container site-header__inner">
             <a class="brand" th:href="@{/}">CourtTime</a>
-            <span class="site-header__note">Acesso ao sistema</span>
+            <a class="text-link" th:href="@{/}">Voltar</a>
         </div>
     </header>
 
-    <main id="conteudo" class="container main-content auth-main">
-        <section class="auth-card" aria-labelledby="page-title">
-            <p class="eyebrow">Acesso ao sistema</p>
+    <main id="conteudo" class="container auth-main">
+        <section class="auth-panel" aria-labelledby="page-title">
             <h1 id="page-title">Entrar</h1>
+            <p class="auth-panel__intro">Use suas credenciais para acessar o CourtTime.</p>
 
             <p class="form-message form-message--error" th:if="${param.erro}">
                 Email ou senha inválidos.
@@ -44,7 +44,7 @@
     <footer class="site-footer">
         <div class="container site-footer__inner">
             <p class="site-footer__brand">CourtTime</p>
-            <p>Sistema de gerenciamento e agendamento da quadra</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
         </div>
     </footer>
 </body>
