@@ -60,7 +60,7 @@ class QuadraControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Quadra Poliesportiva")))
                 .andExpect(content().string(containsString("Quadra esportiva da ETEC.")))
-                .andExpect(content().string(containsString("Disponível")))
+                .andExpect(content().string(containsString("Ativa")))
                 .andExpect(content().string(containsString(
                         "Nenhum horário de disponibilidade foi cadastrado.")));
     }
