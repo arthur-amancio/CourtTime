@@ -33,9 +33,9 @@
                 <p th:text="${quadra.descricao}">Quadra esportiva da ETEC.</p>
             </div>
             <p class="court-status">
-                <span>Situação:</span>
-                <strong class="status-pill status-pill--available" th:if="${quadra.ativa}">Disponível</strong>
-                <strong class="status-pill status-pill--unavailable" th:unless="${quadra.ativa}">Indisponível</strong>
+                <span>Estado da quadra:</span>
+                <strong class="status-pill status-pill--available" th:if="${quadra.ativa}">Ativa</strong>
+                <strong class="status-pill status-pill--unavailable" th:unless="${quadra.ativa}">Inativa</strong>
             </p>
         </section>
 
