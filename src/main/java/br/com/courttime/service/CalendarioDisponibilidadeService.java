@@ -4,8 +4,11 @@ import br.com.courttime.entity.BloqueioQuadra;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
 import br.com.courttime.entity.Quadra;
+import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.repository.BloqueioQuadraRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
+import br.com.courttime.repository.ReservaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +29,15 @@ public class CalendarioDisponibilidadeService {
 
     private final DisponibilidadeQuadraRepository disponibilidadeQuadraRepository;
     private final BloqueioQuadraRepository bloqueioQuadraRepository;
+    private final ReservaRepository reservaRepository;
 
     public CalendarioDisponibilidadeService(
             DisponibilidadeQuadraRepository disponibilidadeQuadraRepository,
-            BloqueioQuadraRepository bloqueioQuadraRepository) {
+            BloqueioQuadraRepository bloqueioQuadraRepository,
+            ReservaRepository reservaRepository) {
         this.disponibilidadeQuadraRepository = disponibilidadeQuadraRepository;
         this.bloqueioQuadraRepository = bloqueioQuadraRepository;
+        this.reservaRepository = reservaRepository;
     }
 
     public LocalDate obterDataAtual() {
@@ -56,10 +62,12 @@ public class CalendarioDisponibilidadeService {
         List<BloqueioQuadra> bloqueios = bloqueioQuadraRepository
                 .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, data);
         bloqueios.forEach(this::validarBloqueio);
+        List<Reserva> reservasAprovadas = obterReservasAprovadas(quadra, data);
+        reservasAprovadas.forEach(this::validarReserva);
 
         TreeMap<LocalTime, HorarioDisponibilidade> horarios = new TreeMap<>();
         for (DisponibilidadeQuadra disponibilidade : disponibilidades) {
-            adicionarHorarios(disponibilidade, bloqueios, horarios);
+            adicionarHorarios(disponibilidade, bloqueios, reservasAprovadas, horarios);
         }
 
         return new ConsultaDisponibilidade(data, true, new ArrayList<>(horarios.values()));
@@ -86,15 +94,28 @@ public class CalendarioDisponibilidadeService {
             return false;
         }
 
-        return bloqueioQuadraRepository
-                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, data)
-                .stream()
-                .peek(this::validarBloqueio)
+        List<BloqueioQuadra> bloqueios = bloqueioQuadraRepository
+                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, data);
+        bloqueios.forEach(this::validarBloqueio);
+        boolean semBloqueio = bloqueios.stream()
                 .noneMatch(bloqueio -> periodosConflitam(
                         horarioInicio,
                         horarioFim,
                         bloqueio.getHorarioInicio(),
                         bloqueio.getHorarioFim()));
+
+        if (!semBloqueio) {
+            return false;
+        }
+
+        List<Reserva> reservasAprovadas = obterReservasAprovadas(quadra, data);
+        reservasAprovadas.forEach(this::validarReserva);
+        return reservasAprovadas.stream()
+                .noneMatch(reserva -> periodosConflitam(
+                        horarioInicio,
+                        horarioFim,
+                        reserva.getHorarioInicio(),
+                        reserva.getHorarioFim()));
     }
 
     private List<DisponibilidadeQuadra> obterDisponibilidadesDoDia(Quadra quadra, LocalDate data) {
@@ -106,25 +127,49 @@ public class CalendarioDisponibilidadeService {
     private void adicionarHorarios(
             DisponibilidadeQuadra disponibilidade,
             List<BloqueioQuadra> bloqueios,
+            List<Reserva> reservasAprovadas,
             TreeMap<LocalTime, HorarioDisponibilidade> horarios) {
         LocalTime inicio = disponibilidade.getHorarioInicio();
         while (inicio.isBefore(disponibilidade.getHorarioFim())) {
             LocalTime horarioInicio = inicio;
             LocalTime horarioFim = horarioInicio.plus(DURACAO_AGENDAMENTO);
-            SituacaoHorario situacao = bloqueios.stream()
-                    .anyMatch(bloqueio -> periodosConflitam(
-                            horarioInicio,
-                            horarioFim,
-                            bloqueio.getHorarioInicio(),
-                            bloqueio.getHorarioFim()))
-                    ? SituacaoHorario.BLOQUEADO
-                    : SituacaoHorario.DISPONIVEL;
+            SituacaoHorario situacao = obterSituacao(
+                    horarioInicio, horarioFim, bloqueios, reservasAprovadas);
 
             HorarioDisponibilidade horario = new HorarioDisponibilidade(
                     horarioInicio, horarioFim, situacao);
             horarios.merge(horarioInicio, horario, this::manterSituacaoMaisRestritiva);
             inicio = horarioFim;
         }
+    }
+
+    private SituacaoHorario obterSituacao(
+            LocalTime horarioInicio,
+            LocalTime horarioFim,
+            List<BloqueioQuadra> bloqueios,
+            List<Reserva> reservasAprovadas) {
+        boolean bloqueado = bloqueios.stream()
+                .anyMatch(bloqueio -> periodosConflitam(
+                        horarioInicio,
+                        horarioFim,
+                        bloqueio.getHorarioInicio(),
+                        bloqueio.getHorarioFim()));
+        if (bloqueado) {
+            return SituacaoHorario.BLOQUEADO;
+        }
+
+        boolean reservado = reservasAprovadas.stream()
+                .anyMatch(reserva -> periodosConflitam(
+                        horarioInicio,
+                        horarioFim,
+                        reserva.getHorarioInicio(),
+                        reserva.getHorarioFim()));
+        return reservado ? SituacaoHorario.RESERVADO : SituacaoHorario.DISPONIVEL;
+    }
+
+    private List<Reserva> obterReservasAprovadas(Quadra quadra, LocalDate data) {
+        return reservaRepository.findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                quadra, data, StatusReserva.APROVADA);
     }
 
     private HorarioDisponibilidade manterSituacaoMaisRestritiva(
@@ -155,6 +200,12 @@ public class CalendarioDisponibilidadeService {
     private void validarBloqueio(BloqueioQuadra bloqueio) {
         if (!bloqueio.isIntervaloValido()) {
             throw new IllegalStateException("Existe um bloqueio inválido cadastrado para a quadra");
+        }
+    }
+
+    private void validarReserva(Reserva reserva) {
+        if (!reserva.isIntervaloValido()) {
+            throw new IllegalStateException("Existe uma reserva inválida cadastrada para a quadra");
         }
     }
 }

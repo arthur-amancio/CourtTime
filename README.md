@@ -6,6 +6,12 @@ O sistema possui uma página pública e autenticação por sessão com Spring Se
 
 A consulta diária divide cada intervalo semanal em períodos de uma hora e considera o estado operacional da quadra e bloqueios específicos da data. Períodos fora do funcionamento cadastrado não são apresentados como disponíveis. O sistema utiliza o fuso `America/Sao_Paulo`. Nenhum horário oficial é criado automaticamente.
 
+## Base de solicitações de reserva
+
+O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO` e só pode ser analisada administrativamente depois de avançar para `PENDENTE_ANALISE`, transição que será vinculada à conferência do termo oficial em etapa própria.
+
+Na aprovação, o backend bloqueia o registro da única quadra durante a transação e verifica novamente horários semanais, bloqueios e reservas já aprovadas. Essa serialização impede que duas análises concorrentes aprovem períodos conflitantes. Não há formulário público de reserva nesta etapa: participantes e documentos serão adicionados somente quando seus campos e o termo institucional estiverem disponíveis, sem criar dados pessoais ou cláusulas fictícias.
+
 ## Stack
 
 Java 17, Spring Boot 3.5.16, Maven Wrapper, Thymeleaf, Spring Security, PostgreSQL e Spring Data JPA.
