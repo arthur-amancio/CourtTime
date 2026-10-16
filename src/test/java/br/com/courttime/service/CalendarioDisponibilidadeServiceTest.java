@@ -47,8 +47,8 @@ class CalendarioDisponibilidadeServiceTest {
     }
 
     @Test
-    void dateWithRegisteredAvailabilityCreatesOneHourPeriods() {
-        DisponibilidadeQuadra disponibilidade = disponibilidade(8, 11);
+    void twoHourAvailabilityCreatesTwoCompletePeriods() {
+        DisponibilidadeQuadra disponibilidade = disponibilidade(8, 0, 10, 0);
         when(disponibilidadeQuadraRepository
                 .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
                         quadra, DiaSemana.SEGUNDA))
@@ -59,9 +59,58 @@ class CalendarioDisponibilidadeServiceTest {
 
         ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
 
-        assertEquals(3, consulta.horarios().size());
+        assertEquals(2, consulta.horarios().size());
         assertEquals("08:00 – 09:00", consulta.horarios().get(0).getPeriodoFormatado());
+        assertEquals("09:00 – 10:00", consulta.horarios().get(1).getPeriodoFormatado());
         assertTrue(consulta.horarios().stream().allMatch(HorarioDisponibilidade::isDisponivel));
+    }
+
+    @Test
+    void availabilityWithRemainingHalfHourCreatesOnlyCompletePeriod() {
+        prepararConsulta(disponibilidade(8, 0, 9, 30), List.of());
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertEquals(1, consulta.horarios().size());
+        assertEquals("08:00 – 09:00", consulta.horarios().get(0).getPeriodoFormatado());
+    }
+
+    @Test
+    void availabilityMayStartOutsideFullHour() {
+        prepararConsulta(disponibilidade(8, 15, 9, 15), List.of());
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertEquals(1, consulta.horarios().size());
+        assertEquals("08:15 – 09:15", consulta.horarios().get(0).getPeriodoFormatado());
+    }
+
+    @Test
+    void availabilityShorterThanOneHourCreatesNoPeriods() {
+        prepararConsulta(disponibilidade(8, 0, 8, 30), List.of());
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertTrue(consulta.horarios().isEmpty());
+    }
+
+    @Test
+    void lateAvailabilityCreatesPeriodWithoutChangingDay() {
+        prepararConsulta(disponibilidade(22, 30, 23, 30), List.of());
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertEquals(1, consulta.horarios().size());
+        assertEquals("22:30 – 23:30", consulta.horarios().get(0).getPeriodoFormatado());
+    }
+
+    @Test
+    void availabilityEndingBeforeMidnightDoesNotWrapPeriodToNextDay() {
+        prepararConsulta(disponibilidade(23, 0, 23, 59), List.of());
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertTrue(consulta.horarios().isEmpty());
     }
 
     @Test
@@ -96,7 +145,7 @@ class CalendarioDisponibilidadeServiceTest {
         when(disponibilidadeQuadraRepository
                 .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
                         quadra, DiaSemana.SEGUNDA))
-                .thenReturn(List.of(disponibilidade(8, 10)));
+                .thenReturn(List.of(disponibilidade(8, 0, 10, 0)));
 
         boolean disponivel = service.periodoEstaDisponivel(
                 quadra, SEGUNDA_FEIRA, LocalTime.of(10, 0), LocalTime.of(11, 0));
@@ -114,11 +163,11 @@ class CalendarioDisponibilidadeServiceTest {
 
     @Test
     void specificDateBlockMakesConflictingPeriodUnavailable() {
-        BloqueioQuadra bloqueio = bloqueio(9, 10);
+        BloqueioQuadra bloqueio = bloqueio(9, 0, 10, 0);
         when(disponibilidadeQuadraRepository
                 .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
                         quadra, DiaSemana.SEGUNDA))
-                .thenReturn(List.of(disponibilidade(8, 10)));
+                .thenReturn(List.of(disponibilidade(8, 0, 10, 0)));
         when(bloqueioQuadraRepository
                 .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
                 .thenReturn(List.of(bloqueio));
@@ -131,8 +180,39 @@ class CalendarioDisponibilidadeServiceTest {
     }
 
     @Test
+    void partialBlockMakesWholeConflictingPeriodUnavailable() {
+        prepararConsulta(
+                disponibilidade(8, 0, 10, 0),
+                List.of(bloqueio(8, 30, 8, 45)));
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertEquals(SituacaoHorario.BLOQUEADO, consulta.horarios().get(0).situacao());
+        assertEquals(SituacaoHorario.DISPONIVEL, consulta.horarios().get(1).situacao());
+    }
+
+    @Test
+    void overlappingWeeklyIntervalsDoNotDuplicateEqualPeriods() {
+        DisponibilidadeQuadra primeira = disponibilidade(8, 0, 10, 0);
+        DisponibilidadeQuadra segunda = disponibilidade(8, 0, 9, 30);
+        when(disponibilidadeQuadraRepository
+                .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
+                        quadra, DiaSemana.SEGUNDA))
+                .thenReturn(List.of(primeira, segunda));
+        when(bloqueioQuadraRepository
+                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
+                .thenReturn(List.of());
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertEquals(2, consulta.horarios().size());
+        assertEquals("08:00 – 09:00", consulta.horarios().get(0).getPeriodoFormatado());
+        assertEquals("09:00 – 10:00", consulta.horarios().get(1).getPeriodoFormatado());
+    }
+
+    @Test
     void invalidWeeklyConfigurationIsRejected() {
-        DisponibilidadeQuadra invalida = disponibilidade(10, 9);
+        DisponibilidadeQuadra invalida = disponibilidade(10, 0, 9, 0);
         when(disponibilidadeQuadraRepository
                 .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
                         quadra, DiaSemana.SEGUNDA))
@@ -142,21 +222,34 @@ class CalendarioDisponibilidadeServiceTest {
                 () -> service.consultar(quadra, SEGUNDA_FEIRA));
     }
 
-    private DisponibilidadeQuadra disponibilidade(int horaInicio, int horaFim) {
+    private void prepararConsulta(
+            DisponibilidadeQuadra disponibilidade, List<BloqueioQuadra> bloqueios) {
+        when(disponibilidadeQuadraRepository
+                .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
+                        quadra, DiaSemana.SEGUNDA))
+                .thenReturn(List.of(disponibilidade));
+        when(bloqueioQuadraRepository
+                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
+                .thenReturn(bloqueios);
+    }
+
+    private DisponibilidadeQuadra disponibilidade(
+            int horaInicio, int minutoInicio, int horaFim, int minutoFim) {
         DisponibilidadeQuadra disponibilidade = new DisponibilidadeQuadra();
         disponibilidade.setDiaSemana(DiaSemana.SEGUNDA);
-        disponibilidade.setHorarioInicio(LocalTime.of(horaInicio, 0));
-        disponibilidade.setHorarioFim(LocalTime.of(horaFim, 0));
+        disponibilidade.setHorarioInicio(LocalTime.of(horaInicio, minutoInicio));
+        disponibilidade.setHorarioFim(LocalTime.of(horaFim, minutoFim));
         disponibilidade.setAtiva(true);
         disponibilidade.setQuadra(quadra);
         return disponibilidade;
     }
 
-    private BloqueioQuadra bloqueio(int horaInicio, int horaFim) {
+    private BloqueioQuadra bloqueio(
+            int horaInicio, int minutoInicio, int horaFim, int minutoFim) {
         BloqueioQuadra bloqueio = new BloqueioQuadra();
         bloqueio.setData(SEGUNDA_FEIRA);
-        bloqueio.setHorarioInicio(LocalTime.of(horaInicio, 0));
-        bloqueio.setHorarioFim(LocalTime.of(horaFim, 0));
+        bloqueio.setHorarioInicio(LocalTime.of(horaInicio, minutoInicio));
+        bloqueio.setHorarioFim(LocalTime.of(horaFim, minutoFim));
         bloqueio.setMotivo("Evento institucional");
         bloqueio.setAtivo(true);
         bloqueio.setQuadra(quadra);
