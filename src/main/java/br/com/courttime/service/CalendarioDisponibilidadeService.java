@@ -108,7 +108,8 @@ public class CalendarioDisponibilidadeService {
             List<BloqueioQuadra> bloqueios,
             TreeMap<LocalTime, HorarioDisponibilidade> horarios) {
         LocalTime inicio = disponibilidade.getHorarioInicio();
-        while (inicio.isBefore(disponibilidade.getHorarioFim())) {
+        while (Duration.between(inicio, disponibilidade.getHorarioFim())
+                .compareTo(DURACAO_AGENDAMENTO) >= 0) {
             LocalTime horarioInicio = inicio;
             LocalTime horarioFim = horarioInicio.plus(DURACAO_AGENDAMENTO);
             SituacaoHorario situacao = bloqueios.stream()
