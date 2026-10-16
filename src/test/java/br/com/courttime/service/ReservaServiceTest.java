@@ -60,6 +60,7 @@ class ReservaServiceTest {
 
     @Test
     void activeStudentCreatesPendingRequestForAvailablePeriod() {
+        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA.minusDays(1));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
                 quadra, DATA, INICIO, FIM)).thenReturn(true);
         when(reservaRepository.save(any(Reserva.class)))
@@ -75,6 +76,7 @@ class ReservaServiceTest {
 
     @Test
     void requestIsRejectedWhenPeriodIsUnavailable() {
+        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA.minusDays(1));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
                 quadra, DATA, INICIO, FIM)).thenReturn(false);
 
@@ -87,6 +89,36 @@ class ReservaServiceTest {
     void nonStudentCannotCreateRequest() {
         assertThrows(AccessDeniedException.class, () -> service.criarSolicitacao(
                 administrador, quadra, DATA, INICIO, FIM, "Treino"));
+    }
+
+    @Test
+    void requestCannotBeCreatedForPastDate() {
+        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA);
+
+        assertThrows(IllegalArgumentException.class, () -> service.criarSolicitacao(
+                aluno, quadra, DATA.minusDays(1), INICIO, FIM, "Treino"));
+        verify(calendarioDisponibilidadeService, never()).periodoEstaDisponivel(
+                any(), any(), any(), any());
+    }
+
+    @Test
+    void studentCanOnlyObtainOwnRequest() {
+        Reserva reserva = reservaPendente(aluno);
+        when(reservaRepository.findByIdAndSolicitante(30L, aluno))
+                .thenReturn(Optional.of(reserva));
+
+        Reserva encontrada = service.obterSolicitacaoDoUsuario(30L, aluno);
+
+        assertEquals(reserva, encontrada);
+    }
+
+    @Test
+    void studentCannotObtainAnotherStudentsRequest() {
+        when(reservaRepository.findByIdAndSolicitante(30L, aluno))
+                .thenReturn(Optional.empty());
+
+        assertThrows(AccessDeniedException.class,
+                () -> service.obterSolicitacaoDoUsuario(30L, aluno));
     }
 
     @Test

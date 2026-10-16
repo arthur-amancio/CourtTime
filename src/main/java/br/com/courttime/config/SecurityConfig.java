@@ -15,6 +15,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/css/**", "/login").permitAll()
+                        .requestMatchers("/solicitacoes/**").hasRole("ALUNO")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
