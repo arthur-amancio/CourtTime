@@ -2,7 +2,9 @@
 
 Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas. Trabalho de Conclusão de Curso do Técnico em Informática para Internet da ETEC Professor Armando José Farinazzo, Fernandópolis/SP, 2026.
 
-O sistema possui uma página pública e autenticação por sessão com Spring Security. Usuários ativos armazenados no PostgreSQL podem entrar com email e senha, consultar a quadra da ETEC e visualizar seus horários de disponibilidade quando cadastrados.
+O sistema possui uma página pública e autenticação por sessão com Spring Security. Usuários ativos armazenados no PostgreSQL podem entrar com email e senha, consultar a quadra da ETEC e visualizar sua disponibilidade por data quando os horários semanais estiverem cadastrados.
+
+A consulta diária divide cada intervalo semanal em períodos de uma hora e considera o estado operacional da quadra e bloqueios específicos da data. Períodos fora do funcionamento cadastrado não são apresentados como disponíveis. O sistema utiliza o fuso `America/Sao_Paulo`. Nenhum horário oficial é criado automaticamente.
 
 ## Stack
 

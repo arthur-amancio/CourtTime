@@ -40,27 +40,59 @@
         </section>
 
         <section class="availability" aria-labelledby="availability-title">
-            <h2 id="availability-title">Horários disponíveis</h2>
-            <p class="empty-message" th:if="${#lists.isEmpty(disponibilidades)}">
-                Nenhum horário de disponibilidade foi cadastrado.
+            <div class="availability__heading">
+                <div>
+                    <h2 id="availability-title">Disponibilidade por data</h2>
+                    <p>Os agendamentos são organizados em períodos de uma hora.</p>
+                </div>
+                <form class="date-form" method="get" th:action="@{/quadra}">
+                    <label for="data">Data da consulta</label>
+                    <div class="date-form__controls">
+                        <input id="data" name="data" type="date" required th:value="${consulta.data}">
+                        <button class="button" type="submit">Consultar</button>
+                    </div>
+                </form>
+            </div>
+
+            <nav class="date-navigation" aria-label="Navegação entre datas">
+                <a class="button button--secondary button--small"
+                   th:href="@{/quadra(data=${dataAnterior})}">Dia anterior</a>
+                <p th:text="${consulta.dataFormatada}">Segunda-feira, 12 de outubro de 2026</p>
+                <a class="button button--secondary button--small"
+                   th:href="@{/quadra(data=${dataSeguinte})}">Dia seguinte</a>
+            </nav>
+
+            <p class="empty-message empty-message--warning" th:unless="${consulta.quadraAtiva}">
+                A quadra está inativa. Não há horários disponíveis para a data selecionada.
             </p>
-            <div class="table-wrapper" th:unless="${#lists.isEmpty(disponibilidades)}">
+            <p class="empty-message"
+               th:if="${consulta.quadraAtiva and #lists.isEmpty(consulta.horarios)}">
+                Não há horários de funcionamento cadastrados para esta data.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(consulta.horarios)}">
                 <table class="schedule-table">
-                    <caption class="visually-hidden">Horários de disponibilidade da quadra</caption>
+                    <caption class="visually-hidden">Disponibilidade da quadra na data selecionada</caption>
                     <thead>
                         <tr>
-                            <th scope="col">Dia</th>
                             <th scope="col">Horário</th>
+                            <th scope="col">Situação</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="disponibilidade : ${disponibilidades}">
-                            <th scope="row" th:text="${disponibilidade.diaSemana.descricao}">Segunda-feira</th>
-                            <td th:text="|${disponibilidade.horarioInicio} – ${disponibilidade.horarioFim}|">08:00 – 10:00</td>
+                        <tr th:each="horario : ${consulta.horarios}">
+                            <th scope="row" th:text="${horario.periodoFormatado}">08:00 – 09:00</th>
+                            <td>
+                                <strong class="status-pill"
+                                        th:classappend="${horario.disponivel} ? 'status-pill--available' : 'status-pill--unavailable'"
+                                        th:text="${horario.situacao.descricao}">Disponível</strong>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <p class="availability__note">
+                Períodos que não aparecem na lista estão fora do horário de funcionamento cadastrado.
+            </p>
         </section>
     </main>
 

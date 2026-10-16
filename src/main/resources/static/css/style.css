@@ -393,6 +393,50 @@ input:hover {
     padding-top: 2rem;
 }
 
+.availability__heading {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.availability__heading h2 {
+    margin-bottom: 0.35rem;
+}
+
+.availability__heading p,
+.availability__note {
+    margin-bottom: 0;
+    color: var(--muted);
+}
+
+.date-form {
+    min-width: min(100%, 23rem);
+    display: grid;
+    gap: 0.4rem;
+}
+
+.date-form__controls {
+    display: flex;
+    align-items: stretch;
+    gap: 0.6rem;
+}
+
+.date-navigation {
+    margin-bottom: 1.25rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+}
+
+.date-navigation p {
+    margin: 0;
+    font-weight: 700;
+    text-align: center;
+}
+
 .empty-message {
     margin-bottom: 0;
     padding: 1rem;
@@ -400,6 +444,12 @@ input:hover {
     border-radius: 8px;
     background: var(--surface);
     color: var(--muted);
+}
+
+.empty-message--warning {
+    border-color: #d9b5b5;
+    background: var(--danger-soft);
+    color: var(--danger);
 }
 
 .table-wrapper {
@@ -434,6 +484,11 @@ input:hover {
 
 .schedule-table tbody th {
     font-weight: 700;
+}
+
+.availability__note {
+    margin-top: 1rem;
+    font-size: 0.9375rem;
 }
 
 .visually-hidden {
@@ -496,7 +551,8 @@ input:hover {
     }
 
     .quick-access__item,
-    .court-summary {
+    .court-summary,
+    .availability__heading {
         align-items: stretch;
         flex-direction: column;
     }
@@ -507,6 +563,23 @@ input:hover {
 
     .court-status {
         margin-top: 0;
+    }
+
+    .date-form {
+        min-width: 0;
+    }
+
+    .date-form__controls {
+        flex-direction: column;
+    }
+
+    .date-navigation {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .date-navigation p {
+        grid-column: 1 / -1;
+        grid-row: 1;
     }
 
     .site-footer__inner {
