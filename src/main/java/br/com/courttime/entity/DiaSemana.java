@@ -1,5 +1,7 @@
 package br.com.courttime.entity;
 
+import java.time.DayOfWeek;
+
 public enum DiaSemana {
     SEGUNDA("Segunda-feira"),
     TERCA("Terça-feira"),
@@ -17,5 +19,9 @@ public enum DiaSemana {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public static DiaSemana from(DayOfWeek dayOfWeek) {
+        return values()[dayOfWeek.getValue() - 1];
     }
 }

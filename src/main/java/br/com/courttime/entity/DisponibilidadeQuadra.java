@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
 
@@ -24,12 +26,15 @@ public class DisponibilidadeQuadra {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
+    @NotNull
     private DiaSemana diaSemana;
 
     @Column(nullable = false)
+    @NotNull
     private LocalTime horarioInicio;
 
     @Column(nullable = false)
+    @NotNull
     private LocalTime horarioFim;
 
     @Column(nullable = false)
@@ -37,6 +42,7 @@ public class DisponibilidadeQuadra {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "quadra_id", nullable = false)
+    @NotNull
     private Quadra quadra;
 
     public Long getId() {
@@ -85,5 +91,12 @@ public class DisponibilidadeQuadra {
 
     public void setQuadra(Quadra quadra) {
         this.quadra = quadra;
+    }
+
+    @AssertTrue(message = "O período semanal deve terminar depois do horário inicial")
+    public boolean isIntervaloValido() {
+        return horarioInicio != null
+                && horarioFim != null
+                && horarioInicio.isBefore(horarioFim);
     }
 }
