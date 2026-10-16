@@ -9,42 +9,42 @@
 <body>
     <header class="site-header">
         <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-        <div class="container site-header__inner">
+        <div class="container site-header__inner site-header__inner--authenticated">
             <a class="brand" th:href="@{/inicio}">CourtTime</a>
-            <span class="site-header__note">Área do usuário</span>
+            <div class="site-header__actions">
+                <p class="session-user">
+                    <span th:text="${nome}">Usuário</span>
+                    <span>Perfil: <strong th:text="${perfil}">ALUNO</strong></span>
+                </p>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
         </div>
     </header>
 
-    <main id="conteudo" class="container main-content dashboard-main">
-        <section class="dashboard" aria-labelledby="page-title">
-            <div class="dashboard__welcome">
+    <main id="conteudo" class="container app-main">
+        <header class="page-heading">
+            <h1 id="page-title">Início</h1>
+            <p>Olá, <span th:text="${nome}">Usuário</span>.</p>
+        </header>
+
+        <section class="quick-access" aria-labelledby="quick-access-title">
+            <h2 id="quick-access-title">Acesso rápido</h2>
+            <div class="quick-access__item">
                 <div>
-                    <p class="eyebrow">Área do usuário</p>
-                    <h1 id="page-title">Olá, <span th:text="${nome}">Usuário</span></h1>
-                    <p class="dashboard__intro">Consulte abaixo as informações disponíveis sobre a quadra.</p>
+                    <h3>Quadra e horários</h3>
+                    <p>Consulte a disponibilidade da quadra.</p>
                 </div>
-                <p class="account-info">Perfil <strong th:text="${perfil}">ALUNO</strong></p>
+                <a class="button" th:href="@{/quadra}">Acessar</a>
             </div>
-
-            <section class="dashboard-action" aria-labelledby="court-action-title">
-                <div>
-                    <p class="dashboard-action__label">Acesso rápido</p>
-                    <h2 id="court-action-title">Consultar quadra</h2>
-                    <p>Veja a situação da quadra e os horários de disponibilidade cadastrados.</p>
-                </div>
-                <a class="button" th:href="@{/quadra}">Acessar consulta</a>
-            </section>
-
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button class="button button--secondary" type="submit">Sair</button>
-            </form>
         </section>
     </main>
 
     <footer class="site-footer">
         <div class="container site-footer__inner">
             <p class="site-footer__brand">CourtTime</p>
-            <p>Sistema de gerenciamento e agendamento da quadra</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
         </div>
     </footer>
 </body>

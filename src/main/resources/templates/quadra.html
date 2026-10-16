@@ -9,46 +9,65 @@
 <body>
     <header class="site-header">
         <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-        <div class="container site-header__inner">
+        <div class="container site-header__inner site-header__inner--authenticated">
             <a class="brand" th:href="@{/inicio}">CourtTime</a>
-            <span class="site-header__note">Área autenticada</span>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/inicio}">Início</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
         </div>
     </header>
 
-    <main id="conteudo" class="container main-content">
-        <section class="quadra-card" aria-labelledby="page-title">
-            <p class="eyebrow">Quadra da ETEC</p>
-            <h1 id="page-title" th:text="${quadra.nome}">Quadra Poliesportiva</h1>
-            <p class="quadra-description" th:text="${quadra.descricao}">Quadra esportiva da ETEC.</p>
-            <p class="quadra-status">
-                Situação:
-                <strong th:if="${quadra.ativa}">Disponível para uso</strong>
-                <strong th:unless="${quadra.ativa}">Indisponível para uso</strong>
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Quadra</span>
+        </nav>
+
+        <section class="court-summary" aria-labelledby="page-title">
+            <div>
+                <h1 id="page-title" th:text="${quadra.nome}">Quadra Poliesportiva</h1>
+                <p th:text="${quadra.descricao}">Quadra esportiva da ETEC.</p>
+            </div>
+            <p class="court-status">
+                <span>Estado da quadra:</span>
+                <strong class="status-pill status-pill--available" th:if="${quadra.ativa}">Ativa</strong>
+                <strong class="status-pill status-pill--unavailable" th:unless="${quadra.ativa}">Inativa</strong>
             </p>
+        </section>
 
-            <section class="availability" aria-labelledby="availability-title">
-                <h2 id="availability-title">Horários de disponibilidade</h2>
-                <p class="empty-message" th:if="${#lists.isEmpty(disponibilidades)}">
-                    Os horários de disponibilidade ainda não foram cadastrados.
-                </p>
-                <ul class="schedule-list" th:unless="${#lists.isEmpty(disponibilidades)}">
-                    <li th:each="disponibilidade : ${disponibilidades}">
-                        <strong th:text="${disponibilidade.diaSemana.descricao}">Segunda-feira</strong>
-                        <span th:text="|${disponibilidade.horarioInicio} às ${disponibilidade.horarioFim}|">
-                            08:00 às 10:00
-                        </span>
-                    </li>
-                </ul>
-            </section>
-
-            <a class="button" th:href="@{/inicio}">Voltar ao início</a>
+        <section class="availability" aria-labelledby="availability-title">
+            <h2 id="availability-title">Horários disponíveis</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(disponibilidades)}">
+                Nenhum horário de disponibilidade foi cadastrado.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(disponibilidades)}">
+                <table class="schedule-table">
+                    <caption class="visually-hidden">Horários de disponibilidade da quadra</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Dia</th>
+                            <th scope="col">Horário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="disponibilidade : ${disponibilidades}">
+                            <th scope="row" th:text="${disponibilidade.diaSemana.descricao}">Segunda-feira</th>
+                            <td th:text="|${disponibilidade.horarioInicio} – ${disponibilidade.horarioFim}|">08:00 – 10:00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
 
     <footer class="site-footer">
         <div class="container site-footer__inner">
             <p class="site-footer__brand">CourtTime</p>
-            <p>Sistema de gerenciamento e agendamento da quadra</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
         </div>
     </footer>
 </body>
