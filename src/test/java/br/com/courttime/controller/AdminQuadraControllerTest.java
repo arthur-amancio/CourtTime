@@ -84,6 +84,17 @@ class AdminQuadraControllerTest {
     }
 
     @Test
+    void segurancaNaoPodeAlterarHorario() throws Exception {
+        mockMvc.perform(post("/admin/horarios")
+                        .with(user("seguranca@escola.test").roles("SEGURANCA"))
+                        .with(csrf())
+                        .param("diaSemana", "SEGUNDA")
+                        .param("horarioInicio", "08:00")
+                        .param("horarioFim", "10:00"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void administradorVisualizaDadosReaisDoPainel() throws Exception {
         prepararAdministradorAutenticado();
         PainelAdministrativo painel = new PainelAdministrativo(

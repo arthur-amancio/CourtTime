@@ -49,16 +49,19 @@ Remove-Variable senha
 
 As variáveis `COURTTIME_DB_URL` e `COURTTIME_DB_USERNAME` são opcionais quando os valores padrão servem. Durante o desenvolvimento, o JPA/Hibernate cria e atualiza as tabelas no PostgreSQL com base nas entidades da aplicação.
 
-## Usuário local para desenvolvimento
+## Primeiro administrador
 
-Não existe cadastro público nesta etapa. Para criar um único usuário local de teste, configure as quatro variáveis abaixo antes de iniciar a aplicação:
+Não existe cadastro público. O primeiro administrador pode ser provisionado uma única vez por um operador com acesso ao ambiente da aplicação. O mecanismo somente é executado quando habilitado explicitamente e não sobrescreve contas ou senhas existentes.
+
+Configure as variáveis abaixo apenas para a primeira inicialização:
 
 | Variável | Conteúdo |
 | --- | --- |
 | `COURTTIME_DEV_USER_NAME` | Nome exibido após o login |
 | `COURTTIME_DEV_USER_EMAIL` | Email usado no login |
 | `COURTTIME_DEV_USER_PASSWORD` | Senha que será armazenada como hash BCrypt |
-| `COURTTIME_DEV_USER_PROFILE` | `ALUNO`, `ADMINISTRADOR`, `SECRETARIA` ou `SEGURANCA` |
+| `COURTTIME_BOOTSTRAP_ADMIN_ENABLED` | `true` para autorizar explicitamente o bootstrap |
+| `COURTTIME_DEV_USER_PROFILE` | Opcional; se informado, deve ser `ADMINISTRADOR` |
 
 Se as variáveis não forem configuradas, nenhum usuário será criado. Se o email já existir, os dados e a senha não serão alterados.
 
@@ -69,12 +72,43 @@ $env:COURTTIME_DEV_USER_NAME = Read-Host 'Nome do usuário de teste'
 $env:COURTTIME_DEV_USER_EMAIL = Read-Host 'Email do usuário de teste'
 $senhaUsuario = Read-Host 'Senha do usuário de teste' -AsSecureString
 $env:COURTTIME_DEV_USER_PASSWORD = [System.Net.NetworkCredential]::new('', $senhaUsuario).Password
-$env:COURTTIME_DEV_USER_PROFILE = 'ALUNO'
+$env:COURTTIME_DEV_USER_PROFILE = 'ADMINISTRADOR'
+$env:COURTTIME_BOOTSTRAP_ADMIN_ENABLED = 'true'
 Remove-Variable senhaUsuario
 .\mvnw.cmd spring-boot:run
 ```
 
+Depois da criação, interrompa a aplicação e remova a autorização de bootstrap:
+
+```powershell
+Remove-Item Env:COURTTIME_BOOTSTRAP_ADMIN_ENABLED
+Remove-Item Env:COURTTIME_DEV_USER_PASSWORD
+```
+
+Se já houver um administrador ativo, o bootstrap não cria outro. Caso o mesmo email já corresponda ao administrador existente, nenhuma senha ou informação será sobrescrita. Contas de aluno, secretaria e segurança devem ser criadas em **Administração → Usuários**.
+
 Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha configurados. Após o login, a aplicação abre `/inicio`. O botão **Sair** encerra a sessão.
+
+## Permissões
+
+| Rota ou ação | Aluno | Administrador | Secretaria | Segurança |
+| --- | --- | --- | --- | --- |
+| Página pública e login | Sim | Sim | Sim | Sim |
+| Consultar quadra e horários | Sim | Sim | Sim | Sim |
+| Criar e consultar as próprias solicitações | Sim | Não | Não | Não |
+| Painel `/admin/**` | Não | Sim | Não | Não |
+| Gerenciar horários e bloqueios | Não | Sim | Não | Não |
+| Gerenciar usuários | Não | Sim | Não | Não |
+
+O formulário comum permite criar somente `ALUNO`, `SECRETARIA` e `SEGURANCA`. Ele não promove contas para `ADMINISTRADOR`, não permite alterar o perfil de administradores existentes e não oferece Super Admin. A desativação, mudança de email ou perfil e redefinição de senha incrementam a versão de acesso da conta; sessões antigas são encerradas na próxima requisição.
+
+Concessões administrativas futuras não estão disponíveis na interface comum. Até que a instituição defina o procedimento responsável por autorizá-las, qualquer ampliação desse perfil exige uma alteração específica, revisada e rastreável na aplicação; não deve ser feita por edição manual recorrente do banco.
+
+## Administração de usuários
+
+Administradores acessam `/admin/usuarios` para listar, pesquisar, filtrar, cadastrar, editar, ativar, desativar e redefinir senhas. As senhas são armazenadas com BCrypt e nunca são exibidas. Contas são desativadas logicamente para preservar reservas e registros históricos. O último administrador ativo e o próprio operador autenticado não podem ser desativados.
+
+As operações relevantes são registradas em `auditorias_usuario`, sem senha, hash ou credencial temporária.
 
 ## Testes e build
 

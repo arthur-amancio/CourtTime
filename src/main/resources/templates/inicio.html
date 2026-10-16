@@ -14,7 +14,7 @@
             <div class="site-header__actions">
                 <p class="session-user">
                     <span th:text="${nome}">Usuário</span>
-                    <span>Perfil: <strong th:text="${perfil}">ALUNO</strong></span>
+                    <span>Perfil: <strong th:text="${perfil.descricao}">Aluno</strong></span>
                 </p>
                 <form class="logout-form" th:action="@{/logout}" method="post">
                     <button class="button button--secondary button--small" type="submit">Sair</button>
@@ -26,31 +26,52 @@
     <main id="conteudo" class="container app-main">
         <header class="page-heading">
             <h1 id="page-title">Início</h1>
-            <p>Olá, <span th:text="${nome}">Usuário</span>.</p>
+            <p>Olá, <span th:text="${nome}">Usuário</span>. Escolha uma das ações disponíveis para sua conta.</p>
         </header>
 
         <section class="quick-access" aria-labelledby="quick-access-title">
             <h2 id="quick-access-title">Acesso rápido</h2>
             <div class="quick-access__item">
                 <div>
-                    <h3>Quadra e horários</h3>
-                    <p>Consulte a disponibilidade da quadra.</p>
+                    <h3>Consultar horários</h3>
+                    <p>Veja o funcionamento e a situação da quadra em uma data.</p>
                 </div>
                 <a class="button" th:href="@{/quadra}">Acessar</a>
             </div>
             <div class="quick-access__item" th:if="${perfil.name() == 'ALUNO'}">
                 <div>
-                    <h3>Minhas solicitações</h3>
-                    <p>Solicite um horário e acompanhe o andamento.</p>
+                    <h3>Nova solicitação</h3>
+                    <p>Selecione um período disponível e registre uma solicitação preliminar.</p>
                 </div>
-                <a class="button" th:href="@{/solicitacoes}">Acessar</a>
+                <a class="button" th:href="@{/solicitacoes/nova}">Solicitar</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'ALUNO'}">
+                <div>
+                    <h3>Minhas solicitações</h3>
+                    <p>Acompanhe as solicitações registradas pela sua conta.</p>
+                </div>
+                <a class="button button--secondary" th:href="@{/solicitacoes}">Consultar</a>
             </div>
             <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
                 <div>
-                    <h3>Administração da quadra</h3>
-                    <p>Gerencie o funcionamento semanal e os bloqueios da quadra.</p>
+                    <h3>Gerenciar usuários</h3>
+                    <p>Cadastre, edite e controle o acesso das contas institucionais.</p>
                 </div>
-                <a class="button" th:href="@{/admin}">Acessar</a>
+                <a class="button" th:href="@{/admin/usuarios}">Gerenciar</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
+                <div>
+                    <h3>Configurar horários</h3>
+                    <p>Gerencie os períodos semanais de funcionamento da quadra.</p>
+                </div>
+                <a class="button button--secondary" th:href="@{/admin/horarios}">Configurar</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
+                <div>
+                    <h3>Consultar bloqueios</h3>
+                    <p>Cadastre e consulte indisponibilidades específicas da quadra.</p>
+                </div>
+                <a class="button button--secondary" th:href="@{/admin/bloqueios}">Consultar</a>
             </div>
         </section>
     </main>
