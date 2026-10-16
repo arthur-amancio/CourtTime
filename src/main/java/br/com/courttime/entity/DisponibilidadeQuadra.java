@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.Duration;
 import java.time.LocalTime;
 
 @Entity
@@ -94,12 +93,10 @@ public class DisponibilidadeQuadra {
         this.quadra = quadra;
     }
 
-    @AssertTrue(message = "O período semanal deve conter blocos completos de uma hora")
+    @AssertTrue(message = "O período semanal deve terminar depois do horário inicial")
     public boolean isIntervaloValido() {
-        if (horarioInicio == null || horarioFim == null || !horarioInicio.isBefore(horarioFim)) {
-            return false;
-        }
-
-        return Duration.between(horarioInicio, horarioFim).toMinutes() % 60 == 0;
+        return horarioInicio != null
+                && horarioFim != null
+                && horarioInicio.isBefore(horarioFim);
     }
 }
