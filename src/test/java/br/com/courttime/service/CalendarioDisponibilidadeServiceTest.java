@@ -4,8 +4,11 @@ import br.com.courttime.entity.BloqueioQuadra;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
 import br.com.courttime.entity.Quadra;
+import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.repository.BloqueioQuadraRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
+import br.com.courttime.repository.ReservaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,13 +38,16 @@ class CalendarioDisponibilidadeServiceTest {
     @Mock
     private BloqueioQuadraRepository bloqueioQuadraRepository;
 
+    @Mock
+    private ReservaRepository reservaRepository;
+
     private CalendarioDisponibilidadeService service;
     private Quadra quadra;
 
     @BeforeEach
     void setUp() {
         service = new CalendarioDisponibilidadeService(
-                disponibilidadeQuadraRepository, bloqueioQuadraRepository);
+                disponibilidadeQuadraRepository, bloqueioQuadraRepository, reservaRepository);
         quadra = new Quadra();
         quadra.setAtiva(true);
     }
@@ -56,6 +62,8 @@ class CalendarioDisponibilidadeServiceTest {
         when(bloqueioQuadraRepository
                 .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
                 .thenReturn(List.of());
+        when(reservaRepository.findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                quadra, SEGUNDA_FEIRA, StatusReserva.APROVADA)).thenReturn(List.of());
 
         ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
 
@@ -171,12 +179,34 @@ class CalendarioDisponibilidadeServiceTest {
         when(bloqueioQuadraRepository
                 .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
                 .thenReturn(List.of(bloqueio));
+        when(reservaRepository.findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                quadra, SEGUNDA_FEIRA, StatusReserva.APROVADA)).thenReturn(List.of());
 
         ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
 
         assertTrue(consulta.horarios().get(0).isDisponivel());
         assertFalse(consulta.horarios().get(1).isDisponivel());
         assertEquals(SituacaoHorario.BLOQUEADO, consulta.horarios().get(1).situacao());
+    }
+
+    @Test
+    void approvedReservationMakesConflictingPeriodUnavailable() {
+        Reserva reserva = reservaAprovada(8, 9);
+        when(disponibilidadeQuadraRepository
+                .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
+                        quadra, DiaSemana.SEGUNDA))
+                .thenReturn(List.of(disponibilidade(8, 0, 10, 0)));
+        when(bloqueioQuadraRepository
+                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
+                .thenReturn(List.of());
+        when(reservaRepository.findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                quadra, SEGUNDA_FEIRA, StatusReserva.APROVADA)).thenReturn(List.of(reserva));
+
+        ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertEquals(SituacaoHorario.RESERVADO, consulta.horarios().get(0).situacao());
+        assertFalse(consulta.horarios().get(0).isDisponivel());
+        assertTrue(consulta.horarios().get(1).isDisponivel());
     }
 
     @Test
@@ -202,6 +232,8 @@ class CalendarioDisponibilidadeServiceTest {
         when(bloqueioQuadraRepository
                 .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
                 .thenReturn(List.of());
+        when(reservaRepository.findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                quadra, SEGUNDA_FEIRA, StatusReserva.APROVADA)).thenReturn(List.of());
 
         ConsultaDisponibilidade consulta = service.consultar(quadra, SEGUNDA_FEIRA);
 
@@ -231,6 +263,8 @@ class CalendarioDisponibilidadeServiceTest {
         when(bloqueioQuadraRepository
                 .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA))
                 .thenReturn(bloqueios);
+        when(reservaRepository.findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                quadra, SEGUNDA_FEIRA, StatusReserva.APROVADA)).thenReturn(List.of());
     }
 
     private DisponibilidadeQuadra disponibilidade(
@@ -254,5 +288,16 @@ class CalendarioDisponibilidadeServiceTest {
         bloqueio.setAtivo(true);
         bloqueio.setQuadra(quadra);
         return bloqueio;
+    }
+
+    private Reserva reservaAprovada(int horaInicio, int horaFim) {
+        Reserva reserva = new Reserva();
+        reserva.setQuadra(quadra);
+        reserva.setDataUtilizacao(SEGUNDA_FEIRA);
+        reserva.setHorarioInicio(LocalTime.of(horaInicio, 0));
+        reserva.setHorarioFim(LocalTime.of(horaFim, 0));
+        reserva.setFinalidade("Atividade esportiva");
+        reserva.setStatus(StatusReserva.APROVADA);
+        return reserva;
     }
 }
