@@ -47,6 +47,9 @@ public class ReservaService {
         validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
         Objects.requireNonNull(quadra, "A quadra é obrigatória");
         Objects.requireNonNull(data, "A data é obrigatória");
+        if (data.isBefore(calendarioDisponibilidadeService.obterDataAtual())) {
+            throw new IllegalArgumentException("A data de utilização não pode estar no passado");
+        }
         validarPeriodo(horarioInicio, horarioFim);
         String finalidadeNormalizada = validarFinalidade(finalidade);
 
@@ -70,6 +73,17 @@ public class ReservaService {
     public List<Reserva> listarSolicitacoesDoUsuario(Usuario solicitante) {
         validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
         return reservaRepository.findBySolicitanteOrderByCriadaEmDesc(solicitante);
+    }
+
+    @Transactional(readOnly = true)
+    public Reserva obterSolicitacaoDoUsuario(Long reservaId, Usuario solicitante) {
+        validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
+        if (reservaId == null) {
+            throw new IllegalArgumentException("A solicitação é obrigatória");
+        }
+        return reservaRepository.findByIdAndSolicitante(reservaId, solicitante)
+                .orElseThrow(() -> new AccessDeniedException(
+                        "A solicitação não existe ou não pertence ao usuário autenticado"));
     }
 
     @Transactional

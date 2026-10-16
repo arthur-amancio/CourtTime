@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Minhas solicitações</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/quadra}">Quadra e horários</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Solicitações</span>
+        </nav>
+
+        <header class="page-heading page-heading--actions">
+            <div>
+                <h1>Minhas solicitações</h1>
+                <p>Acompanhe somente as solicitações registradas por você.</p>
+            </div>
+            <a class="button" th:href="@{/solicitacoes/nova}">Nova solicitação</a>
+        </header>
+
+        <p class="empty-message" th:if="${#lists.isEmpty(solicitacoes)}">
+            Você ainda não possui solicitações cadastradas.
+        </p>
+
+        <div class="table-wrapper" th:unless="${#lists.isEmpty(solicitacoes)}">
+            <table class="schedule-table requests-table">
+                <caption class="visually-hidden">Solicitações de uso da quadra do usuário autenticado</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col">Horário</th>
+                        <th scope="col">Finalidade</th>
+                        <th scope="col">Situação</th>
+                        <th scope="col"><span class="visually-hidden">Ações</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="solicitacao : ${solicitacoes}">
+                        <td th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                        <td th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                        <td th:text="${solicitacao.finalidade}">Treino da turma</td>
+                        <td><strong class="status-pill" th:text="${solicitacao.status.descricao}">Pendente de documentação</strong></td>
+                        <td><a class="text-link" th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Detalhes</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>

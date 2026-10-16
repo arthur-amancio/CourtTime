@@ -38,6 +38,13 @@
                 </div>
                 <a class="button" th:href="@{/quadra}">Acessar</a>
             </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'ALUNO'}">
+                <div>
+                    <h3>Minhas solicitações</h3>
+                    <p>Solicite um horário e acompanhe o andamento.</p>
+                </div>
+                <a class="button" th:href="@{/solicitacoes}">Acessar</a>
+            </div>
         </section>
     </main>
 
