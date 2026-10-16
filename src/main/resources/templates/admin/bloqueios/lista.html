@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Bloqueios</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header"><a class="skip-link" href="#conteudo">Pular para o conteúdo</a><div class="container site-header__inner site-header__inner--authenticated"><a class="brand" th:href="@{/inicio}">CourtTime</a><div class="site-header__actions"><a class="text-link" th:href="@{/admin}">Painel administrativo</a><form class="logout-form" th:action="@{/logout}" method="post"><button class="button button--secondary button--small" type="submit">Sair</button></form></div></div></header>
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><span aria-current="page">Bloqueios</span></nav>
+        <header class="page-heading page-heading--actions"><div><h1>Bloqueios da quadra</h1><p>Consulte e registre indisponibilidades futuras sem alterar o funcionamento semanal.</p></div><a class="button" th:href="@{/admin/bloqueios/novo}">Novo bloqueio</a></header>
+        <p class="form-message form-message--success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+        <p class="empty-message" th:if="${#lists.isEmpty(bloqueios)}">Nenhum bloqueio futuro foi cadastrado.</p>
+        <div class="table-wrapper" th:unless="${#lists.isEmpty(bloqueios)}">
+            <table class="schedule-table admin-table"><caption class="visually-hidden">Bloqueios futuros da quadra</caption><thead><tr><th scope="col">Data</th><th scope="col">Período</th><th scope="col">Motivo</th><th scope="col">Estado</th><th scope="col">Ação</th></tr></thead>
+                <tbody><tr th:each="bloqueio : ${bloqueios}"><td th:text="${#temporals.format(bloqueio.data, 'dd/MM/yyyy')}">19/10/2026</td><td th:text="|${#temporals.format(bloqueio.horarioInicio, 'HH:mm')} – ${#temporals.format(bloqueio.horarioFim, 'HH:mm')}|">08:00 – 09:00</td><td th:text="${bloqueio.motivo}">Manutenção</td><td><span class="status-pill" th:classappend="${bloqueio.ativo} ? ' status-pill--unavailable' : ''" th:text="${bloqueio.ativo} ? 'Ativo' : 'Inativo'">Ativo</span></td><td><form th:if="${bloqueio.ativo}" th:action="@{/admin/bloqueios/{id}/desativar(id=${bloqueio.id})}" method="post" onsubmit="return confirm('Desativar este bloqueio?')"><button class="button button--secondary button--small" type="submit">Desativar</button></form><span th:unless="${bloqueio.ativo}">—</span></td></tr></tbody>
+            </table>
+        </div>
+        <p class="availability__note">Um bloqueio que atinja uma reserva aprovada não será aceito.</p>
+    </main>
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

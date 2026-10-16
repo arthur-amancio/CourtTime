@@ -23,6 +23,11 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
             Quadra quadra, LocalDate dataUtilizacao, StatusReserva status);
 
+    List<Reserva> findByQuadraAndStatusAndDataUtilizacaoGreaterThanEqualOrderByDataUtilizacaoAscHorarioInicioAsc(
+            Quadra quadra, StatusReserva status, LocalDate dataUtilizacao);
+
+    long countByStatus(StatusReserva status);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             select r from Reserva r
