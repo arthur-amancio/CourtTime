@@ -174,7 +174,9 @@ h3 {
 
 a:focus-visible,
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
     outline: 3px solid #875c00;
     outline-offset: 3px;
 }
@@ -247,7 +249,9 @@ label {
     font-weight: 700;
 }
 
-input {
+input,
+select,
+textarea {
     width: 100%;
     min-height: 2.9rem;
     padding: 0.65rem 0.75rem;
@@ -258,8 +262,15 @@ input {
     font: inherit;
 }
 
-input:hover {
+input:hover,
+select:hover,
+textarea:hover {
     border-color: var(--accent);
+}
+
+textarea {
+    min-height: 8rem;
+    resize: vertical;
 }
 
 .form-message {
@@ -312,6 +323,119 @@ input:hover {
     margin-bottom: 0;
     color: var(--muted);
     font-size: 1.0625rem;
+}
+
+.app-main--narrow {
+    width: min(calc(100% - 2rem), 48rem);
+}
+
+.page-heading--actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.form-section + .form-section {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.request-form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.form-field {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.field-help,
+.field-error {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.field-help {
+    color: var(--muted);
+}
+
+.field-error {
+    color: var(--danger);
+    font-weight: 700;
+}
+
+.form-message p,
+.form-message ul {
+    margin-bottom: 0;
+}
+
+.form-message ul {
+    margin-top: 0.4rem;
+    padding-left: 1.25rem;
+}
+
+.request-notice {
+    margin-bottom: 0;
+    padding: 1rem;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-soft);
+}
+
+.request-notice p {
+    margin: 0.25rem 0 0;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.request-details {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.request-details__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.request-details__status h2 {
+    margin-bottom: 0;
+}
+
+.details-list {
+    margin: 1.5rem 0 0;
+}
+
+.details-list > div {
+    padding-block: 0.85rem;
+    border-top: 1px solid var(--border);
+}
+
+.details-list dt {
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.details-list dd {
+    margin: 0.2rem 0 0;
+    overflow-wrap: anywhere;
+}
+
+.requests-table td:nth-child(3) {
+    min-width: 15rem;
+    overflow-wrap: anywhere;
 }
 
 .quick-access h2 {
@@ -552,7 +676,8 @@ input:hover {
 
     .quick-access__item,
     .court-summary,
-    .availability__heading {
+    .availability__heading,
+    .page-heading--actions {
         align-items: stretch;
         flex-direction: column;
     }

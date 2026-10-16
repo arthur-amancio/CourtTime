@@ -2,7 +2,7 @@
 
 Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas. Trabalho de Conclusão de Curso do Técnico em Informática para Internet da ETEC Professor Armando José Farinazzo, Fernandópolis/SP, 2026.
 
-O sistema possui uma página pública e autenticação por sessão com Spring Security. Usuários ativos armazenados no PostgreSQL podem entrar com email e senha, consultar a quadra da ETEC e visualizar sua disponibilidade por data quando os horários semanais estiverem cadastrados.
+O sistema possui uma página pública e autenticação por sessão com Spring Security. Usuários ativos armazenados no PostgreSQL podem entrar com email e senha, consultar a quadra da ETEC e visualizar sua disponibilidade por data quando os horários semanais estiverem cadastrados. Alunos ativos também podem registrar uma solicitação preliminar e acompanhar somente as próprias solicitações.
 
 A consulta diária divide cada intervalo semanal em períodos de uma hora e considera o estado operacional da quadra e bloqueios específicos da data. Períodos fora do funcionamento cadastrado não são apresentados como disponíveis. O sistema utiliza o fuso `America/Sao_Paulo`. Nenhum horário oficial é criado automaticamente.
 
@@ -10,7 +10,9 @@ A consulta diária divide cada intervalo semanal em períodos de uma hora e cons
 
 O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO` e só pode ser analisada administrativamente depois de avançar para `PENDENTE_ANALISE`, transição que será vinculada à conferência do termo oficial em etapa própria.
 
-Na aprovação, o backend bloqueia o registro da única quadra durante a transação e verifica novamente horários semanais, bloqueios e reservas já aprovadas. Essa serialização impede que duas análises concorrentes aprovem períodos conflitantes. Não há formulário público de reserva nesta etapa: participantes e documentos serão adicionados somente quando seus campos e o termo institucional estiverem disponíveis, sem criar dados pessoais ou cláusulas fictícias.
+Na aprovação, o backend bloqueia o registro da única quadra durante a transação e verifica novamente horários semanais, bloqueios e reservas já aprovadas. Essa serialização impede que duas análises concorrentes aprovem períodos conflitantes.
+
+O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Participantes e documentos serão adicionados somente quando seus campos e o termo institucional estiverem disponíveis, sem criar dados pessoais ou cláusulas fictícias.
 
 ## Stack
 
@@ -83,4 +85,4 @@ Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha co
 
 ## Integração contínua
 
-O GitHub Actions executa automaticamente os testes do projeto em pushes para a `main` e em Pull Requests destinados à `main`.
+O GitHub Actions executa automaticamente os testes do projeto em pushes para a `main` e branches `feat/**`, além dos Pull Requests. O workflow utiliza um PostgreSQL 16 temporário, com dados exclusivamente de teste, para validar o mapeamento JPA, consultas, transações, rollback e aprovações concorrentes.
