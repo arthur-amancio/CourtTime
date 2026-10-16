@@ -45,6 +45,13 @@
                 </div>
                 <a class="button" th:href="@{/solicitacoes}">Acessar</a>
             </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
+                <div>
+                    <h3>Administração da quadra</h3>
+                    <p>Gerencie o funcionamento semanal e os bloqueios da quadra.</p>
+                </div>
+                <a class="button" th:href="@{/admin}">Acessar</a>
+            </div>
         </section>
     </main>
 
