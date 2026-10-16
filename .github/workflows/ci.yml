@@ -14,6 +14,28 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: courttime_test
+          POSTGRES_USER: courttime
+          POSTGRES_PASSWORD: courttime_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U courttime -d courttime_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      COURTTIME_POSTGRES_TEST: true
+      COURTTIME_DB_URL: jdbc:postgresql://localhost:5432/courttime_test
+      COURTTIME_DB_USERNAME: courttime
+      COURTTIME_DB_PASSWORD: courttime_test
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+
     steps:
       - name: Baixar o código
         uses: actions/checkout@v7
