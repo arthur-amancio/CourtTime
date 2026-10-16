@@ -1,0 +1,257 @@
+package br.com.courttime.service;
+
+import br.com.courttime.entity.BloqueioQuadra;
+import br.com.courttime.entity.DiaSemana;
+import br.com.courttime.entity.DisponibilidadeQuadra;
+import br.com.courttime.entity.Perfil;
+import br.com.courttime.entity.Quadra;
+import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.StatusReserva;
+import br.com.courttime.entity.Usuario;
+import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.DisponibilidadeQuadraRepository;
+import br.com.courttime.repository.QuadraRepository;
+import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.repository.UsuarioRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@SpringBootTest
+@EnabledIfEnvironmentVariable(named = "COURTTIME_POSTGRES_TEST", matches = "true")
+class ReservaPostgreSqlIntegrationTest {
+
+    private static final LocalDate DATA = LocalDate.of(2026, 10, 19);
+    private static final LocalTime INICIO = LocalTime.of(8, 0);
+    private static final LocalTime FIM = LocalTime.of(9, 0);
+
+    @Autowired
+    private ReservaService reservaService;
+
+    @Autowired
+    private ReservaRepository reservaRepository;
+
+    @Autowired
+    private QuadraRepository quadraRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private DisponibilidadeQuadraRepository disponibilidadeQuadraRepository;
+
+    @Autowired
+    private BloqueioQuadraRepository bloqueioQuadraRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private Quadra quadra;
+    private Usuario aluno;
+    private Usuario administrador;
+
+    @BeforeEach
+    void prepararBanco() {
+        reservaRepository.deleteAllInBatch();
+        bloqueioQuadraRepository.deleteAllInBatch();
+        disponibilidadeQuadraRepository.deleteAllInBatch();
+        usuarioRepository.deleteAllInBatch();
+        quadraRepository.deleteAllInBatch();
+
+        quadra = novaQuadra();
+        aluno = novoUsuario("aluno@teste.local", Perfil.ALUNO);
+        administrador = novoUsuario("administrador@teste.local", Perfil.ADMINISTRADOR);
+        disponibilidadeQuadraRepository.saveAndFlush(disponibilidade(8, 0, 10, 0));
+    }
+
+    @Test
+    void postgresCreatesReservationTableAndDeclaredIndexes() {
+        Long tabelaExiste = jdbcTemplate.queryForObject("""
+                select count(*)
+                from information_schema.tables
+                where table_schema = current_schema() and table_name = 'reservas'
+                """, Long.class);
+        List<String> indices = jdbcTemplate.queryForList("""
+                select indexname
+                from pg_indexes
+                where schemaname = current_schema() and tablename = 'reservas'
+                """, String.class);
+
+        assertEquals(1L, tabelaExiste);
+        assertTrue(indices.contains("idx_reservas_quadra_data_status"));
+        assertTrue(indices.contains("idx_reservas_solicitante"));
+    }
+
+    @Test
+    void persistsRecoversAndQueriesStudentRequest() {
+        Reserva criada = reservaService.criarSolicitacao(
+                aluno, quadra, DATA, INICIO, FIM, "  Treino da turma  ");
+
+        Reserva recuperada = reservaRepository.findById(criada.getId()).orElseThrow();
+        List<Reserva> solicitacoes = reservaService.listarSolicitacoesDoUsuario(aluno);
+
+        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, recuperada.getStatus());
+        assertEquals("Treino da turma", recuperada.getFinalidade());
+        assertEquals(aluno.getId(), recuperada.getSolicitante().getId());
+        assertNotNull(recuperada.getCriadaEm());
+        assertEquals(List.of(criada.getId()), solicitacoes.stream().map(Reserva::getId).toList());
+    }
+
+    @Test
+    void approvalPersistsTransitionAndApprovedReservationQuery() {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+
+        Reserva aprovada = reservaService.aprovar(pendente.getId(), administrador);
+        Reserva recuperada = reservaRepository.findById(aprovada.getId()).orElseThrow();
+        List<Reserva> aprovadas = reservaRepository
+                .findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                        quadra, DATA, StatusReserva.APROVADA);
+
+        assertEquals(StatusReserva.APROVADA, recuperada.getStatus());
+        assertEquals(administrador.getId(), recuperada.getAnalisadaPor().getId());
+        assertNotNull(recuperada.getAnalisadaEm());
+        assertEquals(List.of(aprovada.getId()), aprovadas.stream().map(Reserva::getId).toList());
+    }
+
+    @Test
+    void conflictingApprovalRollsBackAllStateChanges() {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        bloqueioQuadraRepository.saveAndFlush(bloqueio(8, 30, 8, 45));
+
+        assertThrows(IllegalStateException.class,
+                () -> reservaService.aprovar(pendente.getId(), administrador));
+
+        Reserva recuperada = reservaRepository.findById(pendente.getId()).orElseThrow();
+        assertEquals(StatusReserva.PENDENTE_ANALISE, recuperada.getStatus());
+        assertNull(recuperada.getAnalisadaPor());
+        assertNull(recuperada.getAnalisadaEm());
+    }
+
+    @Test
+    void pessimisticCourtLockAllowsOnlyOneConcurrentApprovalForSamePeriod() throws Exception {
+        Reserva primeira = reservaPendente(aluno, INICIO, FIM);
+        Usuario outroAluno = novoUsuario("outro.aluno@teste.local", Perfil.ALUNO);
+        Reserva segunda = reservaPendente(outroAluno, INICIO, FIM);
+        CountDownLatch prontas = new CountDownLatch(2);
+        CountDownLatch iniciar = new CountDownLatch(1);
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<Boolean> resultadoPrimeira = executor.submit(
+                    tentativaDeAprovacao(primeira.getId(), prontas, iniciar));
+            Future<Boolean> resultadoSegunda = executor.submit(
+                    tentativaDeAprovacao(segunda.getId(), prontas, iniciar));
+
+            assertTrue(prontas.await(5, TimeUnit.SECONDS));
+            iniciar.countDown();
+
+            List<Boolean> resultados = List.of(
+                    resultadoPrimeira.get(10, TimeUnit.SECONDS),
+                    resultadoSegunda.get(10, TimeUnit.SECONDS));
+            assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
+            assertEquals(1L, resultados.stream().filter(resultado -> !resultado).count());
+        } finally {
+            executor.shutdownNow();
+        }
+
+        List<Reserva> aprovadas = reservaRepository
+                .findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
+                        quadra, DATA, StatusReserva.APROVADA);
+        long pendentes = reservaRepository.findAll().stream()
+                .filter(reserva -> reserva.getStatus() == StatusReserva.PENDENTE_ANALISE)
+                .count();
+
+        assertEquals(1, aprovadas.size());
+        assertEquals(1, pendentes);
+    }
+
+    private Callable<Boolean> tentativaDeAprovacao(
+            Long reservaId, CountDownLatch prontas, CountDownLatch iniciar) {
+        return () -> {
+            prontas.countDown();
+            if (!iniciar.await(5, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("As aprovações não iniciaram de forma coordenada");
+            }
+            Usuario adminDaTransacao = usuarioRepository.findById(administrador.getId()).orElseThrow();
+            try {
+                reservaService.aprovar(reservaId, adminDaTransacao);
+                return true;
+            } catch (IllegalStateException conflitoEsperado) {
+                return false;
+            }
+        };
+    }
+
+    private Quadra novaQuadra() {
+        Quadra nova = new Quadra();
+        nova.setNome("Quadra de teste");
+        nova.setDescricao("Criada somente no PostgreSQL temporário do CI");
+        nova.setAtiva(true);
+        return quadraRepository.saveAndFlush(nova);
+    }
+
+    private Usuario novoUsuario(String email, Perfil perfil) {
+        Usuario usuario = new Usuario();
+        usuario.setNome("Usuário de teste");
+        usuario.setEmail(email);
+        usuario.setSenha("hash-de-teste");
+        usuario.setPerfil(perfil);
+        usuario.setAtivo(true);
+        return usuarioRepository.saveAndFlush(usuario);
+    }
+
+    private DisponibilidadeQuadra disponibilidade(
+            int horaInicio, int minutoInicio, int horaFim, int minutoFim) {
+        DisponibilidadeQuadra disponibilidade = new DisponibilidadeQuadra();
+        disponibilidade.setQuadra(quadra);
+        disponibilidade.setDiaSemana(DiaSemana.from(DATA.getDayOfWeek()));
+        disponibilidade.setHorarioInicio(LocalTime.of(horaInicio, minutoInicio));
+        disponibilidade.setHorarioFim(LocalTime.of(horaFim, minutoFim));
+        disponibilidade.setAtiva(true);
+        return disponibilidade;
+    }
+
+    private Reserva reservaPendente(
+            Usuario solicitante, LocalTime horarioInicio, LocalTime horarioFim) {
+        Reserva reserva = new Reserva();
+        reserva.setQuadra(quadra);
+        reserva.setSolicitante(solicitante);
+        reserva.setDataUtilizacao(DATA);
+        reserva.setHorarioInicio(horarioInicio);
+        reserva.setHorarioFim(horarioFim);
+        reserva.setFinalidade("Atividade esportiva de teste");
+        reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
+        return reservaRepository.saveAndFlush(reserva);
+    }
+
+    private BloqueioQuadra bloqueio(
+            int horaInicio, int minutoInicio, int horaFim, int minutoFim) {
+        BloqueioQuadra bloqueio = new BloqueioQuadra();
+        bloqueio.setQuadra(quadra);
+        bloqueio.setData(DATA);
+        bloqueio.setHorarioInicio(LocalTime.of(horaInicio, minutoInicio));
+        bloqueio.setHorarioFim(LocalTime.of(horaFim, minutoFim));
+        bloqueio.setMotivo("Bloqueio de teste");
+        bloqueio.setAtivo(true);
+        return bloqueio;
+    }
+}
