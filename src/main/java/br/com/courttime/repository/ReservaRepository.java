@@ -18,6 +18,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findBySolicitanteOrderByCriadaEmDesc(Usuario solicitante);
 
+    Optional<Reserva> findByIdAndSolicitante(Long id, Usuario solicitante);
+
     List<Reserva> findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
             Quadra quadra, LocalDate dataUtilizacao, StatusReserva status);
 

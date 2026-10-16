@@ -40,7 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @EnabledIfEnvironmentVariable(named = "COURTTIME_POSTGRES_TEST", matches = "true")
 class ReservaPostgreSqlIntegrationTest {
 
-    private static final LocalDate DATA = LocalDate.of(2026, 10, 19);
+    private static final LocalDate DATA = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)
+            .plusDays(7);
     private static final LocalTime INICIO = LocalTime.of(8, 0);
     private static final LocalTime FIM = LocalTime.of(9, 0);
 
@@ -114,6 +115,8 @@ class ReservaPostgreSqlIntegrationTest {
         assertEquals(aluno.getId(), recuperada.getSolicitante().getId());
         assertNotNull(recuperada.getCriadaEm());
         assertEquals(List.of(criada.getId()), solicitacoes.stream().map(Reserva::getId).toList());
+        assertTrue(reservaRepository.findByIdAndSolicitante(criada.getId(), aluno).isPresent());
+        assertTrue(reservaRepository.findByIdAndSolicitante(criada.getId(), administrador).isEmpty());
     }
 
     @Test
