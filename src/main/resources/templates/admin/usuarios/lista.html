@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Usuários</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/admin}">Painel administrativo</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/admin}">Administração</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Usuários</span>
+        </nav>
+
+        <header class="page-heading page-heading--actions">
+            <div>
+                <h1>Gerenciar usuários</h1>
+                <p>Consulte e administre as contas persistidas no CourtTime.</p>
+            </div>
+            <a class="button" th:href="@{/admin/usuarios/novo}">Novo usuário</a>
+        </header>
+
+        <p class="form-message form-message--success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
+        <form class="filter-form" th:action="@{/admin/usuarios}" method="get">
+            <div class="form-field filter-form__search">
+                <label for="busca">Nome ou email</label>
+                <input id="busca" name="busca" type="search" th:value="${busca}" maxlength="254">
+            </div>
+            <div class="form-field">
+                <label for="perfil">Perfil</label>
+                <select id="perfil" name="perfil">
+                    <option value="">Todos</option>
+                    <option th:each="item : ${perfis}" th:value="${item}" th:text="${item.descricao}" th:selected="${item == perfilSelecionado}">Aluno</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="ativo">Situação</label>
+                <select id="ativo" name="ativo">
+                    <option value="">Todas</option>
+                    <option value="true" th:selected="${ativoSelecionado == true}">Ativas</option>
+                    <option value="false" th:selected="${ativoSelecionado == false}">Inativas</option>
+                </select>
+            </div>
+            <button class="button" type="submit">Filtrar</button>
+            <a class="button button--secondary" th:href="@{/admin/usuarios}">Limpar</a>
+        </form>
+
+        <p class="empty-message" th:if="${usuarios.empty}">Nenhum usuário foi encontrado com os filtros informados.</p>
+
+        <div class="table-wrapper" th:unless="${usuarios.empty}">
+            <table class="schedule-table admin-table users-table">
+                <caption class="visually-hidden">Usuários cadastrados no CourtTime</caption>
+                <thead><tr><th scope="col">Nome</th><th scope="col">Email</th><th scope="col">Perfil</th><th scope="col">Situação</th><th scope="col">Ações</th></tr></thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios.content}">
+                        <td th:text="${usuario.nome}">Nome completo</td>
+                        <td th:text="${usuario.email}">usuario@escola.test</td>
+                        <td th:text="${usuario.perfil.descricao}">Aluno</td>
+                        <td><span class="status-pill" th:classappend="${usuario.ativo} ? ' status-pill--available' : ' status-pill--unavailable'" th:text="${usuario.ativo} ? 'Ativa' : 'Inativa'">Ativa</span></td>
+                        <td class="table-actions table-actions--users">
+                            <a class="text-link" th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}">Editar</a>
+                            <a class="text-link" th:href="@{/admin/usuarios/{id}/senha(id=${usuario.id})}">Redefinir senha</a>
+                            <form th:if="${usuario.id != operadorId}" th:action="@{/admin/usuarios/{id}/alternar(id=${usuario.id})}" method="post" th:attr="data-confirmacao=${usuario.ativo ? 'Desativar esta conta?' : 'Ativar esta conta?'}" onsubmit="return confirm(this.dataset.confirmacao)">
+                                <button class="button button--secondary button--small" type="submit" th:text="${usuario.ativo} ? 'Desativar' : 'Ativar'">Desativar</button>
+                            </form>
+                            <span class="field-help" th:if="${usuario.id == operadorId}">Conta em uso</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <nav class="pagination" aria-label="Paginação" th:if="${usuarios.totalPages > 1}">
+            <a class="button button--secondary button--small" th:if="${usuarios.hasPrevious()}" th:href="@{/admin/usuarios(busca=${busca},perfil=${perfilSelecionado},ativo=${ativoSelecionado},pagina=${usuarios.number - 1})}">Anterior</a>
+            <span th:text="|Página ${usuarios.number + 1} de ${usuarios.totalPages}|">Página 1 de 1</span>
+            <a class="button button--secondary button--small" th:if="${usuarios.hasNext()}" th:href="@{/admin/usuarios(busca=${busca},perfil=${perfilSelecionado},ativo=${ativoSelecionado},pagina=${usuarios.number + 1})}">Próxima</a>
+        </nav>
+    </main>
+
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

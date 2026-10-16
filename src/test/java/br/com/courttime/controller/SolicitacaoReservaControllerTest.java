@@ -15,6 +15,8 @@ import br.com.courttime.service.ReservaService;
 import br.com.courttime.service.SituacaoHorario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -90,10 +92,11 @@ class SolicitacaoReservaControllerTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @Test
-    void nonStudentProfileCannotAccessRequests() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"ADMINISTRADOR", "SECRETARIA", "SEGURANCA"})
+    void nonStudentProfilesCannotAccessRequests(String perfil) throws Exception {
         mockMvc.perform(get("/solicitacoes/nova")
-                        .with(user("admin@escola.test").roles("ADMINISTRADOR")))
+                        .with(user("usuario@escola.test").roles(perfil)))
                 .andExpect(status().isForbidden());
     }
 

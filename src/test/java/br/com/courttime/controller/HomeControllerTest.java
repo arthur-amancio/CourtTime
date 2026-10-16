@@ -4,6 +4,7 @@ import br.com.courttime.config.SecurityConfig;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAutenticado;
 import br.com.courttime.service.UsuarioDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ class HomeControllerTest {
         mockMvc.perform(get("/inicio").with(user(usuario.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Ana")))
-                .andExpect(content().string(containsString("ALUNO")))
+                .andExpect(content().string(containsString("Aluno")))
                 .andExpect(content().string(containsString("Acesso rápido")))
                 .andExpect(content().string(containsString("Quadra e horários")));
     }
@@ -94,6 +95,21 @@ class HomeControllerTest {
                         .param("password", "senha-de-teste"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login?erro"));
+    }
+
+    @Test
+    void previouslyAuthenticatedSessionIsInvalidatedAfterAccountDeactivation() throws Exception {
+        Usuario usuario = usuario("Ana", "ana@escola.test", Perfil.ALUNO, true);
+        usuario.setId(15L);
+        usuario.setSenha(passwordEncoder.encode("senha-de-teste"));
+        UsuarioAutenticado principal = new UsuarioAutenticado(usuario);
+        usuario.setAtivo(false);
+        usuario.incrementarVersaoAcesso();
+        when(usuarioRepository.findById(15L)).thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio").with(user(principal)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?expirada"));
     }
 
     private Usuario usuario(String nome, String email, Perfil perfil, boolean ativo) {

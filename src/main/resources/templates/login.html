@@ -17,14 +17,17 @@
 
     <main id="conteudo" class="container auth-main">
         <section class="auth-panel" aria-labelledby="page-title">
-            <h1 id="page-title">Entrar</h1>
-            <p class="auth-panel__intro">Use suas credenciais para acessar o CourtTime.</p>
+            <h1 id="page-title">Acessar o CourtTime</h1>
+            <p class="auth-panel__intro">Informe o email e a senha da sua conta autorizada.</p>
 
             <p class="form-message form-message--error" th:if="${param.erro}">
                 Email ou senha inválidos.
             </p>
             <p class="form-message form-message--success" th:if="${param.logout}">
                 Logout realizado.
+            </p>
+            <p class="form-message form-message--error" th:if="${param.expirada}">
+                Sua sessão foi encerrada porque a conta ou as permissões foram alteradas. Entre novamente.
             </p>
 
             <form class="auth-form" th:action="@{/login}" method="post">
@@ -38,6 +41,7 @@
                 </div>
                 <button class="button" type="submit">Entrar</button>
             </form>
+            <p class="auth-help">Se você não possui acesso ou precisa redefinir sua senha, procure um administrador autorizado.</p>
         </section>
     </main>
 
