@@ -49,6 +49,9 @@ class ReservaPostgreSqlIntegrationTest {
     private ReservaService reservaService;
 
     @Autowired
+    private AdministracaoQuadraService administracaoQuadraService;
+
+    @Autowired
     private ReservaRepository reservaRepository;
 
     @Autowired
@@ -120,6 +123,22 @@ class ReservaPostgreSqlIntegrationTest {
     }
 
     @Test
+    void postgresRejectsRequestWithSecondOffsetOutsideGeneratedGrid() {
+        LocalTime inicioDesalinhado = LocalTime.of(8, 0, 30);
+        LocalTime fimDesalinhado = LocalTime.of(9, 0, 30);
+
+        assertThrows(IllegalStateException.class, () -> reservaService.criarSolicitacao(
+                aluno,
+                quadra,
+                DATA,
+                inicioDesalinhado,
+                fimDesalinhado,
+                "Período adulterado fora da grade"));
+
+        assertEquals(0L, reservaRepository.count());
+    }
+
+    @Test
     void approvalPersistsTransitionAndApprovedReservationQuery() {
         Reserva pendente = reservaPendente(aluno, INICIO, FIM);
 
@@ -187,6 +206,53 @@ class ReservaPostgreSqlIntegrationTest {
         assertEquals(1, pendentes);
     }
 
+    @Test
+    void approvalAndConflictingBlockAreSerializedByCourtLock() throws Exception {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+
+        List<Boolean> resultados = executarConcorrentemente(
+                () -> tentarAprovar(pendente.getId()),
+                () -> tentarCadastrarBloqueio());
+
+        Reserva persistida = reservaRepository.findById(pendente.getId()).orElseThrow();
+        long bloqueiosAtivos = bloqueioQuadraRepository.findAll().stream()
+                .filter(BloqueioQuadra::isAtivo)
+                .count();
+        assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
+        assertTrue((persistida.getStatus() == StatusReserva.APROVADA) ^ (bloqueiosAtivos == 1));
+    }
+
+    @Test
+    void approvalAndGridChangingEditCannotBothPersist() throws Exception {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        DisponibilidadeQuadra horario = disponibilidadeQuadraRepository.findAll().get(0);
+
+        List<Boolean> resultados = executarConcorrentemente(
+                () -> tentarAprovar(pendente.getId()),
+                () -> tentarEditarHorario(horario.getId()));
+
+        Reserva reservaPersistida = reservaRepository.findById(pendente.getId()).orElseThrow();
+        DisponibilidadeQuadra horarioPersistido = disponibilidadeQuadraRepository
+                .findById(horario.getId()).orElseThrow();
+        assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
+        assertTrue((reservaPersistida.getStatus() == StatusReserva.APROVADA
+                && horarioPersistido.getHorarioInicio().equals(LocalTime.of(8, 0)))
+                || (reservaPersistida.getStatus() == StatusReserva.PENDENTE_ANALISE
+                && horarioPersistido.getHorarioInicio().equals(LocalTime.of(8, 30))));
+    }
+
+    @Test
+    void concurrentOverlappingWeeklySchedulesCannotBothPersist() throws Exception {
+        disponibilidadeQuadraRepository.deleteAllInBatch();
+
+        List<Boolean> resultados = executarConcorrentemente(
+                () -> tentarCadastrarHorario(LocalTime.of(8, 0), LocalTime.of(10, 0)),
+                () -> tentarCadastrarHorario(LocalTime.of(9, 0), LocalTime.of(11, 0)));
+
+        assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
+        assertEquals(1L, disponibilidadeQuadraRepository.count());
+    }
+
     private Callable<Boolean> tentativaDeAprovacao(
             Long reservaId, CountDownLatch prontas, CountDownLatch iniciar) {
         return () -> {
@@ -202,6 +268,94 @@ class ReservaPostgreSqlIntegrationTest {
                 return false;
             }
         };
+    }
+
+    private List<Boolean> executarConcorrentemente(
+            Callable<Boolean> primeiraOperacao,
+            Callable<Boolean> segundaOperacao) throws Exception {
+        CountDownLatch prontas = new CountDownLatch(2);
+        CountDownLatch iniciar = new CountDownLatch(1);
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<Boolean> primeira = executor.submit(
+                    operacaoSincronizada(primeiraOperacao, prontas, iniciar));
+            Future<Boolean> segunda = executor.submit(
+                    operacaoSincronizada(segundaOperacao, prontas, iniciar));
+            assertTrue(prontas.await(5, TimeUnit.SECONDS));
+            iniciar.countDown();
+            return List.of(
+                    primeira.get(10, TimeUnit.SECONDS),
+                    segunda.get(10, TimeUnit.SECONDS));
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    private Callable<Boolean> operacaoSincronizada(
+            Callable<Boolean> operacao,
+            CountDownLatch prontas,
+            CountDownLatch iniciar) {
+        return () -> {
+            prontas.countDown();
+            if (!iniciar.await(5, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("As operações não iniciaram de forma coordenada");
+            }
+            return operacao.call();
+        };
+    }
+
+    private boolean tentarAprovar(Long reservaId) {
+        Usuario adminDaTransacao = usuarioRepository.findById(administrador.getId()).orElseThrow();
+        try {
+            reservaService.aprovar(reservaId, adminDaTransacao);
+            return true;
+        } catch (IllegalStateException conflitoEsperado) {
+            return false;
+        }
+    }
+
+    private boolean tentarCadastrarBloqueio() {
+        Usuario adminDaTransacao = usuarioRepository.findById(administrador.getId()).orElseThrow();
+        try {
+            administracaoQuadraService.cadastrarBloqueio(
+                    adminDaTransacao,
+                    DATA,
+                    LocalTime.of(8, 30),
+                    LocalTime.of(8, 45),
+                    "Bloqueio concorrente de teste");
+            return true;
+        } catch (IllegalStateException conflitoEsperado) {
+            return false;
+        }
+    }
+
+    private boolean tentarEditarHorario(Long horarioId) {
+        Usuario adminDaTransacao = usuarioRepository.findById(administrador.getId()).orElseThrow();
+        try {
+            administracaoQuadraService.editarHorario(
+                    horarioId,
+                    adminDaTransacao,
+                    DiaSemana.from(DATA.getDayOfWeek()),
+                    LocalTime.of(8, 30),
+                    LocalTime.of(10, 30));
+            return true;
+        } catch (IllegalStateException conflitoEsperado) {
+            return false;
+        }
+    }
+
+    private boolean tentarCadastrarHorario(LocalTime inicio, LocalTime fim) {
+        Usuario adminDaTransacao = usuarioRepository.findById(administrador.getId()).orElseThrow();
+        try {
+            administracaoQuadraService.cadastrarHorario(
+                    adminDaTransacao,
+                    DiaSemana.from(DATA.getDayOfWeek()),
+                    inicio,
+                    fim);
+            return true;
+        } catch (IllegalStateException conflitoEsperado) {
+            return false;
+        }
     }
 
     private Quadra novaQuadra() {
