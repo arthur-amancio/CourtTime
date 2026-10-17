@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${edicao} ? 'CourtTime | Editar horário' : 'CourtTime | Novo horário'">CourtTime | Horário</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header"><a class="skip-link" href="#conteudo">Pular para o conteúdo</a><div class="container site-header__inner site-header__inner--authenticated"><a class="brand" th:href="@{/inicio}">CourtTime</a><div class="site-header__actions"><a class="text-link" th:href="@{/admin/horarios}">Horários semanais</a><form class="logout-form" th:action="@{/logout}" method="post"><button class="button button--secondary button--small" type="submit">Sair</button></form></div></div></header>
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/horarios}">Horários</a><span aria-hidden="true">/</span><span aria-current="page" th:text="${edicao} ? 'Editar' : 'Novo'">Novo</span></nav>
+        <header class="page-heading"><h1 th:text="${edicao} ? 'Editar horário semanal' : 'Novo horário semanal'">Novo horário semanal</h1><p>O calendário gera apenas períodos completos de uma hora dentro do intervalo informado.</p></header>
+        <form class="request-form" th:action="${edicao} ? @{/admin/horarios/{id}(id=${horarioId})} : @{/admin/horarios}" th:object="${form}" method="post">
+            <div class="form-message form-message--error" th:if="${#fields.hasAnyErrors()}"><strong>Revise os dados informados.</strong><ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li></ul></div>
+            <div class="form-field"><label for="diaSemana">Dia da semana</label><select id="diaSemana" th:field="*{diaSemana}" required><option value="">Selecione</option><option th:each="dia : ${diasSemana}" th:value="${dia}" th:text="${dia.descricao}">Segunda-feira</option></select></div>
+            <div class="form-grid"><div class="form-field"><label for="horarioInicio">Início</label><input id="horarioInicio" type="time" th:field="*{horarioInicio}" required></div><div class="form-field"><label for="horarioFim">Encerramento</label><input id="horarioFim" type="time" th:field="*{horarioFim}" required></div></div>
+            <p class="field-help">Não é necessário iniciar em hora cheia. O encerramento deve ocorrer no mesmo dia.</p>
+            <div class="form-actions"><button class="button" type="submit" th:text="${edicao} ? 'Salvar alterações' : 'Cadastrar horário'">Cadastrar horário</button><a class="button button--secondary" th:href="@{/admin/horarios}">Cancelar</a></div>
+        </form>
+    </main>
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

@@ -11,4 +11,9 @@ public interface BloqueioQuadraRepository extends JpaRepository<BloqueioQuadra, 
 
     List<BloqueioQuadra> findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(
             Quadra quadra, LocalDate data);
+
+    List<BloqueioQuadra> findByQuadraAndDataOrderByHorarioInicio(Quadra quadra, LocalDate data);
+
+    List<BloqueioQuadra> findByQuadraAndDataGreaterThanEqualOrderByDataAscHorarioInicioAsc(
+            Quadra quadra, LocalDate data);
 }

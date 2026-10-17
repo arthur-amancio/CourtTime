@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Horários semanais</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header"><a class="skip-link" href="#conteudo">Pular para o conteúdo</a><div class="container site-header__inner site-header__inner--authenticated"><a class="brand" th:href="@{/inicio}">CourtTime</a><div class="site-header__actions"><a class="text-link" th:href="@{/admin}">Painel administrativo</a><form class="logout-form" th:action="@{/logout}" method="post"><button class="button button--secondary button--small" type="submit">Sair</button></form></div></div></header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><span aria-current="page">Horários</span></nav>
+        <header class="page-heading page-heading--actions"><div><h1>Horários semanais</h1><p>Defina os períodos de funcionamento usados pelo calendário da quadra.</p></div><a class="button" th:href="@{/admin/horarios/novo}">Novo horário</a></header>
+
+        <p class="form-message form-message--success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+        <p class="empty-message" th:if="${#lists.isEmpty(horarios)}">Nenhum horário semanal foi cadastrado.</p>
+
+        <div class="table-wrapper" th:unless="${#lists.isEmpty(horarios)}">
+            <table class="schedule-table admin-table">
+                <caption class="visually-hidden">Horários semanais da quadra</caption>
+                <thead><tr><th scope="col">Dia</th><th scope="col">Início</th><th scope="col">Fim</th><th scope="col">Estado</th><th scope="col">Ações</th></tr></thead>
+                <tbody>
+                    <tr th:each="horario : ${horarios}">
+                        <td th:text="${horario.diaSemana.descricao}">Segunda-feira</td>
+                        <td th:text="${#temporals.format(horario.horarioInicio, 'HH:mm')}">08:00</td>
+                        <td th:text="${#temporals.format(horario.horarioFim, 'HH:mm')}">12:00</td>
+                        <td><span class="status-pill" th:classappend="${horario.ativa} ? ' status-pill--available' : ' status-pill--unavailable'" th:text="${horario.ativa} ? 'Ativo' : 'Inativo'">Ativo</span></td>
+                        <td class="table-actions">
+                            <a class="text-link" th:href="@{/admin/horarios/{id}/editar(id=${horario.id})}">Editar</a>
+                            <form th:action="@{/admin/horarios/{id}/alternar(id=${horario.id})}" method="post" th:attr="data-confirmacao=${horario.ativa ? 'Desativar este horário?' : 'Ativar este horário?'}" onsubmit="return confirm(this.dataset.confirmacao)">
+                                <button class="button button--secondary button--small" type="submit" th:text="${horario.ativa} ? 'Desativar' : 'Ativar'">Desativar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="availability__note">Horários contíguos são aceitos. Períodos sobrepostos e alterações que invalidem reservas aprovadas são recusados.</p>
+    </main>
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>
