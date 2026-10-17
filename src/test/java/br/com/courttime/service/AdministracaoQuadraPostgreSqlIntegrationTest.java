@@ -179,6 +179,23 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
         assertTrue(bloqueioRepository.findAll().isEmpty());
     }
 
+    @Test
+    void postgresRecusaEdicaoQueDesalinhaReservaAprovadaDaGrade() {
+        DisponibilidadeQuadra horario = administracaoService.cadastrarHorario(
+                administrador, diaSemana, LocalTime.of(8, 0), LocalTime.of(11, 0));
+        salvarReservaAprovada();
+
+        assertThrows(IllegalStateException.class, () -> administracaoService.editarHorario(
+                horario.getId(), administrador, diaSemana,
+                LocalTime.of(7, 30), LocalTime.of(11, 30)));
+
+        DisponibilidadeQuadra persistido = disponibilidadeRepository.findById(horario.getId()).orElseThrow();
+        assertEquals(LocalTime.of(8, 0), persistido.getHorarioInicio());
+        assertTrue(calendarioService.consultar(quadra, dataFutura).horarios().stream()
+                .anyMatch(slot -> slot.horarioInicio().equals(LocalTime.of(8, 0))
+                        && slot.situacao() == SituacaoHorario.RESERVADO));
+    }
+
     private Usuario salvarUsuario(String email, Perfil perfil) {
         Usuario usuario = new Usuario();
         usuario.setNome("Usuário de integração");
