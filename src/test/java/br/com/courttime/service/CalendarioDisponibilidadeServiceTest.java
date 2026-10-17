@@ -179,6 +179,22 @@ class CalendarioDisponibilidadeServiceTest {
     }
 
     @Test
+    void periodWithSecondOffsetIsNotTreatedAsAlignedWithGeneratedSlots() {
+        when(disponibilidadeQuadraRepository
+                .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
+                        quadra, DiaSemana.SEGUNDA))
+                .thenReturn(List.of(disponibilidade(8, 0, 10, 0)));
+
+        assertFalse(service.periodoEstaDisponivel(
+                quadra,
+                SEGUNDA_FEIRA,
+                LocalTime.of(8, 0, 30),
+                LocalTime.of(9, 0, 30)));
+        verify(bloqueioQuadraRepository, never())
+                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA);
+    }
+
+    @Test
     void invalidRequestedPeriodIsRejected() {
         assertThrows(IllegalArgumentException.class, () -> service.periodoEstaDisponivel(
                 quadra, SEGUNDA_FEIRA, LocalTime.of(8, 0), LocalTime.of(8, 30)));

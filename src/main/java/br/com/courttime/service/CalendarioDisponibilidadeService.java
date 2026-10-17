@@ -129,8 +129,9 @@ public class CalendarioDisponibilidadeService {
                 || !Duration.between(inicioReserva, fimReserva).equals(DURACAO_AGENDAMENTO)) {
             return false;
         }
-        long minutosDesdeAbertura = Duration.between(inicioFuncionamento, inicioReserva).toMinutes();
-        return minutosDesdeAbertura % DURACAO_AGENDAMENTO.toMinutes() == 0;
+        Duration deslocamentoDesdeAbertura = Duration.between(
+                inicioFuncionamento, inicioReserva);
+        return deslocamentoDesdeAbertura.toNanos() % DURACAO_AGENDAMENTO.toNanos() == 0;
     }
 
     private List<DisponibilidadeQuadra> obterDisponibilidadesDoDia(Quadra quadra, LocalDate data) {
