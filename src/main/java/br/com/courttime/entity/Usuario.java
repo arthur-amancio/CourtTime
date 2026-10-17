@@ -33,6 +33,9 @@ public class Usuario {
     @Column(nullable = false)
     private boolean ativo = true;
 
+    @Column(name = "versao_acesso", nullable = false, columnDefinition = "bigint default 0")
+    private long versaoAcesso;
+
     public Long getId() {
         return id;
     }
@@ -79,5 +82,13 @@ public class Usuario {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public long getVersaoAcesso() {
+        return versaoAcesso;
+    }
+
+    public void incrementarVersaoAcesso() {
+        versaoAcesso++;
     }
 }

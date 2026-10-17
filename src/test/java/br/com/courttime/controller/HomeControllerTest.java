@@ -4,6 +4,7 @@ import br.com.courttime.config.SecurityConfig;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAutenticado;
 import br.com.courttime.service.UsuarioDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,8 @@ class HomeControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("CourtTime")))
-                .andExpect(content().string(containsString("Quadra e horários")))
+                .andExpect(content().string(containsString(
+                        "Consulta e solicitação de uso da quadra")))
                 .andExpect(content().string(containsString("/css/style.css")));
     }
 
@@ -70,9 +72,9 @@ class HomeControllerTest {
         mockMvc.perform(get("/inicio").with(user(usuario.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Ana")))
-                .andExpect(content().string(containsString("ALUNO")))
+                .andExpect(content().string(containsString("Aluno")))
                 .andExpect(content().string(containsString("Acesso rápido")))
-                .andExpect(content().string(containsString("Quadra e horários")));
+                .andExpect(content().string(containsString("Consultar horários")));
     }
 
     @Test
@@ -94,6 +96,48 @@ class HomeControllerTest {
                         .param("password", "senha-de-teste"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login?erro"));
+    }
+
+    @Test
+    void previouslyAuthenticatedSessionIsInvalidatedAfterAccountDeactivation() throws Exception {
+        Usuario usuario = usuario("Ana", "ana@escola.test", Perfil.ALUNO, true);
+        usuario.setId(15L);
+        usuario.setSenha(passwordEncoder.encode("senha-de-teste"));
+        UsuarioAutenticado principal = new UsuarioAutenticado(usuario);
+        usuario.setAtivo(false);
+        usuario.incrementarVersaoAcesso();
+        when(usuarioRepository.findById(15L)).thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio").with(user(principal)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?expirada"));
+    }
+
+    @Test
+    void activeSessionWithCurrentCredentialsRemainsValid() throws Exception {
+        Usuario usuario = usuario("Ana", "ana@escola.test", Perfil.ALUNO, true);
+        usuario.setId(16L);
+        UsuarioAutenticado principal = new UsuarioAutenticado(usuario);
+        when(usuarioRepository.findById(16L)).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.findByEmailIgnoreCase(usuario.getEmail()))
+                .thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio").with(user(principal)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Ana")));
+    }
+
+    @Test
+    void sessionWithOutdatedAccessVersionIsInvalidated() throws Exception {
+        Usuario usuario = usuario("Ana", "ana@escola.test", Perfil.ALUNO, true);
+        usuario.setId(17L);
+        UsuarioAutenticado principal = new UsuarioAutenticado(usuario);
+        usuario.incrementarVersaoAcesso();
+        when(usuarioRepository.findById(17L)).thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio").with(user(principal)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?expirada"));
     }
 
     private Usuario usuario(String nome, String email, Perfil perfil, boolean ativo) {

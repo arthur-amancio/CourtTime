@@ -9,6 +9,7 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.AuditoriaUsuarioRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -44,6 +45,8 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
     @Autowired
     private ReservaRepository reservaRepository;
     @Autowired
+    private AuditoriaUsuarioRepository auditoriaUsuarioRepository;
+    @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
     private QuadraRepository quadraRepository;
@@ -58,6 +61,7 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoIsolado() {
+        auditoriaUsuarioRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();
         bloqueioRepository.deleteAllInBatch();
         disponibilidadeRepository.deleteAllInBatch();
