@@ -120,6 +120,22 @@ class ReservaPostgreSqlIntegrationTest {
     }
 
     @Test
+    void postgresRejectsRequestWithSecondOffsetOutsideGeneratedGrid() {
+        LocalTime inicioDesalinhado = LocalTime.of(8, 0, 30);
+        LocalTime fimDesalinhado = LocalTime.of(9, 0, 30);
+
+        assertThrows(IllegalStateException.class, () -> reservaService.criarSolicitacao(
+                aluno,
+                quadra,
+                DATA,
+                inicioDesalinhado,
+                fimDesalinhado,
+                "Período adulterado fora da grade"));
+
+        assertEquals(0L, reservaRepository.count());
+    }
+
+    @Test
     void approvalPersistsTransitionAndApprovedReservationQuery() {
         Reserva pendente = reservaPendente(aluno, INICIO, FIM);
 
