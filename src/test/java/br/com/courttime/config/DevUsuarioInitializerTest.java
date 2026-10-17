@@ -99,6 +99,26 @@ class DevUsuarioInitializerTest {
         verify(usuarioRepository, never()).save(any());
     }
 
+    @Test
+    void bootstrapRecusaEmailInvalidoAntesDeConsultarOBanco() {
+        prepararAmbienteAtivo();
+        when(environment.getProperty("COURTTIME_DEV_USER_EMAIL"))
+                .thenReturn("email-invalido");
+
+        assertThrows(IllegalStateException.class, () -> initializer.run(null));
+        verify(usuarioRepository, never()).save(any());
+    }
+
+    @Test
+    void bootstrapRecusaNomeMaiorQueAColunaDoBanco() {
+        prepararAmbienteAtivo();
+        when(environment.getProperty("COURTTIME_DEV_USER_NAME"))
+                .thenReturn("A".repeat(151));
+
+        assertThrows(IllegalStateException.class, () -> initializer.run(null));
+        verify(usuarioRepository, never()).save(any());
+    }
+
     private void prepararAmbienteAtivo() {
         when(environment.getProperty("COURTTIME_BOOTSTRAP_ADMIN_ENABLED", "false"))
                 .thenReturn("true");

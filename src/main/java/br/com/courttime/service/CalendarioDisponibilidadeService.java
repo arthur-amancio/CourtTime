@@ -87,8 +87,9 @@ public class CalendarioDisponibilidadeService {
         List<DisponibilidadeQuadra> disponibilidades = obterDisponibilidadesDoDia(quadra, data);
         disponibilidades.forEach(this::validarDisponibilidade);
         boolean dentroDoFuncionamento = disponibilidades.stream()
-                .anyMatch(disponibilidade -> !horarioInicio.isBefore(disponibilidade.getHorarioInicio())
-                        && !horarioFim.isAfter(disponibilidade.getHorarioFim()));
+                .anyMatch(disponibilidade -> periodoAlinhadoComGrade(
+                        disponibilidade.getHorarioInicio(), disponibilidade.getHorarioFim(),
+                        horarioInicio, horarioFim));
 
         if (!dentroDoFuncionamento) {
             return false;
@@ -116,6 +117,20 @@ public class CalendarioDisponibilidadeService {
                         horarioFim,
                         reserva.getHorarioInicio(),
                         reserva.getHorarioFim()));
+    }
+
+    static boolean periodoAlinhadoComGrade(
+            LocalTime inicioFuncionamento, LocalTime fimFuncionamento,
+            LocalTime inicioReserva, LocalTime fimReserva) {
+        if (inicioFuncionamento == null || fimFuncionamento == null
+                || inicioReserva == null || fimReserva == null
+                || inicioReserva.isBefore(inicioFuncionamento)
+                || fimReserva.isAfter(fimFuncionamento)
+                || !Duration.between(inicioReserva, fimReserva).equals(DURACAO_AGENDAMENTO)) {
+            return false;
+        }
+        long minutosDesdeAbertura = Duration.between(inicioFuncionamento, inicioReserva).toMinutes();
+        return minutosDesdeAbertura % DURACAO_AGENDAMENTO.toMinutes() == 0;
     }
 
     private List<DisponibilidadeQuadra> obterDisponibilidadesDoDia(Quadra quadra, LocalDate data) {
