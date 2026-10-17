@@ -18,6 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -139,6 +142,32 @@ class AdministracaoUsuarioPostgreSqlIntegrationTest {
                 "outra-senha"));
 
         assertEquals(2L, usuarioRepository.count());
+    }
+
+    @Test
+    void buscaFiltrosEPaginacaoConsultamUsuariosPersistidos() {
+        administracaoUsuarioService.cadastrar(
+                administrador, "Ana Souza", "ana@escola.test", Perfil.ALUNO, "senha-segura");
+        administracaoUsuarioService.cadastrar(
+                administrador, "Anabela Lima", "anabela@escola.test",
+                Perfil.SECRETARIA, "senha-segura");
+        administracaoUsuarioService.cadastrar(
+                administrador, "Carlos Pereira", "carlos@escola.test",
+                Perfil.SEGURANCA, "senha-segura");
+
+        Page<UsuarioResumo> filtrados = administracaoUsuarioService.listar(
+                administrador, "ANA", Perfil.ALUNO, true, 0);
+        Page<Usuario> primeiraPagina = usuarioRepository.buscar(
+                "",
+                null,
+                true,
+                PageRequest.of(0, 2, Sort.by("nome")));
+
+        assertEquals(1L, filtrados.getTotalElements());
+        assertEquals("ana@escola.test", filtrados.getContent().get(0).email());
+        assertEquals(4L, primeiraPagina.getTotalElements());
+        assertEquals(2, primeiraPagina.getTotalPages());
+        assertEquals(2, primeiraPagina.getContent().size());
     }
 
     @Test

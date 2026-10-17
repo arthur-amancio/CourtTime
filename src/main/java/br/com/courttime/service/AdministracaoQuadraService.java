@@ -288,8 +288,9 @@ public class AdministracaoQuadraService {
             Reserva reserva, List<DisponibilidadeQuadra> horariosAtivos) {
         DiaSemana dia = DiaSemana.from(reserva.getDataUtilizacao().getDayOfWeek());
         return horariosAtivos.stream().anyMatch(horario -> horario.getDiaSemana() == dia
-                && !reserva.getHorarioInicio().isBefore(horario.getHorarioInicio())
-                && !reserva.getHorarioFim().isAfter(horario.getHorarioFim()));
+                && CalendarioDisponibilidadeService.periodoAlinhadoComGrade(
+                        horario.getHorarioInicio(), horario.getHorarioFim(),
+                        reserva.getHorarioInicio(), reserva.getHorarioFim()));
     }
 
     private void validarPeriodo(LocalTime inicio, LocalTime fim) {

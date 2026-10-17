@@ -29,6 +29,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -184,6 +185,19 @@ class AdminUsuarioControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Redefinir senha")))
                 .andExpect(content().string(not(containsString("hash-nao-exibido"))));
+    }
+
+    @Test
+    void edicaoDeUsuarioInexistenteRetornaAListaComMensagem() throws Exception {
+        prepararAdministrador();
+        when(administracaoUsuarioService.obterParaEdicao(999L, administrador))
+                .thenThrow(new IllegalArgumentException("Usuário não encontrado"));
+
+        mockMvc.perform(get("/admin/usuarios/999/editar")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/usuarios"))
+                .andExpect(flash().attribute("mensagemErro", "Usuário não encontrado"));
     }
 
     private void prepararAdministrador() {

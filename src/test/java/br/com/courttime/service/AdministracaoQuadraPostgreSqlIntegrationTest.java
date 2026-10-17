@@ -9,6 +9,7 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.AuditoriaUsuarioRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -44,6 +45,8 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
     @Autowired
     private ReservaRepository reservaRepository;
     @Autowired
+    private AuditoriaUsuarioRepository auditoriaUsuarioRepository;
+    @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
     private QuadraRepository quadraRepository;
@@ -58,6 +61,7 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoIsolado() {
+        auditoriaUsuarioRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();
         bloqueioRepository.deleteAllInBatch();
         disponibilidadeRepository.deleteAllInBatch();
@@ -177,6 +181,23 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
 
         assertTrue(disponibilidadeRepository.findById(horario.getId()).orElseThrow().isAtiva());
         assertTrue(bloqueioRepository.findAll().isEmpty());
+    }
+
+    @Test
+    void postgresRecusaEdicaoQueDesalinhaReservaAprovadaDaGrade() {
+        DisponibilidadeQuadra horario = administracaoService.cadastrarHorario(
+                administrador, diaSemana, LocalTime.of(8, 0), LocalTime.of(11, 0));
+        salvarReservaAprovada();
+
+        assertThrows(IllegalStateException.class, () -> administracaoService.editarHorario(
+                horario.getId(), administrador, diaSemana,
+                LocalTime.of(7, 30), LocalTime.of(11, 30)));
+
+        DisponibilidadeQuadra persistido = disponibilidadeRepository.findById(horario.getId()).orElseThrow();
+        assertEquals(LocalTime.of(8, 0), persistido.getHorarioInicio());
+        assertTrue(calendarioService.consultar(quadra, dataFutura).horarios().stream()
+                .anyMatch(slot -> slot.horarioInicio().equals(LocalTime.of(8, 0))
+                        && slot.situacao() == SituacaoHorario.RESERVADO));
     }
 
     private Usuario salvarUsuario(String email, Perfil perfil) {

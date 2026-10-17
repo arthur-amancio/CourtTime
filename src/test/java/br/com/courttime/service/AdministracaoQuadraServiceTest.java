@@ -184,6 +184,26 @@ class AdministracaoQuadraServiceTest {
     }
 
     @Test
+    void edicaoQueDesalinhaReservaAprovadaDaGradeERecusada() {
+        prepararBloqueioDaQuadra();
+        DisponibilidadeQuadra editado = horario(20L, DiaSemana.SEGUNDA, 8, 0, 11, 0, true);
+        Reserva aprovada = reservaAprovada(9, 0, 10, 0);
+        when(disponibilidadeRepository.findByIdComQuadra(20L)).thenReturn(Optional.of(editado));
+        when(disponibilidadeRepository.findByQuadraAndDiaSemanaOrderByHorarioInicioAsc(
+                quadra, DiaSemana.SEGUNDA)).thenReturn(List.of(editado));
+        when(disponibilidadeRepository.findByQuadraAndAtivaTrue(quadra)).thenReturn(List.of(editado));
+        when(calendarioService.obterDataAtual()).thenReturn(HOJE);
+        when(reservaRepository
+                .findByQuadraAndStatusAndDataUtilizacaoGreaterThanEqualOrderByDataUtilizacaoAscHorarioInicioAsc(
+                        quadra, StatusReserva.APROVADA, HOJE)).thenReturn(List.of(aprovada));
+
+        assertThrows(IllegalStateException.class, () -> service.editarHorario(
+                20L, administrador, DiaSemana.SEGUNDA,
+                LocalTime.of(8, 30), LocalTime.of(11, 30)));
+        verify(disponibilidadeRepository, never()).save(any());
+    }
+
+    @Test
     void bloqueioValidoEGravadoComMotivoNormalizado() {
         prepararBloqueioDaQuadra();
         when(calendarioService.obterDataAtual()).thenReturn(HOJE);

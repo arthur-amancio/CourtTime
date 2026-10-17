@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 import java.util.stream.Stream;
+import java.util.regex.Pattern;
 
 @Component
 public class DevUsuarioInitializer implements ApplicationRunner {
@@ -20,6 +21,10 @@ public class DevUsuarioInitializer implements ApplicationRunner {
     private static final String EMAIL = "COURTTIME_DEV_USER_EMAIL";
     private static final String PASSWORD = "COURTTIME_DEV_USER_PASSWORD";
     private static final String PROFILE = "COURTTIME_DEV_USER_PROFILE";
+    private static final int TAMANHO_MAXIMO_NOME = 150;
+    private static final int TAMANHO_MAXIMO_EMAIL = 254;
+    private static final Pattern EMAIL_VALIDO = Pattern.compile(
+            "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
 
     private final Environment environment;
     private final UsuarioRepository usuarioRepository;
@@ -52,7 +57,16 @@ public class DevUsuarioInitializer implements ApplicationRunner {
                     "A senha do bootstrap deve possuir entre 8 e 72 caracteres");
         }
 
+        String nomeNormalizado = nome.trim();
         String emailNormalizado = email.trim().toLowerCase(Locale.ROOT);
+        if (nomeNormalizado.length() > TAMANHO_MAXIMO_NOME) {
+            throw new IllegalStateException(
+                    "O nome do bootstrap deve possuir no máximo 150 caracteres");
+        }
+        if (emailNormalizado.length() > TAMANHO_MAXIMO_EMAIL
+                || !EMAIL_VALIDO.matcher(emailNormalizado).matches()) {
+            throw new IllegalStateException("Configure um email válido para o bootstrap");
+        }
         if (!isBlank(perfilInformado)
                 && !Perfil.ADMINISTRADOR.name().equals(
                         perfilInformado.trim().toUpperCase(Locale.ROOT))) {
@@ -77,7 +91,7 @@ public class DevUsuarioInitializer implements ApplicationRunner {
         }
 
         Usuario usuario = new Usuario();
-        usuario.setNome(nome.trim());
+        usuario.setNome(nomeNormalizado);
         usuario.setEmail(emailNormalizado);
         usuario.setSenha(passwordEncoder.encode(senha));
         usuario.setPerfil(Perfil.ADMINISTRADOR);

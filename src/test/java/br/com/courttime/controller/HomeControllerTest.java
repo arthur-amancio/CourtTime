@@ -113,6 +113,33 @@ class HomeControllerTest {
                 .andExpect(redirectedUrl("/login?expirada"));
     }
 
+    @Test
+    void activeSessionWithCurrentCredentialsRemainsValid() throws Exception {
+        Usuario usuario = usuario("Ana", "ana@escola.test", Perfil.ALUNO, true);
+        usuario.setId(16L);
+        UsuarioAutenticado principal = new UsuarioAutenticado(usuario);
+        when(usuarioRepository.findById(16L)).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.findByEmailIgnoreCase(usuario.getEmail()))
+                .thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio").with(user(principal)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Ana")));
+    }
+
+    @Test
+    void sessionWithOutdatedAccessVersionIsInvalidated() throws Exception {
+        Usuario usuario = usuario("Ana", "ana@escola.test", Perfil.ALUNO, true);
+        usuario.setId(17L);
+        UsuarioAutenticado principal = new UsuarioAutenticado(usuario);
+        usuario.incrementarVersaoAcesso();
+        when(usuarioRepository.findById(17L)).thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio").with(user(principal)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?expirada"));
+    }
+
     private Usuario usuario(String nome, String email, Perfil perfil, boolean ativo) {
         Usuario usuario = new Usuario();
         usuario.setNome(nome);

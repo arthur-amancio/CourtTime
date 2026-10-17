@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -209,5 +210,13 @@ public class AdminUsuarioController {
                 : administracaoUsuarioService.perfisCadastraveis();
         model.addAttribute("usuario", usuario);
         model.addAttribute("perfis", perfis);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String tratarUsuarioNaoEncontrado(
+            IllegalArgumentException exception,
+            RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
+        return "redirect:/admin/usuarios";
     }
 }
