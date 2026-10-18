@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -148,6 +149,38 @@ class AdminUsuarioControllerTest {
                         .param("senha", "senha-segura")
                         .param("confirmacaoSenha", "senha-segura"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void edicaoSemCsrfERecusadaSemAcionarServico() throws Exception {
+        mockMvc.perform(post("/admin/usuarios/20")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("nome", "Ana Souza")
+                        .param("email", "ana@escola.test")
+                        .param("perfil", "ALUNO"))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoUsuarioService);
+    }
+
+    @Test
+    void alternanciaSemCsrfERecusadaSemAcionarServico() throws Exception {
+        mockMvc.perform(post("/admin/usuarios/20/alternar")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoUsuarioService);
+    }
+
+    @Test
+    void redefinicaoDeSenhaSemCsrfERecusadaSemAcionarServico() throws Exception {
+        mockMvc.perform(post("/admin/usuarios/20/senha")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("novaSenha", "senha-segura")
+                        .param("confirmacaoSenha", "senha-segura"))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoUsuarioService);
     }
 
     @Test
