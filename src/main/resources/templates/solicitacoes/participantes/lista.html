@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Participantes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/solicitacoes}">Minhas solicitações</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/solicitacoes}">Solicitações</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Detalhes</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Participantes</span>
+        </nav>
+
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
+        <header class="page-heading page-heading--actions">
+            <div>
+                <h1>Participantes</h1>
+                <p th:text="|Revise a lista da solicitação para ${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}.|">
+                    Revise a lista da solicitação.
+                </p>
+            </div>
+            <a class="button" th:if="${edicaoPermitida}"
+               th:href="@{/solicitacoes/{id}/participantes/novo(id=${solicitacao.id})}">
+                Adicionar participante
+            </a>
+        </header>
+
+        <section class="admin-section" aria-labelledby="resumo-title">
+            <h2 id="resumo-title">Resumo da lista</h2>
+            <div class="metric-grid metric-grid--requests">
+                <div class="metric-card">
+                    <strong th:text="${resumo.quantidadeAlunos}">0</strong>
+                    <span>Alunos</span>
+                </div>
+                <div class="metric-card">
+                    <strong th:text="${resumo.quantidadeOutros}">0</strong>
+                    <span>Demais participantes</span>
+                </div>
+                <div class="metric-card">
+                    <strong th:text="${resumo.total}">0</strong>
+                    <span>Total</span>
+                </div>
+            </div>
+
+            <div class="request-notice" th:if="${resumo.minimoDeAlunosAtendido}">
+                <strong>Mínimo planejado atendido</strong>
+                <p>A lista possui ao menos dez participantes na categoria Aluno.</p>
+            </div>
+            <p class="empty-message empty-message--warning"
+               th:unless="${resumo.minimoDeAlunosAtendido}">
+                A lista ainda precisa atingir o mínimo planejado de dez alunos antes da etapa documental.
+            </p>
+        </section>
+
+        <section class="admin-section" aria-labelledby="lista-title">
+            <div class="admin-summary-card">
+                <div>
+                    <h2 id="lista-title">Lista para revisão</h2>
+                    <p>O limite máximo será confirmado com o documento oficial da ETEC. Nenhum limite definitivo foi aplicado nesta etapa.</p>
+                </div>
+            </div>
+
+            <p class="empty-message" th:if="${#lists.isEmpty(participantes)}">
+                Nenhum participante foi cadastrado nesta solicitação.
+            </p>
+
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(participantes)}">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome completo</th>
+                            <th scope="col">RM ou RG</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col" th:if="${edicaoPermitida}">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="participante : ${participantes}">
+                            <td th:text="${participante.nomeCompleto}">Ana Souza</td>
+                            <td th:text="${participante.rmOuRg}">RM-123</td>
+                            <td th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
+                            <td th:if="${edicaoPermitida}">
+                                <div class="table-actions">
+                                    <a class="button button--secondary button--small"
+                                       th:href="@{/solicitacoes/{reservaId}/participantes/{participanteId}/editar(reservaId=${solicitacao.id}, participanteId=${participante.id})}">
+                                        Editar
+                                    </a>
+                                    <form th:action="@{/solicitacoes/{reservaId}/participantes/{participanteId}/remover(reservaId=${solicitacao.id}, participanteId=${participante.id})}"
+                                          method="post">
+                                        <button class="button button--secondary button--small" type="submit"
+                                                th:attr="aria-label=|Remover ${participante.nomeCompleto}|">
+                                            Remover
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="request-notice" th:unless="${edicaoPermitida}">
+                A lista está disponível somente para consulta porque a solicitação já avançou da etapa de documentação pendente.
+            </p>
+        </section>
+
+        <div class="form-actions">
+            <a class="button button--secondary"
+               th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Voltar aos detalhes</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>

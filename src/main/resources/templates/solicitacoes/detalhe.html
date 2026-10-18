@@ -73,6 +73,9 @@
         </section>
 
         <div class="form-actions">
+            <a class="button" th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">
+                Revisar participantes
+            </a>
             <a class="button button--secondary" th:href="@{/solicitacoes}">Voltar às solicitações</a>
         </div>
     </main>
