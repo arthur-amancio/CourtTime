@@ -99,6 +99,23 @@ class AdminUsuarioControllerTest {
     }
 
     @Test
+    void listaAnunciaMensagensDeSucessoEErro() throws Exception {
+        prepararAdministrador();
+        when(administracaoUsuarioService.listar(
+                administrador, "", null, null, 0)).thenReturn(new PageImpl<>(List.of()));
+
+        mockMvc.perform(get("/admin/usuarios")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .flashAttr("mensagemSucesso", "Operação concluída.")
+                        .flashAttr("mensagemErro", "Não foi possível concluir."))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("role=\"status\"")))
+                .andExpect(content().string(containsString("Operação concluída.")))
+                .andExpect(content().string(containsString("role=\"alert\"")))
+                .andExpect(content().string(containsString("Não foi possível concluir.")));
+    }
+
+    @Test
     void cadastroValidoUsaOperadorAutenticado() throws Exception {
         prepararAdministrador();
 
@@ -148,7 +165,36 @@ class AdminUsuarioControllerTest {
                         .param("confirmacaoSenha", "senha-diferente"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("A confirmação deve ser igual")))
-                .andExpect(content().string(not(containsString("segredo-privado"))));
+                .andExpect(content().string(not(containsString("segredo-privado"))))
+                .andExpect(content().string(containsString("role=\"alert\"")))
+                .andExpect(content().string(containsString("aria-invalid=\"true\"")))
+                .andExpect(content().string(containsString(
+                        "aria-describedby=\"senha-ajuda confirmacaoSenha-erro\"")))
+                .andExpect(content().string(containsString("id=\"confirmacaoSenha-erro\"")));
+    }
+
+    @Test
+    void edicaoInvalidaAssociaErrosAosCampos() throws Exception {
+        prepararAdministrador();
+        when(administracaoUsuarioService.obterParaEdicao(20L, administrador))
+                .thenReturn(new UsuarioEdicao(
+                        20L, "Ana Souza", "ana@escola.test", Perfil.ALUNO, true));
+
+        mockMvc.perform(post("/admin/usuarios/20")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .with(csrf())
+                        .param("nome", "")
+                        .param("email", "email-invalido")
+                        .param("perfil", ""))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("role=\"alert\"")))
+                .andExpect(content().string(containsString("aria-invalid=\"true\"")))
+                .andExpect(content().string(containsString("aria-describedby=\"nome-erro\"")))
+                .andExpect(content().string(containsString("id=\"nome-erro\"")))
+                .andExpect(content().string(containsString("aria-describedby=\"email-erro\"")))
+                .andExpect(content().string(containsString("id=\"email-erro\"")))
+                .andExpect(content().string(containsString("aria-describedby=\"perfil-erro\"")))
+                .andExpect(content().string(containsString("id=\"perfil-erro\"")));
     }
 
     @Test
@@ -185,6 +231,28 @@ class AdminUsuarioControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Redefinir senha")))
                 .andExpect(content().string(not(containsString("hash-nao-exibido"))));
+    }
+
+    @Test
+    void redefinicaoInvalidaAssociaErroAConfirmacaoSemExporSenha() throws Exception {
+        prepararAdministrador();
+        when(administracaoUsuarioService.obterParaEdicao(20L, administrador))
+                .thenReturn(new UsuarioEdicao(
+                        20L, "Ana Souza", "ana@escola.test", Perfil.ALUNO, true));
+
+        mockMvc.perform(post("/admin/usuarios/20/senha")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .with(csrf())
+                        .param("novaSenha", "segredo-privado")
+                        .param("confirmacaoSenha", "senha-diferente"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(not(containsString("segredo-privado"))))
+                .andExpect(content().string(containsString("role=\"alert\"")))
+                .andExpect(content().string(containsString("aria-invalid=\"true\"")))
+                .andExpect(content().string(containsString(
+                        "aria-describedby=\"confirmacaoSenha-erro\"")))
+                .andExpect(content().string(containsString("id=\"confirmacaoSenha-erro\"")))
+                .andExpect(content().string(containsString("A confirmação deve ser igual")));
     }
 
     @Test
