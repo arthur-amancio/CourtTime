@@ -88,7 +88,9 @@ class HomeControllerTest {
                         .with(user(usuario.getEmail()).roles("SECRETARIA")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Conferir documentos")))
-                .andExpect(content().string(containsString("/secretaria/documentos")));
+                .andExpect(content().string(containsString("/secretaria/documentos")))
+                .andExpect(content().string(containsString("Contribuições presenciais")))
+                .andExpect(content().string(containsString("/secretaria/contribuicoes")));
     }
 
     @Test

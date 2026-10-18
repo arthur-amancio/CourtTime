@@ -100,6 +100,7 @@ Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha co
 | Gerenciar participantes das próprias solicitações pendentes | Sim | Não | Não | Não |
 | Enviar e baixar PDFs das próprias solicitações | Sim | Não | Não | Não |
 | Conferir PDFs e consultar o histórico documental | Não | Não | Sim | Não |
+| Registrar contribuições presenciais e ajustes | Não | Não | Sim | Não |
 | Painel `/admin/**` | Não | Sim | Não | Não |
 | Gerenciar horários e bloqueios | Não | Sim | Não | Não |
 | Gerenciar usuários | Não | Sim | Não | Não |
@@ -121,6 +122,12 @@ Enquanto a solicitação está em `PENDENTE_DOCUMENTACAO`, o aluno proprietário
 O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho e SHA-256; versões anteriores não são substituídas. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
 
 A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência não comprova uma assinatura digital, não aprova a reserva e ainda não altera a situação da solicitação; a transição para análise administrativa depende do procedimento institucional aprovado. Retenção, descarte e eventual verificação técnica de assinatura também permanecem pendentes de definição da ETEC.
+
+## Contribuições presenciais
+
+Após a validação da versão documental mais recente, a secretaria pode registrar uma única contribuição presencial por solicitação. O valor informado, a secretaria responsável e o instante do registro ficam vinculados à conferência documental exata. Ajustes de valor ou observações exigem justificativa e criam eventos históricos com o estado anterior e o novo; não existe exclusão, estorno, reembolso nem pagamento eletrônico nesse fluxo.
+
+O valor de R$ 2,00 por participante/hora é apenas uma referência institucional ainda sujeita à confirmação. Por isso, o CourtTime não calcula, preenche nem valida automaticamente o valor recebido. O registro da contribuição não aprova a reserva e deve ser revalidado contra o documento mais recente pela futura análise administrativa.
 
 ## Testes e build
 
