@@ -12,7 +12,7 @@ O domínio de reservas registra solicitante, quadra, data, período de uma hora,
 
 Na aprovação, o backend bloqueia o registro da única quadra durante a transação e verifica novamente horários semanais, bloqueios e reservas já aprovadas. Essa serialização impede que duas análises concorrentes aprovem períodos conflitantes.
 
-O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Participantes e documentos serão adicionados somente quando seus campos e o termo institucional estiverem disponíveis, sem criar dados pessoais ou cláusulas fictícias.
+O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Nessa etapa, o aluno pode revisar os participantes da própria solicitação e enviar versões do PDF preparado externamente. O CourtTime preserva cada arquivo original sem modificá-lo e não declara que a assinatura foi validada.
 
 ## Stack
 
@@ -35,6 +35,7 @@ Crie um banco chamado `courttime` no PostgreSQL, se ele ainda não existir. Voc�
 | `COURTTIME_DB_URL` | URL JDBC; padrão: `jdbc:postgresql://localhost:5432/courttime` |
 | `COURTTIME_DB_USERNAME` | Usuário do banco; padrão: `postgres` |
 | `COURTTIME_DB_PASSWORD` | Senha do usuário; obrigatória |
+| `COURTTIME_DOCUMENT_STORAGE_PATH` | Diretório privado dos PDFs; padrão: `./data/documentos` |
 
 Defina a senha apenas no seu ambiente, nunca em arquivos versionados. No PowerShell, ajuste o caminho do JDK 17 e execute:
 
@@ -47,7 +48,7 @@ Remove-Variable senha
 .\mvnw.cmd spring-boot:run
 ```
 
-As variáveis `COURTTIME_DB_URL` e `COURTTIME_DB_USERNAME` são opcionais quando os valores padrão servem. Durante o desenvolvimento, o JPA/Hibernate cria e atualiza as tabelas no PostgreSQL com base nas entidades da aplicação.
+As variáveis `COURTTIME_DB_URL` e `COURTTIME_DB_USERNAME` são opcionais quando os valores padrão servem. Em produção, configure `COURTTIME_DOCUMENT_STORAGE_PATH` para um diretório persistente, privado e incluído na rotina autorizada de backup. O diretório não deve ser publicado por servidor web. Durante o desenvolvimento, o JPA/Hibernate cria e atualiza as tabelas no PostgreSQL com base nas entidades da aplicação.
 
 ## Primeiro administrador
 
@@ -96,6 +97,8 @@ Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha co
 | Página pública e login | Sim | Sim | Sim | Sim |
 | Consultar quadra e horários | Sim | Sim | Sim | Sim |
 | Criar e consultar as próprias solicitações | Sim | Não | Não | Não |
+| Gerenciar participantes das próprias solicitações pendentes | Sim | Não | Não | Não |
+| Enviar e baixar PDFs das próprias solicitações | Sim | Não | Não | Não |
 | Painel `/admin/**` | Não | Sim | Não | Não |
 | Gerenciar horários e bloqueios | Não | Sim | Não | Não |
 | Gerenciar usuários | Não | Sim | Não | Não |
@@ -109,6 +112,12 @@ Concessões administrativas futuras não estão disponíveis na interface comum.
 Administradores acessam `/admin/usuarios` para listar, pesquisar, filtrar, cadastrar, editar, ativar, desativar e redefinir senhas. As senhas são armazenadas com BCrypt e nunca são exibidas. Contas são desativadas logicamente para preservar reservas e registros históricos. O último administrador ativo e o próprio operador autenticado não podem ser desativados.
 
 As operações relevantes são registradas em `auditorias_usuario`, sem senha, hash ou credencial temporária.
+
+## Participantes e PDFs enviados
+
+Enquanto a solicitação está em `PENDENTE_DOCUMENTACAO`, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. O mínimo de dez alunos é apresentado como requisito planejado; o momento de sua exigência e o limite máximo ainda dependem da confirmação da ETEC e do documento oficial.
+
+O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho e SHA-256; versões anteriores não são substituídas. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico. A conferência pela secretaria, a retenção e o descarte permanecem pendentes de definição institucional.
 
 ## Testes e build
 
