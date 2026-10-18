@@ -21,6 +21,18 @@ public interface DocumentoReservaRepository extends JpaRepository<DocumentoReser
 
     @Query("""
             select d from DocumentoReserva d
+            left join fetch d.conferencia c
+            left join fetch c.conferidoPor
+            where d.reserva = :reserva
+              and d.versao = (
+                select max(d2.versao) from DocumentoReserva d2 where d2.reserva = :reserva
+              )
+            """)
+    Optional<DocumentoReserva> obterVersaoMaisRecenteComConferencia(
+            @Param("reserva") Reserva reserva);
+
+    @Query("""
+            select d from DocumentoReserva d
             join fetch d.reserva r
             join fetch r.solicitante
             where d.versao = (
