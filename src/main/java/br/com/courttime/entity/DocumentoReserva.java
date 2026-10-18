@@ -10,6 +10,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Min;
@@ -69,6 +70,9 @@ public class DocumentoReserva {
 
     @Column(name = "enviado_em", nullable = false, updatable = false)
     private Instant enviadoEm;
+
+    @OneToOne(mappedBy = "documento", fetch = FetchType.EAGER)
+    private ConferenciaDocumento conferencia;
 
     @PrePersist
     void prePersist() {
@@ -143,5 +147,9 @@ public class DocumentoReserva {
 
     public Instant getEnviadoEm() {
         return enviadoEm;
+    }
+
+    public ConferenciaDocumento getConferencia() {
+        return conferencia;
     }
 }
