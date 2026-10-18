@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -137,6 +138,29 @@ class AdminQuadraControllerTest {
                         .param("horarioInicio", "08:00")
                         .param("horarioFim", "10:00"))
                 .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoService);
+    }
+
+    @Test
+    void edicaoDeHorarioSemCsrfERecusada() throws Exception {
+        mockMvc.perform(post("/admin/horarios/20")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("diaSemana", "SEGUNDA")
+                        .param("horarioInicio", "08:00")
+                        .param("horarioFim", "10:00"))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoService);
+    }
+
+    @Test
+    void alternanciaDeHorarioSemCsrfERecusada() throws Exception {
+        mockMvc.perform(post("/admin/horarios/20/alternar")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoService);
     }
 
     @Test
@@ -172,6 +196,28 @@ class AdminQuadraControllerTest {
                 LocalTime.of(8, 0),
                 LocalTime.of(9, 0),
                 "Manutenção");
+    }
+
+    @Test
+    void cadastroDeBloqueioSemCsrfERecusado() throws Exception {
+        mockMvc.perform(post("/admin/bloqueios")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("data", DATA.toString())
+                        .param("horarioInicio", "08:00")
+                        .param("horarioFim", "09:00")
+                        .param("motivo", "Manutenção"))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoService);
+    }
+
+    @Test
+    void desativacaoDeBloqueioSemCsrfERecusada() throws Exception {
+        mockMvc.perform(post("/admin/bloqueios/30/desativar")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(administracaoService);
     }
 
     @Test
