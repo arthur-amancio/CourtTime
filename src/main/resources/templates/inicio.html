@@ -73,6 +73,13 @@
                 </div>
                 <a class="button button--secondary" th:href="@{/admin/bloqueios}">Consultar</a>
             </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'SECRETARIA'}">
+                <div>
+                    <h3>Conferir documentos</h3>
+                    <p>Consulte os PDFs enviados e registre a conferência de cada versão.</p>
+                </div>
+                <a class="button" th:href="@{/secretaria/documentos}">Acessar fila</a>
+            </div>
         </section>
     </main>
 

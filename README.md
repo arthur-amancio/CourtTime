@@ -99,6 +99,7 @@ Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha co
 | Criar e consultar as próprias solicitações | Sim | Não | Não | Não |
 | Gerenciar participantes das próprias solicitações pendentes | Sim | Não | Não | Não |
 | Enviar e baixar PDFs das próprias solicitações | Sim | Não | Não | Não |
+| Conferir PDFs e consultar o histórico documental | Não | Não | Sim | Não |
 | Painel `/admin/**` | Não | Sim | Não | Não |
 | Gerenciar horários e bloqueios | Não | Sim | Não | Não |
 | Gerenciar usuários | Não | Sim | Não | Não |
@@ -117,7 +118,9 @@ As operações relevantes são registradas em `auditorias_usuario`, sem senha, h
 
 Enquanto a solicitação está em `PENDENTE_DOCUMENTACAO`, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. O mínimo de dez alunos é apresentado como requisito planejado; o momento de sua exigência e o limite máximo ainda dependem da confirmação da ETEC e do documento oficial.
 
-O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho e SHA-256; versões anteriores não são substituídas. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico. A conferência pela secretaria, a retenção e o descarte permanecem pendentes de definição institucional.
+O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho e SHA-256; versões anteriores não são substituídas. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
+
+A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência não comprova uma assinatura digital, não aprova a reserva e ainda não altera a situação da solicitação; a transição para análise administrativa depende do procedimento institucional aprovado. Retenção, descarte e eventual verificação técnica de assinatura também permanecem pendentes de definição da ETEC.
 
 ## Testes e build
 

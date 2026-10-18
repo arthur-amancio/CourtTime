@@ -78,6 +78,20 @@ class HomeControllerTest {
     }
 
     @Test
+    void secretariaEncontraAtalhoParaConferenciaDocumental() throws Exception {
+        Usuario usuario = usuario(
+                "Sofia", "secretaria@escola.test", Perfil.SECRETARIA, true);
+        when(usuarioRepository.findByEmailIgnoreCase(usuario.getEmail()))
+                .thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio")
+                        .with(user(usuario.getEmail()).roles("SECRETARIA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Conferir documentos")))
+                .andExpect(content().string(containsString("/secretaria/documentos")));
+    }
+
+    @Test
     void logoutRedirectsToLoginMessage() throws Exception {
         mockMvc.perform(post("/logout").with(user("ana@escola.test")).with(csrf()))
                 .andExpect(status().is3xxRedirection())

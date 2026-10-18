@@ -1,10 +1,12 @@
 package br.com.courttime.controller;
 
 import br.com.courttime.config.SecurityConfig;
+import br.com.courttime.entity.ConferenciaDocumento;
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
@@ -125,6 +127,43 @@ class DocumentoReservaControllerTest {
                 .andExpect(content().string(containsString(
                         "modelo oficial do termo ainda deve ser fornecido")))
                 .andExpect(content().string(not(containsString("Assinatura validada"))));
+    }
+
+    @Test
+    void alunoVisualizaDevolucaoEIdentificaVersaoSubstituida() throws Exception {
+        prepararAlunoEReserva();
+        DocumentoReserva versaoAnterior = documento(30L, 1, "termo inicial.pdf");
+        DocumentoReserva versaoMaisRecente = documento(31L, 2, "termo corrigido.pdf");
+        ConferenciaDocumento conferencia = new ConferenciaDocumento();
+        conferencia.setDocumento(versaoAnterior);
+        conferencia.setResultado(ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO);
+        conferencia.setJustificativa("Falta a página final.");
+        conferencia.setConferidoPor(aluno);
+        ReflectionTestUtils.setField(versaoAnterior, "conferencia", conferencia);
+        when(documentoService.listar(20L, aluno))
+                .thenReturn(List.of(versaoMaisRecente, versaoAnterior));
+
+        mockMvc.perform(get("/solicitacoes/20/documentos")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Devolvido para correção")))
+                .andExpect(content().string(containsString("Falta a página final.")))
+                .andExpect(content().string(containsString("Aguardando conferência")));
+    }
+
+    @Test
+    void versaoAntigaSemConferenciaEExibidaComoSubstituida() throws Exception {
+        prepararAlunoEReserva();
+        DocumentoReserva versaoAnterior = documento(30L, 1, "termo inicial.pdf");
+        DocumentoReserva versaoMaisRecente = documento(31L, 2, "termo corrigido.pdf");
+        when(documentoService.listar(20L, aluno))
+                .thenReturn(List.of(versaoMaisRecente, versaoAnterior));
+
+        mockMvc.perform(get("/solicitacoes/20/documentos")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "Substituída por versão mais recente")));
     }
 
     @Test
