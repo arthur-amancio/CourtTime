@@ -20,6 +20,15 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     Optional<Reserva> findByIdAndSolicitante(Long id, Usuario solicitante);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            select r from Reserva r
+            join fetch r.solicitante
+            where r.id = :id and r.solicitante.id = :solicitanteId
+            """)
+    Optional<Reserva> findByIdAndSolicitanteIdForUpdate(
+            @Param("id") Long id, @Param("solicitanteId") Long solicitanteId);
+
     List<Reserva> findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
             Quadra quadra, LocalDate dataUtilizacao, StatusReserva status);
 
