@@ -56,7 +56,11 @@ public class DocumentoReservaController {
         try {
             Reserva reserva = reservaService.obterSolicitacaoDoUsuario(reservaId, usuario);
             model.addAttribute("solicitacao", reserva);
-            model.addAttribute("documentos", documentoService.listar(reservaId, usuario));
+            var documentos = documentoService.listar(reservaId, usuario);
+            model.addAttribute("documentos", documentos);
+            model.addAttribute(
+                    "versaoMaisRecente",
+                    documentos.isEmpty() ? 0 : documentos.get(0).getVersao());
             model.addAttribute(
                     "envioPermitido",
                     reserva.getStatus() == StatusReserva.PENDENTE_DOCUMENTACAO);

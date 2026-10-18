@@ -90,7 +90,15 @@
                             <td th:text="|v${documento.versao}|">v1</td>
                             <td th:text="${documento.nomeOriginal}">termo.pdf</td>
                             <td th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
-                            <td>Aguardando conferência</td>
+                            <td>
+                                <span th:if="${documento.conferencia == null and documento.versao == versaoMaisRecente}">Aguardando conferência</span>
+                                <span th:if="${documento.conferencia == null and documento.versao != versaoMaisRecente}">Substituída por versão mais recente</span>
+                                <span th:if="${documento.conferencia != null}"
+                                      th:text="${documento.conferencia.resultado.descricao}">Validado</span>
+                                <p class="field-error"
+                                   th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}"
+                                   th:text="${documento.conferencia.justificativa}">Correção solicitada.</p>
+                            </td>
                             <td>
                                 <a class="button button--secondary button--small"
                                    th:href="@{/solicitacoes/{reservaId}/documentos/{documentoId}/baixar(reservaId=${solicitacao.id}, documentoId=${documento.id})}">
