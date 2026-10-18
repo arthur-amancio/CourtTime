@@ -363,6 +363,12 @@ textarea {
     gap: 1.5rem;
 }
 
+.decision-form {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
 .form-field {
     display: grid;
     gap: 0.4rem;
@@ -423,6 +429,7 @@ textarea {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .request-details__status h2 {
@@ -579,6 +586,7 @@ textarea {
     display: flex;
     align-items: center;
     gap: 0.55rem;
+    flex-wrap: wrap;
     color: var(--muted);
     font-size: 0.9375rem;
 }

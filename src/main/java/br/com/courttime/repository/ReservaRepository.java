@@ -37,6 +37,23 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     long countByStatus(StatusReserva status);
 
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.status = :status
+            order by r.criadaEm asc, r.id asc
+            """)
+    List<Reserva> listarParaAnaliseAdministrativa(@Param("status") StatusReserva status);
+
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.id = :id
+            """)
+    Optional<Reserva> obterParaConsultaAdministrativa(@Param("id") Long id);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             select r from Reserva r

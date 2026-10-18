@@ -54,24 +54,10 @@
             </div>
             <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
                 <div>
-                    <h3>Gerenciar usuários</h3>
-                    <p>Cadastre, edite e controle o acesso das contas institucionais.</p>
+                    <h3>Painel administrativo</h3>
+                    <p>Analise solicitações e gerencie usuários, horários e bloqueios.</p>
                 </div>
-                <a class="button" th:href="@{/admin/usuarios}">Gerenciar</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
-                <div>
-                    <h3>Configurar horários</h3>
-                    <p>Gerencie os períodos semanais de funcionamento da quadra.</p>
-                </div>
-                <a class="button button--secondary" th:href="@{/admin/horarios}">Configurar</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
-                <div>
-                    <h3>Consultar bloqueios</h3>
-                    <p>Cadastre e consulte indisponibilidades específicas da quadra.</p>
-                </div>
-                <a class="button button--secondary" th:href="@{/admin/bloqueios}">Consultar</a>
+                <a class="button" th:href="@{/admin}">Acessar painel</a>
             </div>
             <div class="quick-access__item" th:if="${perfil.name() == 'SECRETARIA'}">
                 <div>

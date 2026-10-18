@@ -12,6 +12,9 @@ import br.com.courttime.service.ConsultaDisponibilidade;
 import br.com.courttime.service.HorarioDisponibilidade;
 import br.com.courttime.service.QuadraService;
 import br.com.courttime.service.ReservaService;
+import br.com.courttime.service.SolicitacaoAluno;
+import br.com.courttime.service.SituacaoSolicitacao;
+import br.com.courttime.service.SituacaoSolicitacaoService;
 import br.com.courttime.service.SituacaoHorario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,6 +67,9 @@ class SolicitacaoReservaControllerTest {
     private CalendarioDisponibilidadeService calendarioDisponibilidadeService;
 
     @MockitoBean
+    private SituacaoSolicitacaoService situacaoService;
+
+    @MockitoBean
     private UsuarioRepository usuarioRepository;
 
     private Quadra quadra;
@@ -84,6 +90,12 @@ class SolicitacaoReservaControllerTest {
         aluno.setSenha("hash-de-teste");
         aluno.setPerfil(Perfil.ALUNO);
         aluno.setAtivo(true);
+
+        when(situacaoService.descrever(any(Reserva.class))).thenReturn(
+                new SituacaoSolicitacao(
+                        "Pendente de documentação",
+                        "Revise os participantes e envie o PDF.",
+                        false));
     }
 
     @Test
@@ -241,8 +253,14 @@ class SolicitacaoReservaControllerTest {
     void listContainsOnlyRequestsReturnedForAuthenticatedStudent() throws Exception {
         when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
                 .thenReturn(Optional.of(aluno));
+        Reserva solicitacao = reserva(30L, aluno);
         when(reservaService.listarSolicitacoesDoUsuario(aluno))
-                .thenReturn(List.of(reserva(30L, aluno)));
+                .thenReturn(List.of(solicitacao));
+        when(situacaoService.descrever(List.of(solicitacao))).thenReturn(List.of(
+                new SolicitacaoAluno(
+                        solicitacao,
+                        new SituacaoSolicitacao(
+                                "Pendente de documentação", "Envie o PDF.", false))));
 
         mockMvc.perform(get("/solicitacoes")
                         .with(user(aluno.getEmail()).roles("ALUNO")))
