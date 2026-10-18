@@ -43,6 +43,11 @@ public class DocumentoReserva {
     @Column(nullable = false, updatable = false)
     private int versao;
 
+    @Min(0)
+    @Column(name = "revisao_participantes", nullable = false, updatable = false,
+            columnDefinition = "integer default 0")
+    private int revisaoParticipantes;
+
     @NotBlank
     @Size(max = 255)
     @Column(name = "nome_original", nullable = false, length = 255, updatable = false)
@@ -103,6 +108,17 @@ public class DocumentoReserva {
 
     public void setVersao(int versao) {
         this.versao = versao;
+    }
+
+    public int getRevisaoParticipantes() {
+        return revisaoParticipantes;
+    }
+
+    public void setRevisaoParticipantes(int revisaoParticipantes) {
+        if (revisaoParticipantes < 0) {
+            throw new IllegalArgumentException("A revisão dos participantes não pode ser negativa");
+        }
+        this.revisaoParticipantes = revisaoParticipantes;
     }
 
     public String getNomeOriginal() {

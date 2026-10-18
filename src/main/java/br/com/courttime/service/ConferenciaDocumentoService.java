@@ -23,16 +23,19 @@ public class ConferenciaDocumentoService {
     private final DocumentoReservaRepository documentoRepository;
     private final ConferenciaDocumentoRepository conferenciaRepository;
     private final ReservaRepository reservaRepository;
+    private final ParticipanteReservaService participanteService;
     private final DocumentoStorage documentoStorage;
 
     public ConferenciaDocumentoService(
             DocumentoReservaRepository documentoRepository,
             ConferenciaDocumentoRepository conferenciaRepository,
             ReservaRepository reservaRepository,
+            ParticipanteReservaService participanteService,
             DocumentoStorage documentoStorage) {
         this.documentoRepository = documentoRepository;
         this.conferenciaRepository = conferenciaRepository;
         this.reservaRepository = reservaRepository;
+        this.participanteService = participanteService;
         this.documentoStorage = documentoStorage;
     }
 
@@ -109,10 +112,12 @@ public class ConferenciaDocumentoService {
             String justificativa) {
         validarSecretaria(secretaria);
         validarDocumentoId(documentoId);
+        Long reservaId = documentoRepository.obterReservaId(documentoId)
+                .orElseThrow(() -> new IllegalArgumentException("Documento não encontrado"));
+        Reserva reserva = reservaRepository.findByIdForUpdate(reservaId)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitação não encontrada"));
         DocumentoReserva documento = documentoRepository.obterComSolicitacao(documentoId)
                 .orElseThrow(() -> new IllegalArgumentException("Documento não encontrado"));
-        Reserva reserva = reservaRepository.findByIdForUpdate(documento.getReserva().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Solicitação não encontrada"));
 
         if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
             throw new IllegalStateException(
@@ -123,6 +128,9 @@ public class ConferenciaDocumentoService {
         }
         if (conferenciaRepository.existsByDocumento(documento)) {
             throw new IllegalStateException("Esta versão já possui uma conferência registrada");
+        }
+        if (resultado == ResultadoConferenciaDocumento.VALIDADO) {
+            participanteService.validarDocumentoAtual(reserva, documento);
         }
 
         ConferenciaDocumento conferencia = new ConferenciaDocumento();

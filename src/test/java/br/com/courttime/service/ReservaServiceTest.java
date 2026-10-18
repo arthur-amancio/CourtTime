@@ -1,18 +1,26 @@
 package br.com.courttime.service;
 
+import br.com.courttime.entity.ConferenciaDocumento;
+import br.com.courttime.entity.ContribuicaoApm;
+import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.repository.ContribuicaoApmRepository;
+import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -41,6 +49,14 @@ class ReservaServiceTest {
 
     @Mock
     private CalendarioDisponibilidadeService calendarioDisponibilidadeService;
+    @Mock
+    private DocumentoReservaRepository documentoRepository;
+    @Mock
+    private ParticipanteReservaService participanteService;
+    @Mock
+    private ContribuicaoApmRepository contribuicaoRepository;
+    @Mock
+    private UsuarioRepository usuarioRepository;
 
     private ReservaService service;
     private Quadra quadra;
@@ -50,7 +66,13 @@ class ReservaServiceTest {
     @BeforeEach
     void setUp() {
         service = new ReservaService(
-                reservaRepository, quadraRepository, calendarioDisponibilidadeService);
+                reservaRepository,
+                quadraRepository,
+                calendarioDisponibilidadeService,
+                documentoRepository,
+                participanteService,
+                contribuicaoRepository,
+                usuarioRepository);
         quadra = new Quadra();
         quadra.setId(1L);
         quadra.setAtiva(true);
@@ -124,7 +146,9 @@ class ReservaServiceTest {
     @Test
     void administratorApprovesPendingRequestAfterLockingCourtAndRecheckingAvailability() {
         Reserva reserva = reservaPendente(aluno);
+        prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        prepararElegibilidade(reserva);
         when(quadraRepository.findByIdForUpdate(quadra.getId())).thenReturn(Optional.of(quadra));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
                 quadra, DATA, INICIO, FIM)).thenReturn(true);
@@ -141,7 +165,9 @@ class ReservaServiceTest {
     @Test
     void approvalIsRejectedWhenPeriodIsNoLongerAvailable() {
         Reserva reserva = reservaPendente(aluno);
+        prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        prepararElegibilidade(reserva);
         when(quadraRepository.findByIdForUpdate(quadra.getId())).thenReturn(Optional.of(quadra));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
                 quadra, DATA, INICIO, FIM)).thenReturn(false);
@@ -154,6 +180,7 @@ class ReservaServiceTest {
     void requestCannotBeApprovedBeforeDocumentReviewStage() {
         Reserva reserva = reservaPendente(aluno);
         reserva.setStatus(StatusReserva.PENDENTE_DOCUMENTACAO);
+        prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
 
         assertThrows(IllegalStateException.class, () -> service.aprovar(30L, administrador));
@@ -163,6 +190,7 @@ class ReservaServiceTest {
     @Test
     void administratorCannotApproveOwnRequest() {
         Reserva reserva = reservaPendente(administrador);
+        prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
 
         assertThrows(AccessDeniedException.class, () -> service.aprovar(30L, administrador));
@@ -172,6 +200,7 @@ class ReservaServiceTest {
     @Test
     void rejectionRequiresReasonAndRecordsResponsibleAdministrator() {
         Reserva reserva = reservaPendente(aluno);
+        prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
         when(reservaRepository.save(reserva)).thenReturn(reserva);
 
@@ -181,6 +210,53 @@ class ReservaServiceTest {
         assertEquals("Documentação incompleta", rejeitada.getMotivoRejeicao());
         assertEquals(administrador, rejeitada.getAnalisadaPor());
         assertNotNull(rejeitada.getAnalisadaEm());
+    }
+
+    @Test
+    void approvalRevalidatesCurrentAdministratorAndCompleteEligibility() {
+        Reserva reserva = reservaPendente(aluno);
+        Usuario desativado = usuario(20L, Perfil.ADMINISTRADOR);
+        desativado.setAtivo(false);
+        when(usuarioRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(desativado));
+
+        assertThrows(AccessDeniedException.class,
+                () -> service.aprovar(30L, administrador));
+        verify(reservaRepository, never()).findByIdForUpdate(any());
+
+        when(usuarioRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(administrador));
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        when(documentoRepository.obterVersaoMaisRecenteComConferencia(reserva))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IllegalStateException.class,
+                () -> service.aprovar(30L, administrador));
+        verify(quadraRepository, never()).findByIdForUpdate(any());
+    }
+
+    private void prepararAdministradorAtual() {
+        when(usuarioRepository.findByIdForUpdate(administrador.getId()))
+                .thenReturn(Optional.of(administrador));
+    }
+
+    private void prepararElegibilidade(Reserva reserva) {
+        DocumentoReserva documento = new DocumentoReserva();
+        documento.setId(40L);
+        documento.setReserva(reserva);
+        documento.setVersao(1);
+        documento.setRevisaoParticipantes(reserva.getRevisaoParticipantes());
+        ConferenciaDocumento conferencia = new ConferenciaDocumento();
+        conferencia.setDocumento(documento);
+        conferencia.setResultado(ResultadoConferenciaDocumento.VALIDADO);
+        conferencia.setConferidoPor(administrador);
+        ReflectionTestUtils.setField(documento, "conferencia", conferencia);
+        ContribuicaoApm contribuicao = new ContribuicaoApm();
+        contribuicao.setReserva(reserva);
+        contribuicao.setConferenciaDocumento(conferencia);
+
+        when(documentoRepository.obterVersaoMaisRecenteComConferencia(reserva))
+                .thenReturn(Optional.of(documento));
+        when(contribuicaoRepository.obterPorReservaId(reserva.getId()))
+                .thenReturn(Optional.of(contribuicao));
     }
 
     private Reserva reservaPendente(Usuario solicitante) {

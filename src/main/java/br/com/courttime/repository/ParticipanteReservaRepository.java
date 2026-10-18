@@ -1,5 +1,6 @@
 package br.com.courttime.repository;
 
+import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Reserva;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,11 @@ public interface ParticipanteReservaRepository extends JpaRepository<Participant
     List<ParticipanteReserva> findByReservaOrderByNomeCompletoAscIdAsc(Reserva reserva);
 
     Optional<ParticipanteReserva> findByIdAndReserva(Long id, Reserva reserva);
+
+    boolean existsByReservaAndRmOuRgIgnoreCase(Reserva reserva, String rmOuRg);
+
+    boolean existsByReservaAndRmOuRgIgnoreCaseAndIdNot(
+            Reserva reserva, String rmOuRg, Long id);
+
+    long countByReservaAndCategoria(Reserva reserva, CategoriaParticipante categoria);
 }

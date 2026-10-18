@@ -71,7 +71,7 @@ class DocumentoReservaServiceTest {
     void enviaNovaVersaoComNomeSeguroHashEChaveOpaca() {
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
-        when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(2);
+        when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(0);
         when(documentoRepository.saveAndFlush(any(DocumentoReserva.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -82,7 +82,8 @@ class DocumentoReservaServiceTest {
                 "application/pdf",
                 pdf);
 
-        assertEquals(3, documento.getVersao());
+        assertEquals(1, documento.getVersao());
+        assertEquals(reserva.getRevisaoParticipantes(), documento.getRevisaoParticipantes());
         assertEquals("termo assinado.pdf", documento.getNomeOriginal());
         assertEquals(pdf.length, documento.getTamanhoBytes());
         assertEquals(64, documento.getSha256().length());

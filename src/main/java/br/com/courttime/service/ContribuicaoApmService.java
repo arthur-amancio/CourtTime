@@ -32,6 +32,7 @@ public class ContribuicaoApmService {
     private final AjusteContribuicaoApmRepository ajusteRepository;
     private final DocumentoReservaRepository documentoRepository;
     private final ReservaRepository reservaRepository;
+    private final ParticipanteReservaService participanteService;
     private final UsuarioRepository usuarioRepository;
 
     public ContribuicaoApmService(
@@ -39,11 +40,13 @@ public class ContribuicaoApmService {
             AjusteContribuicaoApmRepository ajusteRepository,
             DocumentoReservaRepository documentoRepository,
             ReservaRepository reservaRepository,
+            ParticipanteReservaService participanteService,
             UsuarioRepository usuarioRepository) {
         this.contribuicaoRepository = contribuicaoRepository;
         this.ajusteRepository = ajusteRepository;
         this.documentoRepository = documentoRepository;
         this.reservaRepository = reservaRepository;
+        this.participanteService = participanteService;
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -99,6 +102,7 @@ public class ContribuicaoApmService {
             throw new IllegalStateException(
                     "A versão mais recente do documento ainda não foi validada");
         }
+        participanteService.validarDocumentoAtual(reserva, documento);
         if (contribuicaoRepository.existsByReserva(reserva)) {
             throw new IllegalStateException(
                     "Esta solicitação já possui uma contribuição registrada");
@@ -111,6 +115,8 @@ public class ContribuicaoApmService {
         contribuicao.setObservacoes(observacoesNormalizadas);
         contribuicao.setRegistradaPor(operadora);
         contribuicao = contribuicaoRepository.saveAndFlush(contribuicao);
+        reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
+        reservaRepository.save(reserva);
         return new DetalheContribuicaoApm(contribuicao, List.of());
     }
 
