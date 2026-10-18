@@ -49,6 +49,8 @@ class ContribuicaoApmServiceTest {
     @Mock
     private ReservaRepository reservaRepository;
     @Mock
+    private ParticipanteReservaService participanteService;
+    @Mock
     private UsuarioRepository usuarioRepository;
 
     private ContribuicaoApmService service;
@@ -64,6 +66,7 @@ class ContribuicaoApmServiceTest {
                 ajusteRepository,
                 documentoRepository,
                 reservaRepository,
+                participanteService,
                 usuarioRepository);
         secretaria = usuario(10L, Perfil.SECRETARIA, true);
         reserva = new Reserva();
@@ -116,7 +119,7 @@ class ContribuicaoApmServiceTest {
     }
 
     @Test
-    void registraValorRealVinculadoAConferenciaExataSemAlterarStatus() {
+    void registraValorRealVinculadoAConferenciaExataEAvancaParaAnalise() {
         prepararRegistro();
         when(contribuicaoRepository.saveAndFlush(any(ContribuicaoApm.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -130,9 +133,9 @@ class ContribuicaoApmServiceTest {
         assertSame(secretaria, contribuicao.getRegistradaPor());
         assertEquals(new BigDecimal("20.50"), contribuicao.getValor());
         assertEquals("Recebido em espécie.", contribuicao.getObservacoes());
-        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, reserva.getStatus());
+        assertEquals(StatusReserva.PENDENTE_ANALISE, reserva.getStatus());
         assertEquals(List.of(), detalhe.ajustes());
-        verify(reservaRepository, never()).save(any());
+        verify(reservaRepository).save(reserva);
     }
 
     @Test
@@ -167,6 +170,20 @@ class ContribuicaoApmServiceTest {
 
         assertEquals("Esta solicitação já possui uma contribuição registrada",
                 exception.getMessage());
+        verify(contribuicaoRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void recusaParticipantesIncompativeisComDocumento() {
+        when(usuarioRepository.findById(10L)).thenReturn(Optional.of(secretaria));
+        when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
+        when(documentoRepository.obterVersaoMaisRecenteComConferencia(reserva))
+                .thenReturn(Optional.of(documento));
+        org.mockito.Mockito.doThrow(new IllegalStateException("participantes inválidos"))
+                .when(participanteService).validarDocumentoAtual(reserva, documento);
+
+        assertThrows(IllegalStateException.class,
+                () -> service.registrar(20L, secretaria, "20.00", null));
         verify(contribuicaoRepository, never()).saveAndFlush(any());
     }
 

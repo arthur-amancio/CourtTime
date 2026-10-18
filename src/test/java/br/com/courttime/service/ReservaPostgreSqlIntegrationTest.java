@@ -1,16 +1,26 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.BloqueioQuadra;
+import br.com.courttime.entity.CategoriaParticipante;
+import br.com.courttime.entity.ConferenciaDocumento;
+import br.com.courttime.entity.ContribuicaoApm;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
+import br.com.courttime.entity.DocumentoReserva;
+import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.BloqueioQuadraRepository;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
+import br.com.courttime.repository.ConferenciaDocumentoRepository;
+import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
+import br.com.courttime.repository.DocumentoReservaRepository;
+import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
@@ -23,6 +33,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -68,6 +79,18 @@ class ReservaPostgreSqlIntegrationTest {
     private BloqueioQuadraRepository bloqueioQuadraRepository;
 
     @Autowired
+    private ParticipanteReservaRepository participanteReservaRepository;
+
+    @Autowired
+    private DocumentoReservaRepository documentoReservaRepository;
+
+    @Autowired
+    private ConferenciaDocumentoRepository conferenciaDocumentoRepository;
+
+    @Autowired
+    private ContribuicaoApmRepository contribuicaoApmRepository;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private Quadra quadra;
@@ -76,6 +99,10 @@ class ReservaPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBanco() {
+        contribuicaoApmRepository.deleteAllInBatch();
+        conferenciaDocumentoRepository.deleteAllInBatch();
+        documentoReservaRepository.deleteAllInBatch();
+        participanteReservaRepository.deleteAllInBatch();
         auditoriaUsuarioRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();
         bloqueioQuadraRepository.deleteAllInBatch();
@@ -248,7 +275,45 @@ class ReservaPostgreSqlIntegrationTest {
         reserva.setHorarioFim(horarioFim);
         reserva.setFinalidade("Atividade esportiva de teste");
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
-        return reservaRepository.saveAndFlush(reserva);
+        reserva = reservaRepository.saveAndFlush(reserva);
+        prepararElegibilidade(reserva);
+        return reserva;
+    }
+
+    private void prepararElegibilidade(Reserva reserva) {
+        for (int indice = 1; indice <= 10; indice++) {
+            ParticipanteReserva participante = new ParticipanteReserva();
+            participante.setReserva(reserva);
+            participante.setNomeCompleto("Aluno " + indice);
+            participante.setRmOuRg("RM-" + reserva.getId() + "-" + indice);
+            participante.setCategoria(CategoriaParticipante.ALUNO);
+            participanteReservaRepository.save(participante);
+        }
+        participanteReservaRepository.flush();
+
+        DocumentoReserva documento = new DocumentoReserva();
+        documento.setReserva(reserva);
+        documento.setVersao(1);
+        documento.setRevisaoParticipantes(reserva.getRevisaoParticipantes());
+        documento.setNomeOriginal("termo.pdf");
+        documento.setChaveArmazenamento("reserva-" + reserva.getId() + ".pdf");
+        documento.setSha256("0".repeat(64));
+        documento.setTamanhoBytes(10);
+        documento.setEnviadoPor(reserva.getSolicitante());
+        documento = documentoReservaRepository.saveAndFlush(documento);
+
+        ConferenciaDocumento conferencia = new ConferenciaDocumento();
+        conferencia.setDocumento(documento);
+        conferencia.setResultado(ResultadoConferenciaDocumento.VALIDADO);
+        conferencia.setConferidoPor(administrador);
+        conferencia = conferenciaDocumentoRepository.saveAndFlush(conferencia);
+
+        ContribuicaoApm contribuicao = new ContribuicaoApm();
+        contribuicao.setReserva(reserva);
+        contribuicao.setConferenciaDocumento(conferencia);
+        contribuicao.setValor(new BigDecimal("20.00"));
+        contribuicao.setRegistradaPor(administrador);
+        contribuicaoApmRepository.saveAndFlush(contribuicao);
     }
 
     private BloqueioQuadra bloqueio(

@@ -16,6 +16,9 @@ public interface DocumentoReservaRepository extends JpaRepository<DocumentoReser
 
     Optional<DocumentoReserva> findByIdAndReserva(Long id, Reserva reserva);
 
+    @Query("select d.reserva.id from DocumentoReserva d where d.id = :id")
+    Optional<Long> obterReservaId(@Param("id") Long id);
+
     @Query("select coalesce(max(d.versao), 0) from DocumentoReserva d where d.reserva = :reserva")
     int obterMaiorVersao(@Param("reserva") Reserva reserva);
 

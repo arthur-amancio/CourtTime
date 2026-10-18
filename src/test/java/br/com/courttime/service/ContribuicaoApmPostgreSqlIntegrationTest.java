@@ -1,10 +1,12 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.AjusteContribuicaoApm;
+import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.ConferenciaDocumento;
 import br.com.courttime.entity.ContribuicaoApm;
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
+import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
@@ -112,6 +114,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
         outraSecretaria = novoUsuario(
                 "secretaria.contribuicao.dois@teste.local", Perfil.SECRETARIA);
         reserva = novaReserva();
+        cadastrarDezAlunos();
     }
 
     @AfterEach
@@ -171,7 +174,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
     }
 
     @Test
-    void registraSomenteAposValidacaoEVinculaConferenciaExataSemMudarStatus() {
+    void registraSomenteAposValidacaoEVinculaConferenciaExataAvancandoStatus() {
         DocumentoReserva documento = enviar("termo.pdf", "documento conferido");
         ConferenciaDocumento conferencia = conferenciaService.validar(
                 documento.getId(), secretaria);
@@ -187,16 +190,17 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
         assertEquals(conferencia.getId(), contribuicao.getConferenciaDocumento().getId());
         assertEquals(secretaria.getId(), contribuicao.getRegistradaPor().getId());
         assertNotNull(contribuicao.getRegistradaEm());
-        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO,
+        assertEquals(StatusReserva.PENDENTE_ANALISE,
                 reservaRepository.findById(reserva.getId()).orElseThrow().getStatus());
         assertTrue(contribuicaoService.listarPendentes(secretaria).isEmpty());
         assertEquals(1, contribuicaoService.listarRegistradas(secretaria).size());
     }
 
     @Test
-    void uploadPosteriorExigeNovaConferenciaAntesDoRegistro() {
-        DocumentoReserva versaoUm = enviar("v1.pdf", "versão validada");
-        conferenciaService.validar(versaoUm.getId(), secretaria);
+    void versaoCorrigidaExigeNovaConferenciaAntesDoRegistro() {
+        DocumentoReserva versaoUm = enviar("v1.pdf", "versão devolvida");
+        conferenciaService.devolver(
+                versaoUm.getId(), secretaria, "Documento precisa de correção.");
         enviar("v2.pdf", "versão ainda não conferida");
 
         assertTrue(contribuicaoService.listarPendentes(secretaria).isEmpty());
@@ -336,6 +340,18 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
                 nome,
                 "application/pdf",
                 ("%PDF-1.7\n" + conteudo).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void cadastrarDezAlunos() {
+        for (int indice = 1; indice <= 10; indice++) {
+            ParticipanteReserva participante = new ParticipanteReserva();
+            participante.setReserva(reserva);
+            participante.setNomeCompleto("Aluno " + indice);
+            participante.setRmOuRg("RM-APM-" + indice);
+            participante.setCategoria(CategoriaParticipante.ALUNO);
+            participanteRepository.save(participante);
+        }
+        participanteRepository.flush();
     }
 
     private void limparArquivos() throws IOException {

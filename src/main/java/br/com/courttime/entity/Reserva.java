@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 import java.time.Duration;
@@ -67,6 +68,11 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private StatusReserva status = StatusReserva.PENDENTE_DOCUMENTACAO;
+
+    @PositiveOrZero
+    @Column(name = "revisao_participantes", nullable = false,
+            columnDefinition = "integer default 0")
+    private int revisaoParticipantes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analisada_por_id")
@@ -165,6 +171,21 @@ public class Reserva {
 
     public void setStatus(StatusReserva status) {
         this.status = status;
+    }
+
+    public int getRevisaoParticipantes() {
+        return revisaoParticipantes;
+    }
+
+    public void setRevisaoParticipantes(int revisaoParticipantes) {
+        if (revisaoParticipantes < 0) {
+            throw new IllegalArgumentException("A revisão dos participantes não pode ser negativa");
+        }
+        this.revisaoParticipantes = revisaoParticipantes;
+    }
+
+    public void incrementarRevisaoParticipantes() {
+        revisaoParticipantes++;
     }
 
     public Usuario getAnalisadaPor() {

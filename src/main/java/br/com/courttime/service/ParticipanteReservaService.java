@@ -1,11 +1,14 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.CategoriaParticipante;
+import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,16 +22,19 @@ public class ParticipanteReservaService {
 
     private static final int TAMANHO_MAXIMO_NOME = 150;
     private static final int TAMANHO_MAXIMO_RM_OU_RG = 30;
-    private static final int MINIMO_DE_ALUNOS = 10;
+    public static final int MINIMO_DE_ALUNOS = 10;
 
     private final ParticipanteReservaRepository participanteRepository;
     private final ReservaRepository reservaRepository;
+    private final DocumentoReservaRepository documentoRepository;
 
     public ParticipanteReservaService(
             ParticipanteReservaRepository participanteRepository,
-            ReservaRepository reservaRepository) {
+            ReservaRepository reservaRepository,
+            DocumentoReservaRepository documentoRepository) {
         this.participanteRepository = participanteRepository;
         this.reservaRepository = reservaRepository;
+        this.documentoRepository = documentoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -60,6 +66,23 @@ public class ParticipanteReservaService {
                 quantidadeAlunos >= MINIMO_DE_ALUNOS);
     }
 
+    @Transactional(readOnly = true)
+    public void validarDocumentoAtual(Reserva reserva, DocumentoReserva documento) {
+        if (reserva == null || documento == null) {
+            throw new IllegalArgumentException("A solicitação e o documento são obrigatórios");
+        }
+        if (documento.getRevisaoParticipantes() != reserva.getRevisaoParticipantes()) {
+            throw new IllegalStateException(
+                    "A lista de participantes foi alterada após o envio do documento");
+        }
+        long quantidadeAlunos = participanteRepository.countByReservaAndCategoria(
+                reserva, CategoriaParticipante.ALUNO);
+        if (quantidadeAlunos < MINIMO_DE_ALUNOS) {
+            throw new IllegalStateException(
+                    "A solicitação deve possuir no mínimo 10 alunos participantes");
+        }
+    }
+
     @Transactional
     public ParticipanteReserva adicionar(
             Long reservaId,
@@ -72,7 +95,10 @@ public class ParticipanteReservaService {
         ParticipanteReserva participante = new ParticipanteReserva();
         participante.setReserva(reserva);
         preencher(participante, nomeCompleto, rmOuRg, categoria);
-        return participanteRepository.save(participante);
+        impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), null);
+        participante = participanteRepository.save(participante);
+        incrementarRevisao(reserva);
+        return participante;
     }
 
     @Transactional
@@ -86,7 +112,10 @@ public class ParticipanteReservaService {
         Reserva reserva = obterReservaEditavel(reservaId, solicitante);
         ParticipanteReserva participante = obterParticipanteDaReserva(participanteId, reserva);
         preencher(participante, nomeCompleto, rmOuRg, categoria);
-        return participanteRepository.save(participante);
+        impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), participante.getId());
+        participante = participanteRepository.save(participante);
+        incrementarRevisao(reserva);
+        return participante;
     }
 
     @Transactional
@@ -94,6 +123,7 @@ public class ParticipanteReservaService {
         Reserva reserva = obterReservaEditavel(reservaId, solicitante);
         ParticipanteReserva participante = obterParticipanteDaReserva(participanteId, reserva);
         participanteRepository.delete(participante);
+        incrementarRevisao(reserva);
     }
 
     private Reserva obterReservaDoSolicitante(Long reservaId, Usuario solicitante) {
@@ -115,7 +145,34 @@ public class ParticipanteReservaService {
             throw new IllegalStateException(
                     "Os participantes só podem ser alterados enquanto a documentação está pendente");
         }
+        DocumentoReserva documentoMaisRecente = documentoRepository
+                .obterVersaoMaisRecenteComConferencia(reserva)
+                .orElse(null);
+        if (documentoMaisRecente != null
+                && (documentoMaisRecente.getConferencia() == null
+                || documentoMaisRecente.getConferencia().getResultado()
+                != ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO)) {
+            throw new IllegalStateException(
+                    "Os participantes só podem ser alterados antes do envio ou após a devolução do documento");
+        }
         return reserva;
+    }
+
+    private void impedirIdentificacaoDuplicada(
+            Reserva reserva, String rmOuRg, Long participanteId) {
+        boolean duplicada = participanteId == null
+                ? participanteRepository.existsByReservaAndRmOuRgIgnoreCase(reserva, rmOuRg)
+                : participanteRepository.existsByReservaAndRmOuRgIgnoreCaseAndIdNot(
+                        reserva, rmOuRg, participanteId);
+        if (duplicada) {
+            throw new IllegalArgumentException(
+                    "Já existe um participante com este RM ou RG na solicitação");
+        }
+    }
+
+    private void incrementarRevisao(Reserva reserva) {
+        reserva.incrementarRevisaoParticipantes();
+        reservaRepository.save(reserva);
     }
 
     private ParticipanteReserva obterParticipanteDaReserva(

@@ -1,9 +1,11 @@
 package br.com.courttime.service;
 
+import br.com.courttime.entity.ConferenciaDocumento;
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
@@ -33,18 +35,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -87,6 +89,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
     private Quadra quadra;
     private Usuario aluno;
     private Usuario outroAluno;
+    private Usuario secretaria;
     private Reserva reserva;
 
     @BeforeEach
@@ -96,6 +99,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
         quadra = novaQuadra();
         aluno = novoUsuario("aluno.documento@teste.local");
         outroAluno = novoUsuario("outro.aluno.documento@teste.local");
+        secretaria = novoUsuario("secretaria.documento@teste.local", Perfil.SECRETARIA);
         reserva = novaReserva(aluno, StatusReserva.PENDENTE_DOCUMENTACAO);
     }
 
@@ -142,7 +146,8 @@ class DocumentoReservaPostgreSqlIntegrationTest {
 
         assertTrue(colunas.containsAll(List.of(
                 "id", "reserva_id", "versao", "nome_original", "chave_armazenamento",
-                "sha256", "tamanho_bytes", "enviado_por_id", "enviado_em")));
+                "sha256", "tamanho_bytes", "enviado_por_id", "enviado_em",
+                "revisao_participantes")));
         assertTrue(indices.contains("idx_documentos_reserva"));
         assertEquals(1L, restricaoVersao);
     }
@@ -154,6 +159,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
 
         DocumentoReserva primeira = documentoService.enviar(
                 reserva.getId(), aluno, "termo original.pdf", "application/pdf", primeiraVersao);
+        registrarDevolucao(primeira);
         DocumentoReserva segunda = documentoService.enviar(
                 reserva.getId(), aluno, "termo corrigido.pdf", "application/pdf", segundaVersao);
 
@@ -216,7 +222,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
     }
 
     @Test
-    void doisEnviosConcorrentesRecebemVersoesUnicasSemSobrescrita() throws Exception {
+    void doisEnviosConcorrentesPermitemSomenteUmaVersaoAguardandoConferencia() throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         CountDownLatch preparados = new CountDownLatch(2);
         CountDownLatch iniciar = new CountDownLatch(1);
@@ -228,16 +234,23 @@ class DocumentoReservaPostgreSqlIntegrationTest {
             preparados.await();
             iniciar.countDown();
 
-            DocumentoReserva documentoA = primeiro.get();
-            DocumentoReserva documentoB = segundo.get();
-            Set<Integer> versoes = new HashSet<>(Set.of(
-                    documentoA.getVersao(), documentoB.getVersao()));
+            int sucessos = 0;
+            int recusas = 0;
+            for (Future<DocumentoReserva> futuro : List.of(primeiro, segundo)) {
+                try {
+                    DocumentoReserva enviado = futuro.get();
+                    assertEquals(1, enviado.getVersao());
+                    sucessos++;
+                } catch (ExecutionException exception) {
+                    assertInstanceOf(IllegalStateException.class, exception.getCause());
+                    recusas++;
+                }
+            }
 
-            assertEquals(Set.of(1, 2), versoes);
-            assertFalse(documentoA.getChaveArmazenamento()
-                    .equals(documentoB.getChaveArmazenamento()));
-            assertEquals(2, documentoRepository.count());
-            assertEquals(2, quantidadeArquivos());
+            assertEquals(1, sucessos);
+            assertEquals(1, recusas);
+            assertEquals(1, documentoRepository.count());
+            assertEquals(1, quantidadeArquivos());
         } finally {
             executor.shutdownNow();
         }
@@ -263,6 +276,15 @@ class DocumentoReservaPostgreSqlIntegrationTest {
         } catch (IOException exception) {
             throw new IllegalStateException(exception);
         }
+    }
+
+    private void registrarDevolucao(DocumentoReserva documento) {
+        ConferenciaDocumento conferencia = new ConferenciaDocumento();
+        conferencia.setDocumento(documento);
+        conferencia.setResultado(ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO);
+        conferencia.setJustificativa("Correção solicitada no teste");
+        conferencia.setConferidoPor(secretaria);
+        conferenciaRepository.saveAndFlush(conferencia);
     }
 
     private byte[] pdf(String conteudo) {
@@ -299,11 +321,15 @@ class DocumentoReservaPostgreSqlIntegrationTest {
     }
 
     private Usuario novoUsuario(String email) {
+        return novoUsuario(email, Perfil.ALUNO);
+    }
+
+    private Usuario novoUsuario(String email, Perfil perfil) {
         Usuario usuario = new Usuario();
-        usuario.setNome("Aluno de teste");
+        usuario.setNome("Usuário de teste");
         usuario.setEmail(email);
         usuario.setSenha("hash-de-teste");
-        usuario.setPerfil(Perfil.ALUNO);
+        usuario.setPerfil(perfil);
         usuario.setAtivo(true);
         return usuarioRepository.saveAndFlush(usuario);
     }

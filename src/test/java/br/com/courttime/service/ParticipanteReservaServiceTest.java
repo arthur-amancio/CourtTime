@@ -1,12 +1,14 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.CategoriaParticipante;
+import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.ParticipanteReservaRepository;
+import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +39,8 @@ class ParticipanteReservaServiceTest {
 
     @Mock
     private ReservaRepository reservaRepository;
+    @Mock
+    private DocumentoReservaRepository documentoRepository;
 
     private ParticipanteReservaService service;
     private Usuario aluno;
@@ -44,7 +48,8 @@ class ParticipanteReservaServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new ParticipanteReservaService(participanteRepository, reservaRepository);
+        service = new ParticipanteReservaService(
+                participanteRepository, reservaRepository, documentoRepository);
         aluno = usuario(10L, Perfil.ALUNO, true);
         reserva = reserva(20L, aluno, StatusReserva.PENDENTE_DOCUMENTACAO);
     }
@@ -67,7 +72,9 @@ class ParticipanteReservaServiceTest {
         assertEquals("Ana Souza", participante.getNomeCompleto());
         assertEquals("12.345.678-X", participante.getRmOuRg());
         assertEquals(CategoriaParticipante.ALUNO, participante.getCategoria());
+        assertEquals(1, reserva.getRevisaoParticipantes());
         verify(reservaRepository).findByIdAndSolicitanteIdForUpdate(20L, 10L);
+        verify(reservaRepository).save(reserva);
     }
 
     @Test
@@ -132,7 +139,26 @@ class ParticipanteReservaServiceTest {
         assertEquals("Ana Souza", editado.getNomeCompleto());
         assertEquals("222", editado.getRmOuRg());
         assertEquals(CategoriaParticipante.ALUNO, editado.getCategoria());
+        assertEquals(2, reserva.getRevisaoParticipantes());
         verify(participanteRepository).delete(participante);
+    }
+
+    @Test
+    void recusaIdentificacaoDuplicadaDepoisDaNormalizacao() {
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
+                .thenReturn(Optional.of(reserva));
+        when(participanteRepository.existsByReservaAndRmOuRgIgnoreCase(
+                reserva, "RM 123")).thenReturn(true);
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.adicionar(
+                        20L, aluno, "Ana Souza", "  RM   123 ", CategoriaParticipante.ALUNO));
+
+        assertEquals("Já existe um participante com este RM ou RG na solicitação",
+                exception.getMessage());
+        assertEquals(0, reserva.getRevisaoParticipantes());
+        verify(participanteRepository, never()).save(any());
     }
 
     @Test
@@ -172,6 +198,23 @@ class ParticipanteReservaServiceTest {
         assertEquals(2, minimoAtendido.quantidadeOutros());
         assertEquals(12, minimoAtendido.total());
         assertTrue(minimoAtendido.minimoDeAlunosAtendido());
+    }
+
+    @Test
+    void documentoExigeMesmaRevisaoEDezAlunos() {
+        DocumentoReserva documento = new DocumentoReserva();
+        documento.setReserva(reserva);
+        documento.setRevisaoParticipantes(0);
+        when(participanteRepository.countByReservaAndCategoria(
+                reserva, CategoriaParticipante.ALUNO)).thenReturn(9L, 10L);
+
+        assertThrows(IllegalStateException.class,
+                () -> service.validarDocumentoAtual(reserva, documento));
+        service.validarDocumentoAtual(reserva, documento);
+
+        reserva.incrementarRevisaoParticipantes();
+        assertThrows(IllegalStateException.class,
+                () -> service.validarDocumentoAtual(reserva, documento));
     }
 
     @Test

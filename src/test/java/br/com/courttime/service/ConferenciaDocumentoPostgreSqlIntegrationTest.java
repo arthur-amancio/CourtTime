@@ -1,8 +1,10 @@
 package br.com.courttime.service;
 
+import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.ConferenciaDocumento;
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
+import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.ResultadoConferenciaDocumento;
@@ -101,6 +103,7 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
         secretaria = novoUsuario("secretaria.um@teste.local", Perfil.SECRETARIA);
         outraSecretaria = novoUsuario("secretaria.dois@teste.local", Perfil.SECRETARIA);
         reserva = novaReserva();
+        cadastrarDezAlunos();
     }
 
     @AfterEach
@@ -146,6 +149,8 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
     @Test
     void filaMostraSomenteVersaoMaisRecenteNaoConferida() {
         DocumentoReserva versaoUm = enviar("v1.pdf", "versão um");
+        conferenciaService.devolver(
+                versaoUm.getId(), secretaria, "Envio de nova versão no teste.");
         DocumentoReserva versaoDois = enviar("v2.pdf", "versão dois");
 
         List<DocumentoReserva> fila = conferenciaService.listarPendentes(secretaria);
@@ -231,11 +236,13 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
     @Test
     void versaoAntigaNaoPodeSerConferidaDepoisDeNovoUpload() {
         DocumentoReserva versaoUm = enviar("v1.pdf", "antigo");
+        conferenciaService.devolver(
+                versaoUm.getId(), secretaria, "Envio de nova versão no teste.");
         enviar("v2.pdf", "novo");
 
         assertThrows(IllegalStateException.class,
                 () -> conferenciaService.validar(versaoUm.getId(), secretaria));
-        assertEquals(0, conferenciaRepository.count());
+        assertEquals(1, conferenciaRepository.count());
     }
 
     private ConferenciaDocumento validarAposSinal(
@@ -255,6 +262,18 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
                 nome,
                 "application/pdf",
                 ("%PDF-1.7\n" + conteudo).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void cadastrarDezAlunos() {
+        for (int indice = 1; indice <= 10; indice++) {
+            ParticipanteReserva participante = new ParticipanteReserva();
+            participante.setReserva(reserva);
+            participante.setNomeCompleto("Aluno " + indice);
+            participante.setRmOuRg("RM-CONF-" + indice);
+            participante.setCategoria(CategoriaParticipante.ALUNO);
+            participanteRepository.save(participante);
+        }
+        participanteRepository.flush();
     }
 
     private void limparArquivos() throws IOException {

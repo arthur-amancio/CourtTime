@@ -44,6 +44,8 @@ class ConferenciaDocumentoServiceTest {
     @Mock
     private ReservaRepository reservaRepository;
     @Mock
+    private ParticipanteReservaService participanteService;
+    @Mock
     private DocumentoStorage documentoStorage;
 
     private ConferenciaDocumentoService service;
@@ -57,6 +59,7 @@ class ConferenciaDocumentoServiceTest {
                 documentoRepository,
                 conferenciaRepository,
                 reservaRepository,
+                participanteService,
                 documentoStorage);
         secretaria = usuario(10L, Perfil.SECRETARIA, true);
         Usuario aluno = usuario(11L, Perfil.ALUNO, true);
@@ -133,7 +136,25 @@ class ConferenciaDocumentoServiceTest {
     }
 
     @Test
+    void validacaoExigeParticipantesIntegresMasDevolucaoContinuaPermitida() {
+        prepararRegistro();
+        org.mockito.Mockito.doThrow(new IllegalStateException("participantes inválidos"))
+                .when(participanteService).validarDocumentoAtual(reserva, documento);
+
+        assertThrows(IllegalStateException.class,
+                () -> service.validar(30L, secretaria));
+
+        when(conferenciaRepository.saveAndFlush(any(ConferenciaDocumento.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        ConferenciaDocumento devolvida = service.devolver(
+                30L, secretaria, "Lista de alunos incompleta");
+        assertEquals(ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO,
+                devolvida.getResultado());
+    }
+
+    @Test
     void recusaVersaoAntigaDecisaoDuplicadaEStatusIncompativel() {
+        when(documentoRepository.obterReservaId(30L)).thenReturn(Optional.of(20L));
         when(documentoRepository.obterComSolicitacao(30L)).thenReturn(Optional.of(documento));
         when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(3);
@@ -165,6 +186,7 @@ class ConferenciaDocumentoServiceTest {
     }
 
     private void prepararRegistro() {
+        when(documentoRepository.obterReservaId(30L)).thenReturn(Optional.of(20L));
         when(documentoRepository.obterComSolicitacao(30L)).thenReturn(Optional.of(documento));
         when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(2);

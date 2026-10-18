@@ -3,6 +3,7 @@ package br.com.courttime.service;
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.DocumentoReservaRepository;
@@ -74,6 +75,16 @@ public class DocumentoReservaService {
             throw new IllegalStateException(
                     "O documento só pode ser enviado enquanto a documentação está pendente");
         }
+        DocumentoReserva documentoMaisRecente = documentoRepository
+                .obterVersaoMaisRecenteComConferencia(reserva)
+                .orElse(null);
+        if (documentoMaisRecente != null
+                && (documentoMaisRecente.getConferencia() == null
+                || documentoMaisRecente.getConferencia().getResultado()
+                != ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO)) {
+            throw new IllegalStateException(
+                    "Uma nova versão só pode ser enviada após a devolução do documento para correção");
+        }
 
         String chave = UUID.randomUUID() + ".pdf";
         documentoStorage.armazenar(chave, conteudo);
@@ -82,6 +93,7 @@ public class DocumentoReservaService {
         DocumentoReserva documento = new DocumentoReserva();
         documento.setReserva(reserva);
         documento.setVersao(documentoRepository.obterMaiorVersao(reserva) + 1);
+        documento.setRevisaoParticipantes(reserva.getRevisaoParticipantes());
         documento.setNomeOriginal(nomeSeguro);
         documento.setChaveArmazenamento(chave);
         documento.setSha256(calcularSha256(conteudo));
