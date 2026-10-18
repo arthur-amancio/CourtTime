@@ -274,7 +274,10 @@ class SolicitacaoReservaControllerTest {
                         .with(user(aluno.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Pendente de documentação")))
-                .andExpect(content().string(containsString("não representa autorização imediata")));
+                .andExpect(content().string(containsString("não representa autorização imediata")))
+                .andExpect(content().string(containsString("Revisar participantes")))
+                .andExpect(content().string(containsString(
+                        "/solicitacoes/30/participantes")));
     }
 
     private void prepararFormularioDisponivel() {
