@@ -278,6 +278,12 @@ textarea:hover {
     border-color: var(--accent);
 }
 
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
 textarea {
     min-height: 8rem;
     resize: vertical;
@@ -761,6 +767,20 @@ textarea {
 .site-footer__brand {
     color: var(--text);
     font-weight: 800;
+}
+
+@media (max-width: 860px) {
+    .filter-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filter-form__search {
+        grid-column: 1 / -1;
+    }
+
+    .filter-form .button {
+        width: 100%;
+    }
 }
 
 @media (max-width: 620px) {

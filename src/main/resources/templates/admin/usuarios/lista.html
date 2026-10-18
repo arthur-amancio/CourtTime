@@ -35,8 +35,10 @@
             <a class="button" th:href="@{/admin/usuarios/novo}">Novo usuário</a>
         </header>
 
-        <p class="form-message form-message--success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
 
         <form class="filter-form" th:action="@{/admin/usuarios}" method="get">
             <div class="form-field filter-form__search">

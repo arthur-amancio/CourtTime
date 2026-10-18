@@ -11,12 +11,50 @@
         <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/usuarios}">Usuários</a><span aria-hidden="true">/</span><span aria-current="page">Novo</span></nav>
         <header class="page-heading"><h1>Novo usuário</h1><p>Cadastre uma conta institucional e entregue a credencial inicial de forma segura.</p></header>
         <form class="request-form" th:action="@{/admin/usuarios}" th:object="${form}" method="post">
-            <div class="form-message form-message--error" th:if="${#fields.hasAnyErrors()}"><strong>Revise os dados informados.</strong><ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro</li></ul></div>
-            <div class="form-field"><label for="nome">Nome completo</label><input id="nome" type="text" th:field="*{nome}" maxlength="150" autocomplete="name" required></div>
-            <div class="form-field"><label for="email">Email</label><input id="email" type="email" th:field="*{email}" maxlength="254" autocomplete="off" required></div>
-            <div class="form-field"><label for="perfil">Perfil</label><select id="perfil" th:field="*{perfil}" required><option value="">Selecione</option><option th:each="item : ${perfis}" th:value="${item}" th:text="${item.descricao}">Aluno</option></select><p class="field-help">Contas administrativas não são criadas por este formulário.</p></div>
-            <div class="form-grid"><div class="form-field"><label for="senha">Senha inicial</label><input id="senha" name="senha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></div><div class="form-field"><label for="confirmacaoSenha">Confirmar senha</label><input id="confirmacaoSenha" name="confirmacaoSenha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></div></div>
-            <p class="field-help">A senha deve possuir entre 8 e 72 caracteres. Ela será armazenada somente como hash BCrypt.</p>
+            <div class="form-message form-message--error" role="alert" th:if="${#fields.hasAnyErrors()}">
+                <strong>Revise os dados informados.</strong>
+                <ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro</li></ul>
+            </div>
+            <div class="form-field">
+                <label for="nome">Nome completo</label>
+                <input id="nome" type="text" th:field="*{nome}" maxlength="150" autocomplete="name" required
+                       th:attr="aria-invalid=${#fields.hasErrors('nome')},aria-describedby=${#fields.hasErrors('nome')} ? 'nome-erro' : null">
+                <p id="nome-erro" class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Informe o nome completo.</p>
+            </div>
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" maxlength="254" autocomplete="off" required
+                       th:attr="aria-invalid=${#fields.hasErrors('email')},aria-describedby=${#fields.hasErrors('email')} ? 'email-erro' : null">
+                <p id="email-erro" class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Informe um email válido.</p>
+            </div>
+            <div class="form-field">
+                <label for="perfil">Perfil</label>
+                <select id="perfil" th:field="*{perfil}" required
+                        th:attr="aria-invalid=${#fields.hasErrors('perfil')},aria-describedby=${#fields.hasErrors('perfil')} ? 'perfil-ajuda perfil-erro' : 'perfil-ajuda'">
+                    <option value="">Selecione</option>
+                    <option th:each="item : ${perfis}" th:value="${item}" th:text="${item.descricao}">Aluno</option>
+                </select>
+                <p id="perfil-ajuda" class="field-help">Contas administrativas não são criadas por este formulário.</p>
+                <p id="perfil-erro" class="field-error" th:if="${#fields.hasErrors('perfil')}" th:errors="*{perfil}">Selecione o perfil.</p>
+            </div>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="senha">Senha inicial</label>
+                    <input id="senha" name="senha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required
+                           th:attr="aria-invalid=${#fields.hasErrors('senha')},aria-describedby=${#fields.hasErrors('senha')} ? 'senha-ajuda senha-erro' : 'senha-ajuda'">
+                    <p id="senha-erro" class="field-error" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}">Informe uma senha válida.</p>
+                </div>
+                <div class="form-field">
+                    <label for="confirmacaoSenha">Confirmar senha</label>
+                    <input id="confirmacaoSenha" name="confirmacaoSenha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required
+                           th:attr="aria-invalid=${#fields.hasErrors('confirmacaoSenha') or #fields.hasErrors('confirmacaoValida')},aria-describedby=${#fields.hasErrors('confirmacaoSenha') or #fields.hasErrors('confirmacaoValida')} ? 'senha-ajuda confirmacaoSenha-erro' : 'senha-ajuda'">
+                    <div id="confirmacaoSenha-erro" th:if="${#fields.hasErrors('confirmacaoSenha') or #fields.hasErrors('confirmacaoValida')}">
+                        <p class="field-error" th:each="erro : ${#fields.errors('confirmacaoSenha')}" th:text="${erro}">Confirme a senha inicial.</p>
+                        <p class="field-error" th:each="erro : ${#fields.errors('confirmacaoValida')}" th:text="${erro}">A confirmação deve ser igual à senha inicial.</p>
+                    </div>
+                </div>
+            </div>
+            <p id="senha-ajuda" class="field-help">A senha deve possuir entre 8 e 72 caracteres. Ela será armazenada somente como hash BCrypt.</p>
             <div class="form-actions"><button class="button" type="submit">Cadastrar usuário</button><a class="button button--secondary" th:href="@{/admin/usuarios}">Cancelar</a></div>
         </form>
     </main>
