@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Analisar solicitação</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/admin/solicitacoes}">Fila de solicitações</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/admin}">Administração</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/admin/solicitacoes}">Solicitações</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Análise</span>
+        </nav>
+
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
+        <header class="page-heading page-heading--actions">
+            <div>
+                <h1 th:text="|Solicitação #${detalhe.solicitacao.id}|">Solicitação #20</h1>
+                <p>Revise as informações antes de registrar uma decisão.</p>
+            </div>
+            <strong class="status-pill" th:text="${detalhe.solicitacao.status.descricao}">Pendente de análise</strong>
+        </header>
+
+        <section class="request-details" aria-labelledby="solicitacao-title">
+            <h2 id="solicitacao-title">Solicitação</h2>
+            <dl class="details-list">
+                <div><dt>Solicitante</dt><dd th:text="${detalhe.solicitacao.solicitante.nome}">Ana Souza</dd></div>
+                <div><dt>Data</dt><dd th:text="${#temporals.format(detalhe.solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</dd></div>
+                <div><dt>Horário</dt><dd th:text="|${#temporals.format(detalhe.solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(detalhe.solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</dd></div>
+                <div><dt>Finalidade</dt><dd th:text="${detalhe.solicitacao.finalidade}">Treino da turma</dd></div>
+            </dl>
+        </section>
+
+        <section class="admin-section" aria-labelledby="documento-title">
+            <h2 id="documento-title">Documento e contribuição</h2>
+            <p class="empty-message empty-message--warning" th:if="${detalhe.documento == null}">Nenhum documento foi encontrado.</p>
+            <div class="request-details" th:if="${detalhe.documento != null}">
+                <dl class="details-list">
+                    <div><dt>Versão mais recente</dt><dd th:text="|v${detalhe.documento.versao} — ${detalhe.documento.nomeOriginal}|">v1 — termo.pdf</dd></div>
+                    <div><dt>Conferência da secretaria</dt><dd th:text="${detalhe.documento.conferencia == null ? 'Aguardando conferência' : detalhe.documento.conferencia.resultado.descricao}">Validado</dd></div>
+                    <div th:if="${detalhe.contribuicao != null}"><dt>Contribuição presencial</dt><dd th:text="|R$ ${#numbers.formatDecimal(detalhe.contribuicao.valor, 1, 'POINT', 2, 'COMMA')} — vinculada à versão ${detalhe.contribuicao.conferenciaDocumento.documento.versao}|">R$ 20,00 — vinculada à versão 2</dd></div>
+                    <div th:if="${detalhe.contribuicao != null}"><dt>Registro da contribuição</dt><dd th:text="|${detalhe.contribuicao.registradaPor.nome}, em ${#temporals.format(detalhe.contribuicao.registradaEm, 'dd/MM/yyyy HH:mm')}|">Secretaria, em 18/10/2026 10:00</dd></div>
+                </dl>
+                <div class="form-actions">
+                    <a class="button button--secondary"
+                       th:href="@{/admin/solicitacoes/{reservaId}/documentos/{documentoId}/baixar(reservaId=${detalhe.solicitacao.id}, documentoId=${detalhe.documento.id})}">Baixar PDF original</a>
+                </div>
+            </div>
+            <p class="empty-message empty-message--warning" th:if="${detalhe.contribuicao == null}">A contribuição presencial ainda não foi registrada.</p>
+            <p class="request-notice">
+                A conferência registrada é manual e não valida criptograficamente a assinatura do PDF.
+                A aprovação não altera o arquivo original enviado.
+            </p>
+        </section>
+
+        <section class="admin-section" aria-labelledby="participantes-title">
+            <div class="admin-summary-card">
+                <div>
+                    <h2 id="participantes-title">Participantes</h2>
+                    <p th:text="|${detalhe.resumoParticipantes.quantidadeAlunos} aluno(s) e ${detalhe.resumoParticipantes.quantidadeOutros} demais participante(s).|">10 alunos.</p>
+                </div>
+                <strong class="status-pill"
+                        th:text="${detalhe.resumoParticipantes.minimoDeAlunosAtendido ? 'Mínimo atendido' : 'Mínimo não atendido'}">Mínimo atendido</strong>
+            </div>
+            <div class="table-wrapper" role="region" aria-labelledby="participantes-title" tabindex="0"
+                 th:unless="${#lists.isEmpty(detalhe.participantes)}">
+                <table class="schedule-table">
+                    <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
+                    <thead><tr><th scope="col">Nome completo</th><th scope="col">RM ou RG</th><th scope="col">Categoria</th></tr></thead>
+                    <tbody>
+                        <tr th:each="participante : ${detalhe.participantes}">
+                            <td th:text="${participante.nomeCompleto}">Ana Souza</td>
+                            <td th:text="${participante.rmOuRg}">RM-123</td>
+                            <td th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="admin-section" aria-labelledby="decisao-title"
+                 th:if="${detalhe.solicitacao.status.name() == 'PENDENTE_ANALISE'}">
+            <h2 id="decisao-title">Decisão administrativa</h2>
+            <form class="request-form" method="post"
+                  th:action="@{/admin/solicitacoes/{id}/aprovar(id=${detalhe.solicitacao.id})}">
+                <button class="button" type="submit">Aprovar e autorizar reserva</button>
+            </form>
+            <form class="request-form decision-form" method="post"
+                  th:action="@{/admin/solicitacoes/{id}/rejeitar(id=${detalhe.solicitacao.id})}">
+                <div class="form-field">
+                    <label for="motivo">Motivo da rejeição</label>
+                    <textarea id="motivo" name="motivo" maxlength="500" rows="4" required
+                              aria-describedby="motivo-ajuda"></textarea>
+                    <p id="motivo-ajuda" class="field-help">Obrigatório para orientar o aluno. Máximo de 500 caracteres.</p>
+                </div>
+                <button class="button button--secondary" type="submit">Rejeitar solicitação</button>
+            </form>
+        </section>
+
+        <div class="form-actions">
+            <a class="button button--secondary" th:href="@{/admin/solicitacoes}">Voltar à fila</a>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

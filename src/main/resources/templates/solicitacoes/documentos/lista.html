@@ -45,6 +45,9 @@
                 <strong>Assinatura externa</strong>
                 <p>O PDF deve ser preparado e assinado fora do sistema. O envio ao CourtTime não comprova nem valida a assinatura.</p>
             </div>
+            <p class="request-notice">
+                Antes do envio, confira se a lista do documento corresponde ao cadastro e contém no mínimo dez alunos.
+            </p>
             <p class="empty-message">
                 O modelo oficial do termo ainda deve ser fornecido pela ETEC. Não gere um termo substituto pelo sistema.
             </p>
@@ -76,6 +79,7 @@
             </p>
             <div class="table-wrapper" th:unless="${#lists.isEmpty(documentos)}">
                 <table class="schedule-table">
+                    <caption class="visually-hidden">Versões de documentos enviadas para a solicitação</caption>
                     <thead>
                         <tr>
                             <th scope="col">Versão</th>

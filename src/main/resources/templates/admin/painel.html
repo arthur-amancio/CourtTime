@@ -33,6 +33,7 @@
         </header>
 
         <nav class="admin-nav" aria-label="Administração da quadra">
+            <a class="button" th:href="@{/admin/solicitacoes}">Analisar solicitações</a>
             <a class="button" th:href="@{/admin/usuarios}">Gerenciar usuários</a>
             <a class="button button--secondary" th:href="@{/admin/horarios}">Horários semanais</a>
             <a class="button button--secondary" th:href="@{/admin/bloqueios}">Bloqueios</a>
@@ -74,7 +75,7 @@
                 <article class="metric-card"><strong th:text="${painel.aprovadas}">0</strong><span>Aprovadas</span></article>
                 <article class="metric-card"><strong th:text="${painel.rejeitadas}">0</strong><span>Rejeitadas</span></article>
             </div>
-            <p class="availability__note">A consulta detalhada e o fluxo institucional de análise serão tratados em uma etapa própria.</p>
+            <p class="availability__note">A fila de análise apresenta somente solicitações que concluíram as etapas anteriores.</p>
         </section>
     </main>
 
