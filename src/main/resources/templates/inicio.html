@@ -73,6 +73,13 @@
                 </div>
                 <a class="button" th:href="@{/secretaria/contribuicoes}">Consultar contribuições</a>
             </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'SEGURANCA'}">
+                <div>
+                    <h3>Reservas autorizadas</h3>
+                    <p>Consulte as reservas liberadas e os participantes para a conferência de entrada.</p>
+                </div>
+                <a class="button" th:href="@{/seguranca/reservas}">Consultar reservas</a>
+            </div>
         </section>
     </main>
 

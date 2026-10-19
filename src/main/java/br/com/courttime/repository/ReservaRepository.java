@@ -54,6 +54,31 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             """)
     Optional<Reserva> obterParaConsultaAdministrativa(@Param("id") Long id);
 
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.status = :status
+              and r.dataUtilizacao >= :dataAtual
+            order by r.dataUtilizacao asc, r.horarioInicio asc, r.id asc
+            """)
+    List<Reserva> listarAutorizadasParaSeguranca(
+            @Param("status") StatusReserva status,
+            @Param("dataAtual") LocalDate dataAtual);
+
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.id = :id
+              and r.status = :status
+              and r.dataUtilizacao >= :dataAtual
+            """)
+    Optional<Reserva> obterAutorizadaParaSeguranca(
+            @Param("id") Long id,
+            @Param("status") StatusReserva status,
+            @Param("dataAtual") LocalDate dataAtual);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             select r from Reserva r

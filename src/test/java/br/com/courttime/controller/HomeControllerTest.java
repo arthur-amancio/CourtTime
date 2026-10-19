@@ -94,6 +94,20 @@ class HomeControllerTest {
     }
 
     @Test
+    void segurancaEncontraAtalhoParaReservasAutorizadas() throws Exception {
+        Usuario usuario = usuario(
+                "Sérgio", "seguranca@escola.test", Perfil.SEGURANCA, true);
+        when(usuarioRepository.findByEmailIgnoreCase(usuario.getEmail()))
+                .thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/inicio")
+                        .with(user(usuario.getEmail()).roles("SEGURANCA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Reservas autorizadas")))
+                .andExpect(content().string(containsString("/seguranca/reservas")));
+    }
+
+    @Test
     void logoutRedirectsToLoginMessage() throws Exception {
         mockMvc.perform(post("/logout").with(user("ana@escola.test")).with(csrf()))
                 .andExpect(status().is3xxRedirection())
