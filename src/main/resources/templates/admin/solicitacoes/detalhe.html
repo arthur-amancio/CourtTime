@@ -85,14 +85,14 @@
             </div>
             <div class="table-wrapper" role="region" aria-labelledby="participantes-title" tabindex="0"
                  th:unless="${#lists.isEmpty(detalhe.participantes)}">
-                <table class="schedule-table">
+                <table class="schedule-table table-cards">
                     <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
                     <thead><tr><th scope="col">Nome completo</th><th scope="col">RM ou RG</th><th scope="col">Categoria</th></tr></thead>
                     <tbody>
                         <tr th:each="participante : ${detalhe.participantes}">
-                            <td th:text="${participante.nomeCompleto}">Ana Souza</td>
-                            <td th:text="${participante.rmOuRg}">RM-123</td>
-                            <td th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
+                            <td data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</td>
+                            <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
+                            <td data-label="Categoria" th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
                         </tr>
                     </tbody>
                 </table>

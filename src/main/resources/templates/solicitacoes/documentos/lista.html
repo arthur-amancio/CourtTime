@@ -83,7 +83,7 @@
                 Nenhum PDF foi enviado. A solicitação continua aguardando documentação.
             </p>
             <div class="table-wrapper" th:unless="${#lists.isEmpty(documentos)}">
-                <table class="schedule-table">
+                <table class="schedule-table table-cards">
                     <caption class="visually-hidden">Versões de documentos enviadas para a solicitação</caption>
                     <thead>
                         <tr>
@@ -96,10 +96,10 @@
                     </thead>
                     <tbody>
                         <tr th:each="documento : ${documentos}">
-                            <td th:text="|v${documento.versao}|">v1</td>
-                            <td th:text="${documento.nomeOriginal}">termo.pdf</td>
-                            <td th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
-                            <td>
+                            <td data-label="Versão" th:text="|v${documento.versao}|">v1</td>
+                            <td data-label="Arquivo original" th:text="${documento.nomeOriginal}">termo.pdf</td>
+                            <td data-label="Enviado em" th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
+                            <td data-label="Situação">
                                 <span th:if="${documento.conferencia == null and documento.versao == versaoMaisRecente}">Aguardando conferência</span>
                                 <span th:if="${documento.conferencia == null and documento.versao != versaoMaisRecente}">Substituída por versão mais recente</span>
                                 <span th:if="${documento.conferencia != null}"
@@ -108,7 +108,7 @@
                                    th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}"
                                    th:text="${documento.conferencia.justificativa}">Correção solicitada.</p>
                             </td>
-                            <td>
+                            <td data-label="Ação">
                                 <a class="button button--secondary button--small"
                                    th:href="@{/solicitacoes/{reservaId}/documentos/{documentoId}/baixar(reservaId=${solicitacao.id}, documentoId=${documento.id})}">
                                     Baixar original

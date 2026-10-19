@@ -67,16 +67,16 @@
         <p class="empty-message" th:if="${usuarios.empty}">Nenhum usuário foi encontrado com os filtros informados.</p>
 
         <div class="table-wrapper" th:unless="${usuarios.empty}">
-            <table class="schedule-table admin-table users-table">
+            <table class="schedule-table admin-table users-table table-cards">
                 <caption class="visually-hidden">Usuários cadastrados no CourtTime</caption>
                 <thead><tr><th scope="col">Nome</th><th scope="col">Email</th><th scope="col">Perfil</th><th scope="col">Situação</th><th scope="col">Ações</th></tr></thead>
                 <tbody>
                     <tr th:each="usuario : ${usuarios.content}">
-                        <td th:text="${usuario.nome}">Nome completo</td>
-                        <td th:text="${usuario.email}">usuario@escola.test</td>
-                        <td th:text="${usuario.perfil.descricao}">Aluno</td>
-                        <td><span class="status-pill" th:classappend="${usuario.ativo} ? ' status-pill--available' : ' status-pill--unavailable'" th:text="${usuario.ativo} ? 'Ativa' : 'Inativa'">Ativa</span></td>
-                        <td class="table-actions table-actions--users">
+                        <td data-label="Nome" th:text="${usuario.nome}">Nome completo</td>
+                        <td data-label="Email" th:text="${usuario.email}">usuario@escola.test</td>
+                        <td data-label="Perfil" th:text="${usuario.perfil.descricao}">Aluno</td>
+                        <td data-label="Situação"><span class="status-pill" th:classappend="${usuario.ativo} ? ' status-pill--available' : ' status-pill--unavailable'" th:text="${usuario.ativo} ? 'Ativa' : 'Inativa'">Ativa</span></td>
+                        <td data-label="Ações" class="table-actions table-actions--users">
                             <a class="text-link" th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}">Editar</a>
                             <a class="text-link" th:href="@{/admin/usuarios/{id}/senha(id=${usuario.id})}">Redefinir senha</a>
                             <form th:if="${usuario.id != operadorId}" th:action="@{/admin/usuarios/{id}/alternar(id=${usuario.id})}" method="post" th:attr="data-confirmacao=${usuario.ativo ? 'Desativar esta conta?' : 'Ativar esta conta?'}" onsubmit="return confirm(this.dataset.confirmacao)">

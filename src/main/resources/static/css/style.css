@@ -960,3 +960,36 @@ textarea {
         max-width: none;
     }
 }
+
+/* Fila de acoes da secretaria. Cada solicitacao pendente e um cartao com o
+   proprio formulario. Antes era uma tabela com o formulario dentro de uma
+   celula, e no celular os campos e o botao ficavam fora da area visivel. */
+.action-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+}
+
+.action-card {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.action-card__title {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.action-card .details-list {
+    margin-top: 0.75rem;
+}
+
+.action-card .request-form {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+}
