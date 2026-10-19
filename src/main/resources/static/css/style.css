@@ -461,7 +461,8 @@ textarea {
     overflow-wrap: anywhere;
 }
 
-.quick-access h2 {
+.quick-access h2,
+.situacao-atual h2 {
     margin-bottom: 0.8rem;
 }
 
@@ -1003,10 +1004,6 @@ textarea {
 /* Situacao da solicitacao mais recente, mostrada no inicio do aluno. */
 .situacao-atual {
     margin-bottom: 2.5rem;
-}
-
-.situacao-atual h2 {
-    margin-bottom: 0.8rem;
 }
 
 .action-card__status {
