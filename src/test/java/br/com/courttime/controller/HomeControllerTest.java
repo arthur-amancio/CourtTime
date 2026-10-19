@@ -5,6 +5,8 @@ import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.security.UsuarioAutenticado;
+import br.com.courttime.service.ReservaService;
+import br.com.courttime.service.SituacaoSolicitacaoService;
 import br.com.courttime.service.UsuarioDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,12 @@ class HomeControllerTest {
 
     @MockitoBean
     private UsuarioRepository usuarioRepository;
+
+    @MockitoBean
+    private ReservaService reservaService;
+
+    @MockitoBean
+    private SituacaoSolicitacaoService situacaoSolicitacaoService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
