@@ -64,9 +64,7 @@ public class SolicitacaoReservaController {
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
             Model model) {
-        LocalDate dataSelecionada = data == null
-                ? calendarioDisponibilidadeService.obterDataAtual()
-                : data;
+        LocalDate dataSelecionada = ajustarParaDataSolicitavel(data);
         SolicitacaoReservaForm form = new SolicitacaoReservaForm();
         form.setData(dataSelecionada);
         model.addAttribute("form", form);
@@ -81,9 +79,7 @@ public class SolicitacaoReservaController {
             Authentication authentication,
             Model model,
             RedirectAttributes redirectAttributes) {
-        LocalDate dataSelecionada = form.getData() == null
-                ? calendarioDisponibilidadeService.obterDataAtual()
-                : form.getData();
+        LocalDate dataSelecionada = ajustarParaDataSolicitavel(form.getData());
 
         if (bindingResult.hasErrors()) {
             prepararFormulario(model, dataSelecionada);
@@ -137,7 +133,21 @@ public class SolicitacaoReservaController {
         model.addAttribute("quadra", quadra);
         model.addAttribute("consulta", consulta);
         model.addAttribute("horariosDisponiveis", horariosDisponiveis);
-        model.addAttribute("dataMinima", calendarioDisponibilidadeService.obterDataAtual());
+        model.addAttribute(
+                "dataMinima", calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao());
+    }
+
+    /**
+     * A tela de nova solicitação só mostra datas que ainda podem ser solicitadas.
+     * Sem isso, o aluno conseguiria listar os horários de hoje e receberia um erro
+     * apenas no envio do formulário.
+     */
+    private LocalDate ajustarParaDataSolicitavel(LocalDate data) {
+        LocalDate dataMinima = calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao();
+        if (data == null || data.isBefore(dataMinima)) {
+            return dataMinima;
+        }
+        return data;
     }
 
     private Usuario obterUsuarioAutenticado(Authentication authentication) {

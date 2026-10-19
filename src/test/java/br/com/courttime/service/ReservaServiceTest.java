@@ -21,6 +21,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -32,6 +33,10 @@ class ReservaServiceTest {
     private static final LocalDate DATA = LocalDate.of(2026, 10, 19);
     private static final LocalTime INICIO = LocalTime.of(8, 0);
     private static final LocalTime FIM = LocalTime.of(9, 0);
+
+    /** Data de hoje usada nos testes da regra de antecedência. */
+    private static final LocalDate HOJE = LocalDate.of(2026, 10, 19);
+    private static final LocalDate AMANHA = HOJE.plusDays(1);
 
     @Mock
     private ReservaRepository reservaRepository;
@@ -60,7 +65,8 @@ class ReservaServiceTest {
 
     @Test
     void activeStudentCreatesPendingRequestForAvailablePeriod() {
-        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA.minusDays(1));
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(DATA);
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
                 quadra, DATA, INICIO, FIM)).thenReturn(true);
         when(reservaRepository.save(any(Reserva.class)))
@@ -76,7 +82,8 @@ class ReservaServiceTest {
 
     @Test
     void requestIsRejectedWhenPeriodIsUnavailable() {
-        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA.minusDays(1));
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(DATA);
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
                 quadra, DATA, INICIO, FIM)).thenReturn(false);
 
@@ -93,12 +100,62 @@ class ReservaServiceTest {
 
     @Test
     void requestCannotBeCreatedForPastDate() {
-        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA);
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(AMANHA);
 
         assertThrows(IllegalArgumentException.class, () -> service.criarSolicitacao(
-                aluno, quadra, DATA.minusDays(1), INICIO, FIM, "Treino"));
+                aluno, quadra, HOJE.minusDays(1), INICIO, FIM, "Treino"));
         verify(calendarioDisponibilidadeService, never()).periodoEstaDisponivel(
                 any(), any(), any(), any());
+        verify(reservaRepository, never()).save(any());
+    }
+
+    @Test
+    void requestCannotBeCreatedForToday() {
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(AMANHA);
+
+        IllegalArgumentException erro = assertThrows(
+                IllegalArgumentException.class, () -> service.criarSolicitacao(
+                        aluno, quadra, HOJE, INICIO, FIM, "Treino"));
+
+        assertTrue(erro.getMessage().contains("um dia de antecedência"));
+        verify(calendarioDisponibilidadeService, never()).periodoEstaDisponivel(
+                any(), any(), any(), any());
+        verify(reservaRepository, never()).save(any());
+    }
+
+    @Test
+    void requestIsAcceptedForTomorrowWhenPeriodIsAvailable() {
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(AMANHA);
+        when(calendarioDisponibilidadeService.periodoEstaDisponivel(
+                quadra, AMANHA, INICIO, FIM)).thenReturn(true);
+        when(reservaRepository.save(any(Reserva.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Reserva reserva = service.criarSolicitacao(
+                aluno, quadra, AMANHA, INICIO, FIM, "Treino da turma");
+
+        assertEquals(AMANHA, reserva.getDataUtilizacao());
+        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, reserva.getStatus());
+    }
+
+    @Test
+    void requestIsAcceptedForLaterDateWhenPeriodIsAvailable() {
+        LocalDate dataFutura = AMANHA.plusDays(7);
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(AMANHA);
+        when(calendarioDisponibilidadeService.periodoEstaDisponivel(
+                quadra, dataFutura, INICIO, FIM)).thenReturn(true);
+        when(reservaRepository.save(any(Reserva.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Reserva reserva = service.criarSolicitacao(
+                aluno, quadra, dataFutura, INICIO, FIM, "Campeonato interno");
+
+        assertEquals(dataFutura, reserva.getDataUtilizacao());
+        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, reserva.getStatus());
     }
 
     @Test
