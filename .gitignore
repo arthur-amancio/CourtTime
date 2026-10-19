@@ -10,3 +10,4 @@ target/
 .env
 .env.*
 application-local.properties
+data/

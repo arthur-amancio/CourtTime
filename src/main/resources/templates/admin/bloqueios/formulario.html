@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Novo bloqueio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header"><a class="skip-link" href="#conteudo">Pular para o conteúdo</a><div class="container site-header__inner site-header__inner--authenticated"><a class="brand" th:href="@{/inicio}">CourtTime</a><div class="site-header__actions"><a class="text-link" th:href="@{/admin/bloqueios}">Bloqueios</a><form class="logout-form" th:action="@{/logout}" method="post"><button class="button button--secondary button--small" type="submit">Sair</button></form></div></div></header>
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/bloqueios}">Bloqueios</a><span aria-hidden="true">/</span><span aria-current="page">Novo</span></nav>
+        <header class="page-heading"><h1>Novo bloqueio</h1><p>Registre um período em que a quadra não poderá ser utilizada.</p></header>
+        <form class="request-form" th:action="@{/admin/bloqueios}" th:object="${form}" method="post">
+            <div class="form-message form-message--error" th:if="${#fields.hasAnyErrors()}"><strong>Revise os dados informados.</strong><ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li></ul></div>
+            <div class="form-field"><label for="data">Data</label><input id="data" type="date" th:field="*{data}" th:min="${dataMinima}" required></div>
+            <div class="form-grid"><div class="form-field"><label for="horarioInicio">Início</label><input id="horarioInicio" type="time" th:field="*{horarioInicio}" required></div><div class="form-field"><label for="horarioFim">Fim</label><input id="horarioFim" type="time" th:field="*{horarioFim}" required></div></div>
+            <div class="form-field"><label for="motivo">Motivo</label><textarea id="motivo" th:field="*{motivo}" maxlength="200" required aria-describedby="motivo-help"></textarea><p id="motivo-help" class="field-help">Informe uma justificativa objetiva, com até 200 caracteres.</p></div>
+            <div class="form-actions"><button class="button" type="submit">Cadastrar bloqueio</button><a class="button button--secondary" th:href="@{/admin/bloqueios}">Cancelar</a></div>
+        </form>
+    </main>
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

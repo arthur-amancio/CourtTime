@@ -14,7 +14,7 @@
             <div class="site-header__actions">
                 <p class="session-user">
                     <span th:text="${nome}">Usuário</span>
-                    <span>Perfil: <strong th:text="${perfil}">ALUNO</strong></span>
+                    <span>Perfil: <strong th:text="${perfil.descricao}">Aluno</strong></span>
                 </p>
                 <form class="logout-form" th:action="@{/logout}" method="post">
                     <button class="button button--secondary button--small" type="submit">Sair</button>
@@ -26,24 +26,59 @@
     <main id="conteudo" class="container app-main">
         <header class="page-heading">
             <h1 id="page-title">Início</h1>
-            <p>Olá, <span th:text="${nome}">Usuário</span>.</p>
+            <p>Olá, <span th:text="${nome}">Usuário</span>. Escolha uma das ações disponíveis para sua conta.</p>
         </header>
 
         <section class="quick-access" aria-labelledby="quick-access-title">
             <h2 id="quick-access-title">Acesso rápido</h2>
             <div class="quick-access__item">
                 <div>
-                    <h3>Quadra e horários</h3>
-                    <p>Consulte a disponibilidade da quadra.</p>
+                    <h3>Consultar horários</h3>
+                    <p>Veja o funcionamento e a situação da quadra em uma data.</p>
                 </div>
                 <a class="button" th:href="@{/quadra}">Acessar</a>
             </div>
             <div class="quick-access__item" th:if="${perfil.name() == 'ALUNO'}">
                 <div>
-                    <h3>Minhas solicitações</h3>
-                    <p>Solicite um horário e acompanhe o andamento.</p>
+                    <h3>Nova solicitação</h3>
+                    <p>Selecione um período disponível e registre uma solicitação preliminar.</p>
                 </div>
-                <a class="button" th:href="@{/solicitacoes}">Acessar</a>
+                <a class="button" th:href="@{/solicitacoes/nova}">Solicitar</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'ALUNO'}">
+                <div>
+                    <h3>Minhas solicitações</h3>
+                    <p>Acompanhe as solicitações registradas pela sua conta.</p>
+                </div>
+                <a class="button button--secondary" th:href="@{/solicitacoes}">Consultar</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
+                <div>
+                    <h3>Painel administrativo</h3>
+                    <p>Analise solicitações e gerencie usuários, horários e bloqueios.</p>
+                </div>
+                <a class="button" th:href="@{/admin}">Acessar painel</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'SECRETARIA'}">
+                <div>
+                    <h3>Conferir documentos</h3>
+                    <p>Consulte os PDFs enviados e registre a conferência de cada versão.</p>
+                </div>
+                <a class="button" th:href="@{/secretaria/documentos}">Acessar fila</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'SECRETARIA'}">
+                <div>
+                    <h3>Contribuições presenciais</h3>
+                    <p>Registre recebimentos somente após a validação da versão documental mais recente.</p>
+                </div>
+                <a class="button" th:href="@{/secretaria/contribuicoes}">Consultar contribuições</a>
+            </div>
+            <div class="quick-access__item" th:if="${perfil.name() == 'SEGURANCA'}">
+                <div>
+                    <h3>Reservas autorizadas</h3>
+                    <p>Consulte as reservas liberadas e os participantes para a conferência de entrada.</p>
+                </div>
+                <a class="button" th:href="@{/seguranca/reservas}">Consultar reservas</a>
             </div>
         </section>
     </main>

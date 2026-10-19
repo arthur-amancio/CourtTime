@@ -52,11 +52,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="solicitacao : ${solicitacoes}">
+                    <tr th:each="item : ${solicitacoes}" th:with="solicitacao=${item.solicitacao}">
                         <td th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
                         <td th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
                         <td th:text="${solicitacao.finalidade}">Treino da turma</td>
-                        <td><strong class="status-pill" th:text="${solicitacao.status.descricao}">Pendente de documentação</strong></td>
+                        <td><strong class="status-pill" th:text="${item.situacao.titulo}">Pendente de documentação</strong></td>
                         <td><a class="text-link" th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Detalhes</a></td>
                     </tr>
                 </tbody>

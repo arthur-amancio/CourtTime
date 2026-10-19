@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Conferência documental</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/quadra}">Consultar quadra</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Conferência documental</span>
+        </nav>
+
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
+        <header class="page-heading">
+            <h1>Conferência documental</h1>
+            <p>Revise somente a versão mais recente enviada para cada solicitação.</p>
+        </header>
+
+        <section class="admin-section" aria-labelledby="pendentes-title">
+            <h2 id="pendentes-title">Aguardando conferência</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(pendentes)}">
+                Não há documentos aguardando conferência.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(pendentes)}">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Solicitante</th>
+                            <th scope="col">Solicitação</th>
+                            <th scope="col">Versão</th>
+                            <th scope="col">Enviado em</th>
+                            <th scope="col">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="documento : ${pendentes}">
+                            <td th:text="${documento.reserva.solicitante.nome}">Ana Souza</td>
+                            <td th:text="|#${documento.reserva.id}|">#20</td>
+                            <td th:text="|v${documento.versao}|">v1</td>
+                            <td th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
+                            <td>
+                                <a class="button button--small"
+                                   th:href="@{/secretaria/documentos/{id}(id=${documento.id})}">Conferir</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="admin-section" aria-labelledby="historico-title">
+            <h2 id="historico-title">Histórico de conferências</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(historico)}">
+                Nenhuma conferência foi registrada.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(historico)}">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Solicitação</th>
+                            <th scope="col">Versão</th>
+                            <th scope="col">Resultado</th>
+                            <th scope="col">Responsável</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="conferencia : ${historico}">
+                            <td th:text="|#${conferencia.documento.reserva.id}|">#20</td>
+                            <td th:text="|v${conferencia.documento.versao}|">v1</td>
+                            <td th:text="${conferencia.resultado.descricao}">Validado</td>
+                            <td th:text="${conferencia.conferidoPor.nome}">Secretaria</td>
+                            <td th:text="${#temporals.format(conferencia.conferidoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
+                            <td>
+                                <a class="button button--secondary button--small"
+                                   th:href="@{/secretaria/documentos/{id}(id=${conferencia.documento.id})}">Consultar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>

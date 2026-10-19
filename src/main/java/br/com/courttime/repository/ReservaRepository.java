@@ -20,8 +20,77 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     Optional<Reserva> findByIdAndSolicitante(Long id, Usuario solicitante);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            select r from Reserva r
+            join fetch r.solicitante
+            where r.id = :id and r.solicitante.id = :solicitanteId
+            """)
+    Optional<Reserva> findByIdAndSolicitanteIdForUpdate(
+            @Param("id") Long id, @Param("solicitanteId") Long solicitanteId);
+
     List<Reserva> findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
             Quadra quadra, LocalDate dataUtilizacao, StatusReserva status);
+
+    List<Reserva> findByQuadraAndStatusAndDataUtilizacaoGreaterThanEqualOrderByDataUtilizacaoAscHorarioInicioAsc(
+            Quadra quadra, StatusReserva status, LocalDate dataUtilizacao);
+
+    long countByStatus(StatusReserva status);
+
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.status = :status
+            order by r.criadaEm asc, r.id asc
+            """)
+    List<Reserva> listarParaAnaliseAdministrativa(@Param("status") StatusReserva status);
+
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            left join fetch r.canceladaPor
+            where r.id = :id
+            """)
+    Optional<Reserva> obterParaConsultaAdministrativa(@Param("id") Long id);
+
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.status = :status
+              and r.dataUtilizacao >= :dataAtual
+            order by r.dataUtilizacao asc, r.horarioInicio asc, r.id asc
+            """)
+    List<Reserva> listarAutorizadasParaSeguranca(
+            @Param("status") StatusReserva status,
+            @Param("dataAtual") LocalDate dataAtual);
+
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.status = :status
+              and r.dataUtilizacao >= :dataAtual
+            order by r.dataUtilizacao asc, r.horarioInicio asc, r.id asc
+            """)
+    List<Reserva> listarAutorizadasParaAdministracao(
+            @Param("status") StatusReserva status,
+            @Param("dataAtual") LocalDate dataAtual);
+
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.id = :id
+              and r.status = :status
+              and r.dataUtilizacao >= :dataAtual
+            """)
+    Optional<Reserva> obterAutorizadaParaSeguranca(
+            @Param("id") Long id,
+            @Param("status") StatusReserva status,
+            @Param("dataAtual") LocalDate dataAtual);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
