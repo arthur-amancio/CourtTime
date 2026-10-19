@@ -103,6 +103,7 @@ Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha co
 | Registrar contribuições presenciais e ajustes | Não | Não | Sim | Não |
 | Painel `/admin/**` | Não | Sim | Não | Não |
 | Analisar solicitações e baixar o PDF conferido | Não | Sim | Não | Não |
+| Consultar reservas autorizadas e participantes | Não | Não | Não | Sim |
 | Gerenciar horários e bloqueios | Não | Sim | Não | Não |
 | Gerenciar usuários | Não | Sim | Não | Não |
 
@@ -135,6 +136,12 @@ O valor de R$ 2,00 por participante/hora é apenas uma referência institucional
 O painel administrativo apresenta somente solicitações prontas para análise. O detalhe reúne solicitante, data, horário, finalidade, participantes, metadados do PDF e da conferência e a contribuição presencial. O administrador pode baixar o PDF original por uma rota privada, aprovar sem justificativa ou rejeitar com motivo obrigatório. A aprovação revalida todos os pré-requisitos dentro da transação e somente `APROVADA` representa autorização de uso.
 
 O modelo oficial do termo e o procedimento institucional para avaliar a assinatura continuam pendentes do arquivo solicitado ao Leandro e da validação da ETEC. O CourtTime não recria o termo, não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
+
+## Consulta da segurança
+
+A segurança acessa somente reservas `APROVADA` para a data atual ou datas futuras. A lista e o detalhe apresentam data, horário, quadra, solicitante e a identificação dos participantes necessária à conferência presencial. Reservas pendentes, rejeitadas, canceladas ou antigas não ficam disponíveis nesse perfil; PDFs, contribuições, emails e histórico interno também não são expostos.
+
+O registro de ocorrências permanece indisponível até a ETEC definir quais ocorrências podem ser registradas, quais dados são necessários e quem poderá consultá-los.
 
 ## Testes e build
 
