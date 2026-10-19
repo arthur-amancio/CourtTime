@@ -44,6 +44,7 @@
             </p>
             <div class="table-wrapper" th:unless="${#lists.isEmpty(pendentes)}">
                 <table class="schedule-table table-cards">
+                    <caption class="visually-hidden">Documentos aguardando conferência</caption>
                     <thead>
                         <tr>
                             <th scope="col">Solicitante</th>
@@ -76,6 +77,7 @@
             </p>
             <div class="table-wrapper" th:unless="${#lists.isEmpty(historico)}">
                 <table class="schedule-table table-cards">
+                    <caption class="visually-hidden">Histórico de conferências documentais</caption>
                     <thead>
                         <tr>
                             <th scope="col">Solicitação</th>
