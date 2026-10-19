@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -50,6 +51,10 @@ public class CalendarioDisponibilidadeService {
 
     public LocalDate obterDataAtual() {
         return LocalDate.now(FUSO_HORARIO);
+    }
+
+    public LocalDateTime obterDataHoraAtual() {
+        return LocalDateTime.now(FUSO_HORARIO);
     }
 
     public LocalDate obterDataMinimaParaSolicitacao() {
