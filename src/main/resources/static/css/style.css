@@ -1012,3 +1012,12 @@ textarea {
 .action-card__status {
     margin: 0.85rem 0 0;
 }
+
+/* No celular os botoes compactos recebem altura minima confortavel para o
+   toque. No desktop a altura menor e mantida, porque ali o alvo e o ponteiro
+   do mouse e a densidade das listas e util. */
+@media (max-width: 620px) {
+    .button--small {
+        min-height: 44px;
+    }
+}
