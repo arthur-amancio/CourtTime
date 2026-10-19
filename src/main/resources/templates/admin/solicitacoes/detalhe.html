@@ -83,7 +83,7 @@
                 <strong class="status-pill"
                         th:text="${detalhe.resumoParticipantes.minimoDeAlunosAtendido ? 'Mínimo atendido' : 'Mínimo não atendido'}">Mínimo atendido</strong>
             </div>
-            <div class="table-wrapper" role="region" aria-labelledby="participantes-title" tabindex="0"
+            <div class="table-wrapper" role="region" aria-label="Tabela de participantes da solicitação" tabindex="0"
                  th:unless="${#lists.isEmpty(detalhe.participantes)}">
                 <table class="schedule-table table-cards">
                     <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
