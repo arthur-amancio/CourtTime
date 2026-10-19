@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -150,6 +151,7 @@ class ReservaServiceTest {
         Reserva reserva = reservaPendente(aluno);
         prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        prepararAntecedenciaValida();
         prepararElegibilidade(reserva);
         when(quadraRepository.findByIdForUpdate(quadra.getId())).thenReturn(Optional.of(quadra));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
@@ -169,6 +171,7 @@ class ReservaServiceTest {
         Reserva reserva = reservaPendente(aluno);
         prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        prepararAntecedenciaValida();
         prepararElegibilidade(reserva);
         when(quadraRepository.findByIdForUpdate(quadra.getId())).thenReturn(Optional.of(quadra));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
@@ -200,6 +203,51 @@ class ReservaServiceTest {
     }
 
     @Test
+    void approvalIsRejectedWhenUtilizationDateIsInThePast() {
+        Reserva reserva = reservaPendente(aluno);
+        reserva.setDataUtilizacao(DATA);
+        prepararAdministradorAtual();
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(DATA.plusDays(3));
+
+        IllegalStateException erro = assertThrows(
+                IllegalStateException.class, () -> service.aprovar(30L, administrador));
+
+        assertTrue(erro.getMessage().contains("antecedência mínima"));
+        verify(quadraRepository, never()).findByIdForUpdate(any());
+        verify(reservaRepository, never()).save(any());
+    }
+
+    @Test
+    void approvalIsRejectedWhenUtilizationDateNoLongerMeetsMinimumNotice() {
+        Reserva reserva = reservaPendente(aluno);
+        reserva.setDataUtilizacao(DATA);
+        prepararAdministradorAtual();
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(DATA.plusDays(1));
+
+        assertThrows(IllegalStateException.class, () -> service.aprovar(30L, administrador));
+        verify(quadraRepository, never()).findByIdForUpdate(any());
+        verify(reservaRepository, never()).save(any());
+    }
+
+    @Test
+    void expiredRequestCanStillBeRejectedWithReason() {
+        Reserva reserva = reservaPendente(aluno);
+        reserva.setDataUtilizacao(DATA);
+        prepararAdministradorAtual();
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        when(reservaRepository.save(reserva)).thenReturn(reserva);
+
+        Reserva rejeitada = service.rejeitar(30L, administrador, "Data de utilização expirada");
+
+        assertEquals(StatusReserva.REJEITADA, rejeitada.getStatus());
+        assertEquals("Data de utilização expirada", rejeitada.getMotivoRejeicao());
+    }
+
+    @Test
     void rejectionRequiresReasonAndRecordsResponsibleAdministrator() {
         Reserva reserva = reservaPendente(aluno);
         prepararAdministradorAtual();
@@ -227,6 +275,7 @@ class ReservaServiceTest {
 
         when(usuarioRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(administrador));
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        prepararAntecedenciaValida();
         when(documentoRepository.obterVersaoMaisRecenteComConferencia(reserva))
                 .thenReturn(Optional.empty());
 
@@ -328,6 +377,12 @@ class ReservaServiceTest {
                         30L, administrador, "Motivo que não deve substituir o primeiro"));
         assertEquals("Primeiro motivo", reserva.getMotivoCancelamentoInstitucional());
         assertEquals(canceladaEm, reserva.getCanceladaEm());
+    }
+
+    /** A data de utilização da reserva de teste cumpre a antecedência mínima. */
+    private void prepararAntecedenciaValida() {
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(DATA);
     }
 
     private void prepararAdministradorAtual() {
