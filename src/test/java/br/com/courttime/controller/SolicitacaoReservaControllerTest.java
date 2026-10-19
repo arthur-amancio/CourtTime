@@ -330,7 +330,8 @@ class SolicitacaoReservaControllerTest {
         HorarioDisponibilidade horario = new HorarioDisponibilidade(
                 INICIO, FIM, SituacaoHorario.DISPONIVEL);
         when(quadraService.obterQuadra()).thenReturn(quadra);
-        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA);
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
+                .thenReturn(DATA);
         when(calendarioDisponibilidadeService.consultar(quadra, DATA))
                 .thenReturn(new ConsultaDisponibilidade(DATA, true, List.of(horario)));
     }
