@@ -24,6 +24,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
@@ -151,7 +152,7 @@ class ReservaServiceTest {
         Reserva reserva = reservaPendente(aluno);
         prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
-        prepararAntecedenciaValida();
+        prepararPeriodoAindaNaoIniciado();
         prepararElegibilidade(reserva);
         when(quadraRepository.findByIdForUpdate(quadra.getId())).thenReturn(Optional.of(quadra));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
@@ -171,7 +172,7 @@ class ReservaServiceTest {
         Reserva reserva = reservaPendente(aluno);
         prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
-        prepararAntecedenciaValida();
+        prepararPeriodoAindaNaoIniciado();
         prepararElegibilidade(reserva);
         when(quadraRepository.findByIdForUpdate(quadra.getId())).thenReturn(Optional.of(quadra));
         when(calendarioDisponibilidadeService.periodoEstaDisponivel(
@@ -205,28 +206,25 @@ class ReservaServiceTest {
     @Test
     void approvalIsRejectedWhenUtilizationDateIsInThePast() {
         Reserva reserva = reservaPendente(aluno);
-        reserva.setDataUtilizacao(DATA);
         prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
-        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
-                .thenReturn(DATA.plusDays(3));
+        agoraEm(DATA.plusDays(1).atTime(8, 0));
 
         IllegalStateException erro = assertThrows(
                 IllegalStateException.class, () -> service.aprovar(30L, administrador));
 
-        assertTrue(erro.getMessage().contains("antecedência mínima"));
+        assertTrue(erro.getMessage().contains("já começou ou já passou"));
         verify(quadraRepository, never()).findByIdForUpdate(any());
         verify(reservaRepository, never()).save(any());
     }
 
     @Test
-    void approvalIsRejectedWhenUtilizationDateNoLongerMeetsMinimumNotice() {
+    void approvalIsRejectedWhenPeriodHasAlreadyStarted() {
         Reserva reserva = reservaPendente(aluno);
-        reserva.setDataUtilizacao(DATA);
         prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
-        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
-                .thenReturn(DATA.plusDays(1));
+        // Exatamente o instante de inicio: o periodo ja comecou.
+        agoraEm(LocalDateTime.of(DATA, INICIO));
 
         assertThrows(IllegalStateException.class, () -> service.aprovar(30L, administrador));
         verify(quadraRepository, never()).findByIdForUpdate(any());
@@ -234,9 +232,37 @@ class ReservaServiceTest {
     }
 
     @Test
+    void approvalIsRejectedWhenPeriodHasAlreadyEnded() {
+        Reserva reserva = reservaPendente(aluno);
+        prepararAdministradorAtual();
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        agoraEm(LocalDateTime.of(DATA, FIM).plusMinutes(30));
+
+        assertThrows(IllegalStateException.class, () -> service.aprovar(30L, administrador));
+        verify(reservaRepository, never()).save(any());
+    }
+
+    @Test
+    void administratorMayApproveOnTheSameDayBeforeTheStart() {
+        Reserva reserva = reservaPendente(aluno);
+        prepararAdministradorAtual();
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        // Mesmo dia da utilizacao, uma hora antes do inicio.
+        agoraEm(LocalDateTime.of(DATA, INICIO).minusHours(1));
+        prepararElegibilidade(reserva);
+        when(quadraRepository.findByIdForUpdate(quadra.getId())).thenReturn(Optional.of(quadra));
+        when(calendarioDisponibilidadeService.periodoEstaDisponivel(
+                quadra, DATA, INICIO, FIM)).thenReturn(true);
+        when(reservaRepository.save(reserva)).thenReturn(reserva);
+
+        Reserva aprovada = service.aprovar(30L, administrador);
+
+        assertEquals(StatusReserva.APROVADA, aprovada.getStatus());
+    }
+
+    @Test
     void expiredRequestCanStillBeRejectedWithReason() {
         Reserva reserva = reservaPendente(aluno);
-        reserva.setDataUtilizacao(DATA);
         prepararAdministradorAtual();
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
         when(reservaRepository.save(reserva)).thenReturn(reserva);
@@ -275,7 +301,7 @@ class ReservaServiceTest {
 
         when(usuarioRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(administrador));
         when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
-        prepararAntecedenciaValida();
+        prepararPeriodoAindaNaoIniciado();
         when(documentoRepository.obterVersaoMaisRecenteComConferencia(reserva))
                 .thenReturn(Optional.empty());
 
@@ -379,10 +405,14 @@ class ReservaServiceTest {
         assertEquals(canceladaEm, reserva.getCanceladaEm());
     }
 
-    /** A data de utilização da reserva de teste cumpre a antecedência mínima. */
-    private void prepararAntecedenciaValida() {
-        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
-                .thenReturn(DATA);
+    /** Fixa o instante atual visto pelo servico. */
+    private void agoraEm(LocalDateTime instante) {
+        when(calendarioDisponibilidadeService.obterDataHoraAtual()).thenReturn(instante);
+    }
+
+    /** O periodo da reserva de teste ainda nao comecou. */
+    private void prepararPeriodoAindaNaoIniciado() {
+        agoraEm(LocalDateTime.of(DATA, INICIO).minusDays(1));
     }
 
     private void prepararAdministradorAtual() {
