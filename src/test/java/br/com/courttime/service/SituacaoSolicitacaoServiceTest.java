@@ -113,7 +113,7 @@ class SituacaoSolicitacaoServiceTest {
 
         reserva.setStatus(StatusReserva.CANCELADA);
         SituacaoSolicitacao cancelada = service.descrever(reserva);
-        assertEquals("Cancelada", cancelada.titulo());
+        assertEquals("Cancelada pela administração", cancelada.titulo());
         assertFalse(cancelada.autorizada());
     }
 

@@ -143,6 +143,12 @@ A segurança acessa somente reservas `APROVADA` para a data atual ou datas futur
 
 O registro de ocorrências permanece indisponível até a ETEC definir quais ocorrências podem ser registradas, quais dados são necessários e quem poderá consultá-los.
 
+## Cancelamento institucional
+
+Uma reserva já aprovada pode ser cancelada por um administrador ativo mediante motivo institucional obrigatório. O registro preserva o responsável, a data, a aprovação anterior, o PDF original, os participantes, a conferência documental e a contribuição. Após a transição para `CANCELADA`, a reserva deixa de aparecer como autorização para a segurança e o horário volta a ser considerado disponível.
+
+O cancelamento não declara que houve contato com o aluno e não cria um reagendamento automaticamente. Registro de contato, nova data, vínculo entre solicitações, reaproveitamento da contribuição e eventual dispensa de nova assinatura permanecem pendentes das regras formais da ETEC.
+
 ## Testes e build
 
 ```powershell
