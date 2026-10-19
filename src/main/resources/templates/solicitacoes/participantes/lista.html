@@ -67,12 +67,12 @@
             </div>
 
             <div class="request-notice" th:if="${resumo.minimoDeAlunosAtendido}">
-                <strong>Mínimo planejado atendido</strong>
+                <strong>Mínimo de alunos atendido</strong>
                 <p>A lista possui ao menos dez participantes na categoria Aluno.</p>
             </div>
             <p class="empty-message empty-message--warning"
                th:unless="${resumo.minimoDeAlunosAtendido}">
-                A lista ainda precisa atingir o mínimo planejado de dez alunos antes da etapa documental.
+                A lista ainda precisa atingir o mínimo exigido de dez alunos antes da etapa documental.
             </p>
         </section>
 
@@ -124,8 +124,13 @@
                 </table>
             </div>
 
-            <p class="request-notice" th:unless="${edicaoPermitida}">
-                A lista está disponível somente para consulta porque a solicitação já avançou da etapa de documentação pendente.
+            <p class="request-notice"
+               th:if="${!edicaoPermitida and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
+                A lista está disponível somente para consulta. Alterações voltam a ser permitidas se a secretaria devolver o documento para correção.
+            </p>
+            <p class="request-notice"
+               th:if="${!edicaoPermitida and solicitacao.status.name() != 'PENDENTE_DOCUMENTACAO'}">
+                A lista está disponível somente para consulta depois que a solicitação avança para análise.
             </p>
         </section>
 

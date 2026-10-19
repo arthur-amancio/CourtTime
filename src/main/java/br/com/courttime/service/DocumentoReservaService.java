@@ -52,6 +52,12 @@ public class DocumentoReservaService {
         return documentoRepository.findByReservaOrderByVersaoDesc(reserva);
     }
 
+    @Transactional(readOnly = true)
+    public boolean podeEnviar(Long reservaId, Usuario solicitante) {
+        Reserva reserva = obterReservaDoSolicitante(reservaId, solicitante);
+        return envioEstaPermitido(reserva);
+    }
+
     @Transactional
     public DocumentoReserva enviar(
             Long reservaId,
@@ -75,13 +81,7 @@ public class DocumentoReservaService {
             throw new IllegalStateException(
                     "O documento só pode ser enviado enquanto a documentação está pendente");
         }
-        DocumentoReserva documentoMaisRecente = documentoRepository
-                .obterVersaoMaisRecenteComConferencia(reserva)
-                .orElse(null);
-        if (documentoMaisRecente != null
-                && (documentoMaisRecente.getConferencia() == null
-                || documentoMaisRecente.getConferencia().getResultado()
-                != ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO)) {
+        if (!envioEstaPermitido(reserva)) {
             throw new IllegalStateException(
                     "Uma nova versão só pode ser enviada após a devolução do documento para correção");
         }
@@ -100,6 +100,19 @@ public class DocumentoReservaService {
         documento.setTamanhoBytes(conteudo.length);
         documento.setEnviadoPor(solicitante);
         return documentoRepository.saveAndFlush(documento);
+    }
+
+    private boolean envioEstaPermitido(Reserva reserva) {
+        if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
+            return false;
+        }
+        DocumentoReserva documentoMaisRecente = documentoRepository
+                .obterVersaoMaisRecenteComConferencia(reserva)
+                .orElse(null);
+        return documentoMaisRecente == null
+                || documentoMaisRecente.getConferencia() != null
+                && documentoMaisRecente.getConferencia().getResultado()
+                == ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO;
     }
 
     @Transactional(readOnly = true)

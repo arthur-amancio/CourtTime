@@ -286,11 +286,27 @@ class DocumentoReservaControllerTest {
         mockMvc.perform(get("/solicitacoes/20/documentos")
                         .with(user(aluno.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Novos envios estão bloqueados")))
+                .andExpect(content().string(containsString(
+                        "não são permitidos depois que a solicitação avança")))
                 .andExpect(content().string(not(containsString("Enviar nova versão"))));
 
         verify(documentoService, never()).enviar(
                 20L, aluno, "termo.pdf", "application/pdf", pdf);
+    }
+
+    @Test
+    void documentoAguardandoConferenciaOcultaNovoUploadMesmoComStatusDocumental() throws Exception {
+        prepararAlunoEReserva();
+        when(documentoService.podeEnviar(20L, aluno)).thenReturn(false);
+        when(documentoService.listar(20L, aluno))
+                .thenReturn(List.of(documento(30L, 1, "termo.pdf")));
+
+        mockMvc.perform(get("/solicitacoes/20/documentos")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "só será liberado se a secretaria devolver")))
+                .andExpect(content().string(not(containsString("Enviar nova versão"))));
     }
 
     private DocumentoReserva documento(Long id, int versao, String nome) {
@@ -315,5 +331,7 @@ class DocumentoReservaControllerTest {
     private void prepararAlunoEReserva() {
         prepararAluno();
         when(reservaService.obterSolicitacaoDoUsuario(20L, aluno)).thenReturn(reserva);
+        when(documentoService.podeEnviar(20L, aluno))
+                .thenReturn(reserva.getStatus() == StatusReserva.PENDENTE_DOCUMENTACAO);
     }
 }

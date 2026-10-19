@@ -68,8 +68,13 @@
             </form>
         </section>
 
-        <p class="request-notice" th:unless="${envioPermitido}">
-            Novos envios estão bloqueados porque a solicitação já avançou da etapa de documentação pendente.
+        <p class="request-notice"
+           th:if="${!envioPermitido and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
+            Um novo envio só será liberado se a secretaria devolver a versão mais recente para correção.
+        </p>
+        <p class="request-notice"
+           th:if="${!envioPermitido and solicitacao.status.name() != 'PENDENTE_DOCUMENTACAO'}">
+            Novos envios não são permitidos depois que a solicitação avança para análise.
         </p>
 
         <section class="form-section" aria-labelledby="historico-title">

@@ -1,6 +1,7 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.ConferenciaDocumento;
+import br.com.courttime.entity.ContribuicaoApm;
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.ResultadoConferenciaDocumento;
@@ -65,11 +66,36 @@ class SituacaoSolicitacaoServiceTest {
         assertEquals("Documento devolvido para correção", service.descrever(reserva).titulo());
 
         conferencia.setResultado(ResultadoConferenciaDocumento.VALIDADO);
-        when(contribuicaoRepository.existsByReserva(reserva)).thenReturn(false);
+        when(contribuicaoRepository.obterPorReservaId(reserva.getId()))
+                .thenReturn(Optional.empty());
         assertEquals("Contribuição pendente", service.descrever(reserva).titulo());
 
-        when(contribuicaoRepository.existsByReserva(reserva)).thenReturn(true);
+        ReflectionTestUtils.setField(conferencia, "id", 30L);
+        ContribuicaoApm contribuicao = new ContribuicaoApm();
+        contribuicao.setConferenciaDocumento(conferencia);
+        when(contribuicaoRepository.obterPorReservaId(reserva.getId()))
+                .thenReturn(Optional.of(contribuicao));
         assertEquals("Pronta para análise administrativa", service.descrever(reserva).titulo());
+    }
+
+    @Test
+    void naoApresentaContribuicaoAntigaComoProntidaoAtual() {
+        ConferenciaDocumento conferenciaAtual = conferencia(
+                ResultadoConferenciaDocumento.VALIDADO);
+        ReflectionTestUtils.setField(conferenciaAtual, "id", 30L);
+        DocumentoReserva documento = documento(conferenciaAtual);
+        when(documentoRepository.obterVersaoMaisRecenteComConferencia(reserva))
+                .thenReturn(Optional.of(documento));
+
+        ConferenciaDocumento conferenciaAntiga = conferencia(
+                ResultadoConferenciaDocumento.VALIDADO);
+        ReflectionTestUtils.setField(conferenciaAntiga, "id", 29L);
+        ContribuicaoApm contribuicao = new ContribuicaoApm();
+        contribuicao.setConferenciaDocumento(conferenciaAntiga);
+        when(contribuicaoRepository.obterPorReservaId(reserva.getId()))
+                .thenReturn(Optional.of(contribuicao));
+
+        assertEquals("Contribuição precisa de revisão", service.descrever(reserva).titulo());
     }
 
     @Test
