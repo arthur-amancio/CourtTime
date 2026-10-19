@@ -43,7 +43,7 @@
                 Não há documentos aguardando conferência.
             </p>
             <div class="table-wrapper" th:unless="${#lists.isEmpty(pendentes)}">
-                <table class="schedule-table">
+                <table class="schedule-table table-cards">
                     <thead>
                         <tr>
                             <th scope="col">Solicitante</th>
@@ -55,11 +55,11 @@
                     </thead>
                     <tbody>
                         <tr th:each="documento : ${pendentes}">
-                            <td th:text="${documento.reserva.solicitante.nome}">Ana Souza</td>
-                            <td th:text="|#${documento.reserva.id}|">#20</td>
-                            <td th:text="|v${documento.versao}|">v1</td>
-                            <td th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
-                            <td>
+                            <td data-label="Solicitante" th:text="${documento.reserva.solicitante.nome}">Ana Souza</td>
+                            <td data-label="Solicitação" th:text="|#${documento.reserva.id}|">#20</td>
+                            <td data-label="Versão" th:text="|v${documento.versao}|">v1</td>
+                            <td data-label="Enviado em" th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
+                            <td data-label="Ação">
                                 <a class="button button--small"
                                    th:href="@{/secretaria/documentos/{id}(id=${documento.id})}">Conferir</a>
                             </td>
@@ -75,7 +75,7 @@
                 Nenhuma conferência foi registrada.
             </p>
             <div class="table-wrapper" th:unless="${#lists.isEmpty(historico)}">
-                <table class="schedule-table">
+                <table class="schedule-table table-cards">
                     <thead>
                         <tr>
                             <th scope="col">Solicitação</th>
@@ -88,12 +88,12 @@
                     </thead>
                     <tbody>
                         <tr th:each="conferencia : ${historico}">
-                            <td th:text="|#${conferencia.documento.reserva.id}|">#20</td>
-                            <td th:text="|v${conferencia.documento.versao}|">v1</td>
-                            <td th:text="${conferencia.resultado.descricao}">Validado</td>
-                            <td th:text="${conferencia.conferidoPor.nome}">Secretaria</td>
-                            <td th:text="${#temporals.format(conferencia.conferidoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
-                            <td>
+                            <td data-label="Solicitação" th:text="|#${conferencia.documento.reserva.id}|">#20</td>
+                            <td data-label="Versão" th:text="|v${conferencia.documento.versao}|">v1</td>
+                            <td data-label="Resultado" th:text="${conferencia.resultado.descricao}">Validado</td>
+                            <td data-label="Responsável" th:text="${conferencia.conferidoPor.nome}">Secretaria</td>
+                            <td data-label="Data" th:text="${#temporals.format(conferencia.conferidoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
+                            <td data-label="Detalhes">
                                 <a class="button button--secondary button--small"
                                    th:href="@{/secretaria/documentos/{id}(id=${conferencia.documento.id})}">Consultar</a>
                             </td>

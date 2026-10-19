@@ -103,7 +103,7 @@
                 Nenhum ajuste foi registrado. O valor atual é o mesmo do recebimento inicial.
             </p>
             <div class="table-wrapper" th:unless="${#lists.isEmpty(detalhe.ajustes)}">
-                <table class="schedule-table">
+                <table class="schedule-table table-cards">
                     <thead>
                         <tr>
                             <th scope="col">Data</th>
@@ -115,17 +115,17 @@
                     </thead>
                     <tbody>
                         <tr th:each="ajuste : ${detalhe.ajustes}">
-                            <td th:text="${#temporals.format(ajuste.ajustadaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
-                            <td th:text="${ajuste.ajustadaPor.nome}">Secretaria</td>
-                            <td th:text="|R$ ${#numbers.formatDecimal(ajuste.valorAnterior, 1, 'POINT', 2, 'COMMA')} → R$ ${#numbers.formatDecimal(ajuste.valorNovo, 1, 'POINT', 2, 'COMMA')}|">
+                            <td data-label="Data" th:text="${#temporals.format(ajuste.ajustadaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
+                            <td data-label="Responsável" th:text="${ajuste.ajustadaPor.nome}">Secretaria</td>
+                            <td data-label="Alteração" th:text="|R$ ${#numbers.formatDecimal(ajuste.valorAnterior, 1, 'POINT', 2, 'COMMA')} → R$ ${#numbers.formatDecimal(ajuste.valorNovo, 1, 'POINT', 2, 'COMMA')}|">
                                 R$ 20,00 → R$ 22,00
                             </td>
-                            <td>
+                            <td data-label="Observações">
                                 <span th:text="|Anterior: ${#strings.isEmpty(ajuste.observacoesAnteriores) ? 'sem observações' : ajuste.observacoesAnteriores}|">Anterior: sem observações</span>
                                 <br>
                                 <span th:text="|Nova: ${#strings.isEmpty(ajuste.observacoesNovas) ? 'sem observações' : ajuste.observacoesNovas}|">Nova: sem observações</span>
                             </td>
-                            <td th:text="${ajuste.motivo}">Correção de digitação.</td>
+                            <td data-label="Justificativa" th:text="${ajuste.motivo}">Correção de digitação.</td>
                         </tr>
                     </tbody>
                 </table>
