@@ -42,9 +42,15 @@
                 <label for="data-consulta">Data de utilização</label>
                 <div class="date-form__controls">
                     <input id="data-consulta" name="data" type="date" required
+                           aria-describedby="data-consulta-ajuda"
                            th:min="${dataMinima}" th:value="${consulta.data}">
                     <button class="button button--secondary" type="submit">Ver horários</button>
                 </div>
+                <p id="data-consulta-ajuda" class="field-help">
+                    A solicitação precisa ser feita com pelo menos um dia de antecedência.
+                    A primeira data disponível é
+                    <strong th:text="${#temporals.format(dataMinima, 'dd/MM/yyyy')}">20/10/2026</strong>.
+                </p>
             </form>
         </section>
 

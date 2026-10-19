@@ -67,8 +67,10 @@ public class ReservaService {
         validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
         Objects.requireNonNull(quadra, "A quadra é obrigatória");
         Objects.requireNonNull(data, "A data é obrigatória");
-        if (data.isBefore(calendarioDisponibilidadeService.obterDataAtual())) {
-            throw new IllegalArgumentException("A data de utilização não pode estar no passado");
+        if (data.isBefore(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())) {
+            throw new IllegalArgumentException(
+                    "A solicitação deve ser feita com pelo menos um dia de antecedência. "
+                            + "Escolha uma data a partir de amanhã");
         }
         validarPeriodo(horarioInicio, horarioFim);
         String finalidadeNormalizada = validarFinalidade(finalidade);

@@ -26,6 +26,14 @@ import java.util.TreeMap;
 public class CalendarioDisponibilidadeService {
 
     public static final ZoneId FUSO_HORARIO = ZoneId.of("America/Sao_Paulo");
+
+    /**
+     * O formulário oficial da ETEC exige a solicitação com pelo menos um dia de
+     * antecedência. A contagem é feita em dias do calendário local, e não em
+     * horas corridas: uma solicitação feita hoje vale a partir de amanhã.
+     */
+    public static final int DIAS_MINIMOS_DE_ANTECEDENCIA = 1;
+
     private static final Duration DURACAO_AGENDAMENTO = Duration.ofHours(1);
 
     private final DisponibilidadeQuadraRepository disponibilidadeQuadraRepository;
@@ -47,6 +55,10 @@ public class CalendarioDisponibilidadeService {
 
     public LocalDateTime obterDataHoraAtual() {
         return LocalDateTime.now(FUSO_HORARIO);
+    }
+
+    public LocalDate obterDataMinimaParaSolicitacao() {
+        return obterDataAtual().plusDays(DIAS_MINIMOS_DE_ANTECEDENCIA);
     }
 
     @Transactional(readOnly = true)

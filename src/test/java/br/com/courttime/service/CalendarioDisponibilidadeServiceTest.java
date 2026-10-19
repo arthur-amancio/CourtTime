@@ -64,6 +64,18 @@ class CalendarioDisponibilidadeServiceTest {
     }
 
     @Test
+    void minimumRequestDateIsTheDayAfterTheLocalCurrentDate() {
+        assertEquals(service.obterDataAtual().plusDays(1), service.obterDataMinimaParaSolicitacao());
+    }
+
+    @Test
+    void currentDateUsesSaoPauloZone() {
+        assertEquals(
+                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO),
+                service.obterDataAtual());
+    }
+
+    @Test
     void twoHourAvailabilityCreatesTwoCompletePeriods() {
         DisponibilidadeQuadra disponibilidade = disponibilidade(8, 0, 10, 0);
         when(disponibilidadeQuadraRepository
