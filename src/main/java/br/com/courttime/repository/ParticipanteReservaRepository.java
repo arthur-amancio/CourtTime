@@ -20,4 +20,6 @@ public interface ParticipanteReservaRepository extends JpaRepository<Participant
             Reserva reserva, String rmOuRg, Long id);
 
     long countByReservaAndCategoria(Reserva reserva, CategoriaParticipante categoria);
+
+    long countByReserva(Reserva reserva);
 }

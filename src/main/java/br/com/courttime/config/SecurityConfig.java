@@ -21,6 +21,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/css/**", "/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/secretaria/**").hasRole("SECRETARIA")
+                        .requestMatchers("/seguranca/**").hasRole("SEGURANCA")
                         .requestMatchers("/solicitacoes/**").hasRole("ALUNO")
                         .anyRequest().authenticated()
                 )
