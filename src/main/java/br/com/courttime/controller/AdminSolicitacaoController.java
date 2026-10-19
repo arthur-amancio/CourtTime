@@ -47,6 +47,9 @@ public class AdminSolicitacaoController {
     public String listar(Authentication authentication, Model model) {
         Usuario administrador = obterUsuarioAutenticado(authentication);
         model.addAttribute("solicitacoes", analiseService.listarPendentes(administrador));
+        model.addAttribute(
+                "reservasAutorizadas",
+                analiseService.listarAutorizadasAtuais(administrador));
         return "admin/solicitacoes/lista";
     }
 
@@ -115,6 +118,25 @@ public class AdminSolicitacaoController {
                     id, obterUsuarioAutenticado(authentication), motivo);
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso", "Solicitação rejeitada.");
+            return "redirect:/admin/solicitacoes";
+        } catch (IllegalArgumentException | IllegalStateException | AccessDeniedException exception) {
+            redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
+            return redirecionarDetalhe(id);
+        }
+    }
+
+    @PostMapping("/{id}/cancelar")
+    public String cancelar(
+            @PathVariable Long id,
+            @RequestParam(required = false) String motivo,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes) {
+        try {
+            reservaService.cancelarInstitucionalmente(
+                    id, obterUsuarioAutenticado(authentication), motivo);
+            redirectAttributes.addFlashAttribute(
+                    "mensagemSucesso",
+                    "Reserva cancelada por motivo institucional.");
             return "redirect:/admin/solicitacoes";
         } catch (IllegalArgumentException | IllegalStateException | AccessDeniedException exception) {
             redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());

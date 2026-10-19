@@ -50,6 +50,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             select r from Reserva r
             join fetch r.quadra
             join fetch r.solicitante
+            left join fetch r.canceladaPor
             where r.id = :id
             """)
     Optional<Reserva> obterParaConsultaAdministrativa(@Param("id") Long id);

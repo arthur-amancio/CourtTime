@@ -16,6 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -45,6 +46,15 @@ public class AnaliseAdministrativaService {
         validarAdministrador(administrador);
         return reservaRepository.listarParaAnaliseAdministrativa(
                 StatusReserva.PENDENTE_ANALISE);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Reserva> listarAutorizadasAtuais(Usuario administrador) {
+        validarAdministrador(administrador);
+        LocalDate dataAtual = LocalDate.now(
+                CalendarioDisponibilidadeService.FUSO_HORARIO);
+        return reservaRepository.listarAutorizadasParaAdministracao(
+                StatusReserva.APROVADA, dataAtual);
     }
 
     @Transactional(readOnly = true)
