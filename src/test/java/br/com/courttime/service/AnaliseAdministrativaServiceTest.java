@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +67,18 @@ class AnaliseAdministrativaServiceTest {
                 StatusReserva.PENDENTE_ANALISE)).thenReturn(List.of(reserva));
 
         assertEquals(List.of(reserva), service.listarPendentes(administrador));
+    }
+
+    @Test
+    void listaSomenteReservasAutorizadasAtuaisOuFuturas() {
+        LocalDate hoje = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
+        reserva.setStatus(StatusReserva.APROVADA);
+        when(reservaRepository.listarAutorizadasParaAdministracao(
+                StatusReserva.APROVADA, hoje)).thenReturn(List.of(reserva));
+
+        assertEquals(List.of(reserva), service.listarAutorizadasAtuais(administrador));
+        verify(reservaRepository).listarAutorizadasParaAdministracao(
+                StatusReserva.APROVADA, hoje);
     }
 
     @Test
@@ -121,6 +134,9 @@ class AnaliseAdministrativaServiceTest {
         assertThrows(
                 AccessDeniedException.class,
                 () -> service.listarPendentes(usuario(2L, Perfil.SECRETARIA)));
+        assertThrows(
+                AccessDeniedException.class,
+                () -> service.listarAutorizadasAtuais(usuario(3L, Perfil.SEGURANCA)));
     }
 
     private ParticipanteReserva participante(CategoriaParticipante categoria) {

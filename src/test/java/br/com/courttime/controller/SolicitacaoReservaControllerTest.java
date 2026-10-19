@@ -301,6 +301,31 @@ class SolicitacaoReservaControllerTest {
                         "/solicitacoes/30/documentos")));
     }
 
+    @Test
+    void alunoVisualizaMotivoDoCancelamentoSemContatoFicticio() throws Exception {
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        Reserva cancelada = reserva(30L, aluno);
+        cancelada.setStatus(StatusReserva.CANCELADA);
+        cancelada.setMotivoCancelamentoInstitucional("Interdição da quadra");
+        when(reservaService.obterSolicitacaoDoUsuario(30L, aluno))
+                .thenReturn(cancelada);
+        when(situacaoService.descrever(cancelada)).thenReturn(
+                new SituacaoSolicitacao(
+                        "Cancelada pela administração",
+                        "A reserva deixou de autorizar a utilização da quadra.",
+                        false));
+
+        mockMvc.perform(get("/solicitacoes/30")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "Cancelada pela administração")))
+                .andExpect(content().string(containsString("Interdição da quadra")))
+                .andExpect(content().string(containsString(
+                        "ainda precisa registrar qualquer contato")));
+    }
+
     private void prepararFormularioDisponivel() {
         HorarioDisponibilidade horario = new HorarioDisponibilidade(
                 INICIO, FIM, SituacaoHorario.DISPONIVEL);

@@ -121,6 +121,9 @@ class AdminSolicitacaoControllerTest {
     void administradorVisualizaFilaEDetalheCompleto() throws Exception {
         prepararAdministrador();
         when(analiseService.listarPendentes(administrador)).thenReturn(List.of(reserva));
+        Reserva autorizada = novaReservaAutorizada();
+        when(analiseService.listarAutorizadasAtuais(administrador))
+                .thenReturn(List.of(autorizada));
         when(analiseService.detalhar(20L, administrador)).thenReturn(detalhe());
 
         mockMvc.perform(get("/admin/solicitacoes")
@@ -128,7 +131,8 @@ class AdminSolicitacaoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Análise de solicitações")))
                 .andExpect(content().string(containsString("Ana Aluna")))
-                .andExpect(content().string(containsString("Treino da turma")));
+                .andExpect(content().string(containsString("Treino da turma")))
+                .andExpect(content().string(containsString("Reservas autorizadas")));
 
         mockMvc.perform(get("/admin/solicitacoes/20")
                         .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
@@ -199,6 +203,46 @@ class AdminSolicitacaoControllerTest {
                         "mensagemErro", containsString("obrigatório")));
     }
 
+    @Test
+    void cancelamentoInstitucionalExigeCsrfEMotivoValidadoNoBackend() throws Exception {
+        mockMvc.perform(post("/admin/solicitacoes/20/cancelar")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("motivo", "Manutenção emergencial"))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(reservaService);
+
+        prepararAdministrador();
+        mockMvc.perform(post("/admin/solicitacoes/20/cancelar")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .with(csrf())
+                        .param("motivo", "Manutenção emergencial"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/solicitacoes"))
+                .andExpect(flash().attribute(
+                        "mensagemSucesso",
+                        "Reserva cancelada por motivo institucional."));
+
+        verify(reservaService).cancelarInstitucionalmente(
+                20L, administrador, "Manutenção emergencial");
+    }
+
+    @Test
+    void detalheApresentaCancelamentoSemPresumirContato() throws Exception {
+        prepararAdministrador();
+        reserva.setStatus(StatusReserva.CANCELADA);
+        reserva.setMotivoCancelamentoInstitucional("Interdição da quadra");
+        reserva.setCanceladaPor(administrador);
+        reserva.setCanceladaEm(Instant.parse("2026-10-19T10:00:00Z"));
+        when(analiseService.detalhar(20L, administrador)).thenReturn(detalhe());
+
+        mockMvc.perform(get("/admin/solicitacoes/20")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Interdição da quadra")))
+                .andExpect(content().string(containsString(
+                        "Nenhum contato com o aluno ou reagendamento é presumido")));
+    }
+
     private DetalheAnaliseAdministrativa detalhe() {
         ParticipanteReserva participante = new ParticipanteReserva();
         participante.setNomeCompleto("Ana Participante");
@@ -216,6 +260,19 @@ class AdminSolicitacaoControllerTest {
                 new ResumoParticipantes(10, 1, 11, true),
                 documento,
                 contribuicao);
+    }
+
+    private Reserva novaReservaAutorizada() {
+        Reserva autorizada = new Reserva();
+        autorizada.setId(21L);
+        autorizada.setSolicitante(reserva.getSolicitante());
+        autorizada.setQuadra(reserva.getQuadra());
+        autorizada.setDataUtilizacao(reserva.getDataUtilizacao());
+        autorizada.setHorarioInicio(reserva.getHorarioInicio());
+        autorizada.setHorarioFim(reserva.getHorarioFim());
+        autorizada.setFinalidade("Evento autorizado");
+        autorizada.setStatus(StatusReserva.APROVADA);
+        return autorizada;
     }
 
     private void prepararAdministrador() {
