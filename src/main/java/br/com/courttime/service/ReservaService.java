@@ -111,6 +111,7 @@ public class ReservaService {
         Reserva reserva = obterParaAnalise(reservaId);
         impedirAnaliseDaPropriaSolicitacao(reserva, administradorAtual);
         validarPendente(reserva);
+        validarAntecedenciaParaAprovacao(reserva);
         validarElegibilidade(reserva);
 
         Quadra quadraBloqueada = quadraRepository.findByIdForUpdate(reserva.getQuadra().getId())
@@ -236,6 +237,22 @@ public class ReservaService {
     private void impedirAnaliseDaPropriaSolicitacao(Reserva reserva, Usuario administrador) {
         if (Objects.equals(reserva.getSolicitante().getId(), administrador.getId())) {
             throw new AccessDeniedException("O usuário não pode analisar a própria solicitação");
+        }
+    }
+
+    /**
+     * A aprovação precisa respeitar a mesma antecedência exigida na solicitação.
+     * Uma solicitação pode ficar parada na fila e chegar à análise quando a data
+     * de utilização já passou, e nesse caso a autorização não faz mais sentido.
+     * A rejeição continua permitida, para que a administração possa encerrar a
+     * solicitação com um motivo registrado.
+     */
+    private void validarAntecedenciaParaAprovacao(Reserva reserva) {
+        if (reserva.getDataUtilizacao().isBefore(
+                calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())) {
+            throw new IllegalStateException(
+                    "A reserva não pode ser aprovada porque a data de utilização não respeita "
+                            + "mais a antecedência mínima de um dia");
         }
     }
 
