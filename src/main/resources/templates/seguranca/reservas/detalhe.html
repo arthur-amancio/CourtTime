@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Conferir reserva</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/seguranca/reservas}">Reservas autorizadas</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/seguranca/reservas}">Reservas autorizadas</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Conferência</span>
+        </nav>
+
+        <header class="page-heading page-heading--actions">
+            <div>
+                <h1>Conferir reserva</h1>
+                <p>Use os dados abaixo somente para a conferência presencial.</p>
+            </div>
+            <strong class="status-pill status-pill--available">Autorizada</strong>
+        </header>
+
+        <section class="request-details" aria-labelledby="reserva-title">
+            <h2 id="reserva-title">Reserva</h2>
+            <dl class="details-list">
+                <div><dt>Data</dt><dd th:text="${#temporals.format(detalhe.reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</dd></div>
+                <div><dt>Horário</dt><dd th:text="|${#temporals.format(detalhe.reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(detalhe.reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</dd></div>
+                <div><dt>Quadra</dt><dd th:text="${detalhe.reserva.quadra}">Quadra Poliesportiva</dd></div>
+                <div><dt>Solicitante</dt><dd th:text="${detalhe.reserva.solicitante}">Ana Souza</dd></div>
+                <div><dt>Participantes</dt><dd th:text="${detalhe.reserva.quantidadeParticipantes}">10</dd></div>
+            </dl>
+        </section>
+
+        <section class="admin-section" aria-labelledby="participantes-title">
+            <h2 id="participantes-title">Identificação dos participantes</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(detalhe.participantes)}">
+                Não há participantes vinculados a esta reserva.
+            </p>
+            <div class="table-wrapper" role="region" aria-labelledby="participantes-title" tabindex="0"
+                 th:unless="${#lists.isEmpty(detalhe.participantes)}">
+                <table class="schedule-table">
+                    <caption class="visually-hidden">Participantes autorizados para conferência de identificação</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome completo</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">RM ou RG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="participante : ${detalhe.participantes}">
+                            <td th:text="${participante.nomeCompleto}">Ana Souza</td>
+                            <td th:text="${participante.categoria}">Aluno</td>
+                            <td th:text="${participante.rmOuRg}">RM-123</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <a class="button button--secondary" th:href="@{/seguranca/reservas}">Voltar às reservas</a>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

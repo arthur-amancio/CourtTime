@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Documentos enviados</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/solicitacoes}">Minhas solicitações</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/solicitacoes}">Solicitações</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Detalhes</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Documentos</span>
+        </nav>
+
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">PDF enviado.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível enviar.</p>
+
+        <header class="page-heading">
+            <h1>Documentos enviados</h1>
+            <p>Consulte as versões enviadas para esta solicitação.</p>
+        </header>
+
+        <section class="form-section" aria-labelledby="envio-title" th:if="${envioPermitido}">
+            <h2 id="envio-title">Enviar PDF</h2>
+            <div class="request-notice">
+                <strong>Assinatura externa</strong>
+                <p>O PDF deve ser preparado e assinado fora do sistema. O envio ao CourtTime não comprova nem valida a assinatura.</p>
+            </div>
+            <p class="request-notice">
+                Antes do envio, confira se a lista do documento corresponde ao cadastro e contém no mínimo dez alunos.
+            </p>
+            <p class="empty-message">
+                O modelo oficial do termo ainda deve ser fornecido pela ETEC. Não gere um termo substituto pelo sistema.
+            </p>
+            <form class="request-form" method="post" enctype="multipart/form-data"
+                  th:action="@{/solicitacoes/{id}/documentos(id=${solicitacao.id})}">
+                <div class="form-field">
+                    <label for="arquivo">Arquivo PDF</label>
+                    <input id="arquivo" name="arquivo" type="file"
+                           accept="application/pdf,.pdf" required
+                           aria-describedby="arquivo-ajuda">
+                    <p id="arquivo-ajuda" class="field-help">
+                        Máximo técnico de 10 MB. O original enviado será preservado sem alterações.
+                    </p>
+                </div>
+                <div class="form-actions">
+                    <button class="button" type="submit">Enviar nova versão</button>
+                </div>
+            </form>
+        </section>
+
+        <p class="request-notice"
+           th:if="${!envioPermitido and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
+            Um novo envio só será liberado se a secretaria devolver a versão mais recente para correção.
+        </p>
+        <p class="request-notice"
+           th:if="${!envioPermitido and solicitacao.status.name() != 'PENDENTE_DOCUMENTACAO'}">
+            Novos envios não são permitidos depois que a solicitação avança para análise.
+        </p>
+
+        <section class="form-section" aria-labelledby="historico-title">
+            <h2 id="historico-title">Histórico de envios</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(documentos)}">
+                Nenhum PDF foi enviado. A solicitação continua aguardando documentação.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(documentos)}">
+                <table class="schedule-table">
+                    <caption class="visually-hidden">Versões de documentos enviadas para a solicitação</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Versão</th>
+                            <th scope="col">Arquivo original</th>
+                            <th scope="col">Enviado em</th>
+                            <th scope="col">Situação</th>
+                            <th scope="col">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="documento : ${documentos}">
+                            <td th:text="|v${documento.versao}|">v1</td>
+                            <td th:text="${documento.nomeOriginal}">termo.pdf</td>
+                            <td th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
+                            <td>
+                                <span th:if="${documento.conferencia == null and documento.versao == versaoMaisRecente}">Aguardando conferência</span>
+                                <span th:if="${documento.conferencia == null and documento.versao != versaoMaisRecente}">Substituída por versão mais recente</span>
+                                <span th:if="${documento.conferencia != null}"
+                                      th:text="${documento.conferencia.resultado.descricao}">Validado</span>
+                                <p class="field-error"
+                                   th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}"
+                                   th:text="${documento.conferencia.justificativa}">Correção solicitada.</p>
+                            </td>
+                            <td>
+                                <a class="button button--secondary button--small"
+                                   th:href="@{/solicitacoes/{reservaId}/documentos/{documentoId}/baixar(reservaId=${solicitacao.id}, documentoId=${documento.id})}">
+                                    Baixar original
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <a class="button button--secondary"
+               th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Voltar aos detalhes</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>

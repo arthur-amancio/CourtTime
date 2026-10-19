@@ -1,12 +1,19 @@
 package br.com.courttime.service;
 
+import br.com.courttime.entity.ConferenciaDocumento;
+import br.com.courttime.entity.ContribuicaoApm;
+import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.repository.ContribuicaoApmRepository;
+import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.repository.UsuarioRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +33,26 @@ public class ReservaService {
     private final ReservaRepository reservaRepository;
     private final QuadraRepository quadraRepository;
     private final CalendarioDisponibilidadeService calendarioDisponibilidadeService;
+    private final DocumentoReservaRepository documentoRepository;
+    private final ParticipanteReservaService participanteService;
+    private final ContribuicaoApmRepository contribuicaoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public ReservaService(
             ReservaRepository reservaRepository,
             QuadraRepository quadraRepository,
-            CalendarioDisponibilidadeService calendarioDisponibilidadeService) {
+            CalendarioDisponibilidadeService calendarioDisponibilidadeService,
+            DocumentoReservaRepository documentoRepository,
+            ParticipanteReservaService participanteService,
+            ContribuicaoApmRepository contribuicaoRepository,
+            UsuarioRepository usuarioRepository) {
         this.reservaRepository = reservaRepository;
         this.quadraRepository = quadraRepository;
         this.calendarioDisponibilidadeService = calendarioDisponibilidadeService;
+        this.documentoRepository = documentoRepository;
+        this.participanteService = participanteService;
+        this.contribuicaoRepository = contribuicaoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional
@@ -88,10 +107,11 @@ public class ReservaService {
 
     @Transactional
     public Reserva aprovar(Long reservaId, Usuario administrador) {
-        validarUsuarioAtivoComPerfil(administrador, Perfil.ADMINISTRADOR);
+        Usuario administradorAtual = obterAdministradorAtual(administrador);
         Reserva reserva = obterParaAnalise(reservaId);
-        impedirAnaliseDaPropriaSolicitacao(reserva, administrador);
+        impedirAnaliseDaPropriaSolicitacao(reserva, administradorAtual);
         validarPendente(reserva);
+        validarElegibilidade(reserva);
 
         Quadra quadraBloqueada = quadraRepository.findByIdForUpdate(reserva.getQuadra().getId())
                 .orElseThrow(() -> new IllegalStateException("Quadra não encontrada"));
@@ -106,7 +126,7 @@ public class ReservaService {
         }
 
         reserva.setStatus(StatusReserva.APROVADA);
-        reserva.setAnalisadaPor(administrador);
+        reserva.setAnalisadaPor(administradorAtual);
         reserva.setAnalisadaEm(Instant.now());
         reserva.setMotivoRejeicao(null);
         return reservaRepository.save(reserva);
@@ -114,9 +134,9 @@ public class ReservaService {
 
     @Transactional
     public Reserva rejeitar(Long reservaId, Usuario administrador, String motivo) {
-        validarUsuarioAtivoComPerfil(administrador, Perfil.ADMINISTRADOR);
+        Usuario administradorAtual = obterAdministradorAtual(administrador);
         Reserva reserva = obterParaAnalise(reservaId);
-        impedirAnaliseDaPropriaSolicitacao(reserva, administrador);
+        impedirAnaliseDaPropriaSolicitacao(reserva, administradorAtual);
         validarPendente(reserva);
 
         String motivoNormalizado = motivo == null ? "" : motivo.trim();
@@ -126,9 +146,34 @@ public class ReservaService {
         }
 
         reserva.setStatus(StatusReserva.REJEITADA);
-        reserva.setAnalisadaPor(administrador);
+        reserva.setAnalisadaPor(administradorAtual);
         reserva.setAnalisadaEm(Instant.now());
         reserva.setMotivoRejeicao(motivoNormalizado);
+        return reservaRepository.save(reserva);
+    }
+
+    @Transactional
+    public Reserva cancelarInstitucionalmente(
+            Long reservaId, Usuario administrador, String motivo) {
+        Usuario administradorAtual = obterAdministradorAtual(administrador);
+        String motivoNormalizado = validarMotivoCancelamento(motivo);
+        Reserva reserva = obterParaAnalise(reservaId);
+        impedirAnaliseDaPropriaSolicitacao(reserva, administradorAtual);
+
+        if (reserva.getStatus() != StatusReserva.APROVADA) {
+            throw new IllegalStateException(
+                    "Somente reservas aprovadas podem ser canceladas pela administração");
+        }
+        if (reserva.getDataUtilizacao()
+                .isBefore(calendarioDisponibilidadeService.obterDataAtual())) {
+            throw new IllegalStateException(
+                    "Reservas com data de utilização passada não podem ser canceladas");
+        }
+
+        reserva.setStatus(StatusReserva.CANCELADA);
+        reserva.setMotivoCancelamentoInstitucional(motivoNormalizado);
+        reserva.setCanceladaPor(administradorAtual);
+        reserva.setCanceladaEm(Instant.now());
         return reservaRepository.save(reserva);
     }
 
@@ -138,6 +183,48 @@ public class ReservaService {
         }
         return reservaRepository.findByIdForUpdate(reservaId)
                 .orElseThrow(() -> new IllegalArgumentException("Reserva não encontrada"));
+    }
+
+    private Usuario obterAdministradorAtual(Usuario administrador) {
+        if (administrador == null || administrador.getId() == null) {
+            throw new AccessDeniedException("Usuário sem permissão para esta operação");
+        }
+        return usuarioRepository.findByIdForUpdate(administrador.getId())
+                .filter(Usuario::isAtivo)
+                .filter(usuario -> usuario.getPerfil() == Perfil.ADMINISTRADOR)
+                .orElseThrow(() -> new AccessDeniedException(
+                        "Usuário sem permissão para esta operação"));
+    }
+
+    private void validarElegibilidade(Reserva reserva) {
+        DocumentoReserva documento = documentoRepository
+                .obterVersaoMaisRecenteComConferencia(reserva)
+                .orElseThrow(() -> new IllegalStateException(
+                        "A versão mais recente do documento ainda não foi conferida"));
+        ConferenciaDocumento conferencia = documento.getConferencia();
+        if (conferencia == null
+                || conferencia.getResultado() != ResultadoConferenciaDocumento.VALIDADO) {
+            throw new IllegalStateException(
+                    "A versão mais recente do documento ainda não foi validada");
+        }
+        participanteService.validarDocumentoAtual(reserva, documento);
+        ContribuicaoApm contribuicao = contribuicaoRepository.obterPorReservaId(reserva.getId())
+                .orElseThrow(() -> new IllegalStateException(
+                        "A contribuição presencial ainda não foi confirmada"));
+        if (!mesmaConferencia(contribuicao.getConferenciaDocumento(), conferencia)) {
+            throw new IllegalStateException(
+                    "A contribuição não corresponde ao documento mais recente validado");
+        }
+    }
+
+    private boolean mesmaConferencia(
+            ConferenciaDocumento contribuicao, ConferenciaDocumento documento) {
+        if (contribuicao == documento) {
+            return true;
+        }
+        return contribuicao != null
+                && contribuicao.getId() != null
+                && Objects.equals(contribuicao.getId(), documento.getId());
     }
 
     private void validarUsuarioAtivoComPerfil(Usuario usuario, Perfil perfilEsperado) {
@@ -175,5 +262,14 @@ public class ReservaService {
                     "A finalidade é obrigatória e deve possuir no máximo 300 caracteres");
         }
         return finalidadeNormalizada;
+    }
+
+    private String validarMotivoCancelamento(String motivo) {
+        String motivoNormalizado = motivo == null ? "" : motivo.trim();
+        if (motivoNormalizado.isEmpty() || motivoNormalizado.length() > 500) {
+            throw new IllegalArgumentException(
+                    "O motivo do cancelamento é obrigatório e deve possuir no máximo 500 caracteres");
+        }
+        return motivoNormalizado;
     }
 }
