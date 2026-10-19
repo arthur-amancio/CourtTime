@@ -993,3 +993,22 @@ textarea {
     padding-top: 1.25rem;
     border-top: 1px solid var(--border);
 }
+
+/* No cartao ha mais espaco que numa celula de tabela, entao a explicacao
+   pode usar uma linha mais longa sem prejudicar a leitura. */
+.action-card .status-next {
+    max-width: 62ch;
+}
+
+/* Situacao da solicitacao mais recente, mostrada no inicio do aluno. */
+.situacao-atual {
+    margin-bottom: 2.5rem;
+}
+
+.situacao-atual h2 {
+    margin-bottom: 0.8rem;
+}
+
+.action-card__status {
+    margin: 0.85rem 0 0;
+}
