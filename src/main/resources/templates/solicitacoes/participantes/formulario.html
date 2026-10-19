@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${'CourtTime | ' + titulo}">CourtTime | Participante</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/solicitacoes}">Minhas solicitações</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main app-main--narrow" th:object="${form}">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/solicitacoes}">Solicitações</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">Participantes</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page" th:text="${participanteId == null ? 'Adicionar' : 'Editar'}">Adicionar</span>
+        </nav>
+
+        <header class="page-heading">
+            <h1 th:text="${titulo}">Adicionar participante</h1>
+            <p>Informe somente os dados previstos para a lista de participantes.</p>
+        </header>
+
+        <div class="form-message form-message--error" role="alert"
+             th:if="${#fields.hasAnyErrors()}">
+            <p>Revise os dados informados:</p>
+            <ul>
+                <li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li>
+            </ul>
+        </div>
+
+        <form class="request-form" th:action="${acaoFormulario}" method="post" th:object="${form}">
+            <div class="form-field">
+                <label for="nomeCompleto">Nome completo</label>
+                <input id="nomeCompleto" type="text" th:field="*{nomeCompleto}"
+                       maxlength="150" autocomplete="name" required
+                       th:attr="aria-invalid=${#fields.hasErrors('nomeCompleto')},aria-describedby=${#fields.hasErrors('nomeCompleto')} ? 'nomeCompleto-erro' : null">
+                <p id="nomeCompleto-erro" class="field-error"
+                   th:if="${#fields.hasErrors('nomeCompleto')}"
+                   th:errors="*{nomeCompleto}">Informe o nome completo.</p>
+            </div>
+
+            <div class="form-field">
+                <label for="rmOuRg">RM ou RG</label>
+                <input id="rmOuRg" type="text" th:field="*{rmOuRg}"
+                       maxlength="30" autocomplete="off" required
+                       aria-describedby="rmOuRg-ajuda"
+                       th:attrappend="aria-describedby=${#fields.hasErrors('rmOuRg')} ? ' rmOuRg-erro' : '',aria-invalid=${#fields.hasErrors('rmOuRg')}">
+                <p id="rmOuRg-ajuda" class="field-help">Informe o RM do aluno ou o RG do demais participante, conforme aplicável.</p>
+                <p id="rmOuRg-erro" class="field-error"
+                   th:if="${#fields.hasErrors('rmOuRg')}"
+                   th:errors="*{rmOuRg}">Informe o RM ou RG.</p>
+            </div>
+
+            <div class="form-field">
+                <label for="categoria">Categoria</label>
+                <select id="categoria" th:field="*{categoria}" required
+                        th:attr="aria-invalid=${#fields.hasErrors('categoria')},aria-describedby=${#fields.hasErrors('categoria')} ? 'categoria-erro' : null">
+                    <option value="">Selecione</option>
+                    <option value="ALUNO">Aluno</option>
+                    <option value="OUTRO">Outro participante</option>
+                </select>
+                <p id="categoria-erro" class="field-error"
+                   th:if="${#fields.hasErrors('categoria')}"
+                   th:errors="*{categoria}">Selecione a categoria.</p>
+            </div>
+
+            <div class="request-notice">
+                <strong>Antes de salvar</strong>
+                <p>Confira os dados. A regra definitiva sobre categorias adicionais aguarda homologação institucional.</p>
+            </div>
+
+            <div class="form-actions">
+                <button class="button" type="submit">Salvar participante</button>
+                <a class="button button--secondary"
+                   th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">Cancelar</a>
+            </div>
+        </form>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>
