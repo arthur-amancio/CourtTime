@@ -46,7 +46,7 @@
         <div class="table-wrapper" role="region" aria-labelledby="fila-title" tabindex="0"
              th:unless="${#lists.isEmpty(solicitacoes)}">
             <h2 id="fila-title" class="visually-hidden">Fila de solicitações prontas para análise</h2>
-            <table class="schedule-table requests-table">
+            <table class="schedule-table requests-table table-cards">
                 <caption class="visually-hidden">Solicitações aguardando decisão administrativa</caption>
                 <thead>
                     <tr>
@@ -59,10 +59,10 @@
                 </thead>
                 <tbody>
                     <tr th:each="solicitacao : ${solicitacoes}">
-                        <td th:text="${solicitacao.solicitante.nome}">Ana Souza</td>
-                        <td th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
-                        <td th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
-                        <td th:text="${solicitacao.finalidade}">Treino da turma</td>
+                        <td data-label="Solicitante" th:text="${solicitacao.solicitante.nome}">Ana Souza</td>
+                        <td data-label="Data" th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                        <td data-label="Horário" th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                        <td data-label="Finalidade" th:text="${solicitacao.finalidade}">Treino da turma</td>
                         <td><a class="text-link" th:href="@{/admin/solicitacoes/{id}(id=${solicitacao.id})}">Analisar</a></td>
                     </tr>
                 </tbody>
@@ -79,9 +79,9 @@
                 Não há reservas autorizadas atuais ou futuras.
             </p>
 
-            <div class="table-wrapper" role="region" aria-labelledby="autorizadas-title" tabindex="0"
+            <div class="table-wrapper" role="region" aria-label="Tabela de reservas autorizadas" tabindex="0"
                  th:unless="${#lists.isEmpty(reservasAutorizadas)}">
-                <table class="schedule-table requests-table">
+                <table class="schedule-table requests-table table-cards">
                     <caption class="visually-hidden">Reservas autorizadas disponíveis para consulta administrativa</caption>
                     <thead>
                         <tr>
@@ -94,10 +94,10 @@
                     </thead>
                     <tbody>
                         <tr th:each="reserva : ${reservasAutorizadas}">
-                            <td th:text="${reserva.solicitante.nome}">Ana Souza</td>
-                            <td th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
-                            <td th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
-                            <td th:text="${reserva.finalidade}">Treino da turma</td>
+                            <td data-label="Solicitante" th:text="${reserva.solicitante.nome}">Ana Souza</td>
+                            <td data-label="Data" th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                            <td data-label="Horário" th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                            <td data-label="Finalidade" th:text="${reserva.finalidade}">Treino da turma</td>
                             <td><a class="text-link" th:href="@{/admin/solicitacoes/{id}(id=${reserva.id})}">Abrir</a></td>
                         </tr>
                     </tbody>

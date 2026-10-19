@@ -109,6 +109,10 @@ class SecretariaDocumentoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("Cache-Control", containsString("no-store")))
                 .andExpect(content().string(containsString("Ana Aluna")))
+                .andExpect(content().string(containsString(
+                        "Documentos aguardando conferência")))
+                .andExpect(content().string(containsString(
+                        "Histórico de conferências documentais")))
                 .andExpect(content().string(containsString("Devolvido para correção")))
                 .andExpect(content().string(containsString("Secretaria da escola")));
     }

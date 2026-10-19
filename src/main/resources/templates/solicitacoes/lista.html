@@ -40,7 +40,7 @@
         </p>
 
         <div class="table-wrapper" th:unless="${#lists.isEmpty(solicitacoes)}">
-            <table class="schedule-table requests-table">
+            <table class="schedule-table requests-table table-cards">
                 <caption class="visually-hidden">Solicitações de uso da quadra do usuário autenticado</caption>
                 <thead>
                     <tr>
@@ -53,10 +53,17 @@
                 </thead>
                 <tbody>
                     <tr th:each="item : ${solicitacoes}" th:with="solicitacao=${item.solicitacao}">
-                        <td th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
-                        <td th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
-                        <td th:text="${solicitacao.finalidade}">Treino da turma</td>
-                        <td><strong class="status-pill" th:text="${item.situacao.titulo}">Pendente de documentação</strong></td>
+                        <td data-label="Data" th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                        <td data-label="Horário" th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                        <td data-label="Finalidade" th:text="${solicitacao.finalidade}">Treino da turma</td>
+                        <td class="cell-status" data-label="Situação">
+                            <span class="cell-status__content">
+                                <strong class="status-pill"
+                                        th:classappend="${item.situacao.autorizada} ? ' status-pill--ok' : ''"
+                                        th:text="${item.situacao.titulo}">Pendente de documentação</strong>
+                                <span class="status-next" th:text="${item.situacao.explicacao}">Revise os participantes e envie o PDF preparado e assinado fora do sistema.</span>
+                            </span>
+                        </td>
                         <td><a class="text-link" th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Detalhes</a></td>
                     </tr>
                 </tbody>

@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -50,6 +51,28 @@ class CalendarioDisponibilidadeServiceTest {
                 disponibilidadeQuadraRepository, bloqueioQuadraRepository, reservaRepository);
         quadra = new Quadra();
         quadra.setAtiva(true);
+    }
+
+    @Test
+    void currentDateTimeUsesSaoPauloZone() {
+        LocalDateTime antes = LocalDateTime.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
+        LocalDateTime obtido = service.obterDataHoraAtual();
+        LocalDateTime depois = LocalDateTime.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
+
+        assertFalse(obtido.isBefore(antes));
+        assertFalse(obtido.isAfter(depois));
+    }
+
+    @Test
+    void minimumRequestDateIsTheDayAfterTheLocalCurrentDate() {
+        assertEquals(service.obterDataAtual().plusDays(1), service.obterDataMinimaParaSolicitacao());
+    }
+
+    @Test
+    void currentDateUsesSaoPauloZone() {
+        assertEquals(
+                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO),
+                service.obterDataAtual());
     }
 
     @Test
@@ -174,6 +197,22 @@ class CalendarioDisponibilidadeServiceTest {
                 quadra, SEGUNDA_FEIRA, LocalTime.of(9, 0), LocalTime.of(10, 0)));
         assertFalse(service.periodoEstaDisponivel(
                 quadra, SEGUNDA_FEIRA, LocalTime.of(10, 30), LocalTime.of(11, 30)));
+        verify(bloqueioQuadraRepository, never())
+                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA);
+    }
+
+    @Test
+    void periodWithSecondOffsetIsNotTreatedAsAlignedWithGeneratedSlots() {
+        when(disponibilidadeQuadraRepository
+                .findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
+                        quadra, DiaSemana.SEGUNDA))
+                .thenReturn(List.of(disponibilidade(8, 0, 10, 0)));
+
+        assertFalse(service.periodoEstaDisponivel(
+                quadra,
+                SEGUNDA_FEIRA,
+                LocalTime.of(8, 0, 30),
+                LocalTime.of(9, 0, 30)));
         verify(bloqueioQuadraRepository, never())
                 .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, SEGUNDA_FEIRA);
     }

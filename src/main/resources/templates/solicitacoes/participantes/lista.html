@@ -89,7 +89,7 @@
             </p>
 
             <div class="table-wrapper" th:unless="${#lists.isEmpty(participantes)}">
-                <table class="schedule-table">
+                <table class="schedule-table table-cards">
                     <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
                     <thead>
                         <tr>
@@ -101,10 +101,10 @@
                     </thead>
                     <tbody>
                         <tr th:each="participante : ${participantes}">
-                            <td th:text="${participante.nomeCompleto}">Ana Souza</td>
-                            <td th:text="${participante.rmOuRg}">RM-123</td>
-                            <td th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
-                            <td th:if="${edicaoPermitida}">
+                            <td data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</td>
+                            <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
+                            <td data-label="Categoria" th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
+                            <td data-label="Ações" th:if="${edicaoPermitida}">
                                 <div class="table-actions">
                                     <a class="button button--secondary button--small"
                                        th:href="@{/solicitacoes/{reservaId}/participantes/{participanteId}/editar(reservaId=${solicitacao.id}, participanteId=${participante.id})}">
