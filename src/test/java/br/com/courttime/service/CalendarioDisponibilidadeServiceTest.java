@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -53,15 +54,13 @@ class CalendarioDisponibilidadeServiceTest {
     }
 
     @Test
-    void minimumRequestDateIsTheDayAfterTheLocalCurrentDate() {
-        assertEquals(service.obterDataAtual().plusDays(1), service.obterDataMinimaParaSolicitacao());
-    }
+    void currentDateTimeUsesSaoPauloZone() {
+        LocalDateTime antes = LocalDateTime.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
+        LocalDateTime obtido = service.obterDataHoraAtual();
+        LocalDateTime depois = LocalDateTime.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
 
-    @Test
-    void currentDateUsesSaoPauloZone() {
-        assertEquals(
-                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO),
-                service.obterDataAtual());
+        assertFalse(obtido.isBefore(antes));
+        assertFalse(obtido.isAfter(depois));
     }
 
     @Test
