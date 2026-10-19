@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
@@ -113,6 +114,7 @@ public class ReservaService {
         Reserva reserva = obterParaAnalise(reservaId);
         impedirAnaliseDaPropriaSolicitacao(reserva, administradorAtual);
         validarPendente(reserva);
+        validarPeriodoAindaNaoIniciado(reserva);
         validarElegibilidade(reserva);
 
         Quadra quadraBloqueada = quadraRepository.findByIdForUpdate(reserva.getQuadra().getId())
@@ -238,6 +240,29 @@ public class ReservaService {
     private void impedirAnaliseDaPropriaSolicitacao(Reserva reserva, Usuario administrador) {
         if (Objects.equals(reserva.getSolicitante().getId(), administrador.getId())) {
             throw new AccessDeniedException("O usuário não pode analisar a própria solicitação");
+        }
+    }
+
+    /**
+     * Uma solicitação pode ficar parada na fila e chegar à análise quando o
+     * período de utilização já começou ou já terminou. Nesse caso a autorização
+     * não teria efeito, então a aprovação é recusada.
+     *
+     * A aprovação no próprio dia continua permitida enquanto o horário não
+     * começou: o termo da ETEC exige um dia de antecedência para a entrega da
+     * documentação assinada, e não para a decisão da direção.
+     *
+     * A rejeição continua permitida em qualquer data, para que a administração
+     * consiga encerrar uma solicitação vencida com um motivo registrado.
+     */
+    private void validarPeriodoAindaNaoIniciado(Reserva reserva) {
+        LocalDateTime inicioDaUtilizacao = LocalDateTime.of(
+                reserva.getDataUtilizacao(), reserva.getHorarioInicio());
+        if (!inicioDaUtilizacao.isAfter(
+                calendarioDisponibilidadeService.obterDataHoraAtual())) {
+            throw new IllegalStateException(
+                    "A reserva não pode ser aprovada porque o horário de utilização "
+                            + "já começou ou já passou");
         }
     }
 
