@@ -16,6 +16,7 @@ import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.BloqueioQuadraRepository;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
+import br.com.courttime.repository.AjusteContribuicaoApmRepository;
 import br.com.courttime.repository.ConferenciaDocumentoRepository;
 import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
@@ -91,6 +92,9 @@ class ReservaPostgreSqlIntegrationTest {
     private ContribuicaoApmRepository contribuicaoApmRepository;
 
     @Autowired
+    private AjusteContribuicaoApmRepository ajusteContribuicaoApmRepository;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private Quadra quadra;
@@ -99,6 +103,7 @@ class ReservaPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBanco() {
+        ajusteContribuicaoApmRepository.deleteAllInBatch();
         contribuicaoApmRepository.deleteAllInBatch();
         conferenciaDocumentoRepository.deleteAllInBatch();
         documentoReservaRepository.deleteAllInBatch();

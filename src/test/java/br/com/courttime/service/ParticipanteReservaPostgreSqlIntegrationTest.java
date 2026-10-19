@@ -8,8 +8,12 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
+import br.com.courttime.repository.AjusteContribuicaoApmRepository;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.ConferenciaDocumentoRepository;
+import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
+import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -40,6 +44,14 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
     private ParticipanteReservaService participanteService;
     @Autowired
     private ParticipanteReservaRepository participanteRepository;
+    @Autowired
+    private AjusteContribuicaoApmRepository ajusteContribuicaoRepository;
+    @Autowired
+    private ContribuicaoApmRepository contribuicaoRepository;
+    @Autowired
+    private ConferenciaDocumentoRepository conferenciaDocumentoRepository;
+    @Autowired
+    private DocumentoReservaRepository documentoReservaRepository;
     @Autowired
     private ReservaRepository reservaRepository;
     @Autowired
@@ -258,6 +270,10 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
     }
 
     private void limparBanco() {
+        ajusteContribuicaoRepository.deleteAllInBatch();
+        contribuicaoRepository.deleteAllInBatch();
+        conferenciaDocumentoRepository.deleteAllInBatch();
+        documentoReservaRepository.deleteAllInBatch();
         participanteRepository.deleteAllInBatch();
         auditoriaRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();

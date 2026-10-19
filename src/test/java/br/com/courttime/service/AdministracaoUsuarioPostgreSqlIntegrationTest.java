@@ -8,8 +8,13 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
+import br.com.courttime.repository.AjusteContribuicaoApmRepository;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.ConferenciaDocumentoRepository;
+import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
+import br.com.courttime.repository.DocumentoReservaRepository;
+import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
@@ -50,6 +55,16 @@ class AdministracaoUsuarioPostgreSqlIntegrationTest {
     @Autowired
     private ReservaRepository reservaRepository;
     @Autowired
+    private AjusteContribuicaoApmRepository ajusteContribuicaoRepository;
+    @Autowired
+    private ContribuicaoApmRepository contribuicaoRepository;
+    @Autowired
+    private ConferenciaDocumentoRepository conferenciaDocumentoRepository;
+    @Autowired
+    private DocumentoReservaRepository documentoReservaRepository;
+    @Autowired
+    private ParticipanteReservaRepository participanteReservaRepository;
+    @Autowired
     private BloqueioQuadraRepository bloqueioRepository;
     @Autowired
     private DisponibilidadeQuadraRepository disponibilidadeRepository;
@@ -65,6 +80,11 @@ class AdministracaoUsuarioPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoIsolado() {
+        ajusteContribuicaoRepository.deleteAllInBatch();
+        contribuicaoRepository.deleteAllInBatch();
+        conferenciaDocumentoRepository.deleteAllInBatch();
+        documentoReservaRepository.deleteAllInBatch();
+        participanteReservaRepository.deleteAllInBatch();
         auditoriaRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();
         bloqueioRepository.deleteAllInBatch();
