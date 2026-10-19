@@ -10,6 +10,7 @@ import br.com.courttime.service.ConsultaDisponibilidade;
 import br.com.courttime.service.HorarioDisponibilidade;
 import br.com.courttime.service.QuadraService;
 import br.com.courttime.service.ReservaService;
+import br.com.courttime.service.SituacaoSolicitacaoService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -39,23 +40,29 @@ public class SolicitacaoReservaController {
     private final ReservaService reservaService;
     private final QuadraService quadraService;
     private final CalendarioDisponibilidadeService calendarioDisponibilidadeService;
+    private final SituacaoSolicitacaoService situacaoService;
     private final UsuarioRepository usuarioRepository;
 
     public SolicitacaoReservaController(
             ReservaService reservaService,
             QuadraService quadraService,
             CalendarioDisponibilidadeService calendarioDisponibilidadeService,
+            SituacaoSolicitacaoService situacaoService,
             UsuarioRepository usuarioRepository) {
         this.reservaService = reservaService;
         this.quadraService = quadraService;
         this.calendarioDisponibilidadeService = calendarioDisponibilidadeService;
+        this.situacaoService = situacaoService;
         this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
     public String listar(Authentication authentication, Model model) {
         Usuario usuario = obterUsuarioAutenticado(authentication);
-        model.addAttribute("solicitacoes", reservaService.listarSolicitacoesDoUsuario(usuario));
+        model.addAttribute(
+                "solicitacoes",
+                situacaoService.descrever(
+                        reservaService.listarSolicitacoesDoUsuario(usuario)));
         return "solicitacoes/lista";
     }
 
@@ -119,8 +126,9 @@ public class SolicitacaoReservaController {
             @PathVariable Long id, Authentication authentication, Model model) {
         Usuario usuario = obterUsuarioAutenticado(authentication);
         try {
-            model.addAttribute(
-                    "solicitacao", reservaService.obterSolicitacaoDoUsuario(id, usuario));
+            Reserva solicitacao = reservaService.obterSolicitacaoDoUsuario(id, usuario);
+            model.addAttribute("solicitacao", solicitacao);
+            model.addAttribute("situacao", situacaoService.descrever(solicitacao));
         } catch (AccessDeniedException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

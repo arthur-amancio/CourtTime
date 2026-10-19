@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Conferir documento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/secretaria/documentos}">Fila de documentos</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/secretaria/documentos}">Documentos</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Conferência</span>
+        </nav>
+
+        <header class="page-heading">
+            <h1>Conferir documento</h1>
+            <p>A conferência registra uma decisão sobre esta versão e não altera o PDF original.</p>
+        </header>
+
+        <section class="request-details" aria-labelledby="documento-title">
+            <div class="request-details__status">
+                <h2 id="documento-title" th:text="|Solicitação #${documento.reserva.id}|">Solicitação #20</h2>
+                <strong class="status-pill" th:text="|v${documento.versao}|">v1</strong>
+            </div>
+            <dl class="details-list">
+                <div>
+                    <dt>Solicitante</dt>
+                    <dd th:text="${documento.reserva.solicitante.nome}">Ana Souza</dd>
+                </div>
+                <div>
+                    <dt>Arquivo original</dt>
+                    <dd th:text="${documento.nomeOriginal}">termo.pdf</dd>
+                </div>
+                <div>
+                    <dt>Enviado em</dt>
+                    <dd th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</dd>
+                </div>
+                <div>
+                    <dt>Resultado</dt>
+                    <dd th:if="${documento.conferencia == null}">Aguardando conferência</dd>
+                    <dd th:if="${documento.conferencia != null}"
+                        th:text="${documento.conferencia.resultado.descricao}">Validado</dd>
+                </div>
+                <div th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}">
+                    <dt>Justificativa</dt>
+                    <dd th:text="${documento.conferencia.justificativa}">Correção necessária.</dd>
+                </div>
+            </dl>
+        </section>
+
+        <div class="form-actions">
+            <a class="button button--secondary"
+               th:href="@{/secretaria/documentos/{id}/baixar(id=${documento.id})}">Baixar PDF original</a>
+        </div>
+
+        <section class="form-section" aria-labelledby="decisao-title"
+                 th:if="${conferenciaPermitida}">
+            <h2 id="decisao-title">Registrar conferência</h2>
+            <div class="request-notice">
+                <strong>Importante</strong>
+                <p>Validar a documentação não aprova a utilização da quadra.</p>
+            </div>
+            <form class="request-form"
+                  th:action="@{/secretaria/documentos/{id}/validar(id=${documento.id})}"
+                  method="post">
+                <button class="button" type="submit">Validar documento</button>
+            </form>
+            <form class="request-form"
+                  th:action="@{/secretaria/documentos/{id}/devolver(id=${documento.id})}"
+                  method="post">
+                <div class="form-field">
+                    <label for="justificativa">Justificativa da correção</label>
+                    <textarea id="justificativa" name="justificativa" maxlength="500" rows="5"
+                              required aria-describedby="justificativa-ajuda"></textarea>
+                    <p id="justificativa-ajuda" class="field-help">
+                        Explique de forma objetiva o que o aluno precisa corrigir. Máximo de 500 caracteres.
+                    </p>
+                </div>
+                <button class="button button--secondary" type="submit">Devolver para correção</button>
+            </form>
+        </section>
+
+        <p class="request-notice"
+           th:if="${documento.conferencia == null and !conferenciaPermitida}">
+            Esta versão não está disponível para uma nova conferência. Consulte a versão mais recente na fila.
+        </p>
+
+        <div class="form-actions">
+            <a class="button button--secondary" th:href="@{/secretaria/documentos}">Voltar à fila</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>

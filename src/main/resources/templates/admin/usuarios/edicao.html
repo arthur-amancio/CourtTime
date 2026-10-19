@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Editar usuário</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header"><a class="skip-link" href="#conteudo">Pular para o conteúdo</a><div class="container site-header__inner site-header__inner--authenticated"><a class="brand" th:href="@{/inicio}">CourtTime</a><div class="site-header__actions"><a class="text-link" th:href="@{/admin/usuarios}">Usuários</a><form class="logout-form" th:action="@{/logout}" method="post"><button class="button button--secondary button--small" type="submit">Sair</button></form></div></div></header>
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/usuarios}">Usuários</a><span aria-hidden="true">/</span><span aria-current="page">Editar</span></nav>
+        <header class="page-heading"><h1>Editar usuário</h1><p>Altere somente os dados administrativos necessários.</p></header>
+        <form class="request-form" th:action="@{/admin/usuarios/{id}(id=${usuario.id})}" th:object="${form}" method="post">
+            <div class="form-message form-message--error" role="alert" th:if="${#fields.hasAnyErrors()}">
+                <strong>Revise os dados informados.</strong>
+                <ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro</li></ul>
+            </div>
+            <div class="form-field">
+                <label for="nome">Nome completo</label>
+                <input id="nome" type="text" th:field="*{nome}" maxlength="150" required
+                       th:attr="aria-invalid=${#fields.hasErrors('nome')},aria-describedby=${#fields.hasErrors('nome')} ? 'nome-erro' : null">
+                <p id="nome-erro" class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Informe o nome completo.</p>
+            </div>
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" maxlength="254" required
+                       th:attr="aria-invalid=${#fields.hasErrors('email')},aria-describedby=${#fields.hasErrors('email')} ? 'email-erro' : null">
+                <p id="email-erro" class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Informe um email válido.</p>
+            </div>
+            <div class="form-field" th:if="${usuario.perfil.name() != 'ADMINISTRADOR'}">
+                <label for="perfil">Perfil</label>
+                <select id="perfil" th:field="*{perfil}" required
+                        th:attr="aria-invalid=${#fields.hasErrors('perfil')},aria-describedby=${#fields.hasErrors('perfil')} ? 'perfil-erro' : null">
+                    <option th:each="item : ${perfis}" th:value="${item}" th:text="${item.descricao}">Aluno</option>
+                </select>
+                <p id="perfil-erro" class="field-error" th:if="${#fields.hasErrors('perfil')}" th:errors="*{perfil}">Selecione o perfil.</p>
+            </div>
+            <div class="form-field" th:if="${usuario.perfil.name() == 'ADMINISTRADOR'}"><span class="field-label">Perfil</span><strong>Administrador</strong><input type="hidden" th:field="*{perfil}"><p class="field-help">O perfil administrativo não pode ser alterado nesta interface.</p></div>
+            <div class="form-actions"><button class="button" type="submit">Salvar alterações</button><a class="button button--secondary" th:href="@{/admin/usuarios}">Cancelar</a></div>
+        </form>
+    </main>
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

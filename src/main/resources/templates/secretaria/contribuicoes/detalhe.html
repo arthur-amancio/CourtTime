@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:with="contribuicao=${detalhe.contribuicao}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Histórico da contribuição</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/secretaria/contribuicoes}">Contribuições</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/secretaria/contribuicoes}">Contribuições</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page" th:text="|Solicitação #${contribuicao.reserva.id}|">Solicitação #20</span>
+        </nav>
+
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
+        <header class="page-heading">
+            <h1>Histórico da contribuição</h1>
+            <p>O registro comprova apenas o recebimento presencial informado pela secretaria. Ele não aprova a reserva.</p>
+        </header>
+
+        <section class="request-details" aria-labelledby="contribuicao-title">
+            <div class="request-details__status">
+                <h2 id="contribuicao-title" th:text="|Solicitação #${contribuicao.reserva.id}|">Solicitação #20</h2>
+                <strong class="status-pill"
+                        th:text="|R$ ${#numbers.formatDecimal(contribuicao.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 20,00</strong>
+            </div>
+            <dl class="details-list">
+                <div>
+                    <dt>Solicitante</dt>
+                    <dd th:text="${contribuicao.reserva.solicitante.nome}">Ana Souza</dd>
+                </div>
+                <div>
+                    <dt>Documento conferido</dt>
+                    <dd th:text="|Versão ${contribuicao.conferenciaDocumento.documento.versao}|">Versão 1</dd>
+                </div>
+                <div>
+                    <dt>Responsável pelo registro</dt>
+                    <dd th:text="${contribuicao.registradaPor.nome}">Secretaria</dd>
+                </div>
+                <div>
+                    <dt>Registrado em</dt>
+                    <dd th:text="${#temporals.format(contribuicao.registradaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</dd>
+                </div>
+                <div>
+                    <dt>Observações atuais</dt>
+                    <dd th:text="${#strings.isEmpty(contribuicao.observacoes) ? 'Sem observações.' : contribuicao.observacoes}">Sem observações.</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="form-section" aria-labelledby="ajuste-title">
+            <h2 id="ajuste-title">Registrar ajuste</h2>
+            <p>Use esta ação somente para corrigir o valor ou as observações. O registro original permanece no histórico.</p>
+            <form class="request-form"
+                  th:action="@{/secretaria/contribuicoes/{id}/ajustes(id=${contribuicao.id})}"
+                  method="post">
+                <div class="form-field">
+                    <label for="novoValor">Novo valor (R$)</label>
+                    <input id="novoValor" name="novoValor" type="number"
+                           min="0.01" max="9999999999.99" step="0.01" inputmode="decimal"
+                           th:value="${contribuicao.valor}" required>
+                </div>
+                <div class="form-field">
+                    <label for="novasObservacoes">Novas observações</label>
+                    <textarea id="novasObservacoes" name="novasObservacoes" maxlength="500" rows="4"
+                              th:text="${contribuicao.observacoes}"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="motivo">Justificativa do ajuste</label>
+                    <textarea id="motivo" name="motivo" maxlength="500" rows="4" required
+                              aria-describedby="motivo-ajuda"></textarea>
+                    <p id="motivo-ajuda" class="field-help">Explique o motivo da correção. Não use este campo para registrar estorno ou reembolso.</p>
+                </div>
+                <button class="button" type="submit">Registrar ajuste no histórico</button>
+            </form>
+        </section>
+
+        <section class="form-section" aria-labelledby="historico-title">
+            <h2 id="historico-title">Ajustes anteriores</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(detalhe.ajustes)}">
+                Nenhum ajuste foi registrado. O valor atual é o mesmo do recebimento inicial.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(detalhe.ajustes)}">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Data</th>
+                            <th scope="col">Responsável</th>
+                            <th scope="col">Alteração</th>
+                            <th scope="col">Observações</th>
+                            <th scope="col">Justificativa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ajuste : ${detalhe.ajustes}">
+                            <td th:text="${#temporals.format(ajuste.ajustadaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
+                            <td th:text="${ajuste.ajustadaPor.nome}">Secretaria</td>
+                            <td th:text="|R$ ${#numbers.formatDecimal(ajuste.valorAnterior, 1, 'POINT', 2, 'COMMA')} → R$ ${#numbers.formatDecimal(ajuste.valorNovo, 1, 'POINT', 2, 'COMMA')}|">
+                                R$ 20,00 → R$ 22,00
+                            </td>
+                            <td>
+                                <span th:text="|Anterior: ${#strings.isEmpty(ajuste.observacoesAnteriores) ? 'sem observações' : ajuste.observacoesAnteriores}|">Anterior: sem observações</span>
+                                <br>
+                                <span th:text="|Nova: ${#strings.isEmpty(ajuste.observacoesNovas) ? 'sem observações' : ajuste.observacoesNovas}|">Nova: sem observações</span>
+                            </td>
+                            <td th:text="${ajuste.motivo}">Correção de digitação.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <a class="button button--secondary" th:href="@{/secretaria/contribuicoes}">Voltar às contribuições</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>

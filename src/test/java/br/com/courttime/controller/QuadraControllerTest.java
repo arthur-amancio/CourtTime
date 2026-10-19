@@ -2,6 +2,7 @@ package br.com.courttime.controller;
 
 import br.com.courttime.config.SecurityConfig;
 import br.com.courttime.entity.Quadra;
+import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.CalendarioDisponibilidadeService;
 import br.com.courttime.service.ConsultaDisponibilidade;
 import br.com.courttime.service.HorarioDisponibilidade;
@@ -40,6 +41,9 @@ class QuadraControllerTest {
 
     @MockitoBean
     private CalendarioDisponibilidadeService calendarioDisponibilidadeService;
+
+    @MockitoBean
+    private UsuarioRepository usuarioRepository;
 
     private Quadra quadra;
     private LocalDate data;

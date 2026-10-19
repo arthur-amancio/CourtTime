@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Reservas autorizadas</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/inicio}">Início</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Reservas autorizadas</span>
+        </nav>
+
+        <header class="page-heading">
+            <h1>Reservas autorizadas</h1>
+            <p>Consulte as reservas liberadas para hoje e para as próximas datas.</p>
+        </header>
+
+        <p class="empty-message" th:if="${#lists.isEmpty(reservas)}">
+            Não há reservas autorizadas para hoje ou para as próximas datas.
+        </p>
+
+        <div class="table-wrapper" role="region" aria-labelledby="reservas-title" tabindex="0"
+             th:unless="${#lists.isEmpty(reservas)}">
+            <h2 id="reservas-title" class="visually-hidden">Lista de reservas autorizadas</h2>
+            <table class="schedule-table">
+                <caption class="visually-hidden">Reservas autorizadas disponíveis para conferência</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col">Horário</th>
+                        <th scope="col">Quadra</th>
+                        <th scope="col">Solicitante</th>
+                        <th scope="col">Participantes</th>
+                        <th scope="col"><span class="visually-hidden">Ação</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reserva : ${reservas}">
+                        <td th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                        <td th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                        <td th:text="${reserva.quadra}">Quadra Poliesportiva</td>
+                        <td th:text="${reserva.solicitante}">Ana Souza</td>
+                        <td th:text="${reserva.quantidadeParticipantes}">10</td>
+                        <td><a class="text-link" th:href="@{/seguranca/reservas/{id}(id=${reserva.id})}">Conferir</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

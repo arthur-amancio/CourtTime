@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Análise de solicitações</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/admin}">Painel administrativo</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <a th:href="@{/admin}">Administração</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Solicitações</span>
+        </nav>
+
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
+        <header class="page-heading">
+            <h1>Análise de solicitações</h1>
+            <p>Fila de solicitações com documento conferido, participantes válidos e contribuição registrada.</p>
+        </header>
+
+        <p class="empty-message" th:if="${#lists.isEmpty(solicitacoes)}">
+            Não há solicitações prontas para análise administrativa.
+        </p>
+
+        <div class="table-wrapper" role="region" aria-labelledby="fila-title" tabindex="0"
+             th:unless="${#lists.isEmpty(solicitacoes)}">
+            <h2 id="fila-title" class="visually-hidden">Fila de solicitações prontas para análise</h2>
+            <table class="schedule-table requests-table">
+                <caption class="visually-hidden">Solicitações aguardando decisão administrativa</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Solicitante</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Horário</th>
+                        <th scope="col">Finalidade</th>
+                        <th scope="col"><span class="visually-hidden">Ação</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="solicitacao : ${solicitacoes}">
+                        <td th:text="${solicitacao.solicitante.nome}">Ana Souza</td>
+                        <td th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                        <td th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                        <td th:text="${solicitacao.finalidade}">Treino da turma</td>
+                        <td><a class="text-link" th:href="@{/admin/solicitacoes/{id}(id=${solicitacao.id})}">Analisar</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <section class="admin-section" aria-labelledby="autorizadas-title">
+            <header class="page-heading">
+                <h2 id="autorizadas-title">Reservas autorizadas</h2>
+                <p>Reservas de hoje em diante que ainda autorizam a utilização da quadra.</p>
+            </header>
+
+            <p class="empty-message" th:if="${#lists.isEmpty(reservasAutorizadas)}">
+                Não há reservas autorizadas atuais ou futuras.
+            </p>
+
+            <div class="table-wrapper" role="region" aria-labelledby="autorizadas-title" tabindex="0"
+                 th:unless="${#lists.isEmpty(reservasAutorizadas)}">
+                <table class="schedule-table requests-table">
+                    <caption class="visually-hidden">Reservas autorizadas disponíveis para consulta administrativa</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Solicitante</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Horário</th>
+                            <th scope="col">Finalidade</th>
+                            <th scope="col"><span class="visually-hidden">Ação</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="reserva : ${reservasAutorizadas}">
+                            <td th:text="${reserva.solicitante.nome}">Ana Souza</td>
+                            <td th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                            <td th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                            <td th:text="${reserva.finalidade}">Treino da turma</td>
+                            <td><a class="text-link" th:href="@{/admin/solicitacoes/{id}(id=${reserva.id})}">Abrir</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+</body>
+</html>

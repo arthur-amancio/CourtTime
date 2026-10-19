@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Contribuições presenciais</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner site-header__inner--authenticated">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+            <div class="site-header__actions">
+                <a class="text-link" th:href="@{/secretaria/documentos}">Conferência documental</a>
+                <form class="logout-form" th:action="@{/logout}" method="post">
+                    <button class="button button--secondary button--small" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container app-main">
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Contribuições presenciais</span>
+        </nav>
+
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
+        <header class="page-heading">
+            <h1>Contribuições presenciais</h1>
+            <p>Registre somente valores efetivamente recebidos na escola, após a conferência do documento.</p>
+        </header>
+
+        <div class="request-notice">
+            <strong>Referência institucional pendente</strong>
+            <p>O valor de R$ 2,00 por participante/hora ainda depende de confirmação da ETEC. O sistema não calcula nem confirma valores automaticamente.</p>
+        </div>
+
+        <section class="admin-section" aria-labelledby="pendentes-title">
+            <h2 id="pendentes-title">Aguardando registro</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(pendentes)}">
+                Não há solicitações com a versão documental mais recente validada e sem contribuição registrada.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(pendentes)}">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Solicitação</th>
+                            <th scope="col">Solicitante</th>
+                            <th scope="col">Uso da quadra</th>
+                            <th scope="col">Registro presencial</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="reserva : ${pendentes}">
+                            <td th:text="|#${reserva.id}|">#20</td>
+                            <td th:text="${reserva.solicitante.nome}">Ana Souza</td>
+                            <td th:text="|${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')} das ${#temporals.format(reserva.horarioInicio, 'HH:mm')} às ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">
+                                20/10/2026 das 08:00 às 09:00
+                            </td>
+                            <td>
+                                <form class="request-form"
+                                      th:action="@{/secretaria/contribuicoes/solicitacoes/{id}(id=${reserva.id})}"
+                                      method="post">
+                                    <div class="form-field">
+                                        <label th:for="|valor-${reserva.id}|">Valor recebido (R$)</label>
+                                        <input th:id="|valor-${reserva.id}|" name="valor" type="number"
+                                               min="0.01" max="9999999999.99" step="0.01"
+                                               inputmode="decimal" required>
+                                    </div>
+                                    <div class="form-field">
+                                        <label th:for="|observacoes-${reserva.id}|">Observações</label>
+                                        <textarea th:id="|observacoes-${reserva.id}|" name="observacoes"
+                                                  maxlength="500" rows="3"></textarea>
+                                    </div>
+                                    <button class="button button--small" type="submit">Registrar recebimento</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="admin-section" aria-labelledby="historico-title">
+            <h2 id="historico-title">Histórico de contribuições</h2>
+            <p class="empty-message" th:if="${#lists.isEmpty(registradas)}">
+                Nenhuma contribuição presencial foi registrada.
+            </p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(registradas)}">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Solicitação</th>
+                            <th scope="col">Valor atual</th>
+                            <th scope="col">Registrado por</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="contribuicao : ${registradas}">
+                            <td th:text="|#${contribuicao.reserva.id}|">#20</td>
+                            <td th:text="|R$ ${#numbers.formatDecimal(contribuicao.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 20,00</td>
+                            <td th:text="${contribuicao.registradaPor.nome}">Secretaria</td>
+                            <td th:text="${#temporals.format(contribuicao.registradaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
+                            <td>
+                                <a class="button button--secondary button--small"
+                                   th:href="@{/secretaria/contribuicoes/solicitacoes/{id}(id=${contribuicao.reserva.id})}">Consultar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <p class="site-footer__brand">CourtTime</p>
+            <p>ETEC Prof. Armando José Farinazzo</p>
+        </div>
+    </footer>
+</body>
+</html>
