@@ -29,6 +29,29 @@
             <p>Olá, <span th:text="${nome}">Usuário</span>. Escolha uma das ações disponíveis para sua conta.</p>
         </header>
 
+        <section class="situacao-atual" th:if="${ultimaSolicitacao != null}"
+                 aria-labelledby="situacao-atual-title">
+            <h2 id="situacao-atual-title">Sua solicitação mais recente</h2>
+            <div class="action-card">
+                <h3 class="action-card__title"
+                    th:text="|${#temporals.format(ultimaSolicitacao.solicitacao.dataUtilizacao, 'dd/MM/yyyy')} das ${#temporals.format(ultimaSolicitacao.solicitacao.horarioInicio, 'HH:mm')} às ${#temporals.format(ultimaSolicitacao.solicitacao.horarioFim, 'HH:mm')}|">
+                    20/10/2026 das 08:00 às 09:00
+                </h3>
+                <p class="action-card__status">
+                    <strong class="status-pill"
+                            th:classappend="${ultimaSolicitacao.situacao.autorizada} ? ' status-pill--ok' : ''"
+                            th:text="${ultimaSolicitacao.situacao.titulo}">Pendente de documentação</strong>
+                </p>
+                <p class="status-next" th:text="${ultimaSolicitacao.situacao.explicacao}">
+                    Revise os participantes e envie o PDF preparado e assinado fora do sistema.
+                </p>
+                <div class="form-actions">
+                    <a class="button"
+                       th:href="@{/solicitacoes/{id}(id=${ultimaSolicitacao.solicitacao.id})}">Abrir solicitação</a>
+                </div>
+            </div>
+        </section>
+
         <section class="quick-access" aria-labelledby="quick-access-title">
             <h2 id="quick-access-title">Acesso rápido</h2>
             <div class="quick-access__item">
