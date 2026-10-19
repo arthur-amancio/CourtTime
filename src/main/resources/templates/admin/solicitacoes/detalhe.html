@@ -118,6 +118,33 @@
             </form>
         </section>
 
+        <section class="admin-section" aria-labelledby="cancelamento-title"
+                 th:if="${detalhe.solicitacao.status.name() == 'APROVADA'}">
+            <h2 id="cancelamento-title">Cancelamento institucional</h2>
+            <p>A reserva deixará de autorizar a entrada. O PDF, os participantes e a contribuição permanecerão preservados.</p>
+            <form class="request-form decision-form" method="post"
+                  th:action="@{/admin/solicitacoes/{id}/cancelar(id=${detalhe.solicitacao.id})}">
+                <div class="form-field">
+                    <label for="motivoCancelamento">Motivo institucional</label>
+                    <textarea id="motivoCancelamento" name="motivo" maxlength="500" rows="4" required
+                              aria-describedby="motivo-cancelamento-ajuda"></textarea>
+                    <p id="motivo-cancelamento-ajuda" class="field-help">Obrigatório. Registre apenas o motivo real, com até 500 caracteres.</p>
+                </div>
+                <button class="button button--secondary" type="submit">Cancelar autorização</button>
+            </form>
+        </section>
+
+        <section class="admin-section" aria-labelledby="cancelada-title"
+                 th:if="${detalhe.solicitacao.status.name() == 'CANCELADA'}">
+            <h2 id="cancelada-title">Cancelamento institucional registrado</h2>
+            <dl class="details-list">
+                <div><dt>Motivo</dt><dd th:text="${detalhe.solicitacao.motivoCancelamentoInstitucional}">Manutenção emergencial.</dd></div>
+                <div><dt>Responsável</dt><dd th:text="${detalhe.solicitacao.canceladaPor.nome}">Administrador</dd></div>
+                <div><dt>Data do registro</dt><dd th:text="${#temporals.format(detalhe.solicitacao.canceladaEm, 'dd/MM/yyyy HH:mm')}">19/10/2026 10:00</dd></div>
+            </dl>
+            <p class="request-notice">Nenhum contato com o aluno ou reagendamento é presumido por este registro.</p>
+        </section>
+
         <div class="form-actions">
             <a class="button button--secondary" th:href="@{/admin/solicitacoes}">Voltar à fila</a>
         </div>

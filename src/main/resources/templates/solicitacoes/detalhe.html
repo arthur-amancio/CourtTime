@@ -52,6 +52,11 @@
                 Solicitação rejeitada.<br>
                 <span th:if="${solicitacao.motivoRejeicao}" th:text="${solicitacao.motivoRejeicao}">Motivo informado pela instituição.</span>
             </p>
+            <div class="form-message form-message--error" th:if="${solicitacao.status.name() == 'CANCELADA'}">
+                <p><strong>Cancelamento institucional registrado.</strong></p>
+                <p th:text="${solicitacao.motivoCancelamentoInstitucional}">Motivo informado pela instituição.</p>
+                <p>A equipe da escola ainda precisa registrar qualquer contato ou encaminhamento de reagendamento.</p>
+            </div>
 
             <dl class="details-list">
                 <div>

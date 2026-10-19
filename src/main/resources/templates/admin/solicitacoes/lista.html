@@ -31,6 +31,8 @@
 
         <p class="form-message form-message--success" role="status"
            th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
 
         <header class="page-heading">
             <h1>Análise de solicitações</h1>
@@ -66,6 +68,42 @@
                 </tbody>
             </table>
         </div>
+
+        <section class="admin-section" aria-labelledby="autorizadas-title">
+            <header class="page-heading">
+                <h2 id="autorizadas-title">Reservas autorizadas</h2>
+                <p>Reservas de hoje em diante que ainda autorizam a utilização da quadra.</p>
+            </header>
+
+            <p class="empty-message" th:if="${#lists.isEmpty(reservasAutorizadas)}">
+                Não há reservas autorizadas atuais ou futuras.
+            </p>
+
+            <div class="table-wrapper" role="region" aria-labelledby="autorizadas-title" tabindex="0"
+                 th:unless="${#lists.isEmpty(reservasAutorizadas)}">
+                <table class="schedule-table requests-table">
+                    <caption class="visually-hidden">Reservas autorizadas disponíveis para consulta administrativa</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Solicitante</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Horário</th>
+                            <th scope="col">Finalidade</th>
+                            <th scope="col"><span class="visually-hidden">Ação</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="reserva : ${reservasAutorizadas}">
+                            <td th:text="${reserva.solicitante.nome}">Ana Souza</td>
+                            <td th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                            <td th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                            <td th:text="${reserva.finalidade}">Treino da turma</td>
+                            <td><a class="text-link" th:href="@{/admin/solicitacoes/{id}(id=${reserva.id})}">Abrir</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
