@@ -623,9 +623,27 @@ textarea {
 }
 
 .status-pill {
+    display: inline-block;
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
     font-size: 0.875rem;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+}
+
+.status-pill--ok {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+/* Explicacao do proximo passo, exibida abaixo da situacao da solicitacao. */
+.status-next {
+    display: block;
+    margin-top: 0.35rem;
+    max-width: 34ch;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--muted);
 }
 
 .status-pill--available {
@@ -702,6 +720,9 @@ textarea {
 }
 
 .table-wrapper {
+    /* Sem position, o overflow nao recorta os rotulos acessiveis, que usam
+       position: absolute. Isso fazia a pagina inteira rolar na horizontal. */
+    position: relative;
     overflow-x: auto;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -875,5 +896,67 @@ textarea {
     *::after {
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* No celular, as tabelas marcadas com table-cards deixam de rolar na horizontal:
+   cada linha vira um cartao e o nome da coluna aparece antes do valor, lido do
+   atributo data-label. Sem JavaScript e sem biblioteca. */
+@media (max-width: 620px) {
+    .table-cards thead {
+        display: none;
+    }
+
+    .table-cards,
+    .table-cards tbody,
+    .table-cards tr,
+    .table-cards td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-cards tr {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .table-cards tr:last-child {
+        border-bottom: 0;
+    }
+
+    .table-cards td {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.3rem 0;
+        border: 0;
+    }
+
+    .table-cards td::before {
+        content: attr(data-label);
+        flex: none;
+        font-weight: 600;
+        color: var(--muted);
+    }
+
+    .table-cards td:empty {
+        display: none;
+    }
+
+    /* A situacao da solicitacao traz uma explicacao de varias linhas, entao a
+       celula empilha rotulo e conteudo em vez de alinhar nas pontas. */
+    .table-cards .cell-status {
+        display: block;
+    }
+
+    .table-cards .cell-status::before {
+        display: block;
+        margin-bottom: 0.4rem;
+    }
+
+    .status-next {
+        max-width: none;
     }
 }
