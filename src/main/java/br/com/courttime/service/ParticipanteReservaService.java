@@ -67,6 +67,12 @@ public class ParticipanteReservaService {
     }
 
     @Transactional(readOnly = true)
+    public boolean podeAlterar(Long reservaId, Usuario solicitante) {
+        Reserva reserva = obterReservaDoSolicitante(reservaId, solicitante);
+        return alteracaoEstaPermitida(reserva);
+    }
+
+    @Transactional(readOnly = true)
     public void validarDocumentoAtual(Reserva reserva, DocumentoReserva documento) {
         if (reserva == null || documento == null) {
             throw new IllegalArgumentException("A solicitação e o documento são obrigatórios");
@@ -141,21 +147,24 @@ public class ParticipanteReservaService {
                         reservaId, solicitante.getId())
                 .orElseThrow(() -> new AccessDeniedException(
                         "A solicitação não existe ou não pertence ao usuário autenticado"));
-        if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
-            throw new IllegalStateException(
-                    "Os participantes só podem ser alterados enquanto a documentação está pendente");
-        }
-        DocumentoReserva documentoMaisRecente = documentoRepository
-                .obterVersaoMaisRecenteComConferencia(reserva)
-                .orElse(null);
-        if (documentoMaisRecente != null
-                && (documentoMaisRecente.getConferencia() == null
-                || documentoMaisRecente.getConferencia().getResultado()
-                != ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO)) {
+        if (!alteracaoEstaPermitida(reserva)) {
             throw new IllegalStateException(
                     "Os participantes só podem ser alterados antes do envio ou após a devolução do documento");
         }
         return reserva;
+    }
+
+    private boolean alteracaoEstaPermitida(Reserva reserva) {
+        if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
+            return false;
+        }
+        DocumentoReserva documentoMaisRecente = documentoRepository
+                .obterVersaoMaisRecenteComConferencia(reserva)
+                .orElse(null);
+        return documentoMaisRecente == null
+                || documentoMaisRecente.getConferencia() != null
+                && documentoMaisRecente.getConferencia().getResultado()
+                == ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO;
     }
 
     private void impedirIdentificacaoDuplicada(

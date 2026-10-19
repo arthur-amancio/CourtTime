@@ -124,7 +124,7 @@ class ParticipanteReservaControllerTest {
                 .andExpect(content().string(containsString("Beatriz Almeida")))
                 .andExpect(content().string(containsString("RM-1234")))
                 .andExpect(content().string(containsString("Demais participantes")))
-                .andExpect(content().string(containsString("Mínimo planejado atendido")))
+                .andExpect(content().string(containsString("Mínimo de alunos atendido")))
                 .andExpect(content().string(containsString("limite máximo será confirmado")));
     }
 
@@ -270,6 +270,22 @@ class ParticipanteReservaControllerTest {
     }
 
     @Test
+    void documentoAguardandoConferenciaOcultaEdicaoMesmoComStatusDocumental() throws Exception {
+        prepararAlunoEReserva();
+        when(participanteService.podeAlterar(20L, aluno)).thenReturn(false);
+        when(participanteService.listar(20L, aluno)).thenReturn(List.of(participante));
+        when(participanteService.resumir(20L, aluno))
+                .thenReturn(new ResumoParticipantes(10, 0, 10, true));
+
+        mockMvc.perform(get("/solicitacoes/20/participantes")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "Alterações voltam a ser permitidas se a secretaria devolver")))
+                .andExpect(content().string(not(containsString("Adicionar participante"))));
+    }
+
+    @Test
     void mutacaoRecusadaPeloServicoMostraErroSemAlegarSucesso() throws Exception {
         prepararAlunoEReserva();
         when(participanteService.adicionar(
@@ -297,5 +313,7 @@ class ParticipanteReservaControllerTest {
     private void prepararAlunoEReserva() {
         prepararAluno();
         when(reservaService.obterSolicitacaoDoUsuario(20L, aluno)).thenReturn(reserva);
+        when(participanteService.podeAlterar(20L, aluno))
+                .thenReturn(reserva.getStatus() == StatusReserva.PENDENTE_DOCUMENTACAO);
     }
 }

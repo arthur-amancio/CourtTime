@@ -1,5 +1,6 @@
 package br.com.courttime.service;
 
+import br.com.courttime.entity.ContribuicaoApm;
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.ResultadoConferenciaDocumento;
@@ -81,10 +82,23 @@ public class SituacaoSolicitacaoService {
                     "Consulte a justificativa, corrija o documento fora do sistema e envie uma nova versão.",
                     false);
         }
-        if (!contribuicaoRepository.existsByReserva(solicitacao)) {
+        ContribuicaoApm contribuicao = contribuicaoRepository
+                .obterPorReservaId(solicitacao.getId())
+                .orElse(null);
+        if (contribuicao == null) {
             return new SituacaoSolicitacao(
                     "Contribuição pendente",
                     "O documento foi conferido. A secretaria ainda precisa registrar a contribuição presencial.",
+                    false);
+        }
+        if (contribuicao.getConferenciaDocumento() == null
+                || contribuicao.getConferenciaDocumento().getId() == null
+                || documento.getConferencia().getId() == null
+                || !contribuicao.getConferenciaDocumento().getId()
+                .equals(documento.getConferencia().getId())) {
+            return new SituacaoSolicitacao(
+                    "Contribuição precisa de revisão",
+                    "A secretaria precisa relacionar o registro presencial ao documento mais recente.",
                     false);
         }
         return new SituacaoSolicitacao(

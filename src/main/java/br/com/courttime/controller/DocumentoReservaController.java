@@ -1,7 +1,6 @@
 package br.com.courttime.controller;
 
 import br.com.courttime.entity.Reserva;
-import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.DocumentoReservaService;
@@ -63,7 +62,7 @@ public class DocumentoReservaController {
                     documentos.isEmpty() ? 0 : documentos.get(0).getVersao());
             model.addAttribute(
                     "envioPermitido",
-                    reserva.getStatus() == StatusReserva.PENDENTE_DOCUMENTACAO);
+                    documentoService.podeEnviar(reservaId, usuario));
             return "solicitacoes/documentos/lista";
         } catch (AccessDeniedException exception) {
             throw paginaNaoEncontrada();

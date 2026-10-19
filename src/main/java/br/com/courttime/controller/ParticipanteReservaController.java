@@ -3,7 +3,6 @@ package br.com.courttime.controller;
 import br.com.courttime.controller.form.ParticipanteReservaForm;
 import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Reserva;
-import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ParticipanteReservaService;
@@ -52,7 +51,9 @@ public class ParticipanteReservaController {
             model.addAttribute("solicitacao", reserva);
             model.addAttribute("participantes", participanteService.listar(reservaId, usuario));
             model.addAttribute("resumo", participanteService.resumir(reservaId, usuario));
-            model.addAttribute("edicaoPermitida", edicaoPermitida(reserva));
+            model.addAttribute(
+                    "edicaoPermitida",
+                    participanteService.podeAlterar(reservaId, usuario));
             return "solicitacoes/participantes/lista";
         } catch (AccessDeniedException exception) {
             throw paginaNaoEncontrada();
@@ -67,7 +68,7 @@ public class ParticipanteReservaController {
             RedirectAttributes redirectAttributes) {
         Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
-        if (!edicaoPermitida(reserva)) {
+        if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
         }
         prepararFormulario(
@@ -85,7 +86,7 @@ public class ParticipanteReservaController {
             RedirectAttributes redirectAttributes) {
         Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
-        if (!edicaoPermitida(reserva)) {
+        if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
         }
         if (bindingResult.hasErrors()) {
@@ -122,7 +123,7 @@ public class ParticipanteReservaController {
             RedirectAttributes redirectAttributes) {
         Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
-        if (!edicaoPermitida(reserva)) {
+        if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
         }
         try {
@@ -150,7 +151,7 @@ public class ParticipanteReservaController {
             RedirectAttributes redirectAttributes) {
         Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
-        if (!edicaoPermitida(reserva)) {
+        if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
         }
         if (bindingResult.hasErrors()) {
@@ -227,15 +228,11 @@ public class ParticipanteReservaController {
                         "Usuário autenticado não encontrado"));
     }
 
-    private boolean edicaoPermitida(Reserva reserva) {
-        return reserva.getStatus() == StatusReserva.PENDENTE_DOCUMENTACAO;
-    }
-
     private String redirecionarEdicaoBloqueada(
             Long reservaId, RedirectAttributes redirectAttributes) {
         return redirecionarErro(
                 reservaId,
-                "Os participantes só podem ser alterados enquanto a documentação está pendente.",
+                "Os participantes só podem ser alterados antes do envio ou após a devolução do documento.",
                 redirectAttributes);
     }
 
