@@ -2,7 +2,7 @@ package br.com.courttime.service;
 
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
-import org.springframework.security.core.userdetails.User;
+import br.com.courttime.security.UsuarioAutenticado;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,9 +25,6 @@ public class UsuarioDetailsService implements UserDetailsService {
                 .filter(Usuario::isAtivo)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado ou inativo"));
 
-        return User.withUsername(usuario.getEmail())
-                .password(usuario.getSenha())
-                .authorities("ROLE_" + usuario.getPerfil().name())
-                .build();
+        return new UsuarioAutenticado(usuario);
     }
 }

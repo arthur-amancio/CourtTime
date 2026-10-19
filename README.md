@@ -8,11 +8,11 @@ A consulta diária divide cada intervalo semanal em períodos de uma hora e cons
 
 ## Base de solicitações de reserva
 
-O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO` e só pode ser analisada administrativamente depois de avançar para `PENDENTE_ANALISE`, transição que será vinculada à conferência do termo oficial em etapa própria.
+O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO`. O registro presencial da contribuição promove a solicitação para `PENDENTE_ANALISE` somente quando a versão mais recente do PDF está conferida, corresponde à revisão atual da lista e possui ao menos dez participantes na categoria `ALUNO`.
 
-Na aprovação, o backend bloqueia o registro da única quadra durante a transação e verifica novamente horários semanais, bloqueios e reservas já aprovadas. Essa serialização impede que duas análises concorrentes aprovem períodos conflitantes.
+Na aprovação, o backend bloqueia a solicitação e o registro da única quadra durante a transação. Antes de autorizar, revalida o administrador, o documento e sua conferência manual, a revisão e o mínimo de alunos, a contribuição vinculada à conferência exata, os horários semanais, os bloqueios e as reservas já aprovadas. Essa serialização impede decisões repetidas e aprovações concorrentes para períodos conflitantes.
 
-O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Participantes e documentos serão adicionados somente quando seus campos e o termo institucional estiverem disponíveis, sem criar dados pessoais ou cláusulas fictícias.
+O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Nessa etapa, o aluno pode revisar os participantes da própria solicitação e enviar versões do PDF preparado externamente. O CourtTime preserva cada arquivo original sem modificá-lo e não declara que a assinatura foi validada.
 
 ## Stack
 
@@ -35,6 +35,7 @@ Crie um banco chamado `courttime` no PostgreSQL, se ele ainda não existir. Voc�
 | `COURTTIME_DB_URL` | URL JDBC; padrão: `jdbc:postgresql://localhost:5432/courttime` |
 | `COURTTIME_DB_USERNAME` | Usuário do banco; padrão: `postgres` |
 | `COURTTIME_DB_PASSWORD` | Senha do usuário; obrigatória |
+| `COURTTIME_DOCUMENT_STORAGE_PATH` | Diretório privado dos PDFs; padrão: `./data/documentos` |
 
 Defina a senha apenas no seu ambiente, nunca em arquivos versionados. No PowerShell, ajuste o caminho do JDK 17 e execute:
 
@@ -47,18 +48,21 @@ Remove-Variable senha
 .\mvnw.cmd spring-boot:run
 ```
 
-As variáveis `COURTTIME_DB_URL` e `COURTTIME_DB_USERNAME` são opcionais quando os valores padrão servem. Durante o desenvolvimento, o JPA/Hibernate cria e atualiza as tabelas no PostgreSQL com base nas entidades da aplicação.
+As variáveis `COURTTIME_DB_URL` e `COURTTIME_DB_USERNAME` são opcionais quando os valores padrão servem. Em produção, configure `COURTTIME_DOCUMENT_STORAGE_PATH` para um diretório persistente, privado e incluído na rotina autorizada de backup. O diretório não deve ser publicado por servidor web. Durante o desenvolvimento, o JPA/Hibernate cria e atualiza as tabelas no PostgreSQL com base nas entidades da aplicação.
 
-## Usuário local para desenvolvimento
+## Primeiro administrador
 
-Não existe cadastro público nesta etapa. Para criar um único usuário local de teste, configure as quatro variáveis abaixo antes de iniciar a aplicação:
+Não existe cadastro público. O primeiro administrador pode ser provisionado uma única vez por um operador com acesso ao ambiente da aplicação. O mecanismo somente é executado quando habilitado explicitamente e não sobrescreve contas ou senhas existentes.
+
+Configure as variáveis abaixo apenas para a primeira inicialização:
 
 | Variável | Conteúdo |
 | --- | --- |
 | `COURTTIME_DEV_USER_NAME` | Nome exibido após o login |
 | `COURTTIME_DEV_USER_EMAIL` | Email usado no login |
 | `COURTTIME_DEV_USER_PASSWORD` | Senha que será armazenada como hash BCrypt |
-| `COURTTIME_DEV_USER_PROFILE` | `ALUNO`, `ADMINISTRADOR`, `SECRETARIA` ou `SEGURANCA` |
+| `COURTTIME_BOOTSTRAP_ADMIN_ENABLED` | `true` para autorizar explicitamente o bootstrap |
+| `COURTTIME_DEV_USER_PROFILE` | Opcional; se informado, deve ser `ADMINISTRADOR` |
 
 Se as variáveis não forem configuradas, nenhum usuário será criado. Se o email já existir, os dados e a senha não serão alterados.
 
@@ -69,12 +73,81 @@ $env:COURTTIME_DEV_USER_NAME = Read-Host 'Nome do usuário de teste'
 $env:COURTTIME_DEV_USER_EMAIL = Read-Host 'Email do usuário de teste'
 $senhaUsuario = Read-Host 'Senha do usuário de teste' -AsSecureString
 $env:COURTTIME_DEV_USER_PASSWORD = [System.Net.NetworkCredential]::new('', $senhaUsuario).Password
-$env:COURTTIME_DEV_USER_PROFILE = 'ALUNO'
+$env:COURTTIME_DEV_USER_PROFILE = 'ADMINISTRADOR'
+$env:COURTTIME_BOOTSTRAP_ADMIN_ENABLED = 'true'
 Remove-Variable senhaUsuario
 .\mvnw.cmd spring-boot:run
 ```
 
+Depois da criação, interrompa a aplicação e remova a autorização de bootstrap:
+
+```powershell
+Remove-Item Env:COURTTIME_BOOTSTRAP_ADMIN_ENABLED
+Remove-Item Env:COURTTIME_DEV_USER_PASSWORD
+```
+
+Se já houver um administrador ativo, o bootstrap não cria outro. Caso o mesmo email já corresponda ao administrador existente, nenhuma senha ou informação será sobrescrita. Contas de aluno, secretaria e segurança devem ser criadas em **Administração → Usuários**.
+
 Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha configurados. Após o login, a aplicação abre `/inicio`. O botão **Sair** encerra a sessão.
+
+## Permissões
+
+| Rota ou ação | Aluno | Administrador | Secretaria | Segurança |
+| --- | --- | --- | --- | --- |
+| Página pública e login | Sim | Sim | Sim | Sim |
+| Consultar quadra e horários | Sim | Sim | Sim | Sim |
+| Criar e consultar as próprias solicitações | Sim | Não | Não | Não |
+| Gerenciar participantes das próprias solicitações pendentes | Sim | Não | Não | Não |
+| Enviar e baixar PDFs das próprias solicitações | Sim | Não | Não | Não |
+| Conferir PDFs e consultar o histórico documental | Não | Não | Sim | Não |
+| Registrar contribuições presenciais e ajustes | Não | Não | Sim | Não |
+| Painel `/admin/**` | Não | Sim | Não | Não |
+| Analisar solicitações e baixar o PDF conferido | Não | Sim | Não | Não |
+| Consultar reservas autorizadas e participantes | Não | Não | Não | Sim |
+| Gerenciar horários e bloqueios | Não | Sim | Não | Não |
+| Gerenciar usuários | Não | Sim | Não | Não |
+
+O formulário comum permite criar somente `ALUNO`, `SECRETARIA` e `SEGURANCA`. Ele não promove contas para `ADMINISTRADOR`, não permite alterar o perfil de administradores existentes e não oferece Super Admin. A desativação, mudança de email ou perfil e redefinição de senha incrementam a versão de acesso da conta; sessões antigas são encerradas na próxima requisição.
+
+Concessões administrativas futuras não estão disponíveis na interface comum. Até que a instituição defina o procedimento responsável por autorizá-las, qualquer ampliação desse perfil exige uma alteração específica, revisada e rastreável na aplicação; não deve ser feita por edição manual recorrente do banco.
+
+## Administração de usuários
+
+Administradores acessam `/admin/usuarios` para listar, pesquisar, filtrar, cadastrar, editar, ativar, desativar e redefinir senhas. As senhas são armazenadas com BCrypt e nunca são exibidas. Contas são desativadas logicamente para preservar reservas e registros históricos. O último administrador ativo e o próprio operador autenticado não podem ser desativados.
+
+As operações relevantes são registradas em `auditorias_usuario`, sem senha, hash ou credencial temporária.
+
+## Participantes e PDFs enviados
+
+Antes do primeiro envio, ou depois de uma devolução documental para correção, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. Um mesmo RM ou RG não pode ser repetido na solicitação. A conferência e a aprovação exigem no mínimo dez participantes na categoria `ALUNO`; o limite máximo ainda depende da confirmação da ETEC e do documento oficial.
+
+O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho, SHA-256 e a revisão da lista de participantes; versões anteriores não são substituídas. Enquanto a versão aguarda conferência, a lista e um novo upload permanecem bloqueados. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
+
+A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. A validação exige que a lista não tenha mudado e contenha ao menos dez alunos. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência é manual: não comprova criptograficamente uma assinatura digital e não aprova a reserva. Retenção, descarte e eventual verificação técnica de assinatura permanecem pendentes de definição da ETEC.
+
+## Contribuições presenciais
+
+Após a validação da versão documental mais recente, a secretaria pode registrar uma única contribuição presencial por solicitação. O valor informado, a secretaria responsável e o instante do registro ficam vinculados à conferência documental exata. Na mesma transação, a solicitação passa para `PENDENTE_ANALISE`. Ajustes de valor ou observações exigem justificativa e criam eventos históricos com o estado anterior e o novo; não existe exclusão, estorno, reembolso nem pagamento eletrônico nesse fluxo.
+
+O valor de R$ 2,00 por participante/hora é apenas uma referência institucional ainda sujeita à confirmação. Por isso, o CourtTime não calcula, preenche nem valida automaticamente o valor recebido. O registro da contribuição não aprova a reserva: a administração ainda revisa os dados e registra aprovação ou rejeição. A rejeição exige motivo; a aprovação comum não exige justificativa.
+
+## Análise administrativa
+
+O painel administrativo apresenta somente solicitações prontas para análise. O detalhe reúne solicitante, data, horário, finalidade, participantes, metadados do PDF e da conferência e a contribuição presencial. O administrador pode baixar o PDF original por uma rota privada, aprovar sem justificativa ou rejeitar com motivo obrigatório. A aprovação revalida todos os pré-requisitos dentro da transação e somente `APROVADA` representa autorização de uso.
+
+O modelo oficial do termo e o procedimento institucional para avaliar a assinatura continuam pendentes do arquivo solicitado ao Leandro e da validação da ETEC. O CourtTime não recria o termo, não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
+
+## Consulta da segurança
+
+A segurança acessa somente reservas `APROVADA` para a data atual ou datas futuras. A lista e o detalhe apresentam data, horário, quadra, solicitante e a identificação dos participantes necessária à conferência presencial. Reservas pendentes, rejeitadas, canceladas ou antigas não ficam disponíveis nesse perfil; PDFs, contribuições, emails e histórico interno também não são expostos.
+
+O registro de ocorrências permanece indisponível até a ETEC definir quais ocorrências podem ser registradas, quais dados são necessários e quem poderá consultá-los.
+
+## Cancelamento institucional
+
+Uma reserva já aprovada pode ser cancelada por um administrador ativo mediante motivo institucional obrigatório. O registro preserva o responsável, a data, a aprovação anterior, o PDF original, os participantes, a conferência documental e a contribuição. Após a transição para `CANCELADA`, a reserva deixa de aparecer como autorização para a segurança e o horário volta a ser considerado disponível.
+
+O cancelamento não declara que houve contato com o aluno e não cria um reagendamento automaticamente. Registro de contato, nova data, vínculo entre solicitações, reaproveitamento da contribuição e eventual dispensa de nova assinatura permanecem pendentes das regras formais da ETEC.
 
 ## Testes e build
 

@@ -1,15 +1,27 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.BloqueioQuadra;
+import br.com.courttime.entity.CategoriaParticipante;
+import br.com.courttime.entity.ConferenciaDocumento;
+import br.com.courttime.entity.ContribuicaoApm;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
+import br.com.courttime.entity.DocumentoReserva;
+import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
+import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.AuditoriaUsuarioRepository;
+import br.com.courttime.repository.AjusteContribuicaoApmRepository;
+import br.com.courttime.repository.ConferenciaDocumentoRepository;
+import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
+import br.com.courttime.repository.DocumentoReservaRepository;
+import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
@@ -22,6 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -52,6 +65,9 @@ class ReservaPostgreSqlIntegrationTest {
     private ReservaRepository reservaRepository;
 
     @Autowired
+    private AuditoriaUsuarioRepository auditoriaUsuarioRepository;
+
+    @Autowired
     private QuadraRepository quadraRepository;
 
     @Autowired
@@ -64,6 +80,21 @@ class ReservaPostgreSqlIntegrationTest {
     private BloqueioQuadraRepository bloqueioQuadraRepository;
 
     @Autowired
+    private ParticipanteReservaRepository participanteReservaRepository;
+
+    @Autowired
+    private DocumentoReservaRepository documentoReservaRepository;
+
+    @Autowired
+    private ConferenciaDocumentoRepository conferenciaDocumentoRepository;
+
+    @Autowired
+    private ContribuicaoApmRepository contribuicaoApmRepository;
+
+    @Autowired
+    private AjusteContribuicaoApmRepository ajusteContribuicaoApmRepository;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private Quadra quadra;
@@ -72,6 +103,12 @@ class ReservaPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBanco() {
+        ajusteContribuicaoApmRepository.deleteAllInBatch();
+        contribuicaoApmRepository.deleteAllInBatch();
+        conferenciaDocumentoRepository.deleteAllInBatch();
+        documentoReservaRepository.deleteAllInBatch();
+        participanteReservaRepository.deleteAllInBatch();
+        auditoriaUsuarioRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();
         bloqueioQuadraRepository.deleteAllInBatch();
         disponibilidadeQuadraRepository.deleteAllInBatch();
@@ -133,6 +170,83 @@ class ReservaPostgreSqlIntegrationTest {
         assertEquals(administrador.getId(), recuperada.getAnalisadaPor().getId());
         assertNotNull(recuperada.getAnalisadaEm());
         assertEquals(List.of(aprovada.getId()), aprovadas.stream().map(Reserva::getId).toList());
+    }
+
+    @Test
+    void institutionalCancellationPersistsAuditAndPreservesReservationEvidence() {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        Reserva aprovada = reservaService.aprovar(pendente.getId(), administrador);
+        Long documentoId = documentoReservaRepository.findAll().get(0).getId();
+        Long contribuicaoId = contribuicaoApmRepository.findAll().get(0).getId();
+        var analisadaEm = reservaRepository.findById(aprovada.getId())
+                .orElseThrow()
+                .getAnalisadaEm();
+
+        List<Reserva> autorizadasAntes = reservaRepository
+                .listarAutorizadasParaAdministracao(
+                        StatusReserva.APROVADA,
+                        LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
+        assertEquals(List.of(aprovada.getId()),
+                autorizadasAntes.stream().map(Reserva::getId).toList());
+
+        reservaService.cancelarInstitucionalmente(
+                aprovada.getId(), administrador, "  Interdição institucional  ");
+
+        Reserva recuperada = reservaRepository.findById(aprovada.getId()).orElseThrow();
+        assertEquals(StatusReserva.CANCELADA, recuperada.getStatus());
+        assertEquals("Interdição institucional",
+                recuperada.getMotivoCancelamentoInstitucional());
+        assertEquals(administrador.getId(), recuperada.getCanceladaPor().getId());
+        assertNotNull(recuperada.getCanceladaEm());
+        assertEquals(administrador.getId(), recuperada.getAnalisadaPor().getId());
+        assertEquals(analisadaEm, recuperada.getAnalisadaEm());
+        assertTrue(documentoReservaRepository.findById(documentoId).isPresent());
+        assertTrue(contribuicaoApmRepository.findById(contribuicaoId).isPresent());
+        assertEquals(10, participanteReservaRepository.count());
+        assertTrue(reservaRepository.listarAutorizadasParaSeguranca(
+                StatusReserva.APROVADA,
+                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)).isEmpty());
+        assertTrue(reservaRepository.listarAutorizadasParaAdministracao(
+                StatusReserva.APROVADA,
+                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)).isEmpty());
+    }
+
+    @Test
+    void pessimisticReservationLockAllowsOnlyOneInstitutionalCancellation() throws Exception {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        Reserva aprovada = reservaService.aprovar(pendente.getId(), administrador);
+        Usuario outroAdministrador = novoUsuario(
+                "outro.administrador@teste.local", Perfil.ADMINISTRADOR);
+        CountDownLatch prontas = new CountDownLatch(2);
+        CountDownLatch iniciar = new CountDownLatch(1);
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<Boolean> primeiroResultado = executor.submit(tentativaDeCancelamento(
+                    aprovada.getId(), administrador.getId(), "Interdição da direção", prontas, iniciar));
+            Future<Boolean> segundoResultado = executor.submit(tentativaDeCancelamento(
+                    aprovada.getId(), outroAdministrador.getId(), "Manutenção da quadra", prontas, iniciar));
+
+            assertTrue(prontas.await(5, TimeUnit.SECONDS));
+            iniciar.countDown();
+
+            List<Boolean> resultados = List.of(
+                    primeiroResultado.get(10, TimeUnit.SECONDS),
+                    segundoResultado.get(10, TimeUnit.SECONDS));
+            assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
+            assertEquals(1L, resultados.stream().filter(resultado -> !resultado).count());
+        } finally {
+            executor.shutdownNow();
+        }
+
+        Reserva cancelada = reservaRepository.findById(aprovada.getId()).orElseThrow();
+        assertEquals(StatusReserva.CANCELADA, cancelada.getStatus());
+        assertNotNull(cancelada.getCanceladaPor());
+        assertNotNull(cancelada.getCanceladaEm());
+        assertTrue(List.of("Interdição da direção", "Manutenção da quadra")
+                .contains(cancelada.getMotivoCancelamentoInstitucional()));
+        assertEquals(1, contribuicaoApmRepository.count());
+        assertEquals(1, documentoReservaRepository.count());
     }
 
     @Test
@@ -204,6 +318,27 @@ class ReservaPostgreSqlIntegrationTest {
         };
     }
 
+    private Callable<Boolean> tentativaDeCancelamento(
+            Long reservaId,
+            Long administradorId,
+            String motivo,
+            CountDownLatch prontas,
+            CountDownLatch iniciar) {
+        return () -> {
+            prontas.countDown();
+            if (!iniciar.await(5, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("Os cancelamentos não iniciaram de forma coordenada");
+            }
+            Usuario adminDaTransacao = usuarioRepository.findById(administradorId).orElseThrow();
+            try {
+                reservaService.cancelarInstitucionalmente(reservaId, adminDaTransacao, motivo);
+                return true;
+            } catch (IllegalStateException repeticaoEsperada) {
+                return false;
+            }
+        };
+    }
+
     private Quadra novaQuadra() {
         Quadra nova = new Quadra();
         nova.setNome("Quadra de teste");
@@ -243,7 +378,45 @@ class ReservaPostgreSqlIntegrationTest {
         reserva.setHorarioFim(horarioFim);
         reserva.setFinalidade("Atividade esportiva de teste");
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
-        return reservaRepository.saveAndFlush(reserva);
+        reserva = reservaRepository.saveAndFlush(reserva);
+        prepararElegibilidade(reserva);
+        return reserva;
+    }
+
+    private void prepararElegibilidade(Reserva reserva) {
+        for (int indice = 1; indice <= 10; indice++) {
+            ParticipanteReserva participante = new ParticipanteReserva();
+            participante.setReserva(reserva);
+            participante.setNomeCompleto("Aluno " + indice);
+            participante.setRmOuRg("RM-" + reserva.getId() + "-" + indice);
+            participante.setCategoria(CategoriaParticipante.ALUNO);
+            participanteReservaRepository.save(participante);
+        }
+        participanteReservaRepository.flush();
+
+        DocumentoReserva documento = new DocumentoReserva();
+        documento.setReserva(reserva);
+        documento.setVersao(1);
+        documento.setRevisaoParticipantes(reserva.getRevisaoParticipantes());
+        documento.setNomeOriginal("termo.pdf");
+        documento.setChaveArmazenamento("reserva-" + reserva.getId() + ".pdf");
+        documento.setSha256("0".repeat(64));
+        documento.setTamanhoBytes(10);
+        documento.setEnviadoPor(reserva.getSolicitante());
+        documento = documentoReservaRepository.saveAndFlush(documento);
+
+        ConferenciaDocumento conferencia = new ConferenciaDocumento();
+        conferencia.setDocumento(documento);
+        conferencia.setResultado(ResultadoConferenciaDocumento.VALIDADO);
+        conferencia.setConferidoPor(administrador);
+        conferencia = conferenciaDocumentoRepository.saveAndFlush(conferencia);
+
+        ContribuicaoApm contribuicao = new ContribuicaoApm();
+        contribuicao.setReserva(reserva);
+        contribuicao.setConferenciaDocumento(conferencia);
+        contribuicao.setValor(new BigDecimal("20.00"));
+        contribuicao.setRegistradaPor(administrador);
+        contribuicaoApmRepository.saveAndFlush(contribuicao);
     }
 
     private BloqueioQuadra bloqueio(

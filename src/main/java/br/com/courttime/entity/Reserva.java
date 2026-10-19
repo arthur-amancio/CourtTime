@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 import java.time.Duration;
@@ -68,12 +69,24 @@ public class Reserva {
     @Column(nullable = false, length = 30)
     private StatusReserva status = StatusReserva.PENDENTE_DOCUMENTACAO;
 
+    @PositiveOrZero
+    @Column(name = "revisao_participantes", nullable = false,
+            columnDefinition = "integer default 0")
+    private int revisaoParticipantes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analisada_por_id")
     private Usuario analisadaPor;
 
     @Column(length = 500)
     private String motivoRejeicao;
+
+    @Column(name = "motivo_cancelamento_institucional", length = 500)
+    private String motivoCancelamentoInstitucional;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cancelada_por_id")
+    private Usuario canceladaPor;
 
     @Column(nullable = false, updatable = false)
     private Instant criadaEm;
@@ -82,6 +95,8 @@ public class Reserva {
     private Instant atualizadaEm;
 
     private Instant analisadaEm;
+
+    private Instant canceladaEm;
 
     @PrePersist
     void prePersist() {
@@ -167,6 +182,21 @@ public class Reserva {
         this.status = status;
     }
 
+    public int getRevisaoParticipantes() {
+        return revisaoParticipantes;
+    }
+
+    public void setRevisaoParticipantes(int revisaoParticipantes) {
+        if (revisaoParticipantes < 0) {
+            throw new IllegalArgumentException("A revisão dos participantes não pode ser negativa");
+        }
+        this.revisaoParticipantes = revisaoParticipantes;
+    }
+
+    public void incrementarRevisaoParticipantes() {
+        revisaoParticipantes++;
+    }
+
     public Usuario getAnalisadaPor() {
         return analisadaPor;
     }
@@ -183,6 +213,22 @@ public class Reserva {
         this.motivoRejeicao = motivoRejeicao;
     }
 
+    public String getMotivoCancelamentoInstitucional() {
+        return motivoCancelamentoInstitucional;
+    }
+
+    public void setMotivoCancelamentoInstitucional(String motivoCancelamentoInstitucional) {
+        this.motivoCancelamentoInstitucional = motivoCancelamentoInstitucional;
+    }
+
+    public Usuario getCanceladaPor() {
+        return canceladaPor;
+    }
+
+    public void setCanceladaPor(Usuario canceladaPor) {
+        this.canceladaPor = canceladaPor;
+    }
+
     public Instant getCriadaEm() {
         return criadaEm;
     }
@@ -197,5 +243,13 @@ public class Reserva {
 
     public void setAnalisadaEm(Instant analisadaEm) {
         this.analisadaEm = analisadaEm;
+    }
+
+    public Instant getCanceladaEm() {
+        return canceladaEm;
+    }
+
+    public void setCanceladaEm(Instant canceladaEm) {
+        this.canceladaEm = canceladaEm;
     }
 }

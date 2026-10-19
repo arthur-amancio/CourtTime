@@ -11,14 +11,20 @@ import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 import java.util.stream.Stream;
+import java.util.regex.Pattern;
 
 @Component
 public class DevUsuarioInitializer implements ApplicationRunner {
 
+    private static final String ENABLED = "COURTTIME_BOOTSTRAP_ADMIN_ENABLED";
     private static final String NAME = "COURTTIME_DEV_USER_NAME";
     private static final String EMAIL = "COURTTIME_DEV_USER_EMAIL";
     private static final String PASSWORD = "COURTTIME_DEV_USER_PASSWORD";
     private static final String PROFILE = "COURTTIME_DEV_USER_PROFILE";
+    private static final int TAMANHO_MAXIMO_NOME = 150;
+    private static final int TAMANHO_MAXIMO_EMAIL = 254;
+    private static final Pattern EMAIL_VALIDO = Pattern.compile(
+            "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
 
     private final Environment environment;
     private final UsuarioRepository usuarioRepository;
@@ -33,36 +39,62 @@ public class DevUsuarioInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        if (!Boolean.parseBoolean(environment.getProperty(ENABLED, "false"))) {
+            return;
+        }
+
         String nome = environment.getProperty(NAME);
         String email = environment.getProperty(EMAIL);
         String senha = environment.getProperty(PASSWORD);
         String perfilInformado = environment.getProperty(PROFILE);
 
-        if (Stream.of(nome, email, senha, perfilInformado).allMatch(this::isBlank)) {
-            return;
+        if (Stream.of(nome, email, senha).anyMatch(this::isBlank)) {
+            throw new IllegalStateException(
+                    "Configure nome, email e senha para o bootstrap administrativo");
+        }
+        if (senha.length() < 8 || senha.length() > 72) {
+            throw new IllegalStateException(
+                    "A senha do bootstrap deve possuir entre 8 e 72 caracteres");
         }
 
-        if (Stream.of(nome, email, senha, perfilInformado).anyMatch(this::isBlank)) {
-            throw new IllegalStateException("Configure todas as variáveis COURTTIME_DEV_USER_*");
-        }
-
+        String nomeNormalizado = nome.trim();
         String emailNormalizado = email.trim().toLowerCase(Locale.ROOT);
-        if (usuarioRepository.existsByEmailIgnoreCase(emailNormalizado)) {
-            return;
+        if (nomeNormalizado.length() > TAMANHO_MAXIMO_NOME) {
+            throw new IllegalStateException(
+                    "O nome do bootstrap deve possuir no máximo 150 caracteres");
+        }
+        if (emailNormalizado.length() > TAMANHO_MAXIMO_EMAIL
+                || !EMAIL_VALIDO.matcher(emailNormalizado).matches()) {
+            throw new IllegalStateException("Configure um email válido para o bootstrap");
+        }
+        if (!isBlank(perfilInformado)
+                && !Perfil.ADMINISTRADOR.name().equals(
+                        perfilInformado.trim().toUpperCase(Locale.ROOT))) {
+            throw new IllegalStateException(
+                    "O bootstrap controlado cria somente o primeiro ADMINISTRADOR");
         }
 
-        Perfil perfil;
-        try {
-            perfil = Perfil.valueOf(perfilInformado.trim().toUpperCase(Locale.ROOT));
-        } catch (IllegalArgumentException exception) {
-            throw new IllegalStateException("COURTTIME_DEV_USER_PROFILE possui um perfil inválido", exception);
+        if (usuarioRepository.existsByPerfilAndAtivoTrue(Perfil.ADMINISTRADOR)) {
+            Usuario existente = usuarioRepository.findByEmailIgnoreCase(emailNormalizado)
+                    .orElse(null);
+            if (existente != null
+                    && existente.isAtivo()
+                    && existente.getPerfil() == Perfil.ADMINISTRADOR) {
+                return;
+            }
+            throw new IllegalStateException(
+                    "O bootstrap foi recusado porque já existe um administrador ativo");
+        }
+        if (usuarioRepository.existsByEmailIgnoreCase(emailNormalizado)) {
+            throw new IllegalStateException(
+                    "O email do bootstrap já pertence a uma conta existente");
         }
 
         Usuario usuario = new Usuario();
-        usuario.setNome(nome.trim());
+        usuario.setNome(nomeNormalizado);
         usuario.setEmail(emailNormalizado);
         usuario.setSenha(passwordEncoder.encode(senha));
-        usuario.setPerfil(perfil);
+        usuario.setPerfil(Perfil.ADMINISTRADOR);
         usuario.setAtivo(true);
         usuarioRepository.save(usuario);
     }

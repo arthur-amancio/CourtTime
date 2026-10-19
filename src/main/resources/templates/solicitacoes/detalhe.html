@@ -42,19 +42,21 @@
         <section class="request-details" aria-labelledby="status-title">
             <div class="request-details__status">
                 <h2 id="status-title">Situação</h2>
-                <strong class="status-pill" th:text="${solicitacao.status.descricao}">Pendente de documentação</strong>
+                <strong class="status-pill" th:text="${situacao.titulo}">Pendente de documentação</strong>
             </div>
 
-            <p class="request-notice" th:if="${solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
-                A solicitação foi registrada e aguarda a etapa documental antes da análise institucional.
-            </p>
-            <p class="request-notice" th:if="${solicitacao.status.name() == 'PENDENTE_ANALISE'}">
-                A documentação foi conferida e a solicitação aguarda análise da instituição.
+            <p class="request-notice" th:text="${situacao.explicacao}">
+                A solicitação aguarda a próxima etapa institucional.
             </p>
             <p class="form-message form-message--error" th:if="${solicitacao.status.name() == 'REJEITADA'}">
                 Solicitação rejeitada.<br>
                 <span th:if="${solicitacao.motivoRejeicao}" th:text="${solicitacao.motivoRejeicao}">Motivo informado pela instituição.</span>
             </p>
+            <div class="form-message form-message--error" th:if="${solicitacao.status.name() == 'CANCELADA'}">
+                <p><strong>Cancelamento institucional registrado.</strong></p>
+                <p th:text="${solicitacao.motivoCancelamentoInstitucional}">Motivo informado pela instituição.</p>
+                <p>A equipe da escola ainda precisa registrar qualquer contato ou encaminhamento de reagendamento.</p>
+            </div>
 
             <dl class="details-list">
                 <div>
@@ -73,6 +75,12 @@
         </section>
 
         <div class="form-actions">
+            <a class="button button--secondary" th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">
+                Revisar participantes
+            </a>
+            <a class="button button--secondary" th:href="@{/solicitacoes/{id}/documentos(id=${solicitacao.id})}">
+                Documentos enviados
+            </a>
             <a class="button button--secondary" th:href="@{/solicitacoes}">Voltar às solicitações</a>
         </div>
     </main>

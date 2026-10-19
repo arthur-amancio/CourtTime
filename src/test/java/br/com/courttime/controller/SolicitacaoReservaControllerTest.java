@@ -12,9 +12,14 @@ import br.com.courttime.service.ConsultaDisponibilidade;
 import br.com.courttime.service.HorarioDisponibilidade;
 import br.com.courttime.service.QuadraService;
 import br.com.courttime.service.ReservaService;
+import br.com.courttime.service.SolicitacaoAluno;
+import br.com.courttime.service.SituacaoSolicitacao;
+import br.com.courttime.service.SituacaoSolicitacaoService;
 import br.com.courttime.service.SituacaoHorario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -62,6 +67,9 @@ class SolicitacaoReservaControllerTest {
     private CalendarioDisponibilidadeService calendarioDisponibilidadeService;
 
     @MockitoBean
+    private SituacaoSolicitacaoService situacaoService;
+
+    @MockitoBean
     private UsuarioRepository usuarioRepository;
 
     private Quadra quadra;
@@ -82,6 +90,12 @@ class SolicitacaoReservaControllerTest {
         aluno.setSenha("hash-de-teste");
         aluno.setPerfil(Perfil.ALUNO);
         aluno.setAtivo(true);
+
+        when(situacaoService.descrever(any(Reserva.class))).thenReturn(
+                new SituacaoSolicitacao(
+                        "Pendente de documentação",
+                        "Revise os participantes e envie o PDF.",
+                        false));
     }
 
     @Test
@@ -90,10 +104,11 @@ class SolicitacaoReservaControllerTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-    @Test
-    void nonStudentProfileCannotAccessRequests() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"ADMINISTRADOR", "SECRETARIA", "SEGURANCA"})
+    void nonStudentProfilesCannotAccessRequests(String perfil) throws Exception {
         mockMvc.perform(get("/solicitacoes/nova")
-                        .with(user("admin@escola.test").roles("ADMINISTRADOR")))
+                        .with(user("usuario@escola.test").roles(perfil)))
                 .andExpect(status().isForbidden());
     }
 
@@ -238,8 +253,14 @@ class SolicitacaoReservaControllerTest {
     void listContainsOnlyRequestsReturnedForAuthenticatedStudent() throws Exception {
         when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
                 .thenReturn(Optional.of(aluno));
+        Reserva solicitacao = reserva(30L, aluno);
         when(reservaService.listarSolicitacoesDoUsuario(aluno))
-                .thenReturn(List.of(reserva(30L, aluno)));
+                .thenReturn(List.of(solicitacao));
+        when(situacaoService.descrever(List.of(solicitacao))).thenReturn(List.of(
+                new SolicitacaoAluno(
+                        solicitacao,
+                        new SituacaoSolicitacao(
+                                "Pendente de documentação", "Envie o PDF.", false))));
 
         mockMvc.perform(get("/solicitacoes")
                         .with(user(aluno.getEmail()).roles("ALUNO")))
@@ -271,7 +292,38 @@ class SolicitacaoReservaControllerTest {
                         .with(user(aluno.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Pendente de documentação")))
-                .andExpect(content().string(containsString("não representa autorização imediata")));
+                .andExpect(content().string(containsString("não representa autorização imediata")))
+                .andExpect(content().string(containsString("Revisar participantes")))
+                .andExpect(content().string(containsString(
+                        "/solicitacoes/30/participantes")))
+                .andExpect(content().string(containsString("Documentos enviados")))
+                .andExpect(content().string(containsString(
+                        "/solicitacoes/30/documentos")));
+    }
+
+    @Test
+    void alunoVisualizaMotivoDoCancelamentoSemContatoFicticio() throws Exception {
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        Reserva cancelada = reserva(30L, aluno);
+        cancelada.setStatus(StatusReserva.CANCELADA);
+        cancelada.setMotivoCancelamentoInstitucional("Interdição da quadra");
+        when(reservaService.obterSolicitacaoDoUsuario(30L, aluno))
+                .thenReturn(cancelada);
+        when(situacaoService.descrever(cancelada)).thenReturn(
+                new SituacaoSolicitacao(
+                        "Cancelada pela administração",
+                        "A reserva deixou de autorizar a utilização da quadra.",
+                        false));
+
+        mockMvc.perform(get("/solicitacoes/30")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "Cancelada pela administração")))
+                .andExpect(content().string(containsString("Interdição da quadra")))
+                .andExpect(content().string(containsString(
+                        "ainda precisa registrar qualquer contato")));
     }
 
     private void prepararFormularioDisponivel() {
