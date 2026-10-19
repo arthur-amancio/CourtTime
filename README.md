@@ -8,9 +8,9 @@ A consulta diária divide cada intervalo semanal em períodos de uma hora e cons
 
 ## Base de solicitações de reserva
 
-O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO` e só pode ser analisada administrativamente depois de avançar para `PENDENTE_ANALISE`, transição que será vinculada à conferência do termo oficial em etapa própria.
+O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO`. O registro presencial da contribuição promove a solicitação para `PENDENTE_ANALISE` somente quando a versão mais recente do PDF está conferida, corresponde à revisão atual da lista e possui ao menos dez participantes na categoria `ALUNO`.
 
-Na aprovação, o backend bloqueia o registro da única quadra durante a transação e verifica novamente horários semanais, bloqueios e reservas já aprovadas. Essa serialização impede que duas análises concorrentes aprovem períodos conflitantes.
+Na aprovação, o backend bloqueia a solicitação e o registro da única quadra durante a transação. Antes de autorizar, revalida o administrador, o documento e sua conferência manual, a revisão e o mínimo de alunos, a contribuição vinculada à conferência exata, os horários semanais, os bloqueios e as reservas já aprovadas. Essa serialização impede decisões repetidas e aprovações concorrentes para períodos conflitantes.
 
 O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Nessa etapa, o aluno pode revisar os participantes da própria solicitação e enviar versões do PDF preparado externamente. O CourtTime preserva cada arquivo original sem modificá-lo e não declara que a assinatura foi validada.
 
@@ -102,6 +102,7 @@ Acesse `http://localhost:8080/`, selecione **Entrar** e use o email e a senha co
 | Conferir PDFs e consultar o histórico documental | Não | Não | Sim | Não |
 | Registrar contribuições presenciais e ajustes | Não | Não | Sim | Não |
 | Painel `/admin/**` | Não | Sim | Não | Não |
+| Analisar solicitações e baixar o PDF conferido | Não | Sim | Não | Não |
 | Gerenciar horários e bloqueios | Não | Sim | Não | Não |
 | Gerenciar usuários | Não | Sim | Não | Não |
 
@@ -117,17 +118,23 @@ As operações relevantes são registradas em `auditorias_usuario`, sem senha, h
 
 ## Participantes e PDFs enviados
 
-Enquanto a solicitação está em `PENDENTE_DOCUMENTACAO`, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. O mínimo de dez alunos é apresentado como requisito planejado; o momento de sua exigência e o limite máximo ainda dependem da confirmação da ETEC e do documento oficial.
+Antes do primeiro envio, ou depois de uma devolução documental para correção, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. Um mesmo RM ou RG não pode ser repetido na solicitação. A conferência e a aprovação exigem no mínimo dez participantes na categoria `ALUNO`; o limite máximo ainda depende da confirmação da ETEC e do documento oficial.
 
-O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho e SHA-256; versões anteriores não são substituídas. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
+O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho, SHA-256 e a revisão da lista de participantes; versões anteriores não são substituídas. Enquanto a versão aguarda conferência, a lista e um novo upload permanecem bloqueados. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
 
-A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência não comprova uma assinatura digital, não aprova a reserva e ainda não altera a situação da solicitação; a transição para análise administrativa depende do procedimento institucional aprovado. Retenção, descarte e eventual verificação técnica de assinatura também permanecem pendentes de definição da ETEC.
+A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. A validação exige que a lista não tenha mudado e contenha ao menos dez alunos. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência é manual: não comprova criptograficamente uma assinatura digital e não aprova a reserva. Retenção, descarte e eventual verificação técnica de assinatura permanecem pendentes de definição da ETEC.
 
 ## Contribuições presenciais
 
-Após a validação da versão documental mais recente, a secretaria pode registrar uma única contribuição presencial por solicitação. O valor informado, a secretaria responsável e o instante do registro ficam vinculados à conferência documental exata. Ajustes de valor ou observações exigem justificativa e criam eventos históricos com o estado anterior e o novo; não existe exclusão, estorno, reembolso nem pagamento eletrônico nesse fluxo.
+Após a validação da versão documental mais recente, a secretaria pode registrar uma única contribuição presencial por solicitação. O valor informado, a secretaria responsável e o instante do registro ficam vinculados à conferência documental exata. Na mesma transação, a solicitação passa para `PENDENTE_ANALISE`. Ajustes de valor ou observações exigem justificativa e criam eventos históricos com o estado anterior e o novo; não existe exclusão, estorno, reembolso nem pagamento eletrônico nesse fluxo.
 
-O valor de R$ 2,00 por participante/hora é apenas uma referência institucional ainda sujeita à confirmação. Por isso, o CourtTime não calcula, preenche nem valida automaticamente o valor recebido. O registro da contribuição não aprova a reserva e deve ser revalidado contra o documento mais recente pela futura análise administrativa.
+O valor de R$ 2,00 por participante/hora é apenas uma referência institucional ainda sujeita à confirmação. Por isso, o CourtTime não calcula, preenche nem valida automaticamente o valor recebido. O registro da contribuição não aprova a reserva: a administração ainda revisa os dados e registra aprovação ou rejeição. A rejeição exige motivo; a aprovação comum não exige justificativa.
+
+## Análise administrativa
+
+O painel administrativo apresenta somente solicitações prontas para análise. O detalhe reúne solicitante, data, horário, finalidade, participantes, metadados do PDF e da conferência e a contribuição presencial. O administrador pode baixar o PDF original por uma rota privada, aprovar sem justificativa ou rejeitar com motivo obrigatório. A aprovação revalida todos os pré-requisitos dentro da transação e somente `APROVADA` representa autorização de uso.
+
+O modelo oficial do termo e o procedimento institucional para avaliar a assinatura continuam pendentes do arquivo solicitado ao Leandro e da validação da ETEC. O CourtTime não recria o termo, não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
 
 ## Testes e build
 
