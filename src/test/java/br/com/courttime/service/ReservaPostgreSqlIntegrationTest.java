@@ -173,6 +173,83 @@ class ReservaPostgreSqlIntegrationTest {
     }
 
     @Test
+    void institutionalCancellationPersistsAuditAndPreservesReservationEvidence() {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        Reserva aprovada = reservaService.aprovar(pendente.getId(), administrador);
+        Long documentoId = documentoReservaRepository.findAll().get(0).getId();
+        Long contribuicaoId = contribuicaoApmRepository.findAll().get(0).getId();
+        var analisadaEm = reservaRepository.findById(aprovada.getId())
+                .orElseThrow()
+                .getAnalisadaEm();
+
+        List<Reserva> autorizadasAntes = reservaRepository
+                .listarAutorizadasParaAdministracao(
+                        StatusReserva.APROVADA,
+                        LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
+        assertEquals(List.of(aprovada.getId()),
+                autorizadasAntes.stream().map(Reserva::getId).toList());
+
+        reservaService.cancelarInstitucionalmente(
+                aprovada.getId(), administrador, "  Interdição institucional  ");
+
+        Reserva recuperada = reservaRepository.findById(aprovada.getId()).orElseThrow();
+        assertEquals(StatusReserva.CANCELADA, recuperada.getStatus());
+        assertEquals("Interdição institucional",
+                recuperada.getMotivoCancelamentoInstitucional());
+        assertEquals(administrador.getId(), recuperada.getCanceladaPor().getId());
+        assertNotNull(recuperada.getCanceladaEm());
+        assertEquals(administrador.getId(), recuperada.getAnalisadaPor().getId());
+        assertEquals(analisadaEm, recuperada.getAnalisadaEm());
+        assertTrue(documentoReservaRepository.findById(documentoId).isPresent());
+        assertTrue(contribuicaoApmRepository.findById(contribuicaoId).isPresent());
+        assertEquals(10, participanteReservaRepository.count());
+        assertTrue(reservaRepository.listarAutorizadasParaSeguranca(
+                StatusReserva.APROVADA,
+                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)).isEmpty());
+        assertTrue(reservaRepository.listarAutorizadasParaAdministracao(
+                StatusReserva.APROVADA,
+                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)).isEmpty());
+    }
+
+    @Test
+    void pessimisticReservationLockAllowsOnlyOneInstitutionalCancellation() throws Exception {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        Reserva aprovada = reservaService.aprovar(pendente.getId(), administrador);
+        Usuario outroAdministrador = novoUsuario(
+                "outro.administrador@teste.local", Perfil.ADMINISTRADOR);
+        CountDownLatch prontas = new CountDownLatch(2);
+        CountDownLatch iniciar = new CountDownLatch(1);
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            Future<Boolean> primeiroResultado = executor.submit(tentativaDeCancelamento(
+                    aprovada.getId(), administrador.getId(), "Interdição da direção", prontas, iniciar));
+            Future<Boolean> segundoResultado = executor.submit(tentativaDeCancelamento(
+                    aprovada.getId(), outroAdministrador.getId(), "Manutenção da quadra", prontas, iniciar));
+
+            assertTrue(prontas.await(5, TimeUnit.SECONDS));
+            iniciar.countDown();
+
+            List<Boolean> resultados = List.of(
+                    primeiroResultado.get(10, TimeUnit.SECONDS),
+                    segundoResultado.get(10, TimeUnit.SECONDS));
+            assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
+            assertEquals(1L, resultados.stream().filter(resultado -> !resultado).count());
+        } finally {
+            executor.shutdownNow();
+        }
+
+        Reserva cancelada = reservaRepository.findById(aprovada.getId()).orElseThrow();
+        assertEquals(StatusReserva.CANCELADA, cancelada.getStatus());
+        assertNotNull(cancelada.getCanceladaPor());
+        assertNotNull(cancelada.getCanceladaEm());
+        assertTrue(List.of("Interdição da direção", "Manutenção da quadra")
+                .contains(cancelada.getMotivoCancelamentoInstitucional()));
+        assertEquals(1, contribuicaoApmRepository.count());
+        assertEquals(1, documentoReservaRepository.count());
+    }
+
+    @Test
     void conflictingApprovalRollsBackAllStateChanges() {
         Reserva pendente = reservaPendente(aluno, INICIO, FIM);
         bloqueioQuadraRepository.saveAndFlush(bloqueio(8, 30, 8, 45));
@@ -236,6 +313,27 @@ class ReservaPostgreSqlIntegrationTest {
                 reservaService.aprovar(reservaId, adminDaTransacao);
                 return true;
             } catch (IllegalStateException conflitoEsperado) {
+                return false;
+            }
+        };
+    }
+
+    private Callable<Boolean> tentativaDeCancelamento(
+            Long reservaId,
+            Long administradorId,
+            String motivo,
+            CountDownLatch prontas,
+            CountDownLatch iniciar) {
+        return () -> {
+            prontas.countDown();
+            if (!iniciar.await(5, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("Os cancelamentos não iniciaram de forma coordenada");
+            }
+            Usuario adminDaTransacao = usuarioRepository.findById(administradorId).orElseThrow();
+            try {
+                reservaService.cancelarInstitucionalmente(reservaId, adminDaTransacao, motivo);
+                return true;
+            } catch (IllegalStateException repeticaoEsperada) {
                 return false;
             }
         };
