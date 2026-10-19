@@ -53,9 +53,9 @@
             <p class="empty-message" th:if="${#lists.isEmpty(detalhe.participantes)}">
                 Não há participantes vinculados a esta reserva.
             </p>
-            <div class="table-wrapper" role="region" aria-labelledby="participantes-title" tabindex="0"
+            <div class="table-wrapper" role="region" aria-label="Tabela de identificação dos participantes" tabindex="0"
                  th:unless="${#lists.isEmpty(detalhe.participantes)}">
-                <table class="schedule-table">
+                <table class="schedule-table table-cards">
                     <caption class="visually-hidden">Participantes autorizados para conferência de identificação</caption>
                     <thead>
                         <tr>
@@ -66,9 +66,9 @@
                     </thead>
                     <tbody>
                         <tr th:each="participante : ${detalhe.participantes}">
-                            <td th:text="${participante.nomeCompleto}">Ana Souza</td>
-                            <td th:text="${participante.categoria}">Aluno</td>
-                            <td th:text="${participante.rmOuRg}">RM-123</td>
+                            <td data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</td>
+                            <td data-label="Categoria" th:text="${participante.categoria}">Aluno</td>
+                            <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
                         </tr>
                     </tbody>
                 </table>

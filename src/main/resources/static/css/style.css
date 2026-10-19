@@ -461,7 +461,8 @@ textarea {
     overflow-wrap: anywhere;
 }
 
-.quick-access h2 {
+.quick-access h2,
+.situacao-atual h2 {
     margin-bottom: 0.8rem;
 }
 
@@ -623,9 +624,27 @@ textarea {
 }
 
 .status-pill {
+    display: inline-block;
     padding: 0.25rem 0.6rem;
     border-radius: 999px;
     font-size: 0.875rem;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+}
+
+.status-pill--ok {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+/* Explicacao do proximo passo, exibida abaixo da situacao da solicitacao. */
+.status-next {
+    display: block;
+    margin-top: 0.35rem;
+    max-width: 34ch;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--muted);
 }
 
 .status-pill--available {
@@ -702,6 +721,9 @@ textarea {
 }
 
 .table-wrapper {
+    /* Sem position, o overflow nao recorta os rotulos acessiveis, que usam
+       position: absolute. Isso fazia a pagina inteira rolar na horizontal. */
+    position: relative;
     overflow-x: auto;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -875,5 +897,124 @@ textarea {
     *::after {
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* No celular, as tabelas marcadas com table-cards deixam de rolar na horizontal:
+   cada linha vira um cartao e o nome da coluna aparece antes do valor, lido do
+   atributo data-label. Sem JavaScript e sem biblioteca. */
+@media (max-width: 620px) {
+    .table-cards thead {
+        display: none;
+    }
+
+    .table-cards,
+    .table-cards tbody,
+    .table-cards tr,
+    .table-cards td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-cards tr {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .table-cards tr:last-child {
+        border-bottom: 0;
+    }
+
+    .table-cards td {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.3rem 0;
+        border: 0;
+    }
+
+    .table-cards td::before {
+        content: attr(data-label);
+        flex: none;
+        font-weight: 600;
+        color: var(--muted);
+    }
+
+    .table-cards td:empty {
+        display: none;
+    }
+
+    /* A situacao da solicitacao traz uma explicacao de varias linhas, entao a
+       celula empilha rotulo e conteudo em vez de alinhar nas pontas. */
+    .table-cards .cell-status {
+        display: block;
+    }
+
+    .table-cards .cell-status::before {
+        display: block;
+        margin-bottom: 0.4rem;
+    }
+
+    .status-next {
+        max-width: none;
+    }
+}
+
+/* Fila de acoes da secretaria. Cada solicitacao pendente e um cartao com o
+   proprio formulario. Antes era uma tabela com o formulario dentro de uma
+   celula, e no celular os campos e o botao ficavam fora da area visivel. */
+.action-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+}
+
+.action-card {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.action-card__title {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.action-card .details-list {
+    margin-top: 0.75rem;
+}
+
+.action-card .request-form {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+}
+
+/* No cartao ha mais espaco que numa celula de tabela, entao a explicacao
+   pode usar uma linha mais longa sem prejudicar a leitura. */
+.action-card .status-next {
+    max-width: 62ch;
+}
+
+/* Situacao da solicitacao mais recente, mostrada no inicio do aluno. */
+.situacao-atual {
+    margin-bottom: 2.5rem;
+}
+
+.action-card__status {
+    margin: 0.85rem 0 0;
+}
+
+/* No celular os botoes compactos recebem altura minima confortavel para o
+   toque. No desktop a altura menor e mantida, porque ali o alvo e o ponteiro
+   do mouse e a densidade das listas e util. */
+@media (max-width: 620px) {
+    .button--small {
+        min-height: 44px;
     }
 }

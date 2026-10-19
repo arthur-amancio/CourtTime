@@ -126,6 +126,8 @@ class SecretariaContribuicaoControllerTest {
                 .andExpect(content().string(containsString("Ana Aluna")))
                 .andExpect(content().string(containsString("R$ 20,00")))
                 .andExpect(content().string(containsString(
+                        "Histórico de contribuições presenciais")))
+                .andExpect(content().string(containsString(
                         "não calcula nem confirma valores automaticamente")));
     }
 
@@ -198,6 +200,8 @@ class SecretariaContribuicaoControllerTest {
                 .andExpect(content().string(containsString("Versão 2")))
                 .andExpect(content().string(containsString("R$ 18,00 → R$ 20,00")))
                 .andExpect(content().string(containsString("Correção de digitação.")))
+                .andExpect(content().string(containsString(
+                        "Histórico de ajustes da contribuição")))
                 .andExpect(content().string(containsString(
                         "não aprova a reserva")));
     }
