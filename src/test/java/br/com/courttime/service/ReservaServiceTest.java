@@ -22,12 +22,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -233,6 +235,101 @@ class ReservaServiceTest {
         verify(quadraRepository, never()).findByIdForUpdate(any());
     }
 
+    @Test
+    void administratorCancelsApprovedCurrentReservationAndPreservesApprovalData() {
+        Reserva reserva = reservaAprovada(aluno);
+        Usuario administradorDaAprovacao = usuario(21L, Perfil.ADMINISTRADOR);
+        Instant analisadaEm = Instant.parse("2026-10-18T12:00:00Z");
+        reserva.setAnalisadaPor(administradorDaAprovacao);
+        reserva.setAnalisadaEm(analisadaEm);
+        reserva.setRevisaoParticipantes(4);
+        prepararAdministradorAtual();
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA);
+        when(reservaRepository.save(reserva)).thenReturn(reserva);
+
+        Reserva cancelada = service.cancelarInstitucionalmente(
+                30L, administrador, "  Manutenção emergencial da quadra  ");
+
+        assertEquals(StatusReserva.CANCELADA, cancelada.getStatus());
+        assertEquals("Manutenção emergencial da quadra",
+                cancelada.getMotivoCancelamentoInstitucional());
+        assertSame(administrador, cancelada.getCanceladaPor());
+        assertNotNull(cancelada.getCanceladaEm());
+        assertSame(administradorDaAprovacao, cancelada.getAnalisadaPor());
+        assertEquals(analisadaEm, cancelada.getAnalisadaEm());
+        assertEquals(4, cancelada.getRevisaoParticipantes());
+    }
+
+    @Test
+    void cancellationRevalidatesActiveAdministratorAndOwnership() {
+        Usuario administradorDesativado = usuario(20L, Perfil.ADMINISTRADOR);
+        administradorDesativado.setAtivo(false);
+        when(usuarioRepository.findByIdForUpdate(20L))
+                .thenReturn(Optional.of(administradorDesativado));
+
+        assertThrows(AccessDeniedException.class,
+                () -> service.cancelarInstitucionalmente(30L, administrador, "Interdição"));
+        verify(reservaRepository, never()).findByIdForUpdate(any());
+
+        Usuario seguranca = usuario(20L, Perfil.SEGURANCA);
+        when(usuarioRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(seguranca));
+        assertThrows(AccessDeniedException.class,
+                () -> service.cancelarInstitucionalmente(30L, administrador, "Interdição"));
+        verify(reservaRepository, never()).findByIdForUpdate(any());
+
+        prepararAdministradorAtual();
+        Reserva propriaReserva = reservaAprovada(administrador);
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(propriaReserva));
+
+        assertThrows(AccessDeniedException.class,
+                () -> service.cancelarInstitucionalmente(30L, administrador, "Interdição"));
+        verify(reservaRepository, never()).save(any());
+    }
+
+    @Test
+    void cancellationRequiresValidReasonApprovedStateAndCurrentDate() {
+        prepararAdministradorAtual();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.cancelarInstitucionalmente(30L, administrador, "  "));
+        assertThrows(IllegalArgumentException.class,
+                () -> service.cancelarInstitucionalmente(
+                        30L, administrador, "a".repeat(501)));
+
+        Reserva pendente = reservaPendente(aluno);
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(pendente));
+        assertThrows(IllegalStateException.class,
+                () -> service.cancelarInstitucionalmente(30L, administrador, "Interdição"));
+
+        Reserva passada = reservaAprovada(aluno);
+        passada.setDataUtilizacao(DATA.minusDays(1));
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(passada));
+        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA);
+        assertThrows(IllegalStateException.class,
+                () -> service.cancelarInstitucionalmente(30L, administrador, "Interdição"));
+
+        verify(reservaRepository, never()).save(any());
+    }
+
+    @Test
+    void repeatedCancellationIsRejectedWithoutOverwritingOriginalRecord() {
+        Reserva reserva = reservaAprovada(aluno);
+        prepararAdministradorAtual();
+        when(reservaRepository.findByIdForUpdate(30L)).thenReturn(Optional.of(reserva));
+        when(calendarioDisponibilidadeService.obterDataAtual()).thenReturn(DATA);
+        when(reservaRepository.save(reserva)).thenReturn(reserva);
+
+        service.cancelarInstitucionalmente(30L, administrador, "Primeiro motivo");
+        Instant canceladaEm = reserva.getCanceladaEm();
+
+        assertThrows(IllegalStateException.class,
+                () -> service.cancelarInstitucionalmente(
+                        30L, administrador, "Motivo que não deve substituir o primeiro"));
+        assertEquals("Primeiro motivo", reserva.getMotivoCancelamentoInstitucional());
+        assertEquals(canceladaEm, reserva.getCanceladaEm());
+    }
+
     private void prepararAdministradorAtual() {
         when(usuarioRepository.findByIdForUpdate(administrador.getId()))
                 .thenReturn(Optional.of(administrador));
@@ -269,6 +366,12 @@ class ReservaServiceTest {
         reserva.setHorarioFim(FIM);
         reserva.setFinalidade("Treino");
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
+        return reserva;
+    }
+
+    private Reserva reservaAprovada(Usuario solicitante) {
+        Reserva reserva = reservaPendente(solicitante);
+        reserva.setStatus(StatusReserva.APROVADA);
         return reserva;
     }
 

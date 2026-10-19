@@ -152,6 +152,31 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
+    @Transactional
+    public Reserva cancelarInstitucionalmente(
+            Long reservaId, Usuario administrador, String motivo) {
+        Usuario administradorAtual = obterAdministradorAtual(administrador);
+        String motivoNormalizado = validarMotivoCancelamento(motivo);
+        Reserva reserva = obterParaAnalise(reservaId);
+        impedirAnaliseDaPropriaSolicitacao(reserva, administradorAtual);
+
+        if (reserva.getStatus() != StatusReserva.APROVADA) {
+            throw new IllegalStateException(
+                    "Somente reservas aprovadas podem ser canceladas pela administração");
+        }
+        if (reserva.getDataUtilizacao()
+                .isBefore(calendarioDisponibilidadeService.obterDataAtual())) {
+            throw new IllegalStateException(
+                    "Reservas com data de utilização passada não podem ser canceladas");
+        }
+
+        reserva.setStatus(StatusReserva.CANCELADA);
+        reserva.setMotivoCancelamentoInstitucional(motivoNormalizado);
+        reserva.setCanceladaPor(administradorAtual);
+        reserva.setCanceladaEm(Instant.now());
+        return reservaRepository.save(reserva);
+    }
+
     private Reserva obterParaAnalise(Long reservaId) {
         if (reservaId == null) {
             throw new IllegalArgumentException("A reserva é obrigatória");
@@ -237,5 +262,14 @@ public class ReservaService {
                     "A finalidade é obrigatória e deve possuir no máximo 300 caracteres");
         }
         return finalidadeNormalizada;
+    }
+
+    private String validarMotivoCancelamento(String motivo) {
+        String motivoNormalizado = motivo == null ? "" : motivo.trim();
+        if (motivoNormalizado.isEmpty() || motivoNormalizado.length() > 500) {
+            throw new IllegalArgumentException(
+                    "O motivo do cancelamento é obrigatório e deve possuir no máximo 500 caracteres");
+        }
+        return motivoNormalizado;
     }
 }
