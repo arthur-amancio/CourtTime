@@ -1973,8 +1973,7 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
     .indicador { padding: var(--esp-3); }
 }
 
-/* ===================================================================
-   CourtTime V2 — FASE F: secretaria e seguranca.
+/* ============================================================   CourtTime V2 — FASE F: secretaria e seguranca.
    Registro de contribuicao em cartoes empilhados: o titulo h3 e o
    formulario ficam no mesmo contêiner (cada solicitacao e uma operacao).
    =================================================================== */
@@ -1996,3 +1995,8 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
     .painel > .tabela-wrapper { padding: var(--esp-3); }
     .painel > .tabela-wrapper .tabela--cartoes tr:last-child { margin-bottom: 0; }
 }
+=======
+/* Indicadores com rótulos longos ("Aguardando documentação"): no celular
+   ficam em duas colunas para o texto não ser cortado. */
+.indicadores--largos { grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); }
+.indicador__rotulo { overflow-wrap: break-word; }
