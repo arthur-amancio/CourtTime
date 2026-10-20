@@ -30,6 +30,33 @@ npm ci
 npx playwright install chromium
 ```
 
+## Isolamento obrigatório antes de executar a jornada
+
+**Esta automação cria usuários e modifica a grade, documentos, contribuições e reservas.**
+Ela não deve ser executada no `courttime_demo`, nem em banco persistente.
+
+1. Crie um banco PostgreSQL **novo, vazio e descartável** chamado `courttime_e2e`.
+2. Execute uma **instância separada** do Spring Boot, configurada com
+   `COURTTIME_DB_URL=jdbc:postgresql://localhost:5432/courttime_e2e` e
+   `SERVER_PORT=18081`. Use credenciais sintéticas de bootstrap neste banco.
+3. Verifique pessoalmente, antes de cada execução, que **a aplicação em
+   `127.0.0.1:18081` está realmente conectada a `courttime_e2e`** e não ao
+   banco de desenvolvimento. A validação do script não consegue provar isso.
+4. Habilite o aceite explícito somente para a sessão de teste:
+
+```bash
+export COURTTIME_E2E_ACK_ISOLATED_DB=YES
+export COURTTIME_E2E_DATABASE_NAME=courttime_e2e
+export COURTTIME_E2E_BASE_URL=http://127.0.0.1:18081
+```
+
+Sem essas variáveis o script **interrompe antes de iniciar o navegador**.
+URLs remotas, HTTPS ou portas diferentes de 18081 são recusadas. A proteção é
+preventiva; não dispensa conferir manualmente o banco da instância do servidor.
+
+A suíte de testes da própria proteção pode ser executada sem PostgreSQL nem
+Chromium: `npm run test:guard` (usa apenas o Node.js instalado).
+
 ## Execução
 
 Defina a senha sintética apenas no ambiente da sessão. Não a grave em arquivo,
