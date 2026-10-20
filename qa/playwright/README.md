@@ -99,7 +99,7 @@ npm run test:telas
 
 Somente leitura: faz login nos quatro perfis e abre páginas por `GET`. Para cada
 página e viewport (390, 430, 768 e 1440 px) verifica rolagem horizontal, um
-único `h1` e o logout como formulário `POST` com CSRF; salva capturas em
+único `h1` e o logout como formulário `POST` com CSRF; salva capturas JPEG em
 `$COURTTIME_E2E_EVIDENCE_DIR/telas`. Também verifica o menu móvel por teclado
 (quando existir), a navegação sem JavaScript e o zoom de 200% e 400%.
 

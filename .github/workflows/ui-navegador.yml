@@ -158,7 +158,7 @@ jobs:
           path: evidencias-ui
           retention-days: 14
 
-  # Copia as capturas (JPEG reduzido, dados sintéticos) para a branch
+  # Copia as capturas (JPEG gerado pelo Playwright, dados sintéticos) para a branch
   # evidencias/ui-v2, para que revisores vejam as telas reais sem baixar
   # artefatos. Não altera código nem outras branches.
   publicar-capturas:
@@ -191,9 +191,7 @@ jobs:
           rm -rf "$destino" && mkdir -p "$destino"
           cp ../evidencias/*.json "$destino"/ 2>/dev/null || true
           if [ -d ../evidencias/telas ]; then
-            for f in ../evidencias/telas/*.png; do
-              convert "$f" -resize '1440x>' -quality 72 "$destino/$(basename "${f%.png}").jpg"
-            done
+            cp ../evidencias/telas/*.jpg "$destino"/ 2>/dev/null || true
           fi
           {
             echo "# Evidências de interface — $ORIGEM"
