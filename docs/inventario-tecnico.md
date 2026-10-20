@@ -340,7 +340,7 @@ Para a documentação acadêmica não prometer o que o código não entrega:
 - não gera o formulário oficial da ETEC preenchido;
 - não verifica criptograficamente assinatura de PDF — a conferência é humana;
 - não calcula o valor da contribuição à APM;
-- não tem reagendamento após cancelamento;
+- remarca após cancelamento só como nova solicitação, sem reaproveitar aprovação, PDF ou contribuição;
 - não registra contato com o aluno;
 - não registra ocorrências pela segurança;
 - não tem regra de retenção dos documentos enviados;

@@ -475,6 +475,34 @@ async function responsiveAudit(page, label, url) {
     assert(!postCancelLinks.includes(`/seguranca/reservas/${approvedId}`), 'reserva cancelada desaparece da segurança');
     await seguranca.screenshot({ path: path.join(EVIDENCE, 'seguranca-pos-cancelamento-1440.png'), fullPage: true });
 
+    // Remarcação: o dono da reserva cancelada pede outro horário pela própria tela.
+    const donoCancelada = aApproved ? alunoA : alunoB;
+    await donoCancelada.goto(`${BASE}/solicitacoes/${approvedId}`);
+    await Promise.all([
+      donoCancelada.waitForURL(url => url.pathname === '/solicitacoes/nova'),
+      donoCancelada.getByRole('link', { name: 'Solicitar outro horário' }).click(),
+    ]);
+    assert((await donoCancelada.locator('body').innerText()).includes('Remarcação de reserva cancelada'), 'botão abre a remarcação da reserva cancelada');
+    const urlRemarcacao = `${BASE}/solicitacoes/nova?origem=${approvedId}&data=${requestDate}`;
+    await responsiveAudit(donoCancelada, 'aluno-remarcacao', urlRemarcacao);
+    await donoCancelada.setViewportSize({ width: 1440, height: 1000 });
+    await donoCancelada.goto(urlRemarcacao);
+    assert((await listarHorariosDisponiveis(donoCancelada)).includes('09:00'), 'cancelamento libera o período para a remarcação');
+    assert(await donoCancelada.locator('input[name="copiarParticipantes"][type="checkbox"]').isChecked(), 'cópia dos participantes vem marcada');
+    await selecionarHorario(donoCancelada, '09:00');
+    await Promise.all([
+      donoCancelada.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
+      donoCancelada.getByRole('button', { name: 'Registrar solicitação' }).click(),
+    ]);
+    const remarcadaId = Number(donoCancelada.url().match(/\/solicitacoes\/(\d+)$/)[1]);
+    assert((await donoCancelada.locator('body').innerText()).includes('Esta solicitação remarca a reserva de'), 'nova solicitação mostra a reserva de origem', `#${remarcadaId}`);
+    await donoCancelada.goto(`${BASE}/solicitacoes/${remarcadaId}/participantes`);
+    assert((await donoCancelada.locator('body').innerText()).includes('Mínimo de alunos atendido'), 'participantes copiados para a remarcação');
+    await donoCancelada.goto(`${BASE}/solicitacoes/${approvedId}`);
+    const canceladaBody = await donoCancelada.locator('body').innerText();
+    assert(!canceladaBody.includes('Solicitar outro horário') && canceladaBody.includes('ver a nova solicitação'), 'reserva cancelada aponta para a remarcação e não oferece outra');
+    await donoCancelada.screenshot({ path: path.join(EVIDENCE, 'aluno-cancelada-remarcada-1440.png'), fullPage: true });
+
     await alunoB.goto(`${BASE}/inicio`);
     await admin.goto(`${BASE}/admin/usuarios?busca=${encodeURIComponent(users.alunoB[0])}`);
     const alunoBRow = admin.locator('tbody tr').filter({ hasText: users.alunoB[0] });

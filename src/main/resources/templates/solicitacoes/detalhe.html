@@ -27,6 +27,21 @@
             <p th:text="${mensagemSucesso}">Solicitação registrada.</p>
         </div>
 
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
+        </div>
+
+        <div class="alerta alerta--info bloco" th:if="${reservaRemarcada}">
+            <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+            <p>
+                Esta solicitação remarca a reserva de
+                <a th:href="@{/solicitacoes/{id}(id=${reservaRemarcada.id})}"
+                   th:text="|${#temporals.format(reservaRemarcada.dataUtilizacao, 'dd/MM/yyyy')}, às ${#temporals.format(reservaRemarcada.horarioInicio, 'HH:mm')}|">21/10/2026, às 08:00</a>,
+                cancelada pela instituição.
+            </p>
+        </div>
+
         <header class="cabecalho-pagina">
             <div class="cabecalho-pagina__texto">
                 <p class="sobretitulo" th:text="|Solicitação #${solicitacao.id} · Quadra Poliesportiva|">Solicitação #16</p>
@@ -96,7 +111,15 @@
                 <th:block th:if="${status == 'CANCELADA'}">
                     <p class="bloco-texto"><strong>Cancelamento institucional registrado.</strong>
                         <span th:text="${solicitacao.motivoCancelamentoInstitucional}">Motivo informado pela instituição.</span></p>
-                    <p>A equipe da escola ainda precisa registrar qualquer contato ou encaminhamento de reagendamento.</p>
+                    <th:block th:if="${remarcacao == null}">
+                        <p>Se quiser, solicite outro horário. A nova solicitação passa por todas as etapas de novo: participantes, PDF assinado, conferência, contribuição e aprovação.</p>
+                        <p><a class="botao" th:href="@{/solicitacoes/nova(origem=${solicitacao.id})}">Solicitar outro horário</a></p>
+                    </th:block>
+                    <p th:if="${remarcacao != null}">
+                        Outro horário já foi solicitado a partir desta reserva:
+                        <a th:href="@{/solicitacoes/{id}(id=${remarcacao.id})}"
+                           th:text="|ver a nova solicitação de ${#temporals.format(remarcacao.dataUtilizacao, 'dd/MM/yyyy')}, às ${#temporals.format(remarcacao.horarioInicio, 'HH:mm')}|">ver a nova solicitação</a>.
+                    </p>
                 </th:block>
             </div>
         </div>

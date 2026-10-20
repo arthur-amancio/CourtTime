@@ -497,6 +497,126 @@ class ReservaServiceTest {
                 .thenReturn(Optional.of(contribuicao));
     }
 
+    // ---------- Remarcação após cancelamento institucional ----------
+
+    @Test
+    void remarcacaoCriaNovaSolicitacaoPendenteVinculadaACanceladaECopiaParticipantes() {
+        Reserva cancelada = reservaCancelada(aluno);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(30L, aluno.getId()))
+                .thenReturn(Optional.of(cancelada));
+        when(reservaRepository.existsByRemarcacaoDe(cancelada)).thenReturn(false);
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao()).thenReturn(DATA);
+        when(calendarioDisponibilidadeService.periodoEstaDisponivel(quadra, DATA, INICIO, FIM))
+                .thenReturn(true);
+        when(reservaRepository.save(any(Reserva.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Reserva nova = service.criarRemarcacao(
+                aluno, quadra, 30L, DATA, INICIO, FIM, "Treino remarcado", true);
+
+        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, nova.getStatus());
+        assertSame(cancelada, nova.getRemarcacaoDe());
+        assertEquals(StatusReserva.CANCELADA, cancelada.getStatus(),
+                "a reserva cancelada não é alterada");
+        verify(participanteService).copiarParticipantes(cancelada, nova);
+    }
+
+    @Test
+    void remarcacaoSemCopiaNaoCopiaParticipantes() {
+        Reserva cancelada = reservaCancelada(aluno);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(30L, aluno.getId()))
+                .thenReturn(Optional.of(cancelada));
+        when(reservaRepository.existsByRemarcacaoDe(cancelada)).thenReturn(false);
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao()).thenReturn(DATA);
+        when(calendarioDisponibilidadeService.periodoEstaDisponivel(quadra, DATA, INICIO, FIM))
+                .thenReturn(true);
+        when(reservaRepository.save(any(Reserva.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        service.criarRemarcacao(aluno, quadra, 30L, DATA, INICIO, FIM, "Treino", false);
+
+        verify(participanteService, never()).copiarParticipantes(any(), any());
+    }
+
+    @Test
+    void remarcacaoDeReservaDeOutroAlunoENegada() {
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(30L, aluno.getId()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(AccessDeniedException.class, () -> service.criarRemarcacao(
+                aluno, quadra, 30L, DATA, INICIO, FIM, "Treino", true));
+        verify(reservaRepository, never()).save(any(Reserva.class));
+    }
+
+    @Test
+    void remarcacaoExigeReservaCancelada() {
+        Reserva aprovada = reservaAprovada(aluno);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(30L, aluno.getId()))
+                .thenReturn(Optional.of(aprovada));
+
+        IllegalStateException erro = assertThrows(IllegalStateException.class,
+                () -> service.criarRemarcacao(aluno, quadra, 30L, DATA, INICIO, FIM, "Treino", true));
+        assertTrue(erro.getMessage().contains("canceladas"));
+        verify(reservaRepository, never()).save(any(Reserva.class));
+    }
+
+    @Test
+    void reservaCanceladaSoPodeSerRemarcadaUmaVez() {
+        Reserva cancelada = reservaCancelada(aluno);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(30L, aluno.getId()))
+                .thenReturn(Optional.of(cancelada));
+        when(reservaRepository.existsByRemarcacaoDe(cancelada)).thenReturn(true);
+
+        IllegalStateException erro = assertThrows(IllegalStateException.class,
+                () -> service.criarRemarcacao(aluno, quadra, 30L, DATA, INICIO, FIM, "Treino", true));
+        assertTrue(erro.getMessage().contains("já possui"));
+        verify(reservaRepository, never()).save(any(Reserva.class));
+    }
+
+    @Test
+    void remarcacaoRespeitaADisponibilidadeReal() {
+        Reserva cancelada = reservaCancelada(aluno);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(30L, aluno.getId()))
+                .thenReturn(Optional.of(cancelada));
+        when(reservaRepository.existsByRemarcacaoDe(cancelada)).thenReturn(false);
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao()).thenReturn(DATA);
+        when(calendarioDisponibilidadeService.periodoEstaDisponivel(quadra, DATA, INICIO, FIM))
+                .thenReturn(false);
+
+        assertThrows(IllegalStateException.class, () -> service.criarRemarcacao(
+                aluno, quadra, 30L, DATA, INICIO, FIM, "Treino", true));
+        verify(reservaRepository, never()).save(any(Reserva.class));
+        verify(participanteService, never()).copiarParticipantes(any(), any());
+    }
+
+    @Test
+    void remarcacaoRespeitaAAntecedenciaMinima() {
+        Reserva cancelada = reservaCancelada(aluno);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(30L, aluno.getId()))
+                .thenReturn(Optional.of(cancelada));
+        when(reservaRepository.existsByRemarcacaoDe(cancelada)).thenReturn(false);
+        when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao()).thenReturn(AMANHA);
+
+        assertThrows(IllegalArgumentException.class, () -> service.criarRemarcacao(
+                aluno, quadra, 30L, HOJE, INICIO, FIM, "Treino", true));
+        verify(reservaRepository, never()).save(any(Reserva.class));
+    }
+
+    @Test
+    void telaDeRemarcacaoSoAbreParaReservaCanceladaDoAluno() {
+        Reserva pendente = reservaPendente(aluno);
+        when(reservaRepository.findByIdAndSolicitante(30L, aluno)).thenReturn(Optional.of(pendente));
+
+        assertThrows(IllegalStateException.class, () -> service.obterParaRemarcacao(30L, aluno));
+    }
+
+    private Reserva reservaCancelada(Usuario solicitante) {
+        Reserva reserva = reservaPendente(solicitante);
+        reserva.setStatus(StatusReserva.CANCELADA);
+        reserva.setMotivoCancelamentoInstitucional("Interdição da quadra");
+        return reserva;
+    }
+
     private Reserva reservaPendente(Usuario solicitante) {
         Reserva reserva = new Reserva();
         reserva.setId(30L);
