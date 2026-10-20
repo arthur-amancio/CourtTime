@@ -5,7 +5,9 @@ const { verificarAmbienteIsolado } = require('./seguranca-ambiente.cjs');
 const correto = {
   baseUrl: 'http://127.0.0.1:18081',
   consentimento: 'YES',
-  nomeBanco: 'courttime_e2e'
+  nomeBanco: 'courttime_e2e',
+  marcadorInstancia: 'qa8c00b35',
+  emailAdmin: 'admin.qa8c00b35@e2e.invalid'
 };
 
 test('recusa execucao sem confirmacao explicita', () => {
@@ -15,6 +17,13 @@ test('recusa execucao sem confirmacao explicita', () => {
 test('recusa banco demo e banco de testes da CI', () => {
   assert.throws(() => verificarAmbienteIsolado({ ...correto, nomeBanco: 'courttime_demo' }), /bloqueada/);
   assert.throws(() => verificarAmbienteIsolado({ ...correto, nomeBanco: 'courttime_test' }), /bloqueada/);
+});
+test('recusa marcador ausente, previsivel demais ou inconsistente com o administrador', () => {
+  assert.throws(() => verificarAmbienteIsolado({ ...correto, marcadorInstancia: undefined }), /bloqueada/);
+  assert.throws(() => verificarAmbienteIsolado({ ...correto, marcadorInstancia: 'curto' }), /bloqueada/);
+  assert.throws(() => verificarAmbienteIsolado({ ...correto, marcadorInstancia: 'QA_8C00B35' }), /bloqueada/);
+  assert.throws(() => verificarAmbienteIsolado({ ...correto, emailAdmin: 'admin@e2e.invalid' }), /bloqueada/);
+  assert.throws(() => verificarAmbienteIsolado({ ...correto, emailAdmin: 'admin.qa8c00b35@example.com' }), /bloqueada/);
 });
 test('recusa URLs remotas, publicas e com porta errada', () => {
   for (const baseUrl of [
