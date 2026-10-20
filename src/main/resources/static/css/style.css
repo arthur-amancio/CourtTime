@@ -81,7 +81,7 @@ h3 {
     position: fixed;
     top: 0.75rem;
     left: 0.75rem;
-    z-index: 10;
+    z-index: 100;
     padding: 0.55rem 0.8rem;
     transform: translateY(-160%);
     background: var(--surface);
@@ -1965,8 +1965,6 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
 }
 .formulario-painel > .alerta { display: block; }
 .celula-quebra { overflow-wrap: anywhere; }
-=======
-.campo__rotulo { font-weight: 700; }
 .tabela tbody th { font-size: var(--texto-sm); font-weight: 700; color: var(--cor-texto); }
 @media (max-width: 640px) {
     .indicadores { grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); }
@@ -1995,7 +1993,6 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
     .painel > .tabela-wrapper { padding: var(--esp-3); }
     .painel > .tabela-wrapper .tabela--cartoes tr:last-child { margin-bottom: 0; }
 }
-=======
 /* Indicadores com rótulos longos ("Aguardando documentação"): no celular
    ficam em duas colunas para o texto não ser cortado. */
 .indicadores--largos { grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); }
