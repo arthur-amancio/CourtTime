@@ -4,21 +4,28 @@ Base funcional inicial: `8c00b358de36fb03d113e8e2a8de6497c4cc1dfb`.
 Referência visual: PR #49, commit
 `766c430fde14ece94c3f524e2a8b31b768ae5581` — **não mesclar**.
 
+Revisões reais registradas nesta matriz:
+
+- Fase B, PR #52: `8b11183c24903598b809c31c2c545607e70232fb`;
+- Fase C, PR #53 (baseada na Fase B):
+  `394e9177fc9f5935d96b16ede55c8eba13b31cf4`.
+
 As capturas em `design/prototipo-visual/docs/capturas/v2/` pertencem ao
 protótipo estático. Elas orientam a comparação, mas não são evidência da
 aplicação Spring Boot. Na base inicial, somente a Fase A (tokens e fundação do
 design system) está integrada; diferenças visuais esperadas não são defeitos.
 
-| Tela | Referência V2 no PR #49 | Implementação em `8c00b35` | Divergência inicial | Prioridade | Critério de aceite |
+| Tela | Referência V2 no PR #49 | Implementação revisada | Divergência encontrada | Prioridade | Critério de aceite |
 | --- | --- | --- | --- | --- | --- |
-| Login | `login--390/430/1440.png` | Login Thymeleaf funcional, aparência anterior | Composição e espaçamento ainda não migrados | P2 | Formulário mantém `email`, `senha`, CSRF, erros reais, foco visível e envio sem JavaScript. |
-| Página inicial | `inicio-administrador--1440.png` e `index--390/1440.png` | Atalhos condicionais por perfil | Cabeçalho e hierarquia ainda anteriores | P1 | Mostra somente ações autorizadas, situação real do aluno e um H1; nenhuma ação fictícia. |
-| Navegação compartilhada | `menu-movel-aberto-390.png` | Links por página; menu móvel V2 ausente | Fase B pendente | P1 | Menu abre pelo teclado, usa `aria-expanded`, torna fundo `inert`, contém foco, fecha por Escape e restaura foco; links e logout POST funcionam sem JS. |
+| Login | `login--390/430/1440.png` | Fase C no PR #53; formulário real preservado | Nenhuma divergência funcional ou de reflow nas larguras auditadas | P2 | Formulário mantém `email`, `password`, CSRF, erros reais, foco visível e envio sem JavaScript. |
+| Página pública | `index--390/1440.png` | Fase C no PR #53 | Nenhuma divergência bloqueadora; texto informa que o valor da APM ainda depende de confirmação | P2 | Um H1, conteúdo institucional verdadeiro, sem ação fictícia, sem overflow e navegação por teclado. |
+| Página inicial autenticada | `inicio-administrador--1440.png` | Estrutura compartilhada da Fase B no PR #52 | Migração visual específica do conteúdo ainda pendente | P1 | Mostra somente ações autorizadas, situação real do aluno e um H1; nenhuma ação fictícia. |
+| Navegação compartilhada | `menu-movel-aberto-390.png` | Fase B no PR #52 | O link de salto focado fica atrás de `header.topo-app` em 390 px (`z-index: 10` contra `30`) | P1 | Menu abre pelo teclado, usa `aria-expanded`, torna fundo `inert`, contém foco, fecha por Escape e restaura foco; link de salto permanece visível; links e logout POST funcionam sem JS. |
 | Calendário | `quadra--1440.png` e `calendario-opcao-a-390.png` | Consulta por campo de data e tabela | Componente mensal/semana móvel ainda ausente | P1 | Implementa opção A sem contadores; usa grade/bloqueios reais, recusa passado e antecedência inválida, mantém `horarioInicio=HH:mm` e alternativa sem JS. |
-| Nova solicitação | `nova-solicitacao--390/430/768/1440.png` | Data, horário e finalidade funcionais | Organização visual ainda anterior | P1 | Preserva nomes, rota, CSRF e duração calculada no backend; validação legível e nenhum envio automático. |
-| Painel administrativo | `admin-painel--390/1440.png` | Métricas e links reais | Densidade e navegação ainda anteriores | P2 | Solicitações, usuários, horários e bloqueios permanecem alcançáveis; nenhuma permissão da secretaria é ampliada. |
-| Secretaria | `secretaria-conferencia--1440.png` | Filas, conferência e contribuições reais | Layout V2 ainda não migrado | P1 | Devolução exige justificativa com mensagem visível; download, validação e contribuição preservam CSRF, integridade e duplicidade. |
-| Segurança | `seguranca-conferencia--390.png` e `seguranca-reservas--1440.png` | Lista e detalhe somente leitura | Layout V2 ainda não migrado | P1 | Exibe apenas reservas autorizadas e identificação necessária; omite documentos, finanças e edição; canceladas retornam 404. |
+| Nova solicitação | `nova-solicitacao--390/430/768/1440.png` | Contrato funcional preservado no PR #52 | Migração visual específica ainda pendente | P1 | Preserva nomes, rota, CSRF e duração calculada no backend; validação legível e nenhum envio automático. |
+| Painel administrativo | `admin-painel--390/1440.png` | Navegação compartilhada da Fase B no PR #52 | Conteúdo específico ainda não migrado | P2 | Solicitações, usuários, horários e bloqueios permanecem alcançáveis; nenhuma permissão da secretaria é ampliada. |
+| Secretaria | `secretaria-conferencia--1440.png` | Navegação compartilhada da Fase B no PR #52 | Conteúdo específico ainda não migrado | P1 | Devolução exige justificativa com mensagem visível; download, validação e contribuição preservam CSRF, integridade e duplicidade. |
+| Segurança | `seguranca-conferencia--390.png` e `seguranca-reservas--1440.png` | Navegação compartilhada da Fase B no PR #52 | Conteúdo específico ainda não migrado | P1 | Exibe apenas reservas autorizadas e identificação necessária; omite documentos, finanças e edição; canceladas retornam 404. |
 
 ## Procedimento por PR visual
 

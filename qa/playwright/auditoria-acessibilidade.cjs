@@ -49,6 +49,7 @@ const CHROMIUM_EXECUTABLE = configuracao.chromiumExecutable;
       { width: 1440, height: 1000 },
     ];
     const paginas = [
+      ['pagina-publica', '/', null],
       ['login', '/login', null],
       ['aluno', '/solicitacoes', 'alunoA'],
       ['quadra', '/quadra', 'alunoA'],
