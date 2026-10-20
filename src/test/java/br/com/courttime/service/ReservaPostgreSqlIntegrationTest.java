@@ -25,6 +25,7 @@ import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.support.BancoDeTeste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.math.BigDecimal;
@@ -60,6 +62,9 @@ class ReservaPostgreSqlIntegrationTest {
 
     @Autowired
     private ReservaService reservaService;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Autowired
     private AdministracaoQuadraService administracaoQuadraService;
@@ -106,6 +111,7 @@ class ReservaPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBanco() {
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         ajusteContribuicaoApmRepository.deleteAllInBatch();
         contribuicaoApmRepository.deleteAllInBatch();
         conferenciaDocumentoRepository.deleteAllInBatch();
