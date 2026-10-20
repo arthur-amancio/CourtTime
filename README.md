@@ -160,7 +160,17 @@ O registro de ocorrências permanece indisponível até a ETEC definir quais oco
 
 Uma reserva já aprovada pode ser cancelada por um administrador ativo mediante motivo institucional obrigatório. O registro preserva o responsável, a data, a aprovação anterior, o PDF original, os participantes, a conferência documental e a contribuição. Após a transição para `CANCELADA`, a reserva deixa de aparecer como autorização para a segurança e o horário volta a ser considerado disponível.
 
-O cancelamento não declara que houve contato com o aluno e não cria um reagendamento automaticamente. Registro de contato, nova data, vínculo entre solicitações, reaproveitamento da contribuição e eventual dispensa de nova assinatura permanecem pendentes das regras formais da ETEC.
+O cancelamento não declara que houve contato com o aluno e não cria um reagendamento automaticamente.
+
+### Remarcação após cancelamento
+
+No detalhe de uma reserva cancelada, o aluno encontra **Solicitar outro horário**. A tela é o formulário comum de solicitação, com aviso da reserva de origem e a finalidade já preenchida, e passa pelas mesmas regras: antecedência mínima, grade semanal, bloqueios e disponibilidade real. A nova solicitação:
+
+- começa em `PENDENTE_DOCUMENTACAO` e fica vinculada à cancelada (`reservas.remarcacao_de_id`, coluna única);
+- pode copiar os participantes da cancelada (opção marcada por padrão), que continuam editáveis antes do envio do PDF;
+- **não** reaproveita aprovação, PDF nem contribuição — esses dependem de regra institucional ainda não definida.
+
+Cada reserva cancelada pode ser remarcada uma vez; a cancelada não é alterada e continua no histórico. A reserva de origem fica travada durante a operação, então dois envios simultâneos não criam duas remarcações. Registro de contato com o aluno, reaproveitamento da contribuição e dispensa de nova assinatura continuam pendentes das regras formais da ETEC.
 
 ## Testes e build
 

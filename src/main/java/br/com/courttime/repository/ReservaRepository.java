@@ -37,6 +37,18 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     long countByStatus(StatusReserva status);
 
+    boolean existsByRemarcacaoDe(Reserva reservaCancelada);
+
+    Optional<Reserva> findByRemarcacaoDe(Reserva reservaCancelada);
+
+    /** Reserva cancelada que a solicitação informada remarca, do mesmo aluno. */
+    @Query("""
+            select r.remarcacaoDe from Reserva r
+            where r.id = :id and r.solicitante = :solicitante
+            """)
+    Optional<Reserva> obterReservaRemarcada(
+            @Param("id") Long id, @Param("solicitante") Usuario solicitante);
+
     @Query("""
             select r from Reserva r
             join fetch r.quadra

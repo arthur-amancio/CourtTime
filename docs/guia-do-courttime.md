@@ -66,8 +66,9 @@ Para não prometer na banca o que o código não faz:
   fora do sistema.
 - O sistema **não verifica** se o PDF enviado está realmente assinado. A
   conferência da secretaria é manual.
-- **Não há reagendamento** após cancelamento institucional, nem reaproveitamento
-  da contribuição.
+- A **remarcação** após cancelamento cria uma solicitação nova, do início: não
+  reaproveita aprovação, PDF nem contribuição (só os participantes, se o aluno
+  pedir).
 - **Não há registro** de contato com o aluno.
 - **Não há registro de ocorrências** pela segurança.
 - **Não há** regra de retenção dos documentos enviados.

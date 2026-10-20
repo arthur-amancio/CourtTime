@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -87,6 +88,15 @@ public class Reserva {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cancelada_por_id")
     private Usuario canceladaPor;
+
+    /**
+     * Solicitação cancelada que esta remarca, quando houver. A anterior não é
+     * alterada: o vínculo só registra de onde a nova solicitação veio. Cada
+     * cancelamento pode ser remarcado uma única vez (coluna única).
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "remarcacao_de_id", unique = true)
+    private Reserva remarcacaoDe;
 
     @Column(nullable = false, updatable = false)
     private Instant criadaEm;
@@ -227,6 +237,14 @@ public class Reserva {
 
     public void setCanceladaPor(Usuario canceladaPor) {
         this.canceladaPor = canceladaPor;
+    }
+
+    public Reserva getRemarcacaoDe() {
+        return remarcacaoDe;
+    }
+
+    public void setRemarcacaoDe(Reserva remarcacaoDe) {
+        this.remarcacaoDe = remarcacaoDe;
     }
 
     public Instant getCriadaEm() {
