@@ -237,9 +237,10 @@ class JornadaCompletaE2ETest {
 
         // a secretaria não aprova reservas
         assertEquals(HttpStatus.FORBIDDEN,
-                secretaria.post("/admin/solicitacoes/" + reservaId + "/aprovar",
+                secretaria.postComTokenDe("/inicio",
+                        "/admin/solicitacoes/" + reservaId + "/aprovar",
                         new LinkedMultiValueMap<>()).getStatusCode(),
-                "a secretaria não pode aprovar");
+                "a secretaria não pode aprovar, mesmo com token CSRF válido");
 
         // ---------- ADMINISTRACAO ----------
         Sessao admin = entrar("admin.demo@exemplo.local");
@@ -410,6 +411,19 @@ class JornadaCompletaE2ETest {
 
         ResponseEntity<String> postSemCsrf(String caminho, MultiValueMap<String, String> form) {
             return enviar(caminho, form);
+        }
+
+        /**
+         * POST com token valido obtido de outra pagina. Serve para provar que a
+         * recusa veio da autorizacao por perfil, e nao da falta de token: quem
+         * nao pode abrir a pagina de destino tambem nao conseguiria o token
+         * dela.
+         */
+        ResponseEntity<String> postComTokenDe(String paginaDoToken, String destino,
+                MultiValueMap<String, String> form) {
+            MultiValueMap<String, String> comToken = new LinkedMultiValueMap<>(form);
+            comToken.add("_csrf", csrf(paginaDoToken));
+            return enviar(destino, comToken);
         }
 
         private ResponseEntity<String> enviar(String caminho, MultiValueMap<String, String> form) {
