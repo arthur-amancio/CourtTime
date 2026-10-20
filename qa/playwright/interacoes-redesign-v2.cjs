@@ -110,11 +110,19 @@ async function auditarSequenciaDeFoco(page, tela) {
       const caixa = ativo.getBoundingClientRect();
       const centroX = Math.max(0, Math.min(innerWidth - 1, caixa.left + caixa.width / 2));
       const centroY = Math.max(0, Math.min(innerHeight - 1, caixa.top + caixa.height / 2));
-      const sobrepositores = document.elementsFromPoint(centroX, centroY).filter(elemento => {
-        if (elemento === ativo || elemento.contains(ativo) || ativo.contains(elemento)) return false;
-        const posicao = getComputedStyle(elemento).position;
-        return posicao === 'fixed' || posicao === 'sticky';
-      }).map(elemento => `${elemento.tagName.toLowerCase()}.${[...elemento.classList].join('.')}`);
+      // elementsFromPoint devolve as camadas da frente para tras.
+      // So ha encobrimento se o overlay estiver ANTES do elemento focado
+      // na pilha de pintura. Considerar todas as camadas (inclusive as
+      // que estao ATRAS do foco) gera falso positivo para o skip-link.
+      const sobrepositores = [];
+      for (const elemento of document.elementsFromPoint(centroX, centroY)) {
+        if (elemento === ativo || elemento.contains(ativo) || ativo.contains(elemento)) break;
+        const estilo = getComputedStyle(elemento);
+        if ((estilo.position === 'fixed' || estilo.position === 'sticky')
+            && estilo.visibility !== 'hidden' && estilo.pointerEvents !== 'none') {
+          sobrepositores.push(`${elemento.tagName.toLowerCase()}.${[...elemento.classList].join('.')}`);
+        }
+      }
       return {
         identificador: ativo.getAttribute('aria-label') || ativo.textContent?.trim().slice(0, 80)
           || ativo.getAttribute('name') || ativo.id || ativo.tagName,
