@@ -184,8 +184,9 @@ class JornadaCompletaE2ETest {
         enviarPdf(aluno, reservaId);
         assertEquals(1, documentoReservaRepository.count(), "o PDF deve ter sido registrado");
 
-        assertTrue(aluno.get("/solicitacoes/" + reservaId).getBody().contains("Pendente"),
-                "o aluno deve ver a situação pendente");
+        assertTrue(aluno.get("/solicitacoes/" + reservaId).getBody()
+                        .contains("Documento aguardando conferência"),
+                "depois do envio, o aluno deve ver que o documento aguarda a secretaria");
 
         // ---------- IDOR: outro aluno não acessa a solicitação alheia ----------
         Sessao outroAluno = entrar("outro.aluno@exemplo.local");
@@ -290,8 +291,9 @@ class JornadaCompletaE2ETest {
         assertEquals(1, contribuicaoApmRepository.count(), "a contribuição deve continuar registrada");
         assertEquals(10, participanteReservaRepository.count());
 
-        assertFalse(seguranca.get("/seguranca/reservas").getBody().contains("Participante Fictício"),
-                "a reserva cancelada deve sumir da consulta da segurança");
+        assertEquals(HttpStatus.NOT_FOUND,
+                seguranca.get("/seguranca/reservas/" + reservaId).getStatusCode(),
+                "a reserva cancelada nao deve mais ser encontrada pela segurança");
         assertTrue(aluno.get("/solicitacoes/" + reservaId).getBody()
                         .contains("Interdição da quadra para manutenção"),
                 "o aluno deve ver o motivo do cancelamento");
