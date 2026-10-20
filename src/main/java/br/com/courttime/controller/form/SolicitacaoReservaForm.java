@@ -22,6 +22,11 @@ public class SolicitacaoReservaForm {
     @Size(max = 300, message = "A finalidade deve possuir no máximo 300 caracteres")
     private String finalidade;
 
+    /** Reserva cancelada que esta solicitação remarca; vazio numa solicitação comum. */
+    private Long origemId;
+
+    private boolean copiarParticipantes;
+
     public LocalDate getData() {
         return data;
     }
@@ -44,5 +49,21 @@ public class SolicitacaoReservaForm {
 
     public void setFinalidade(String finalidade) {
         this.finalidade = finalidade;
+    }
+
+    public Long getOrigemId() {
+        return origemId;
+    }
+
+    public void setOrigemId(Long origemId) {
+        this.origemId = origemId;
+    }
+
+    public boolean isCopiarParticipantes() {
+        return copiarParticipantes;
+    }
+
+    public void setCopiarParticipantes(boolean copiarParticipantes) {
+        this.copiarParticipantes = copiarParticipantes;
     }
 }

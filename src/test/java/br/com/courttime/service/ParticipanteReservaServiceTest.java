@@ -258,6 +258,47 @@ class ParticipanteReservaServiceTest {
         return participantes;
     }
 
+    @Test
+    void remarcacaoCopiaParticipantesSemAlterarOsDaReservaCancelada() {
+        Reserva cancelada = reserva(5L, aluno, StatusReserva.CANCELADA);
+        ParticipanteReserva ana = participante(1L, cancelada, "Ana Souza", "RM-1", CategoriaParticipante.ALUNO);
+        ParticipanteReserva joao = participante(2L, cancelada, "João Lima", "RG-2", CategoriaParticipante.OUTRO);
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(cancelada))
+                .thenReturn(List.of(ana, joao));
+        List<ParticipanteReserva> copias = new ArrayList<>();
+        when(participanteRepository.save(any(ParticipanteReserva.class))).thenAnswer(invocation -> {
+            copias.add(invocation.getArgument(0));
+            return invocation.getArgument(0);
+        });
+
+        int quantidade = service.copiarParticipantes(cancelada, reserva);
+
+        assertEquals(2, quantidade);
+        assertEquals(2, copias.size());
+        for (ParticipanteReserva copia : copias) {
+            assertSame(reserva, copia.getReserva());
+            assertEquals(null, copia.getId(), "a cópia é um registro novo");
+        }
+        assertEquals("Ana Souza", copias.get(0).getNomeCompleto());
+        assertEquals("RG-2", copias.get(1).getRmOuRg());
+        assertEquals(CategoriaParticipante.OUTRO, copias.get(1).getCategoria());
+        assertSame(cancelada, ana.getReserva(), "os participantes originais continuam na cancelada");
+        assertEquals(1, reserva.getRevisaoParticipantes());
+    }
+
+    @Test
+    void copiaDeParticipantesExigeMesmoAlunoECanceladaParaPendente() {
+        Usuario outroAluno = usuario(11L, Perfil.ALUNO, true);
+        Reserva canceladaDeOutro = reserva(6L, outroAluno, StatusReserva.CANCELADA);
+        Reserva aprovada = reserva(7L, aluno, StatusReserva.APROVADA);
+
+        assertThrows(IllegalStateException.class,
+                () -> service.copiarParticipantes(canceladaDeOutro, reserva));
+        assertThrows(IllegalStateException.class,
+                () -> service.copiarParticipantes(aprovada, reserva));
+        verify(participanteRepository, never()).save(any(ParticipanteReserva.class));
+    }
+
     private ParticipanteReserva participante(
             Long id,
             Reserva reserva,

@@ -33,8 +33,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -322,8 +324,157 @@ class SolicitacaoReservaControllerTest {
                 .andExpect(content().string(containsString(
                         "Cancelada pela administração")))
                 .andExpect(content().string(containsString("Interdição da quadra")))
-                .andExpect(content().string(containsString(
-                        "ainda precisa registrar qualquer contato")));
+                .andExpect(content().string(containsString("Solicitar outro horário")))
+                .andExpect(content().string(containsString("/solicitacoes/nova?origem=30")));
+    }
+
+    // ---------- Remarcação após cancelamento ----------
+
+    @Test
+    void canceladaJaRemarcadaMostraLinkParaANovaEmVezDoBotao() throws Exception {
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        Reserva cancelada = reservaCancelada(30L, aluno);
+        Reserva nova = reserva(31L, aluno);
+        when(reservaService.obterSolicitacaoDoUsuario(30L, aluno)).thenReturn(cancelada);
+        when(reservaService.obterRemarcacao(cancelada)).thenReturn(Optional.of(nova));
+
+        mockMvc.perform(get("/solicitacoes/30")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/solicitacoes/31")))
+                .andExpect(content().string(not(containsString("Solicitar outro horário"))));
+    }
+
+    @Test
+    void remarcacaoMostraDeQualReservaCanceladaVeio() throws Exception {
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        Reserva nova = reserva(31L, aluno);
+        Reserva cancelada = reservaCancelada(30L, aluno);
+        when(reservaService.obterSolicitacaoDoUsuario(31L, aluno)).thenReturn(nova);
+        when(reservaService.obterReservaRemarcada(nova, aluno)).thenReturn(Optional.of(cancelada));
+
+        mockMvc.perform(get("/solicitacoes/31")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Esta solicitação remarca a reserva de")))
+                .andExpect(content().string(containsString("/solicitacoes/30")));
+    }
+
+    @Test
+    void formularioDeRemarcacaoTrazAvisoFinalidadeECaixaDeParticipantes() throws Exception {
+        prepararFormularioDisponivel();
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        Reserva cancelada = reservaCancelada(30L, aluno);
+        when(reservaService.obterParaRemarcacao(30L, aluno)).thenReturn(cancelada);
+
+        mockMvc.perform(get("/solicitacoes/nova")
+                        .param("origem", "30")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Remarcação de reserva cancelada")))
+                .andExpect(content().string(containsString("foi cancelada pela instituição")))
+                .andExpect(content().string(containsString("name=\"origemId\"")))
+                .andExpect(content().string(containsString("Copiar os participantes da reserva cancelada")))
+                .andExpect(content().string(containsString("Treino da turma")))
+                .andExpect(content().string(containsString("name=\"origem\"")));
+    }
+
+    @Test
+    void remarcacaoDeReservaDeOutroAlunoRespondeNaoEncontrado() throws Exception {
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        when(reservaService.obterParaRemarcacao(99L, aluno))
+                .thenThrow(new AccessDeniedException("não pertence"));
+
+        mockMvc.perform(get("/solicitacoes/nova")
+                        .param("origem", "99")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void remarcacaoDeReservaNaoCanceladaVoltaAoDetalheComOMotivo() throws Exception {
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        when(reservaService.obterParaRemarcacao(30L, aluno))
+                .thenThrow(new IllegalStateException("Esta reserva cancelada já possui uma nova solicitação"));
+
+        mockMvc.perform(get("/solicitacoes/nova")
+                        .param("origem", "30")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/solicitacoes/30"))
+                .andExpect(flash().attribute("mensagemErro", containsString("já possui")));
+    }
+
+    @Test
+    void envioDaRemarcacaoUsaOAlunoAutenticadoEAOpcaoDeCopia() throws Exception {
+        prepararFormularioDisponivel();
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        Reserva cancelada = reservaCancelada(30L, aluno);
+        when(reservaService.obterSolicitacaoDoUsuario(30L, aluno)).thenReturn(cancelada);
+        when(reservaService.criarRemarcacao(
+                aluno, quadra, 30L, DATA, INICIO, FIM, "Treino remarcado", false))
+                .thenReturn(reserva(31L, aluno));
+
+        mockMvc.perform(post("/solicitacoes")
+                        .with(user(aluno.getEmail()).roles("ALUNO"))
+                        .with(csrf())
+                        .param("data", DATA.toString())
+                        .param("horarioInicio", INICIO.toString())
+                        .param("finalidade", "Treino remarcado")
+                        .param("origemId", "30")
+                        .param("_copiarParticipantes", "on"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/solicitacoes/31"));
+        verify(reservaService, never()).criarSolicitacao(any(), any(), any(), any(), any(), any());
+    }
+
+    @Test
+    void envioDeRemarcacaoComReservaDeOutroAlunoRespondeNaoEncontrado() throws Exception {
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        when(reservaService.obterSolicitacaoDoUsuario(99L, aluno))
+                .thenThrow(new AccessDeniedException("não pertence"));
+
+        mockMvc.perform(post("/solicitacoes")
+                        .with(user(aluno.getEmail()).roles("ALUNO"))
+                        .with(csrf())
+                        .param("data", DATA.toString())
+                        .param("horarioInicio", INICIO.toString())
+                        .param("finalidade", "Treino")
+                        .param("origemId", "99"))
+                .andExpect(status().isNotFound());
+        verify(reservaService, never()).criarRemarcacao(
+                any(), any(), any(), any(), any(), any(), any(), org.mockito.ArgumentMatchers.anyBoolean());
+    }
+
+    @Test
+    void conflitoNaRemarcacaoReexibeFormularioComOAviso() throws Exception {
+        prepararFormularioDisponivel();
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
+        Reserva cancelada = reservaCancelada(30L, aluno);
+        when(reservaService.obterSolicitacaoDoUsuario(30L, aluno)).thenReturn(cancelada);
+        when(reservaService.criarRemarcacao(
+                aluno, quadra, 30L, DATA, INICIO, FIM, "Treino", true))
+                .thenThrow(new IllegalStateException("O período selecionado não está disponível"));
+
+        mockMvc.perform(post("/solicitacoes")
+                        .with(user(aluno.getEmail()).roles("ALUNO"))
+                        .with(csrf())
+                        .param("data", DATA.toString())
+                        .param("horarioInicio", INICIO.toString())
+                        .param("finalidade", "Treino")
+                        .param("origemId", "30")
+                        .param("copiarParticipantes", "true"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("O período selecionado não está disponível")))
+                .andExpect(content().string(containsString("Remarcação de reserva cancelada")));
     }
 
     private void prepararFormularioDisponivel() {
@@ -334,6 +485,13 @@ class SolicitacaoReservaControllerTest {
                 .thenReturn(DATA);
         when(calendarioDisponibilidadeService.consultar(quadra, DATA))
                 .thenReturn(new ConsultaDisponibilidade(DATA, true, List.of(horario)));
+    }
+
+    private Reserva reservaCancelada(Long id, Usuario solicitante) {
+        Reserva reserva = reserva(id, solicitante);
+        reserva.setStatus(StatusReserva.CANCELADA);
+        reserva.setMotivoCancelamentoInstitucional("Interdição da quadra");
+        return reserva;
     }
 
     private Reserva reserva(Long id, Usuario solicitante) {
