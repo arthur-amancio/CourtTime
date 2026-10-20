@@ -12,93 +12,110 @@
     <header th:replace="~{fragments/layout :: topo}"></header>
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
 
-    <main id="conteudo" class="container app-main app-main--narrow">
+    <main id="conteudo" class="container app-main">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
             <a th:href="@{/inicio}">Início</a>
             <span aria-hidden="true">/</span>
-            <a th:href="@{/secretaria/documentos}">Documentos</a>
+            <a th:href="@{/secretaria/documentos}">Conferência documental</a>
             <span aria-hidden="true">/</span>
             <span aria-current="page">Conferência</span>
         </nav>
 
-        <p class="form-message form-message--error" role="alert"
-           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
-
-        <header class="page-heading">
-            <h1>Conferir documento</h1>
-            <p>A conferência registra uma decisão sobre esta versão e não altera o PDF original.</p>
-        </header>
-
-        <section class="request-details" aria-labelledby="documento-title">
-            <div class="request-details__status">
-                <h2 id="documento-title" th:text="|Solicitação #${documento.reserva.id}|">Solicitação #20</h2>
-                <strong class="status-pill" th:text="|v${documento.versao}|">v1</strong>
-            </div>
-            <dl class="details-list">
-                <div>
-                    <dt>Solicitante</dt>
-                    <dd th:text="${documento.reserva.solicitante.nome}">Ana Souza</dd>
-                </div>
-                <div>
-                    <dt>Arquivo original</dt>
-                    <dd th:text="${documento.nomeOriginal}">termo.pdf</dd>
-                </div>
-                <div>
-                    <dt>Enviado em</dt>
-                    <dd th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</dd>
-                </div>
-                <div>
-                    <dt>Resultado</dt>
-                    <dd th:if="${documento.conferencia == null}">Aguardando conferência</dd>
-                    <dd th:if="${documento.conferencia != null}"
-                        th:text="${documento.conferencia.resultado.descricao}">Validado</dd>
-                </div>
-                <div th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}">
-                    <dt>Justificativa</dt>
-                    <dd th:text="${documento.conferencia.justificativa}">Correção necessária.</dd>
-                </div>
-            </dl>
-        </section>
-
-        <div class="form-actions">
-            <a class="button button--secondary"
-               th:href="@{/secretaria/documentos/{id}/baixar(id=${documento.id})}">Baixar PDF original</a>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
         </div>
 
-        <section class="form-section" aria-labelledby="decisao-title"
-                 th:if="${conferenciaPermitida}">
-            <h2 id="decisao-title">Registrar conferência</h2>
-            <div class="request-notice">
-                <strong>Importante</strong>
-                <p>Validar a documentação não aprova a utilização da quadra.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo" th:text="|Solicitação #${documento.reserva.id}|">Solicitação #20</p>
+                <h1>Conferir documento</h1>
+                <p>A conferência registra uma decisão sobre esta versão e não altera o PDF original.</p>
             </div>
-            <form class="request-form"
-                  th:action="@{/secretaria/documentos/{id}/validar(id=${documento.id})}"
-                  method="post">
-                <button class="button" type="submit">Validar documento</button>
-            </form>
-            <form class="request-form"
-                  th:action="@{/secretaria/documentos/{id}/devolver(id=${documento.id})}"
-                  method="post">
-                <div class="form-field">
-                    <label for="justificativa">Justificativa da correção</label>
-                    <textarea id="justificativa" name="justificativa" maxlength="500" rows="5"
-                              required aria-describedby="justificativa-ajuda"></textarea>
-                    <p id="justificativa-ajuda" class="field-help">
-                        Explique de forma objetiva o que o aluno precisa corrigir. Máximo de 500 caracteres.
-                    </p>
+            <span class="badge badge--documentacao" th:if="${documento.conferencia == null}">
+                <svg th:replace="~{fragments/icones :: icone('ampulheta')}"></svg><span>Aguardando conferência</span>
+            </span>
+            <span class="badge badge--aprovada" th:if="${documento.conferencia != null and documento.conferencia.resultado.name() == 'VALIDADO'}">
+                <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg><span th:text="${documento.conferencia.resultado.descricao}">Validado</span>
+            </span>
+            <span class="badge badge--documentacao" th:if="${documento.conferencia != null and documento.conferencia.resultado.name() != 'VALIDADO'}">
+                <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg><span th:text="${documento.conferencia.resultado.descricao}">Devolvido para correção</span>
+            </span>
+        </header>
+
+        <div class="grade-detalhe">
+            <div class="pilha">
+                <section class="painel" aria-labelledby="documento-title">
+                    <div class="painel__cabecalho">
+                        <h2 id="documento-title" th:text="|Solicitação #${documento.reserva.id}|">Solicitação #20</h2>
+                    </div>
+                    <div class="painel__corpo pilha pilha--compacta">
+                        <div class="arquivo-pdf">
+                            <span class="arquivo-pdf__icone" aria-hidden="true">PDF</span>
+                            <div class="arquivo-pdf__dados">
+                                <strong class="celula-quebra" th:text="|v${documento.versao} — ${documento.nomeOriginal}|">v1 — termo.pdf</strong>
+                                <span th:text="|Enviado em ${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}|">Enviado em 18/10/2026 10:00</span>
+                            </div>
+                            <a class="botao botao--secundario botao--sm"
+                               th:href="@{/secretaria/documentos/{id}/baixar(id=${documento.id})}">
+                                <svg th:replace="~{fragments/icones :: icone('download')}"></svg><span>Baixar PDF original</span>
+                            </a>
+                        </div>
+                        <dl class="dados">
+                            <div><dt>Solicitante</dt><dd th:text="${documento.reserva.solicitante.nome}">Ana Souza</dd></div>
+                            <div><dt>Versão</dt><dd th:text="|v${documento.versao}|">v1</dd></div>
+                            <div>
+                                <dt>Resultado</dt>
+                                <dd th:if="${documento.conferencia == null}">Aguardando conferência</dd>
+                                <dd th:if="${documento.conferencia != null}" th:text="${documento.conferencia.resultado.descricao}">Validado</dd>
+                            </div>
+                        </dl>
+                        <div class="alerta alerta--aviso" th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}">
+                            <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
+                            <p><strong>Justificativa:</strong> <span th:text="${documento.conferencia.justificativa}">Correção necessária.</span></p>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="alerta alerta--info" th:if="${documento.conferencia == null and !conferenciaPermitida}">
+                    <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+                    <p>Esta versão não está disponível para uma nova conferência. Consulte a versão mais recente na fila.</p>
                 </div>
-                <button class="button button--secondary" type="submit">Devolver para correção</button>
-            </form>
-        </section>
+            </div>
 
-        <p class="request-notice"
-           th:if="${documento.conferencia == null and !conferenciaPermitida}">
-            Esta versão não está disponível para uma nova conferência. Consulte a versão mais recente na fila.
-        </p>
+            <aside class="pilha">
+                <section class="painel" aria-labelledby="decisao-title" th:if="${conferenciaPermitida}">
+                    <div class="painel__cabecalho"><h2 id="decisao-title">Registrar conferência</h2></div>
+                    <div class="painel__corpo">
+                        <div class="alerta alerta--info bloco-espaco">
+                            <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+                            <p><strong>Importante:</strong> validar a documentação não aprova a utilização da quadra.</p>
+                        </div>
+                        <form class="decisao" method="post"
+                              th:action="@{/secretaria/documentos/{id}/validar(id=${documento.id})}">
+                            <button class="botao botao--bloco" type="submit">
+                                <svg th:replace="~{fragments/icones :: icone('documento-check')}"></svg><span>Validar documento</span>
+                            </button>
+                        </form>
+                        <form class="decisao" method="post"
+                              th:action="@{/secretaria/documentos/{id}/devolver(id=${documento.id})}">
+                            <div class="campo">
+                                <label for="justificativa">Justificativa da correção</label>
+                                <textarea id="justificativa" name="justificativa" maxlength="500" rows="5"
+                                          required aria-describedby="justificativa-ajuda"></textarea>
+                                <p id="justificativa-ajuda" class="campo__ajuda">
+                                    Explique de forma objetiva o que o aluno precisa corrigir. Máximo de 500 caracteres.
+                                </p>
+                            </div>
+                            <button class="botao botao--secundario botao--bloco botao--espacado" type="submit">Devolver para correção</button>
+                        </form>
+                    </div>
+                </section>
 
-        <div class="form-actions">
-            <a class="button button--secondary" th:href="@{/secretaria/documentos}">Voltar à fila</a>
+                <a class="botao botao--secundario botao--bloco" th:href="@{/secretaria/documentos}">
+                    <svg th:replace="~{fragments/icones :: icone('seta-esq')}"></svg><span>Voltar à fila</span>
+                </a>
+            </aside>
         </div>
     </main>
 

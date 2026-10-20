@@ -21,54 +21,66 @@
             <span aria-current="page">Conferência</span>
         </nav>
 
-        <header class="page-heading page-heading--actions">
-            <div>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
                 <h1>Conferir reserva</h1>
                 <p>Use os dados abaixo somente para a conferência presencial.</p>
             </div>
-            <strong class="status-pill status-pill--available">Autorizada</strong>
+            <span class="badge badge--aprovada">
+                <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg><span>Autorizada</span>
+            </span>
         </header>
 
-        <section class="request-details" aria-labelledby="reserva-title">
-            <h2 id="reserva-title">Reserva</h2>
-            <dl class="details-list">
-                <div><dt>Data</dt><dd th:text="${#temporals.format(detalhe.reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</dd></div>
-                <div><dt>Horário</dt><dd th:text="|${#temporals.format(detalhe.reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(detalhe.reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</dd></div>
-                <div><dt>Quadra</dt><dd th:text="${detalhe.reserva.quadra}">Quadra Poliesportiva</dd></div>
-                <div><dt>Solicitante</dt><dd th:text="${detalhe.reserva.solicitante}">Ana Souza</dd></div>
-                <div><dt>Participantes</dt><dd th:text="${detalhe.reserva.quantidadeParticipantes}">10</dd></div>
-            </dl>
-        </section>
+        <div class="pilha">
+            <section class="painel" aria-labelledby="reserva-title">
+                <div class="painel__cabecalho"><h2 id="reserva-title">Reserva</h2></div>
+                <div class="painel__corpo">
+                    <dl class="dados">
+                        <div><dt>Data</dt><dd th:text="${#temporals.format(detalhe.reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</dd></div>
+                        <div><dt>Horário</dt><dd th:text="|${#temporals.format(detalhe.reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(detalhe.reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</dd></div>
+                        <div><dt>Quadra</dt><dd th:text="${detalhe.reserva.quadra}">Quadra Poliesportiva</dd></div>
+                        <div><dt>Solicitante</dt><dd th:text="${detalhe.reserva.solicitante}">Ana Souza</dd></div>
+                        <div><dt>Participantes</dt><dd th:text="${detalhe.reserva.quantidadeParticipantes}">10</dd></div>
+                    </dl>
+                </div>
+            </section>
 
-        <section class="admin-section" aria-labelledby="participantes-title">
-            <h2 id="participantes-title">Identificação dos participantes</h2>
-            <p class="empty-message" th:if="${#lists.isEmpty(detalhe.participantes)}">
-                Não há participantes vinculados a esta reserva.
-            </p>
-            <div class="table-wrapper" role="region" aria-label="Tabela de identificação dos participantes" tabindex="0"
-                 th:unless="${#lists.isEmpty(detalhe.participantes)}">
-                <table class="schedule-table table-cards">
-                    <caption class="visually-hidden">Participantes autorizados para conferência de identificação</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Nome completo</th>
-                            <th scope="col">Categoria</th>
-                            <th scope="col">RM ou RG</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="participante : ${detalhe.participantes}">
-                            <td data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</td>
-                            <td data-label="Categoria" th:text="${participante.categoria}">Aluno</td>
-                            <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <section class="painel" aria-labelledby="participantes-title">
+                <div class="painel__cabecalho">
+                    <h2 id="participantes-title">Identificação dos participantes</h2>
+                    <p class="campo__ajuda">Confira o nome e o RM ou RG de quem entrar na quadra.</p>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(detalhe.participantes)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg></span>
+                    <strong>Sem participantes</strong>
+                    <p>Não há participantes vinculados a esta reserva.</p>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(detalhe.participantes)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Participantes autorizados para conferência de identificação</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Nome completo</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">RM ou RG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="participante : ${detalhe.participantes}">
+                                <th scope="row" data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</th>
+                                <td data-label="Categoria" th:text="${participante.categoria}">Aluno</td>
+                                <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div>
+                <a class="botao botao--secundario" th:href="@{/seguranca/reservas}">
+                    <svg th:replace="~{fragments/icones :: icone('seta-esq')}"></svg><span>Voltar às reservas</span>
+                </a>
             </div>
-        </section>
-
-        <div class="form-actions">
-            <a class="button button--secondary" th:href="@{/seguranca/reservas}">Voltar às reservas</a>
         </div>
     </main>
 
