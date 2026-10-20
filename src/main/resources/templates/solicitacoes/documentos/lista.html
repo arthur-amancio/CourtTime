@@ -5,20 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Documentos enviados</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <script th:replace="~{fragments/layout :: script}"></script>
 </head>
-<body>
-    <header class="site-header">
-        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-        <div class="container site-header__inner site-header__inner--authenticated">
-            <a class="brand" th:href="@{/inicio}">CourtTime</a>
-            <div class="site-header__actions">
-                <a class="text-link" th:href="@{/solicitacoes}">Minhas solicitações</a>
-                <form class="logout-form" th:action="@{/logout}" method="post">
-                    <button class="button button--secondary button--small" type="submit">Sair</button>
-                </form>
-            </div>
-        </div>
-    </header>
+<body class="app-autenticado">
+    <a th:replace="~{fragments/layout :: pular}"></a>
+    <header th:replace="~{fragments/layout :: topo}"></header>
+    <aside th:replace="~{fragments/layout :: lateral}"></aside>
 
     <main id="conteudo" class="container app-main app-main--narrow">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
@@ -126,11 +118,6 @@
         </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="container site-footer__inner">
-            <p class="site-footer__brand">CourtTime</p>
-            <p>ETEC Prof. Armando José Farinazzo</p>
-        </div>
-    </footer>
+    <footer th:replace="~{fragments/layout :: rodape}"></footer>
 </body>
 </html>

@@ -12,6 +12,7 @@ public class UsuarioAutenticado extends User {
     private static final long serialVersionUID = 1L;
 
     private final Long id;
+    private final String nome;
     private final Perfil perfil;
     private final long versaoAcesso;
 
@@ -25,12 +26,20 @@ public class UsuarioAutenticado extends User {
                 true,
                 List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getPerfil().name())));
         this.id = usuario.getId();
+        this.nome = usuario.getNome();
         this.perfil = usuario.getPerfil();
         this.versaoAcesso = usuario.getVersaoAcesso();
     }
 
     public Long getId() {
         return id;
+    }
+
+    /**
+     * Nome exibido na navegacao. Lido no login; nao participa da autorizacao.
+     */
+    public String getNome() {
+        return nome;
     }
 
     public Perfil getPerfil() {
