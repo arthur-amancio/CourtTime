@@ -6,6 +6,7 @@
   "scripts": {
     "test:jornada": "node jornada-quatro-perfis.cjs",
     "test:a11y": "node auditoria-acessibilidade.cjs",
+    "test:telas": "node capturas-telas.cjs",
     "test:guard": "node --test seguranca-ambiente.test.cjs"
   },
   "dependencies": {
