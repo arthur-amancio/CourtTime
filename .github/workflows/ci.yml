@@ -47,6 +47,53 @@ jobs:
           java-version: '17'
           cache: maven
 
+      - name: Validar sintaxe dos scripts PowerShell
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path 'scripts/Verificar-Ambiente-CourtTime.ps1'),
+            [ref] $tokens,
+            [ref] $errors
+          ) > $null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+
+      - name: Testar leitura real do arquivo local no PowerShell
+        shell: pwsh
+        env:
+          COURTTIME_DB_URL: ''
+          COURTTIME_DB_PASSWORD: ''
+          COURTTIME_POSTGRES_TEST: 'false'
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+        run: |
+          $arquivo = 'application-local.properties'
+          if (Test-Path -LiteralPath $arquivo) { throw 'Arquivo de configuracao inesperado no checkout.' }
+          try {
+            @(
+              'spring.datasource.url=jdbc:postgresql://localhost:5432/courttime_demo'
+              'spring.datasource.username=courttime'
+              'spring.datasource.password=senha-ficticia-somente-na-ci'
+            ) | Set-Content -LiteralPath $arquivo -Encoding utf8
+            $saida = (& pwsh -NoProfile -File scripts/Verificar-Ambiente-CourtTime.ps1 2>&1 | Out-String)
+            if ($saida -notmatch '\[ok\]\s+Senha PostgreSQL configurada') {
+              throw 'O verificador nao leu a senha do arquivo local.'
+            }
+            if ($saida -notmatch '\[ok\]\s+Banco configurado e courttime_demo') {
+              throw 'O verificador nao leu o banco courttime_demo do arquivo local.'
+            }
+            if ($saida.Contains('senha-ficticia-somente-na-ci')) {
+              throw 'O verificador expôs o valor da senha.'
+            }
+            Write-Host 'Leitura real de URL e senha ficticia validada, sem exposicao da senha.'
+          }
+          finally {
+            Remove-Item -LiteralPath $arquivo -Force -ErrorAction SilentlyContinue
+          }
+
       - name: Compilar e executar os testes
         run: ./mvnw clean verify
 
