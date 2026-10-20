@@ -88,3 +88,26 @@ somente pessoas fictícias.
 
 A automação usa PDF sintético gerado pelo próprio Chromium. Ele é identificado
 como teste, não reproduz o termo da ETEC e não representa assinatura.
+
+## Capturas de layout (`capturas-telas.cjs`)
+
+Rodar **depois** da jornada, com as mesmas variáveis de ambiente:
+
+```bash
+npm run test:telas
+```
+
+Somente leitura: faz login nos quatro perfis e abre páginas por `GET`. Para cada
+página e viewport (390, 430, 768 e 1440 px) verifica rolagem horizontal, um
+único `h1` e o logout como formulário `POST` com CSRF; salva capturas em
+`$COURTTIME_E2E_EVIDENCE_DIR/telas`. Também verifica o menu móvel por teclado
+(quando existir), a navegação sem JavaScript e o zoom de 200% e 400%.
+
+## Execução no GitHub Actions (`.github/workflows/ui-navegador.yml`)
+
+Para branches `feat/ui-v2-**` e `chore/ui-v2-**`, o workflow sobe um PostgreSQL 16
+temporário com o banco `courttime_e2e`, cria uma senha sintética mascarada a cada
+execução, inicia a aplicação na porta 18081, **confere pelo `psql` que o único
+usuário do banco é o administrador de bootstrap** (prova de que a instância usa
+o banco descartável) e roda guarda, jornada, axe-core e capturas. As evidências
+ficam como artefato da execução por 14 dias. Nada é gravado no repositório.
