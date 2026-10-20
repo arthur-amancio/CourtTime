@@ -16,10 +16,11 @@ Rode primeiro, de preferência um dia antes:
 ```
 
 Ele não altera nada. Confere Java 17, `JAVA_HOME`, Maven Wrapper, `psql`, as
-variáveis de conexão, e avisa sobre duas variáveis perigosas esquecidas
-ligadas: `COURTTIME_POSTGRES_TEST`, que faz os testes apagarem o banco
-configurado, e `COURTTIME_BOOTSTRAP_ADMIN_ENABLED`, que impede a aplicação de
-iniciar quando já existe administrador.
+variáveis de conexão, e avisa sobre três variáveis perigosas esquecidas
+ligadas: `COURTTIME_POSTGRES_TEST`, que habilita os testes de integração;
+`SPRING_JPA_HIBERNATE_DDL_AUTO` com `create` ou `create-drop`, que faz a própria
+aplicação apagar as tabelas ao iniciar; e `COURTTIME_BOOTSTRAP_ADMIN_ENABLED`,
+que impede a aplicação de iniciar quando já existe administrador.
 
 ### 1. Banco de demonstração isolado
 
@@ -33,7 +34,9 @@ Nunca use um banco com dados existentes.
 
 Ele recusa qualquer nome que não termine em `_demo`, recusa `postgres`,
 `courttime` e `courttime_test`, mostra quantas tabelas e contas existem no
-banco, e **exige que você digite o nome do banco** antes de apagar.
+banco, recusa apagar com a aplicação ainda no ar, e **exige que você digite o
+nome do banco** antes de apagar. Se o PostgreSQL recusar qualquer passo, o
+script para e diz o motivo, em vez de anunciar sucesso.
 
 **Equivalente manual**, se preferir fazer à mão. Confirme primeiro onde você
 está conectado:

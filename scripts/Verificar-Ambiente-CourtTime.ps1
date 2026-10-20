@@ -77,6 +77,18 @@ if ($env:COURTTIME_POSTGRES_TEST -eq 'true') {
     Resultado $true 'COURTTIME_POSTGRES_TEST desligada' $null
 }
 
+# 7b. Esquema sendo recriado ao subir? -------------------------------------
+# O CI usa create-drop porque o banco dele e descartavel. Copiada para esta
+# maquina, essa configuracao faz a PROPRIA aplicacao apagar todas as tabelas
+# do banco configurado ao iniciar, antes de qualquer guarda dos testes.
+$ddl = $env:SPRING_JPA_HIBERNATE_DDL_AUTO
+if ($ddl -and $ddl -match '^(create|create-drop)$') {
+    Resultado $false "SPRING_JPA_HIBERNATE_DDL_AUTO=$ddl apaga o esquema ao iniciar" `
+        'Use: Remove-Item Env:SPRING_JPA_HIBERNATE_DDL_AUTO (o padrao do projeto e update)'
+} else {
+    Resultado $true 'Esquema preservado ao iniciar (ddl-auto padrao)' $null
+}
+
 # 8. Bootstrap esquecido ligado? ---------------------------------------------
 if ($env:COURTTIME_BOOTSTRAP_ADMIN_ENABLED -eq 'true') {
     Resultado $false 'COURTTIME_BOOTSTRAP_ADMIN_ENABLED ainda ligada' `
