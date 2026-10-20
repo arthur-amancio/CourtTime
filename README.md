@@ -25,6 +25,12 @@ contas ficticias, horarios e bloqueios de exemplo, siga
 [desenvolvimento local rapido](docs/desenvolvimento-local-rapido.md).
 Nao e necessario redefinir variaveis de ambiente em toda execucao.
 
+## Ensaio da interface V2 no computador da escola
+
+Para testar a versão integrada no Windows com banco isolado e quatro perfis,
+siga o [roteiro de ensaio V2](docs/teste-escola-v2.md). A execução manual não
+usa a base automatizada `courttime_e2e` e não requer publicar o sistema na rede.
+
 ## Pré-requisitos
 
 - Java 17 (JDK), com `JAVA_HOME` apontando para sua instalação;
