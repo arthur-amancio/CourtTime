@@ -88,6 +88,12 @@ Para não prometer na banca o que o código não faz:
 
 # Execução local no Windows
 
+**Alternativa mais simples:** a configuracao local persistente, sem digitar variaveis
+em cada execucao, e o povoamento opcional do banco estao documentados em
+[desenvolvimento local rapido](desenvolvimento-local-rapido.md). Os passos
+abaixo continuam validos para configuracao inteiramente por ambiente.
+
+
 ## Pré-requisitos
 
 - JDK 17, com `JAVA_HOME` apontando para a instalação.

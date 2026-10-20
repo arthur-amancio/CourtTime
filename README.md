@@ -18,6 +18,13 @@ O formulário do aluno utiliza apenas períodos realmente disponíveis e identif
 
 Java 17, Spring Boot 3.5.16, Maven Wrapper, Thymeleaf, Spring Security, PostgreSQL e Spring Data JPA.
 
+## Ambiente local rapido (VS Code + pgAdmin)
+
+Para desenvolvimento diario com senha persistente em arquivo local ignorado pelo Git,
+contas ficticias, horarios e bloqueios de exemplo, siga
+[desenvolvimento local rapido](docs/desenvolvimento-local-rapido.md).
+Nao e necessario redefinir variaveis de ambiente em toda execucao.
+
 ## Pré-requisitos
 
 - Java 17 (JDK), com `JAVA_HOME` apontando para sua instalação;
