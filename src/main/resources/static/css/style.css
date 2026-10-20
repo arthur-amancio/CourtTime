@@ -1972,3 +1972,21 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
     .indicadores { grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); }
     .indicador { padding: var(--esp-3); }
 }
+
+/* ===================================================================
+   CourtTime V2 — FASE F: secretaria e seguranca.
+   Registro de contribuicao em cartoes empilhados: o titulo h3 e o
+   formulario ficam no mesmo contêiner (cada solicitacao e uma operacao).
+   =================================================================== */
+.operacoes { list-style: none; margin: 0; padding: 0; display: grid; }
+.operacao { display: grid; gap: var(--esp-4); padding: var(--esp-5); border-top: 1px solid var(--cor-borda); }
+.operacao:first-child { border-top: 0; }
+.operacao__titulo { margin: 0; font-size: var(--texto-lg); }
+.operacao__form { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: var(--esp-4); align-items: start; }
+.operacao__form .campo + .campo { margin-top: 0; }
+.operacao__form > div:last-child { grid-column: 1 / -1; }
+@media (max-width: 640px) {
+    .operacao { padding: var(--esp-4); }
+    .operacao__form { grid-template-columns: minmax(0, 1fr); }
+    .operacao__form .botao { width: 100%; }
+}
