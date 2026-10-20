@@ -34,7 +34,7 @@ usa a base automatizada `courttime_e2e` e não requer publicar o sistema na rede
 ## Pré-requisitos
 
 - Java 17 (JDK), com `JAVA_HOME` apontando para sua instalação;
-- PostgreSQL em execução;
+- PostgreSQL 18 em execução (o 16 também funciona; a CI testa as duas versões);
 - Git.
 
 Não é necessário instalar Maven globalmente.
@@ -171,4 +171,4 @@ O cancelamento não declara que houve contato com o aluno e não cria um reagend
 
 ## Integração contínua
 
-O GitHub Actions executa automaticamente os testes do projeto em pushes para a `main` e branches `feat/**`, além dos Pull Requests. O workflow utiliza um PostgreSQL 16 temporário, com dados exclusivamente de teste, para validar o mapeamento JPA, consultas, transações, rollback e aprovações concorrentes.
+O GitHub Actions executa automaticamente os testes do projeto em pushes para a `main` e branches `feat/**`, além dos Pull Requests. O workflow roda a suíte duas vezes, com PostgreSQL 16 e 18 temporários, com dados exclusivamente de teste, para validar o mapeamento JPA, consultas, transações, rollback e aprovações concorrentes.
