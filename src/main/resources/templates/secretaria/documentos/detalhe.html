@@ -29,6 +29,11 @@
             <span aria-current="page">Conferência</span>
         </nav>
 
+        <p class="form-message form-message--success" role="status"
+           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
+        <p class="form-message form-message--error" role="alert"
+           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+
         <header class="page-heading">
             <h1>Conferir documento</h1>
             <p>A conferência registra uma decisão sobre esta versão e não altera o PDF original.</p>

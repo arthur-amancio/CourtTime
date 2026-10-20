@@ -145,6 +145,23 @@ class SecretariaDocumentoControllerTest {
     }
 
     @Test
+    void detalheExibeErroDeValidacaoEnviadoPeloController() throws Exception {
+        prepararSecretaria();
+        when(conferenciaService.obter(30L, secretaria)).thenReturn(documento);
+        when(conferenciaService.podeConferir(documento, secretaria)).thenReturn(true);
+
+        mockMvc.perform(get("/secretaria/documentos/30")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA"))
+                        .flashAttr(
+                                "mensagemErro",
+                                "A justificativa da devolução é obrigatória"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "A justificativa da devolução é obrigatória")))
+                .andExpect(content().string(containsString("role=\"alert\"")));
+    }
+
+    @Test
     void versaoSubstituidaNaoExibeAcoesDeDecisao() throws Exception {
         prepararSecretaria();
         when(conferenciaService.obter(30L, secretaria)).thenReturn(documento);
