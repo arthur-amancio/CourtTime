@@ -1,7 +1,7 @@
 // Protecao preventiva para testes que CRIAM e ALTERAM dados via interface.
-// IMPORTANTE: esta validacao NAO consulta o banco real usado pelo servidor.
-// Quem executa precisa confirmar a configuracao e o isolamento da instancia.
-function verificarAmbienteIsolado({ baseUrl, consentimento, nomeBanco }) {
+// O marcador de instancia deve existir tanto no banco efemero quanto na pagina
+// autenticada. Essa segunda verificacao e feita pelo helper de autenticacao.
+function verificarAmbienteIsolado({ baseUrl, consentimento, nomeBanco, marcadorInstancia, emailAdmin }) {
   if (consentimento !== 'YES') {
     throw new Error(
       'Execucao bloqueada. Defina COURTTIME_E2E_ACK_ISOLATED_DB=YES somente apos verificar um banco descartavel e vazio.'
@@ -10,6 +10,18 @@ function verificarAmbienteIsolado({ baseUrl, consentimento, nomeBanco }) {
   if (nomeBanco !== 'courttime_e2e') {
     throw new Error(
       'Execucao bloqueada. COURTTIME_E2E_DATABASE_NAME deve ser courttime_e2e (nunca courttime_demo ou courttime_test).'
+    );
+  }
+
+  if (!/^[a-z0-9]{8,32}$/.test(marcadorInstancia || '')) {
+    throw new Error(
+      'Execucao bloqueada. COURTTIME_E2E_INSTANCE_TOKEN deve conter de 8 a 32 caracteres minusculos ou numeros.'
+    );
+  }
+  const emailEsperado = `admin.${marcadorInstancia}@e2e.invalid`;
+  if (emailAdmin !== emailEsperado) {
+    throw new Error(
+      `Execucao bloqueada. COURTTIME_E2E_ADMIN_EMAIL deve ser exatamente ${emailEsperado}.`
     );
   }
 

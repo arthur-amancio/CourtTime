@@ -2,28 +2,23 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
-const { verificarAmbienteIsolado } = require('./seguranca-ambiente.cjs');
-const BASE = process.env.COURTTIME_E2E_BASE_URL || 'http://127.0.0.1:18081';
-// Interromper antes de gerar evidencias, autenticar ou modificar o banco.
-verificarAmbienteIsolado({
-  baseUrl: BASE,
-  consentimento: process.env.COURTTIME_E2E_ACK_ISOLATED_DB,
-  nomeBanco: process.env.COURTTIME_E2E_DATABASE_NAME,
-});
-const EVIDENCE = process.env.COURTTIME_E2E_EVIDENCE_DIR || '/tmp/courttime-banca-evidence';
-const TARGET_SHA = process.env.COURTTIME_E2E_TARGET_SHA || 'nao-informado';
-const CHROMIUM_EXECUTABLE = process.env.COURTTIME_E2E_CHROMIUM_PATH;
-fs.mkdirSync(EVIDENCE, { recursive: true });
+const { carregarConfiguracao } = require('./suporte/configuracao.cjs');
+const {
+  autenticar,
+  postComCsrf,
+  postSemCsrf,
+  selecionarHorario,
+  listarHorariosDisponiveis,
+} = require('./suporte/sessoes.cjs');
 
-const PASSWORD = process.env.COURTTIME_E2E_PASSWORD;
-if (!PASSWORD) throw new Error('Defina COURTTIME_E2E_PASSWORD somente no ambiente da execução.');
-const users = {
-  admin: ['admin.banca@exemplo.local', PASSWORD],
-  alunoA: ['aluno.a@exemplo.local', PASSWORD],
-  alunoB: ['aluno.b@exemplo.local', PASSWORD],
-  secretaria: ['secretaria.banca@exemplo.local', PASSWORD],
-  seguranca: ['seguranca.banca@exemplo.local', PASSWORD],
-};
+// Interrompe antes de gerar evidencias, autenticar ou modificar o banco.
+const configuracao = carregarConfiguracao();
+const BASE = configuracao.baseUrl;
+const EVIDENCE = configuracao.evidencias;
+const TARGET_SHA = configuracao.targetSha;
+const CHROMIUM_EXECUTABLE = configuracao.chromiumExecutable;
+const PASSWORD = configuracao.senha;
+const users = configuracao.usuarios;
 
 const results = [];
 function pass(name, detail = '') {
@@ -55,23 +50,25 @@ function isoInSaoPaulo(offsetDays) {
   const date = new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day) + offsetDays));
   return date.toISOString().slice(0, 10);
 }
-const today = isoInSaoPaulo(0);
-const requestDate = isoInSaoPaulo(8);
-const blockedDate = isoInSaoPaulo(9);
 const enumDays = ['DOMINGO', 'SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'SABADO'];
 const ptDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
 function dayFor(iso) { return enumDays[new Date(`${iso}T12:00:00Z`).getUTCDay()]; }
 function ptDayFor(iso) { return ptDays[new Date(`${iso}T12:00:00Z`).getUTCDay()]; }
+function proximaDataDoDia(diaSemana, deslocamentoMinimo = 7) {
+  for (let deslocamento = deslocamentoMinimo; deslocamento < deslocamentoMinimo + 14; deslocamento += 1) {
+    const candidata = isoInSaoPaulo(deslocamento);
+    if (dayFor(candidata) === diaSemana) return candidata;
+  }
+  throw new Error(`Nao foi possivel determinar uma data futura para ${diaSemana}.`);
+}
+const yesterday = isoInSaoPaulo(-1);
+const today = isoInSaoPaulo(0);
+const requestDate = proximaDataDoDia('SEGUNDA');
+const blockedDate = proximaDataDoDia('TERCA');
 
 async function login(page, role) {
-  await page.goto(`${BASE}/login`);
-  await page.locator('#email').fill(users[role][0]);
-  await page.locator('#senha').fill(users[role][1]);
-  await Promise.all([
-    page.waitForURL(url => url.pathname === '/inicio'),
-    page.getByRole('button', { name: 'Entrar' }).click(),
-  ]);
-  assert((await page.locator('body').innerText()).includes('Perfil:'), `login ${role}`);
+  await autenticar(page, configuracao, role, { comprovarInstancia: role === 'admin' });
+  pass(`login ${role}`);
 }
 
 async function createUser(page, name, email, profile) {
@@ -101,34 +98,16 @@ async function createSchedule(page, day) {
 }
 
 async function csrfFetch(page, url, fields = {}, method = 'POST') {
-  return page.evaluate(async ({ url, fields, method }) => {
-    const token = document.querySelector('input[name="_csrf"]')?.value;
-    const body = new URLSearchParams({ ...fields, ...(token ? { _csrf: token } : {}) });
-    const response = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body,
-      redirect: 'follow'
-    });
-    return { status: response.status, url: response.url, text: await response.text() };
-  }, { url, fields, method });
+  return postComCsrf(page, url, fields, method);
 }
 
 async function noCsrfFetch(page, url, fields = {}) {
-  return page.evaluate(async ({ url, fields }) => {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(fields),
-      redirect: 'manual'
-    });
-    return { status: response.status, text: await response.text() };
-  }, { url, fields });
+  return postSemCsrf(page, url, fields);
 }
 
 async function createRequest(page, date, time, purpose) {
   await page.goto(`${BASE}/solicitacoes/nova?data=${date}`);
-  await page.locator('#horarioInicio').selectOption(time);
+  await selecionarHorario(page, time);
   await page.locator('#finalidade').fill(purpose);
   await Promise.all([
     page.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
@@ -221,7 +200,12 @@ async function responsiveAudit(page, label, url) {
     await createUser(admin, 'Aluno Sintético B', users.alunoB[0], 'ALUNO');
     await createUser(admin, 'Secretaria Sintética', users.secretaria[0], 'SECRETARIA');
     await createUser(admin, 'Segurança Sintética', users.seguranca[0], 'SEGURANCA');
-    for (const day of enumDays.slice(1).concat(enumDays[0])) await createSchedule(admin, day);
+    for (const day of ['SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA']) await createSchedule(admin, day);
+    await admin.goto(`${BASE}/admin/horarios`);
+    const gradeText = await admin.locator('body').innerText();
+    for (const dia of ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira']) {
+      assert(gradeText.includes(dia), `grade controlada contem ${dia}`);
+    }
     await responsiveAudit(admin, 'admin-painel', `${BASE}/admin`);
     await responsiveAudit(admin, 'admin-usuarios', `${BASE}/admin/usuarios`);
     await responsiveAudit(admin, 'admin-horarios', `${BASE}/admin/horarios`);
@@ -236,6 +220,23 @@ async function responsiveAudit(page, label, url) {
       admin.getByRole('button', { name: 'Cadastrar bloqueio' }).click(),
     ]);
     assert((await admin.locator('body').innerText()).includes('Bloqueio cadastrado com sucesso.'), 'cadastro de bloqueio futuro');
+
+    await admin.goto(`${BASE}/admin/bloqueios/novo`);
+    await admin.locator('#data').fill(blockedDate);
+    await admin.locator('#horarioInicio').fill('10:00');
+    await admin.locator('#horarioFim').fill('11:00');
+    await admin.locator('#motivo').fill('Bloqueio sintético que será desativado');
+    await Promise.all([
+      admin.waitForURL(url => url.pathname === '/admin/bloqueios'),
+      admin.getByRole('button', { name: 'Cadastrar bloqueio' }).click(),
+    ]);
+    const inactiveRow = admin.locator('tbody tr').filter({ hasText: 'Bloqueio sintético que será desativado' });
+    admin.once('dialog', dialog => dialog.accept());
+    await Promise.all([
+      admin.waitForURL(url => url.pathname === '/admin/bloqueios'),
+      inactiveRow.getByRole('button', { name: 'Desativar' }).click(),
+    ]);
+    assert((await admin.locator('body').innerText()).includes('Bloqueio desativado.'), 'bloqueio inativo preservado sem impedir a grade');
     await responsiveAudit(admin, 'admin-bloqueios', `${BASE}/admin/bloqueios`);
 
     contexts.alunoA = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
@@ -251,12 +252,33 @@ async function responsiveAudit(page, label, url) {
     const minDate = await alunoA.locator('#data-consulta').getAttribute('min');
     assert(minDate === isoInSaoPaulo(1), 'timezone America/Sao_Paulo e antecedência mínima', `min=${minDate}`);
 
+    const pastAttempt = await csrfFetch(alunoA, '/solicitacoes', { data: yesterday, horarioInicio: '09:00', finalidade: 'Tentativa no passado' });
+    assert(pastAttempt.text.includes('pelo menos um dia de antecedência'), 'servidor rejeita solicitação para data passada');
     const todayAttempt = await csrfFetch(alunoA, '/solicitacoes', { data: today, horarioInicio: '09:00', finalidade: 'Tentativa hoje' });
     assert(todayAttempt.text.includes('pelo menos um dia de antecedência'), 'servidor rejeita solicitação para hoje');
     const noGridAttempt = await csrfFetch(alunoA, '/solicitacoes', { data: requestDate, horarioInicio: '12:00', finalidade: 'Fora da grade' });
     assert(noGridAttempt.text.includes('horário semanal ativo') || noGridAttempt.text.includes('não está disponível'), 'servidor rejeita período fora da grade', `HTTP ${noGridAttempt.status}: ${noGridAttempt.text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 500)}`);
     const blockedAttempt = await csrfFetch(alunoA, '/solicitacoes', { data: blockedDate, horarioInicio: '08:00', finalidade: 'Período bloqueado' });
     assert(blockedAttempt.text.includes('bloqueio') || blockedAttempt.text.includes('não está disponível'), 'servidor rejeita período bloqueado', `HTTP ${blockedAttempt.status}: ${blockedAttempt.text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 500)}`);
+
+    await alunoA.goto(`${BASE}/solicitacoes/nova?data=${blockedDate}`);
+    const horariosAposDesativacao = await listarHorariosDisponiveis(alunoA);
+    assert(horariosAposDesativacao.includes('10:00'), 'bloqueio inativo não impede horário válido', horariosAposDesativacao.join(', '));
+
+    const semJavascript = await browser.newContext({ viewport: { width: 430, height: 932 }, javaScriptEnabled: false });
+    const paginaSemJavascript = await semJavascript.newPage();
+    await login(paginaSemJavascript, 'alunoA');
+    await paginaSemJavascript.goto(`${BASE}/solicitacoes/nova?data=${blockedDate}`);
+    await selecionarHorario(paginaSemJavascript, '10:00');
+    await paginaSemJavascript.getByLabel(/finalidade/i).fill('Solicitação sintética sem JavaScript');
+    await Promise.all([
+      paginaSemJavascript.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
+      paginaSemJavascript.getByRole('button', { name: 'Registrar solicitação' }).click(),
+    ]);
+    const detalheSemJavascript = await paginaSemJavascript.locator('body').innerText();
+    assert(/10:00\s*(às|–|-)\s*11:00/.test(detalheSemJavascript), 'backend define duração de uma hora sem campo horarioFim');
+    assert(!detalheSemJavascript.includes('Reserva autorizada'), 'criação não produz aprovação automática');
+    await semJavascript.close();
 
     const requestA = await createRequest(alunoA, requestDate, '09:00', 'Atividade esportiva sintética A');
     const requestB = await createRequest(alunoB, requestDate, '09:00', 'Atividade esportiva sintética B');
@@ -399,7 +421,7 @@ async function responsiveAudit(page, label, url) {
     assert(blankRejection.text.includes('motivo') && blankRejection.text.includes('obrigatório'), 'rejeição exige motivo');
 
     await alunoA.goto(`${BASE}/solicitacoes/nova?data=${requestDate}`);
-    const availableOptions = await alunoA.locator('#horarioInicio option').evaluateAll(options => options.map(option => option.value));
+    const availableOptions = await listarHorariosDisponiveis(alunoA);
     assert(!availableOptions.includes('09:00'), 'horário aprovado deixa de aparecer disponível');
 
     await admin.goto(`${BASE}/admin/horarios`);
@@ -433,7 +455,7 @@ async function responsiveAudit(page, label, url) {
     await seguranca.getByRole('link', { name: 'Conferir' }).click();
     securityBody = await seguranca.locator('body').innerText();
     assert(securityBody.includes('Identificação dos participantes') && securityBody.includes('RM-'), 'segurança consulta identificação dos participantes');
-    assert(!securityBody.includes('Contribuição') && !securityBody.includes('Documento') && !securityBody.includes('@exemplo.local'), 'segurança não recebe dados internos desnecessários');
+    assert(!securityBody.includes('Contribuição') && !securityBody.includes('Documento') && !securityBody.includes('@e2e.invalid'), 'segurança não recebe dados internos desnecessários');
     response = await seguranca.goto(`${BASE}/secretaria/contribuicoes`);
     assert(response.status() === 403, 'segurança não acessa dados financeiros', `HTTP ${response.status()}`);
     response = await seguranca.goto(`${BASE}/secretaria/documentos`);
@@ -484,7 +506,7 @@ async function responsiveAudit(page, label, url) {
 
     fs.writeFileSync(path.join(EVIDENCE, 'resultados-e2e.json'), JSON.stringify({
       sha: TARGET_SHA,
-      dates: { today, requestDate, blockedDate, day: dayFor(requestDate) },
+      dates: { yesterday, today, requestDate, blockedDate, day: dayFor(requestDate) },
       ids: { requestA, requestB, documentA1, documentA2, documentB, approvedId },
       results
     }, null, 2));

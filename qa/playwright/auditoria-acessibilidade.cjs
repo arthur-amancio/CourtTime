@@ -1,24 +1,15 @@
 const { chromium } = require('playwright');
 const fs = require('fs');
 
-const BASE = process.env.COURTTIME_E2E_BASE_URL || 'http://127.0.0.1:18081';
-const AXE = require.resolve('axe-core/axe.min.js');
-const EVIDENCE = process.env.COURTTIME_E2E_EVIDENCE_DIR || '/tmp/courttime-banca-evidence';
-const TARGET_SHA = process.env.COURTTIME_E2E_TARGET_SHA || 'nao-informado';
-const CHROMIUM_EXECUTABLE = process.env.COURTTIME_E2E_CHROMIUM_PATH;
-const PASSWORD = process.env.COURTTIME_E2E_PASSWORD;
-if (!PASSWORD) throw new Error('Defina COURTTIME_E2E_PASSWORD somente no ambiente da execução.');
-fs.mkdirSync(EVIDENCE, { recursive: true });
+const { carregarConfiguracao, caminhoEvidencia } = require('./suporte/configuracao.cjs');
+const { autenticar } = require('./suporte/sessoes.cjs');
 
-async function login(page, email) {
-  await page.goto(`${BASE}/login`);
-  await page.locator('#email').fill(email);
-  await page.locator('#senha').fill(PASSWORD);
-  await Promise.all([
-    page.waitForURL(url => url.pathname === '/inicio'),
-    page.getByRole('button', { name: 'Entrar' }).click(),
-  ]);
-}
+const configuracao = carregarConfiguracao();
+const BASE = configuracao.baseUrl;
+const AXE = require.resolve('axe-core/axe.min.js');
+const EVIDENCE = configuracao.evidencias;
+const TARGET_SHA = configuracao.targetSha;
+const CHROMIUM_EXECUTABLE = configuracao.chromiumExecutable;
 
 (async () => {
   const browser = await chromium.launch({
@@ -27,10 +18,10 @@ async function login(page, email) {
     args: ['--no-sandbox']
   });
   const scans = [];
-  async function scan(name, url, email, viewport) {
+  async function scan(name, url, perfil, viewport) {
     const context = await browser.newContext({ viewport });
     const page = await context.newPage();
-    if (email) await login(page, email);
+    if (perfil) await autenticar(page, configuracao, perfil);
     await page.goto(`${BASE}${url}`);
     await page.addScriptTag({ path: AXE });
     const result = await page.evaluate(async () => axe.run(document, {
@@ -59,30 +50,30 @@ async function login(page, email) {
     ];
     const paginas = [
       ['login', '/login', null],
-      ['aluno', '/solicitacoes', 'aluno.a@exemplo.local'],
-      ['quadra', '/quadra', 'aluno.a@exemplo.local'],
-      ['secretaria', '/secretaria/contribuicoes', 'secretaria.banca@exemplo.local'],
-      ['administracao', '/admin/solicitacoes', 'admin.banca@exemplo.local'],
-      ['seguranca', '/seguranca/reservas', 'seguranca.banca@exemplo.local'],
+      ['aluno', '/solicitacoes', 'alunoA'],
+      ['quadra', '/quadra', 'alunoA'],
+      ['secretaria', '/secretaria/contribuicoes', 'secretaria'],
+      ['administracao', '/admin/solicitacoes', 'admin'],
+      ['seguranca', '/seguranca/reservas', 'seguranca'],
     ];
     const resultadoJornada = `${EVIDENCE}/resultados-e2e.json`;
     if (fs.existsSync(resultadoJornada)) {
       const { ids } = JSON.parse(fs.readFileSync(resultadoJornada, 'utf8'));
       paginas.push(
-        ['participantes', `/solicitacoes/${ids.requestA}/participantes`, 'aluno.a@exemplo.local'],
-        ['documentos', `/solicitacoes/${ids.requestA}/documentos`, 'aluno.a@exemplo.local'],
-        ['conferencia-documental', `/secretaria/documentos/${ids.documentA2}`, 'secretaria.banca@exemplo.local'],
-        ['analise-administrativa', `/admin/solicitacoes/${ids.approvedId}`, 'admin.banca@exemplo.local'],
+        ['participantes', `/solicitacoes/${ids.requestA}/participantes`, 'alunoA'],
+        ['documentos', `/solicitacoes/${ids.requestA}/documentos`, 'alunoA'],
+        ['conferencia-documental', `/secretaria/documentos/${ids.documentA2}`, 'secretaria'],
+        ['analise-administrativa', `/admin/solicitacoes/${ids.approvedId}`, 'admin'],
       );
     }
     for (const [name, url, email] of paginas) {
       for (const viewport of viewports) await scan(name, url, email, viewport);
     }
-    fs.writeFileSync(`${EVIDENCE}/resultados-axe.json`, JSON.stringify({ sha: TARGET_SHA, scans }, null, 2));
+    fs.writeFileSync(caminhoEvidencia(configuracao, 'resultados-axe.json'), JSON.stringify({ sha: TARGET_SHA, scans }, null, 2));
     const total = scans.reduce((sum, scan) => sum + scan.violations.length, 0);
     const serious = scans.flatMap(scan => scan.violations).filter(v => ['serious', 'critical'].includes(v.impact)).length;
     process.stdout.write(`SUMMARY | ${scans.length} varreduras | ${total} violações | ${serious} sérias/críticas\n`);
-    process.exitCode = serious ? 1 : 0;
+    process.exitCode = total ? 1 : 0;
   } finally {
     await browser.close();
   }
