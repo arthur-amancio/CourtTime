@@ -2,11 +2,39 @@
 
 Esta configuracao e **somente para desenvolvimento local**. Ela nao modifica a
 configuracao do banco de producao, nao habilita testes destrutivos nem carrega
-dados ficticios automaticamente. Siga os passos **uma unica vez**.
+dados ficticios automaticamente.
+
+## Em resumo
+
+**Uma unica vez:**
+
+1. Instale o **JDK 17** e o **PostgreSQL 18** (o 16 tambem funciona; a CI testa
+   os dois). No instalador do PostgreSQL, anote a senha do usuario `postgres`.
+2. No pgAdmin, crie o banco vazio **`courttime_demo`**.
+3. Na raiz do projeto, copie `application-local.properties.example` para
+   **`application-local.properties`** e troque a senha pela do seu PostgreSQL.
+   Esse arquivo e ignorado pelo Git: a senha nunca vai para o GitHub.
+4. Rode `.\mvnw.cmd spring-boot:run` uma vez (cria as tabelas) e pare com Ctrl+C.
+5. No pgAdmin, execute `scripts/popular-demo.sql` no `courttime_demo` (secao 2).
+
+**Todo dia:** `.\mvnw.cmd spring-boot:run` e abra `http://localhost:8080/`.
+Nenhuma variavel de ambiente e necessaria.
+
+**Para nao perder os dados do `courttime_demo`:**
+
+- nao defina `COURTTIME_POSTGRES_TEST` nem `SPRING_JPA_HIBERNATE_DDL_AUTO` na
+  sua maquina (o verificador `scripts\Verificar-Ambiente-CourtTime.ps1` acusa os
+  dois);
+- nao rode `scripts\Reiniciar-Demonstracao.ps1`, a menos que queira apagar o
+  banco de demonstracao de proposito;
+- atualizacoes do sistema so **acrescentam** colunas e tabelas
+  (`ddl-auto=update`); os registros existentes continuam la.
+
+As secoes abaixo detalham cada passo.
 
 ## 1. Banco e senha local
 
-1. Tenha Java 17 e PostgreSQL 16 instalados. Mantenha o servico PostgreSQL em
+1. Tenha Java 17 e PostgreSQL 18 (ou 16) instalados. Mantenha o servico PostgreSQL em
    execucao. O pgAdmin e opcional para iniciar a aplicacao: ele e apenas a
    interface grafica de administracao.
 2. No pgAdmin, crie um banco vazio chamado **courttime_demo**. Nao use o banco
@@ -83,6 +111,13 @@ Os horarios nao representam o funcionamento oficial da quadra da ETEC.
 Nao rode `clean verify` com `COURTTIME_POSTGRES_TEST=true` no banco de
 apresentacao. Os testes PostgreSQL sao destrutivos por projeto e devem usar o
 banco dedicado `courttime_test`, protegido pelas verificacoes atuais.
+
+### Primeira geracao do formulario oficial
+
+Na primeira vez que alguem gera o formulario oficial preenchido depois de
+iniciar a aplicacao, o PDFBox monta um cache das fontes do Windows e leva alguns
+segundos. As geracoes seguintes sao imediatas. Faca uma geracao de teste antes
+de apresentar.
 
 ## 4. Interface e apresentacao
 
