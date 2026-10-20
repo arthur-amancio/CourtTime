@@ -1990,3 +1990,9 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
     .operacao__form { grid-template-columns: minmax(0, 1fr); }
     .operacao__form .botao { width: 100%; }
 }
+/* Tabela que vira cartões dentro de um painel: respiro entre a borda do
+   painel e cada cartão, evitando o efeito de cartão colado em cartão. */
+@media (max-width: 860px) {
+    .painel > .tabela-wrapper { padding: var(--esp-3); }
+    .painel > .tabela-wrapper .tabela--cartoes tr:last-child { margin-bottom: 0; }
+}
