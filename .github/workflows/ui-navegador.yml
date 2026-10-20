@@ -127,6 +127,29 @@ jobs:
         working-directory: qa/playwright
         run: npm run test:telas
 
+      - name: Resumo legível pela API (anotações)
+        if: always()
+        run: |
+          node - <<'JS'
+          const fs = require('fs');
+          const dir = process.env.COURTTIME_E2E_EVIDENCE_DIR;
+          const ler = f => { try { return JSON.parse(fs.readFileSync(`${dir}/${f}`, 'utf8')); } catch { return null; } };
+          const jornada = ler('resultados-e2e.json') || ler('resultados-e2e-parcial.json');
+          if (jornada) {
+            const r = jornada.results || [];
+            const falhas = r.filter(x => x.status === 'FAIL');
+            console.log(`::notice title=Jornada::${r.length - falhas.length} aprovadas | ${falhas.length} reprovadas${jornada.error ? ' | interrompida' : ''}`);
+            falhas.slice(0, 20).forEach(f => console.log(`::error title=Jornada::${f.name} ${f.detail || ''}`.slice(0, 900)));
+            if (jornada.error) console.log(`::error title=Jornada interrompida::${String(jornada.error).split('\n')[0].slice(0, 900)}`);
+          }
+          const axe = ler('resultados-axe.json');
+          if (axe) {
+            const v = axe.scans.flatMap(s => s.violations.map(x => ({ ...x, pagina: s.name, largura: s.viewport.width })));
+            console.log(`::notice title=axe-core::${axe.scans.length} varreduras | ${v.length} violações`);
+            v.slice(0, 20).forEach(x => console.log(`::warning title=axe ${x.impact}::${x.pagina} ${x.largura}px ${x.id}: ${x.help} — ${JSON.stringify(x.nodes).slice(0, 300)}`));
+          }
+          JS
+
       - name: Publicar evidências
         if: always()
         uses: actions/upload-artifact@v4
@@ -134,3 +157,54 @@ jobs:
           name: evidencias-ui-${{ github.sha }}
           path: evidencias-ui
           retention-days: 14
+
+  # Copia as capturas (JPEG reduzido, dados sintéticos) para a branch
+  # evidencias/ui-v2, para que revisores vejam as telas reais sem baixar
+  # artefatos. Não altera código nem outras branches.
+  publicar-capturas:
+    needs: navegador
+    if: always() && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: evidencias-ui-v2
+      cancel-in-progress: false
+    steps:
+      - name: Baixar evidências
+        uses: actions/download-artifact@v4
+        with:
+          name: evidencias-ui-${{ github.sha }}
+          path: evidencias
+      - name: Publicar na branch evidencias/ui-v2
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGEM: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          destino="$(echo "$ORIGEM" | tr '/' '_')/${GITHUB_SHA::7}"
+          git init -q repo && cd repo
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch -q --depth 1 origin evidencias/ui-v2; then git checkout -q -b evidencias/ui-v2 FETCH_HEAD; else git checkout -q --orphan evidencias/ui-v2; fi
+          rm -rf "$destino" && mkdir -p "$destino"
+          cp ../evidencias/*.json "$destino"/ 2>/dev/null || true
+          if [ -d ../evidencias/telas ]; then
+            for f in ../evidencias/telas/*.png; do
+              convert "$f" -resize '1440x>' -quality 72 "$destino/$(basename "${f%.png}").jpg"
+            done
+          fi
+          {
+            echo "# Evidências de interface — $ORIGEM"
+            echo
+            echo "Capturas da aplicação real (dados sintéticos, banco descartável courttime_e2e)."
+            echo "Commit: $GITHUB_SHA"
+          } > "$destino/LEIA-ME.md"
+          git add -A
+          git commit -q -m "evidências: $ORIGEM ${GITHUB_SHA::7}"
+          for i in 1 2 3; do
+            if git push -q origin HEAD:evidencias/ui-v2; then exit 0; fi
+            git fetch -q --depth 1 origin evidencias/ui-v2 && git rebase -q FETCH_HEAD || true
+          done
+          exit 1
