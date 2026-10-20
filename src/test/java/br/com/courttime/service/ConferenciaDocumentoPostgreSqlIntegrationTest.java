@@ -23,6 +23,7 @@ import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import br.com.courttime.support.BancoDeTeste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -32,6 +33,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -67,6 +69,9 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
 
     @Autowired
     private ConferenciaDocumentoService conferenciaService;
+
+    @Autowired
+    private DataSource dataSource;
     @Autowired
     private DocumentoReservaService documentoService;
     @Autowired
@@ -292,6 +297,9 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
     }
 
     private void limparBanco() {
+        // A guarda fica aqui, e nao so no @BeforeEach: o JUnit executa o @AfterEach
+        // mesmo quando o @BeforeEach falha, e este metodo tambem e chamado por ele.
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         ajusteContribuicaoRepository.deleteAllInBatch();
         contribuicaoRepository.deleteAllInBatch();
         conferenciaRepository.deleteAllInBatch();
