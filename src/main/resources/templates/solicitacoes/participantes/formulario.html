@@ -14,6 +14,8 @@
 
     <main id="conteudo" class="container app-main app-main--narrow" th:object="${form}">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
             <a th:href="@{/solicitacoes}">Solicitações</a>
             <span aria-hidden="true">/</span>
             <a th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">Participantes</a>
@@ -21,63 +23,74 @@
             <span aria-current="page" th:text="${participanteId == null ? 'Adicionar' : 'Editar'}">Adicionar</span>
         </nav>
 
-        <header class="page-heading">
-            <h1 th:text="${titulo}">Adicionar participante</h1>
-            <p>Informe somente os dados previstos para a lista de participantes.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo" th:text="|Solicitação #${solicitacao.id}|">Solicitação #16</p>
+                <h1 th:text="${titulo}">Adicionar participante</h1>
+                <p>Informe somente os dados previstos para a lista de participantes.</p>
+            </div>
         </header>
 
-        <div class="form-message form-message--error" role="alert"
-             th:if="${#fields.hasAnyErrors()}">
-            <p>Revise os dados informados:</p>
-            <ul>
-                <li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li>
-            </ul>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <div>
+                <p><strong>Revise os dados informados:</strong></p>
+                <ul>
+                    <li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li>
+                </ul>
+            </div>
         </div>
 
-        <form class="request-form" th:action="${acaoFormulario}" method="post" th:object="${form}">
-            <div class="form-field">
-                <label for="nomeCompleto">Nome completo</label>
-                <input id="nomeCompleto" type="text" th:field="*{nomeCompleto}"
-                       maxlength="150" autocomplete="name" required
-                       th:attr="aria-invalid=${#fields.hasErrors('nomeCompleto')},aria-describedby=${#fields.hasErrors('nomeCompleto')} ? 'nomeCompleto-erro' : null">
-                <p id="nomeCompleto-erro" class="field-error"
-                   th:if="${#fields.hasErrors('nomeCompleto')}"
-                   th:errors="*{nomeCompleto}">Informe o nome completo.</p>
-            </div>
+        <form class="painel" th:action="${acaoFormulario}" method="post" th:object="${form}">
+            <div class="painel__corpo">
+                <div class="campo" th:classappend="${#fields.hasErrors('nomeCompleto')} ? ' campo--erro'">
+                    <label for="nomeCompleto">Nome completo</label>
+                    <input id="nomeCompleto" type="text" th:field="*{nomeCompleto}"
+                           maxlength="150" autocomplete="name" required
+                           th:attr="aria-invalid=${#fields.hasErrors('nomeCompleto')},aria-describedby=${#fields.hasErrors('nomeCompleto')} ? 'nomeCompleto-erro' : null">
+                    <p id="nomeCompleto-erro" class="campo__erro"
+                       th:if="${#fields.hasErrors('nomeCompleto')}"
+                       th:errors="*{nomeCompleto}">Informe o nome completo.</p>
+                </div>
 
-            <div class="form-field">
-                <label for="rmOuRg">RM ou RG</label>
-                <input id="rmOuRg" type="text" th:field="*{rmOuRg}"
-                       maxlength="30" autocomplete="off" required
-                       aria-describedby="rmOuRg-ajuda"
-                       th:attrappend="aria-describedby=${#fields.hasErrors('rmOuRg')} ? ' rmOuRg-erro' : '',aria-invalid=${#fields.hasErrors('rmOuRg')}">
-                <p id="rmOuRg-ajuda" class="field-help">Informe o RM do aluno ou o RG do demais participante, conforme aplicável.</p>
-                <p id="rmOuRg-erro" class="field-error"
-                   th:if="${#fields.hasErrors('rmOuRg')}"
-                   th:errors="*{rmOuRg}">Informe o RM ou RG.</p>
-            </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('rmOuRg')} ? ' campo--erro'">
+                    <label for="rmOuRg">RM ou RG</label>
+                    <input id="rmOuRg" type="text" th:field="*{rmOuRg}"
+                           maxlength="30" autocomplete="off" required
+                           aria-describedby="rmOuRg-ajuda"
+                           th:attrappend="aria-describedby=${#fields.hasErrors('rmOuRg')} ? ' rmOuRg-erro' : '',aria-invalid=${#fields.hasErrors('rmOuRg')}">
+                    <p id="rmOuRg-ajuda" class="campo__ajuda">Informe o RM do aluno ou o RG do demais participante, conforme aplicável. Um mesmo RM ou RG não pode se repetir na solicitação.</p>
+                    <p id="rmOuRg-erro" class="campo__erro"
+                       th:if="${#fields.hasErrors('rmOuRg')}"
+                       th:errors="*{rmOuRg}">Informe o RM ou RG.</p>
+                </div>
 
-            <div class="form-field">
-                <label for="categoria">Categoria</label>
-                <select id="categoria" th:field="*{categoria}" required
-                        th:attr="aria-invalid=${#fields.hasErrors('categoria')},aria-describedby=${#fields.hasErrors('categoria')} ? 'categoria-erro' : null">
-                    <option value="">Selecione</option>
-                    <option value="ALUNO">Aluno</option>
-                    <option value="OUTRO">Outro participante</option>
-                </select>
-                <p id="categoria-erro" class="field-error"
-                   th:if="${#fields.hasErrors('categoria')}"
-                   th:errors="*{categoria}">Selecione a categoria.</p>
-            </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('categoria')} ? ' campo--erro'">
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" th:field="*{categoria}" required
+                            aria-describedby="categoria-ajuda"
+                            th:attrappend="aria-describedby=${#fields.hasErrors('categoria')} ? ' categoria-erro' : '',aria-invalid=${#fields.hasErrors('categoria')}">
+                        <option value="">Selecione</option>
+                        <option value="ALUNO">Aluno</option>
+                        <option value="OUTRO">Outro participante</option>
+                    </select>
+                    <p id="categoria-ajuda" class="campo__ajuda">O mínimo exigido é de dez participantes na categoria Aluno.</p>
+                    <p id="categoria-erro" class="campo__erro"
+                       th:if="${#fields.hasErrors('categoria')}"
+                       th:errors="*{categoria}">Selecione a categoria.</p>
+                </div>
 
-            <div class="request-notice">
-                <strong>Antes de salvar</strong>
-                <p>Confira os dados. A regra definitiva sobre categorias adicionais aguarda homologação institucional.</p>
+                <div class="alerta alerta--info campo--espacado">
+                    <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+                    <div>
+                        <p><strong>Antes de salvar</strong></p>
+                        <p>Confira os dados. A regra definitiva sobre categorias adicionais aguarda homologação institucional.</p>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-actions">
-                <button class="button" type="submit">Salvar participante</button>
-                <a class="button button--secondary"
+            <div class="painel__rodape grupo-botoes">
+                <button class="botao" type="submit">Salvar participante</button>
+                <a class="botao botao--fantasma"
                    th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">Cancelar</a>
             </div>
         </form>

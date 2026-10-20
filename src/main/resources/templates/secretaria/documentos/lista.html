@@ -19,83 +19,112 @@
             <span aria-current="page">Conferência documental</span>
         </nav>
 
-        <p class="form-message form-message--success" role="status"
-           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" role="alert"
-           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Operação concluída.</p>
+        </div>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
+        </div>
 
-        <header class="page-heading">
-            <h1>Conferência documental</h1>
-            <p>Revise somente a versão mais recente enviada para cada solicitação.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Conferência documental</h1>
+                <p>Revise somente a versão mais recente enviada para cada solicitação.</p>
+            </div>
         </header>
 
-        <section class="admin-section" aria-labelledby="pendentes-title">
-            <h2 id="pendentes-title">Aguardando conferência</h2>
-            <p class="empty-message" th:if="${#lists.isEmpty(pendentes)}">
-                Não há documentos aguardando conferência.
-            </p>
-            <div class="table-wrapper" th:unless="${#lists.isEmpty(pendentes)}">
-                <table class="schedule-table table-cards">
-                    <caption class="visually-hidden">Documentos aguardando conferência</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Solicitante</th>
-                            <th scope="col">Solicitação</th>
-                            <th scope="col">Versão</th>
-                            <th scope="col">Enviado em</th>
-                            <th scope="col">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="documento : ${pendentes}">
-                            <td data-label="Solicitante" th:text="${documento.reserva.solicitante.nome}">Ana Souza</td>
-                            <td data-label="Solicitação" th:text="|#${documento.reserva.id}|">#20</td>
-                            <td data-label="Versão" th:text="|v${documento.versao}|">v1</td>
-                            <td data-label="Enviado em" th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
-                            <td data-label="Ação">
-                                <a class="button button--small"
-                                   th:href="@{/secretaria/documentos/{id}(id=${documento.id})}">Conferir</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        <div class="pilha">
+            <section class="painel" aria-labelledby="pendentes-title">
+                <div class="painel__cabecalho">
+                    <h2 id="pendentes-title">Aguardando conferência</h2>
+                    <span class="badge badge--documentacao" th:unless="${#lists.isEmpty(pendentes)}">
+                        <svg th:replace="~{fragments/icones :: icone('documento')}"></svg>
+                        <span th:text="${#lists.size(pendentes) == 1} ? '1 documento' : |${#lists.size(pendentes)} documentos|">2 documentos</span>
+                    </span>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(pendentes)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('bandeja')}"></svg></span>
+                    <strong>Nada para conferir</strong>
+                    <p>Não há documentos aguardando conferência.</p>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(pendentes)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Documentos aguardando conferência</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Solicitante</th>
+                                <th scope="col">Versão</th>
+                                <th scope="col">Enviado em</th>
+                                <th scope="col"><span class="visually-hidden">Ação</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="documento : ${pendentes}">
+                                <th scope="row" data-label="Solicitante">
+                                    <span th:text="${documento.reserva.solicitante.nome}">Ana Souza</span>
+                                    <span class="tabela__secundario" th:text="|Solicitação #${documento.reserva.id}|">Solicitação #20</span>
+                                </th>
+                                <td data-label="Versão" th:text="|v${documento.versao}|">v1</td>
+                                <td data-label="Enviado em" th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
+                                <td class="acoes-celula">
+                                    <div class="acoes-tabela">
+                                        <a class="botao botao--sm" th:href="@{/secretaria/documentos/{id}(id=${documento.id})}">Conferir<span class="visually-hidden" th:text="| o documento da solicitação #${documento.reserva.id}|"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-        <section class="admin-section" aria-labelledby="historico-title">
-            <h2 id="historico-title">Histórico de conferências</h2>
-            <p class="empty-message" th:if="${#lists.isEmpty(historico)}">
-                Nenhuma conferência foi registrada.
-            </p>
-            <div class="table-wrapper" th:unless="${#lists.isEmpty(historico)}">
-                <table class="schedule-table table-cards">
-                    <caption class="visually-hidden">Histórico de conferências documentais</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Solicitação</th>
-                            <th scope="col">Versão</th>
-                            <th scope="col">Resultado</th>
-                            <th scope="col">Responsável</th>
-                            <th scope="col">Data</th>
-                            <th scope="col">Detalhes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="conferencia : ${historico}">
-                            <td data-label="Solicitação" th:text="|#${conferencia.documento.reserva.id}|">#20</td>
-                            <td data-label="Versão" th:text="|v${conferencia.documento.versao}|">v1</td>
-                            <td data-label="Resultado" th:text="${conferencia.resultado.descricao}">Validado</td>
-                            <td data-label="Responsável" th:text="${conferencia.conferidoPor.nome}">Secretaria</td>
-                            <td data-label="Data" th:text="${#temporals.format(conferencia.conferidoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
-                            <td data-label="Detalhes">
-                                <a class="button button--secondary button--small"
-                                   th:href="@{/secretaria/documentos/{id}(id=${conferencia.documento.id})}">Consultar</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+            <section class="painel" aria-labelledby="historico-title">
+                <div class="painel__cabecalho">
+                    <h2 id="historico-title">Histórico de conferências</h2>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(historico)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('lista')}"></svg></span>
+                    <strong>Sem histórico</strong>
+                    <p>Nenhuma conferência foi registrada.</p>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(historico)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Histórico de conferências documentais</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Solicitação</th>
+                                <th scope="col">Versão</th>
+                                <th scope="col">Resultado</th>
+                                <th scope="col">Responsável</th>
+                                <th scope="col">Data</th>
+                                <th scope="col"><span class="visually-hidden">Detalhes</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="conferencia : ${historico}">
+                                <th scope="row" data-label="Solicitação" th:text="|#${conferencia.documento.reserva.id}|">#20</th>
+                                <td data-label="Versão" th:text="|v${conferencia.documento.versao}|">v1</td>
+                                <td data-label="Resultado">
+                                    <span class="badge" th:classappend="${conferencia.resultado.name() == 'VALIDADO'} ? 'badge--aprovada' : 'badge--documentacao'">
+                                        <th:block th:if="${conferencia.resultado.name() == 'VALIDADO'}"><svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg></th:block>
+                                        <th:block th:unless="${conferencia.resultado.name() == 'VALIDADO'}"><svg th:replace="~{fragments/icones :: icone('alerta')}"></svg></th:block>
+                                        <span th:text="${conferencia.resultado.descricao}">Validado</span>
+                                    </span>
+                                </td>
+                                <td data-label="Responsável" th:text="${conferencia.conferidoPor.nome}">Secretaria</td>
+                                <td data-label="Data" th:text="${#temporals.format(conferencia.conferidoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>
+                                <td class="acoes-celula">
+                                    <div class="acoes-tabela">
+                                        <a class="botao botao--secundario botao--sm" th:href="@{/secretaria/documentos/{id}(id=${conferencia.documento.id})}">Consultar<span class="visually-hidden" th:text="| a conferência da solicitação #${conferencia.documento.reserva.id}, versão ${conferencia.documento.versao}|"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

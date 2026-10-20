@@ -11,14 +11,14 @@
     <header th:replace="~{fragments/layout :: topo}"></header>
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
     <main id="conteudo" class="container app-main app-main--narrow">
-        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/bloqueios}">Bloqueios</a><span aria-hidden="true">/</span><span aria-current="page">Novo</span></nav>
-        <header class="page-heading"><h1>Novo bloqueio</h1><p>Registre um período em que a quadra não poderá ser utilizada.</p></header>
-        <form class="request-form" th:action="@{/admin/bloqueios}" th:object="${form}" method="post">
-            <div class="form-message form-message--error" th:if="${#fields.hasAnyErrors()}"><strong>Revise os dados informados.</strong><ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li></ul></div>
-            <div class="form-field"><label for="data">Data</label><input id="data" type="date" th:field="*{data}" th:min="${dataMinima}" required></div>
-            <div class="form-grid"><div class="form-field"><label for="horarioInicio">Início</label><input id="horarioInicio" type="time" th:field="*{horarioInicio}" required></div><div class="form-field"><label for="horarioFim">Fim</label><input id="horarioFim" type="time" th:field="*{horarioFim}" required></div></div>
-            <div class="form-field"><label for="motivo">Motivo</label><textarea id="motivo" th:field="*{motivo}" maxlength="200" required aria-describedby="motivo-help"></textarea><p id="motivo-help" class="field-help">Informe uma justificativa objetiva, com até 200 caracteres.</p></div>
-            <div class="form-actions"><button class="button" type="submit">Cadastrar bloqueio</button><a class="button button--secondary" th:href="@{/admin/bloqueios}">Cancelar</a></div>
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/inicio}">Início</a><span aria-hidden="true">/</span><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/bloqueios}">Bloqueios</a><span aria-hidden="true">/</span><span aria-current="page">Novo</span></nav>
+        <header class="cabecalho-pagina"><div class="cabecalho-pagina__texto"><h1>Novo bloqueio</h1><p>Registre um período em que a quadra não poderá ser utilizada.</p></div></header>
+        <form class="painel formulario-painel" th:action="@{/admin/bloqueios}" th:object="${form}" method="post">
+            <div class="alerta alerta--perigo" role="alert" th:if="${#fields.hasAnyErrors()}"><strong>Revise os dados informados.</strong><ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li></ul></div>
+            <div class="campo"><label for="data">Data</label><input id="data" type="date" th:field="*{data}" th:min="${dataMinima}" required></div>
+            <div class="campos-linha"><div class="campo"><label for="horarioInicio">Início</label><input id="horarioInicio" type="time" th:field="*{horarioInicio}" required></div><div class="campo"><label for="horarioFim">Fim</label><input id="horarioFim" type="time" th:field="*{horarioFim}" required></div></div>
+            <div class="campo"><label for="motivo">Motivo</label><textarea id="motivo" th:field="*{motivo}" maxlength="200" required aria-describedby="motivo-help"></textarea><p id="motivo-help" class="campo__ajuda">Informe uma justificativa objetiva, com até 200 caracteres.</p></div>
+            <div class="grupo-botoes formulario-painel__acoes"><button class="botao" type="submit">Cadastrar bloqueio</button><a class="botao botao--fantasma" th:href="@{/admin/bloqueios}">Cancelar</a></div>
         </form>
     </main>
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

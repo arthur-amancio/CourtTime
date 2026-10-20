@@ -11,35 +11,35 @@
     <header th:replace="~{fragments/layout :: topo}"></header>
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
     <main id="conteudo" class="container app-main app-main--narrow">
-        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/usuarios}">Usuários</a><span aria-hidden="true">/</span><span aria-current="page">Editar</span></nav>
-        <header class="page-heading"><h1>Editar usuário</h1><p>Altere somente os dados administrativos necessários.</p></header>
-        <form class="request-form" th:action="@{/admin/usuarios/{id}(id=${usuario.id})}" th:object="${form}" method="post">
-            <div class="form-message form-message--error" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/inicio}">Início</a><span aria-hidden="true">/</span><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/usuarios}">Usuários</a><span aria-hidden="true">/</span><span aria-current="page">Editar</span></nav>
+        <header class="cabecalho-pagina"><div class="cabecalho-pagina__texto"><h1>Editar usuário</h1><p>Altere somente os dados administrativos necessários.</p></div></header>
+        <form class="painel formulario-painel" th:action="@{/admin/usuarios/{id}(id=${usuario.id})}" th:object="${form}" method="post">
+            <div class="alerta alerta--perigo" role="alert" th:if="${#fields.hasAnyErrors()}">
                 <strong>Revise os dados informados.</strong>
                 <ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro</li></ul>
             </div>
-            <div class="form-field">
+            <div class="campo">
                 <label for="nome">Nome completo</label>
                 <input id="nome" type="text" th:field="*{nome}" maxlength="150" required
                        th:attr="aria-invalid=${#fields.hasErrors('nome')},aria-describedby=${#fields.hasErrors('nome')} ? 'nome-erro' : null">
-                <p id="nome-erro" class="field-error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Informe o nome completo.</p>
+                <p id="nome-erro" class="campo__erro" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Informe o nome completo.</p>
             </div>
-            <div class="form-field">
+            <div class="campo">
                 <label for="email">Email</label>
                 <input id="email" type="email" th:field="*{email}" maxlength="254" required
                        th:attr="aria-invalid=${#fields.hasErrors('email')},aria-describedby=${#fields.hasErrors('email')} ? 'email-erro' : null">
-                <p id="email-erro" class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Informe um email válido.</p>
+                <p id="email-erro" class="campo__erro" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Informe um email válido.</p>
             </div>
-            <div class="form-field" th:if="${usuario.perfil.name() != 'ADMINISTRADOR'}">
+            <div class="campo" th:if="${usuario.perfil.name() != 'ADMINISTRADOR'}">
                 <label for="perfil">Perfil</label>
                 <select id="perfil" th:field="*{perfil}" required
                         th:attr="aria-invalid=${#fields.hasErrors('perfil')},aria-describedby=${#fields.hasErrors('perfil')} ? 'perfil-erro' : null">
                     <option th:each="item : ${perfis}" th:value="${item}" th:text="${item.descricao}">Aluno</option>
                 </select>
-                <p id="perfil-erro" class="field-error" th:if="${#fields.hasErrors('perfil')}" th:errors="*{perfil}">Selecione o perfil.</p>
+                <p id="perfil-erro" class="campo__erro" th:if="${#fields.hasErrors('perfil')}" th:errors="*{perfil}">Selecione o perfil.</p>
             </div>
-            <div class="form-field" th:if="${usuario.perfil.name() == 'ADMINISTRADOR'}"><span class="field-label">Perfil</span><strong>Administrador</strong><input type="hidden" th:field="*{perfil}"><p class="field-help">O perfil administrativo não pode ser alterado nesta interface.</p></div>
-            <div class="form-actions"><button class="button" type="submit">Salvar alterações</button><a class="button button--secondary" th:href="@{/admin/usuarios}">Cancelar</a></div>
+            <div class="campo" th:if="${usuario.perfil.name() == 'ADMINISTRADOR'}"><span class="campo__rotulo">Perfil</span><strong>Administrador</strong><input type="hidden" th:field="*{perfil}"><p class="campo__ajuda">O perfil administrativo não pode ser alterado nesta interface.</p></div>
+            <div class="grupo-botoes formulario-painel__acoes"><button class="botao" type="submit">Salvar alterações</button><a class="botao botao--fantasma" th:href="@{/admin/usuarios}">Cancelar</a></div>
         </form>
     </main>
     <footer th:replace="~{fragments/layout :: rodape}"></footer>
