@@ -142,39 +142,65 @@ async function auditarSequenciaDeFoco(page, tela) {
   relatorio.conferir(retrocedeu, `Shift+Tab retrocede o foco: ${tela.nome}`);
 }
 
-async function auditarCalendario(page) {
-  const calendario = page.locator('[data-calendario-grade], [role="grid"], [aria-label*="calend" i], [data-calendar]').first();
+async function auditarCalendario(page, tela, permitirDatasPassadas) {
+  const calendario = page.locator(
+    '[data-calendario-grade], [role="grid"], [aria-label*="calend" i], [data-calendar], .calendario, .faixa-dias'
+  ).filter({ visible: true }).first();
   if (await calendario.count() === 0) {
-    relatorio.pendente('Calendario V2 navegavel por teclado', 'Componente da Fase D ainda nao detectado.');
+    relatorio.pendente(`Calendario V2 navegavel por teclado: ${tela.nome}`, 'Componente da Fase D ainda nao detectado.');
     return;
   }
   const texto = await calendario.innerText();
-  relatorio.conferir(!/\d+\s+hor.rios?\s+(dispon.ve(?:is|l)|livres?)/i.test(texto), 'Calendario opcao A sem contadores por dia');
+  relatorio.conferir(!/\d+\s+hor.rios?\s+(dispon.ve(?:is|l)|livres?)/i.test(texto),
+    `Calendario opcao A sem contadores por dia: ${tela.nome}`);
   const diaFocavel = calendario.locator(
     '[data-data]:not(:disabled):not([aria-disabled="true"]), '
-      + '[data-date]:not(:disabled):not([aria-disabled="true"])'
+      + '[data-date]:not(:disabled):not([aria-disabled="true"]), '
+      + 'a.dia[href*="data="]:not([aria-current="date"]), '
+      + 'a.dia-chip[href*="data="]:not([aria-current="date"])'
   ).filter({ visible: true })
     .first();
-  relatorio.conferir(await diaFocavel.count() === 1, 'Calendario possui dia habilitado e focavel');
-  await diaFocavel.focus();
-  const focoAntes = await page.evaluate(() => document.activeElement?.getAttribute('data-data')
-    || document.activeElement?.getAttribute('data-date'));
-  await page.keyboard.press('ArrowRight');
-  const focoDepois = await page.evaluate(() => document.activeElement?.getAttribute('data-data')
-    || document.activeElement?.getAttribute('data-date'));
-  relatorio.conferir(Boolean(focoAntes) && Boolean(focoDepois) && focoAntes !== focoDepois,
-    'Calendario responde a navegacao por teclado', `${focoAntes} -> ${focoDepois}`);
-  const passadasHabilitadas = await calendario.locator('[data-data], [data-date]').evaluateAll(elementos => {
+  relatorio.conferir(await diaFocavel.count() === 1, `Calendario possui dia habilitado e focavel: ${tela.nome}`);
+  const passadasHabilitadas = await calendario.locator('[data-data], [data-date], a.dia[href*="data="], a.dia-chip[href*="data="]').evaluateAll(elementos => {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
     return elementos.filter(elemento => {
-      const valor = elemento.getAttribute('data-data') || elemento.getAttribute('data-date');
+      const valor = elemento.getAttribute('data-data') || elemento.getAttribute('data-date')
+        || new URL(elemento.href, location.href).searchParams.get('data');
       const data = new Date(`${valor}T12:00:00`);
       const desabilitado = elemento.matches(':disabled,[aria-disabled="true"]');
       return data < hoje && !desabilitado;
-    }).map(elemento => elemento.getAttribute('data-data') || elemento.getAttribute('data-date'));
+    }).map(elemento => elemento.getAttribute('data-data') || elemento.getAttribute('data-date')
+      || new URL(elemento.href, location.href).searchParams.get('data'));
   });
-  relatorio.conferir(passadasHabilitadas.length === 0, 'Calendario nao habilita datas passadas', JSON.stringify(passadasHabilitadas));
+  if (!permitirDatasPassadas) {
+    relatorio.conferir(passadasHabilitadas.length === 0,
+      `Calendario de solicitacao nao habilita datas passadas: ${tela.nome}`, JSON.stringify(passadasHabilitadas));
+  }
+
+  await diaFocavel.focus();
+  const estado = await diaFocavel.evaluate(elemento => ({
+    data: elemento.getAttribute('data-data') || elemento.getAttribute('data-date')
+      || new URL(elemento.href, location.href).searchParams.get('data'),
+    href: elemento instanceof HTMLAnchorElement ? elemento.href : null,
+    gradeComSetas: elemento.hasAttribute('data-data') || elemento.hasAttribute('data-date'),
+    focado: elemento === document.activeElement,
+  }));
+  relatorio.conferir(estado.focado && Boolean(estado.data), `Calendario recebe foco pelo teclado: ${tela.nome}`, estado.data);
+  if (estado.gradeComSetas) {
+    await page.keyboard.press('ArrowRight');
+    const focoDepois = await page.evaluate(() => document.activeElement?.getAttribute('data-data')
+      || document.activeElement?.getAttribute('data-date'));
+    relatorio.conferir(Boolean(focoDepois) && estado.data !== focoDepois,
+      `Calendario responde a setas: ${tela.nome}`, `${estado.data} -> ${focoDepois}`);
+  } else {
+    await Promise.all([
+      page.waitForURL(url => url.searchParams.get('data') === estado.data),
+      page.keyboard.press('Enter'),
+    ]);
+    relatorio.conferir(new URL(page.url()).searchParams.get('data') === estado.data,
+      `Calendario nativo abre a data com Enter: ${tela.nome}`, estado.href);
+  }
 }
 
 (async () => {
@@ -201,7 +227,9 @@ async function auditarCalendario(page) {
       await page.goto(`${configuracao.baseUrl}${tela.rota}`);
       await auditarSequenciaDeFoco(page, tela);
       if (tela.perfil) await auditarMenu(page, tela);
-      if (tela.nome === 'aluno-calendario') await auditarCalendario(page);
+      if (tela.nome === 'aluno-calendario' || tela.nome === 'aluno-nova-solicitacao') {
+        await auditarCalendario(page, tela, tela.nome === 'aluno-calendario');
+      }
       await context.close();
     }
     const contagem = relatorio.salvar(caminhoEvidencia(configuracao, 'resultados-redesign-v2.json'), {
