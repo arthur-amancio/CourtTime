@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fragmentos do calendário</title>
+</head>
+<body>
+<!--
+  Calendario opcao A (prototipo V2): dia da semana, numero, data selecionada e
+  indicacao de funcionamento cadastrado na grade semanal. Sem contagem de vagas.
+  Cada dia e um link GET para a mesma tela com ?data=AAAA-MM-DD; o servidor
+  consulta a disponibilidade real e revalida tudo no envio.
+  Parametros: calendario (CalendarioVisual) e rota ('/quadra' ou '/solicitacoes/nova').
+-->
+
+<section th:fragment="mes(calendario, rota)" th:if="${calendario != null}" class="painel calendario" aria-labelledby="calendario-titulo">
+    <div class="calendario__topo">
+        <h2 id="calendario-titulo" class="calendario__mes" th:text="${calendario.tituloMes}">Outubro de 2026</h2>
+        <div class="calendario__nav">
+            <a class="botao-icone" th:if="${calendario.mesAnterior != null}"
+               th:href="@{${rota}(data=${calendario.mesAnterior})}" aria-label="Mês anterior">
+                <svg th:replace="~{fragments/icones :: icone('chevron-esq')}"></svg>
+            </a>
+            <span class="botao-icone botao-icone--desativado" th:if="${calendario.mesAnterior == null}"
+                  aria-hidden="true"><svg th:replace="~{fragments/icones :: icone('chevron-esq')}"></svg></span>
+            <a class="botao-icone" th:href="@{${rota}(data=${calendario.mesSeguinte})}" aria-label="Próximo mês">
+                <svg th:replace="~{fragments/icones :: icone('chevron-dir')}"></svg>
+            </a>
+        </div>
+    </div>
+    <table class="calendario__grade">
+        <caption class="visually-hidden" th:text="|Datas de ${calendario.tituloMes}|">Datas do mês</caption>
+        <thead>
+            <tr>
+                <th scope="col" th:each="nome : ${calendario.diasDaSemana}">
+                    <abbr th:title="${nome}" th:text="${#strings.toUpperCase(#strings.substring(nome, 0, 1))}">D</abbr>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="semana : ${calendario.semanas}">
+                <td th:each="dia : ${semana}">
+                    <th:block th:if="${dia != null}">
+                        <a th:if="${dia.habilitada}" class="dia"
+                           th:classappend="${dia.funciona ? ' dia--funciona' : ' dia--sem-funcionamento'} + ${dia.hoje ? ' dia--hoje' : ''} + ${dia.selecionada ? ' dia--selecionado' : ''}"
+                           th:href="@{${rota}(data=${dia.data})}"
+                           th:aria-current="${dia.selecionada} ? 'date'"
+                           th:aria-label="${dia.rotuloAcessivel}"
+                           th:text="${dia.dia}">21</a>
+                        <span th:unless="${dia.habilitada}" class="dia dia--desabilitado"
+                              th:classappend="${dia.hoje ? ' dia--hoje' : ''}"
+                              th:aria-label="${dia.rotuloAcessivel}" role="img"
+                              th:text="${dia.dia}">20</span>
+                    </th:block>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="calendario__legenda">
+        <span class="legenda-item"><span class="legenda-amostra legenda-amostra--ponto" aria-hidden="true"></span>Dia com funcionamento cadastrado</span>
+        <span class="legenda-item"><span class="legenda-amostra legenda-amostra--selecionado" aria-hidden="true"></span>Data selecionada</span>
+    </p>
+</section>
+
+<nav th:fragment="faixa(calendario, rota)" th:if="${calendario != null}" class="faixa-dias" aria-label="Próximos dias">
+    <th:block th:each="dia : ${calendario.faixa}">
+        <a th:if="${dia.habilitada}" class="dia-chip"
+           th:classappend="${dia.funciona ? ' dia-chip--funciona' : ' dia-chip--fechado'} + ${dia.selecionada ? ' dia-chip--selecionado' : ''}"
+           th:href="@{${rota}(data=${dia.data})}"
+           th:aria-current="${dia.selecionada} ? 'date'"
+           th:aria-label="${dia.rotuloAcessivel}">
+            <small aria-hidden="true" th:text="${dia.diaSemanaCurto}">qua</small>
+            <strong aria-hidden="true" th:text="${dia.dia}">21</strong>
+            <span aria-hidden="true">
+                <i class="dia-chip__ponto" th:if="${dia.funciona}"></i>
+                <th:block th:unless="${dia.funciona}">fechado</th:block>
+            </span>
+        </a>
+    </th:block>
+</nav>
+</body>
+</html>

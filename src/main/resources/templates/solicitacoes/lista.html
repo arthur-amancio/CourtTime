@@ -19,48 +19,47 @@
             <span aria-current="page">Solicitações</span>
         </nav>
 
-        <header class="page-heading page-heading--actions">
-            <div>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
                 <h1>Minhas solicitações</h1>
                 <p>Acompanhe somente as solicitações registradas por você.</p>
             </div>
-            <a class="button" th:href="@{/solicitacoes/nova}">Nova solicitação</a>
+            <div class="cabecalho-pagina__acoes">
+                <a class="botao" th:href="@{/solicitacoes/nova}">
+                    <svg th:replace="~{fragments/icones :: icone('mais')}"></svg><span>Nova solicitação</span>
+                </a>
+            </div>
         </header>
 
-        <p class="empty-message" th:if="${#lists.isEmpty(solicitacoes)}">
-            Você ainda não possui solicitações cadastradas.
-        </p>
-
-        <div class="table-wrapper" th:unless="${#lists.isEmpty(solicitacoes)}">
-            <table class="schedule-table requests-table table-cards">
-                <caption class="visually-hidden">Solicitações de uso da quadra do usuário autenticado</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Data</th>
-                        <th scope="col">Horário</th>
-                        <th scope="col">Finalidade</th>
-                        <th scope="col">Situação</th>
-                        <th scope="col"><span class="visually-hidden">Ações</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="item : ${solicitacoes}" th:with="solicitacao=${item.solicitacao}">
-                        <td data-label="Data" th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
-                        <td data-label="Horário" th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
-                        <td data-label="Finalidade" th:text="${solicitacao.finalidade}">Treino da turma</td>
-                        <td class="cell-status" data-label="Situação">
-                            <span class="cell-status__content">
-                                <strong class="status-pill"
-                                        th:classappend="${item.situacao.autorizada} ? ' status-pill--ok' : ''"
-                                        th:text="${item.situacao.titulo}">Pendente de documentação</strong>
-                                <span class="status-next" th:text="${item.situacao.explicacao}">Revise os participantes e envie o PDF preparado e assinado fora do sistema.</span>
-                            </span>
-                        </td>
-                        <td><a class="text-link" th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Detalhes</a></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="painel vazio" th:if="${#lists.isEmpty(solicitacoes)}">
+            <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('lista')}"></svg></span>
+            <strong>Nenhuma solicitação</strong>
+            <p>Você ainda não possui solicitações cadastradas. Quando registrar uma, ela aparecerá aqui com a situação atual.</p>
+            <a class="botao botao--sm" th:href="@{/solicitacoes/nova}">Nova solicitação</a>
         </div>
+
+        <ul class="lista-solicitacoes" th:unless="${#lists.isEmpty(solicitacoes)}"
+            aria-label="Solicitações de uso da quadra do usuário autenticado">
+            <li class="cartao-solicitacao" th:each="item : ${solicitacoes}" th:with="solicitacao=${item.solicitacao}">
+                <span class="data-bloco" aria-hidden="true">
+                    <small th:text="${#strings.arraySplit('jan,fev,mar,abr,mai,jun,jul,ago,set,out,nov,dez', ',')[solicitacao.dataUtilizacao.monthValue - 1]}">out</small>
+                    <strong th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd')}">26</strong>
+                </span>
+                <div>
+                    <span th:replace="~{fragments/situacao :: situacao(${solicitacao.status}, ${item.situacao})}"></span>
+                    <h2 th:text="${solicitacao.finalidade}">Treino da turma</h2>
+                    <p class="cartao-solicitacao__meta">
+                        <span th:text="|${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')} · ${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">19/10/2026 · 08:00 – 09:00</span>
+                    </p>
+                    <p th:text="${item.situacao.explicacao}">Revise os participantes e envie o PDF preparado e assinado fora do sistema.</p>
+                </div>
+                <div>
+                    <a class="botao botao--secundario botao--sm" th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">
+                        Detalhes<span class="visually-hidden" th:text="| da solicitação de ${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}|"> da solicitação</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

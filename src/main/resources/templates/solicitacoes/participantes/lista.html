@@ -23,112 +23,122 @@
             <span aria-current="page">Participantes</span>
         </nav>
 
-        <p class="form-message form-message--success" role="status"
-           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" role="alert"
-           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Operação concluída.</p>
+        </div>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
+        </div>
 
-        <header class="page-heading page-heading--actions">
-            <div>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo" th:text="|Solicitação #${solicitacao.id}|">Solicitação #16</p>
                 <h1>Participantes</h1>
                 <p th:text="|Revise a lista da solicitação para ${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}.|">
                     Revise a lista da solicitação.
                 </p>
             </div>
-            <a class="button" th:if="${edicaoPermitida}"
-               th:href="@{/solicitacoes/{id}/participantes/novo(id=${solicitacao.id})}">
-                Adicionar participante
-            </a>
+            <div class="cabecalho-pagina__acoes" th:if="${edicaoPermitida}">
+                <a class="botao" th:href="@{/solicitacoes/{id}/participantes/novo(id=${solicitacao.id})}">
+                    <svg th:replace="~{fragments/icones :: icone('mais')}"></svg><span>Adicionar participante</span>
+                </a>
+            </div>
         </header>
 
-        <section class="admin-section" aria-labelledby="resumo-title">
-            <h2 id="resumo-title">Resumo da lista</h2>
-            <div class="metric-grid metric-grid--requests">
-                <div class="metric-card">
-                    <strong th:text="${resumo.quantidadeAlunos}">0</strong>
-                    <span>Alunos</span>
+        <div class="pilha">
+            <section aria-labelledby="resumo-title">
+                <h2 id="resumo-title" class="titulo-secao">Resumo da lista</h2>
+                <div class="indicadores">
+                    <div class="indicador">
+                        <strong class="indicador__valor" th:text="${resumo.quantidadeAlunos}">0</strong>
+                        <span class="indicador__rotulo">Alunos</span>
+                    </div>
+                    <div class="indicador">
+                        <strong class="indicador__valor" th:text="${resumo.quantidadeOutros}">0</strong>
+                        <span class="indicador__rotulo">Demais participantes</span>
+                    </div>
+                    <div class="indicador">
+                        <strong class="indicador__valor" th:text="${resumo.total}">0</strong>
+                        <span class="indicador__rotulo">Total</span>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <strong th:text="${resumo.quantidadeOutros}">0</strong>
-                    <span>Demais participantes</span>
-                </div>
-                <div class="metric-card">
-                    <strong th:text="${resumo.total}">0</strong>
-                    <span>Total</span>
-                </div>
-            </div>
+            </section>
 
-            <div class="request-notice" th:if="${resumo.minimoDeAlunosAtendido}">
-                <strong>Mínimo de alunos atendido</strong>
-                <p>A lista possui ao menos dez participantes na categoria Aluno.</p>
-            </div>
-            <p class="empty-message empty-message--warning"
-               th:unless="${resumo.minimoDeAlunosAtendido}">
-                A lista ainda precisa atingir o mínimo exigido de dez alunos antes da etapa documental.
-            </p>
-        </section>
-
-        <section class="admin-section" aria-labelledby="lista-title">
-            <div class="admin-summary-card">
+            <div class="alerta alerta--sucesso" th:if="${resumo.minimoDeAlunosAtendido}">
+                <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
                 <div>
-                    <h2 id="lista-title">Lista para revisão</h2>
-                    <p>O limite máximo será confirmado com o documento oficial da ETEC. Nenhum limite definitivo foi aplicado nesta etapa.</p>
+                    <p><strong>Mínimo de alunos atendido</strong></p>
+                    <p>A lista possui ao menos dez participantes na categoria Aluno.</p>
                 </div>
             </div>
-
-            <p class="empty-message" th:if="${#lists.isEmpty(participantes)}">
-                Nenhum participante foi cadastrado nesta solicitação.
-            </p>
-
-            <div class="table-wrapper" th:unless="${#lists.isEmpty(participantes)}">
-                <table class="schedule-table table-cards">
-                    <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Nome completo</th>
-                            <th scope="col">RM ou RG</th>
-                            <th scope="col">Categoria</th>
-                            <th scope="col" th:if="${edicaoPermitida}">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="participante : ${participantes}">
-                            <td data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</td>
-                            <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
-                            <td data-label="Categoria" th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
-                            <td data-label="Ações" th:if="${edicaoPermitida}">
-                                <div class="table-actions">
-                                    <a class="button button--secondary button--small"
-                                       th:href="@{/solicitacoes/{reservaId}/participantes/{participanteId}/editar(reservaId=${solicitacao.id}, participanteId=${participante.id})}">
-                                        Editar
-                                    </a>
-                                    <form th:action="@{/solicitacoes/{reservaId}/participantes/{participanteId}/remover(reservaId=${solicitacao.id}, participanteId=${participante.id})}"
-                                          method="post">
-                                        <button class="button button--secondary button--small" type="submit"
-                                                th:attr="aria-label=|Remover ${participante.nomeCompleto}|">
-                                            Remover
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="alerta alerta--aviso" th:unless="${resumo.minimoDeAlunosAtendido}">
+                <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
+                <p>A lista ainda precisa atingir o mínimo exigido de dez alunos antes da etapa documental.</p>
             </div>
 
-            <p class="request-notice"
-               th:if="${!edicaoPermitida and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
-                A lista está disponível somente para consulta. Alterações voltam a ser permitidas se a secretaria devolver o documento para correção.
-            </p>
-            <p class="request-notice"
-               th:if="${!edicaoPermitida and solicitacao.status.name() != 'PENDENTE_DOCUMENTACAO'}">
-                A lista está disponível somente para consulta depois que a solicitação avança para análise.
-            </p>
-        </section>
+            <section class="painel" aria-labelledby="lista-title">
+                <div class="painel__cabecalho">
+                    <h2 id="lista-title">Lista para revisão</h2>
+                    <p class="campo__ajuda">O limite máximo será confirmado com o documento oficial da ETEC. Nenhum limite definitivo foi aplicado nesta etapa.</p>
+                </div>
 
-        <div class="form-actions">
-            <a class="button button--secondary"
-               th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Voltar aos detalhes</a>
+                <div class="vazio" th:if="${#lists.isEmpty(participantes)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg></span>
+                    <strong>Nenhum participante</strong>
+                    <p>Nenhum participante foi cadastrado nesta solicitação.</p>
+                </div>
+
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(participantes)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Nome completo</th>
+                                <th scope="col">RM ou RG</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col" th:if="${edicaoPermitida}"><span class="visually-hidden">Ações</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="participante : ${participantes}">
+                                <th scope="row" data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</th>
+                                <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
+                                <td data-label="Categoria" th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
+                                <td class="acoes-celula" th:if="${edicaoPermitida}">
+                                    <div class="acoes-tabela">
+                                        <a class="botao botao--secundario botao--sm"
+                                           th:href="@{/solicitacoes/{reservaId}/participantes/{participanteId}/editar(reservaId=${solicitacao.id}, participanteId=${participante.id})}"
+                                           th:attr="aria-label=|Editar ${participante.nomeCompleto}|">Editar</a>
+                                        <form th:action="@{/solicitacoes/{reservaId}/participantes/{participanteId}/remover(reservaId=${solicitacao.id}, participanteId=${participante.id})}"
+                                              method="post">
+                                            <button class="botao botao--perigo-contorno botao--sm" type="submit"
+                                                    th:attr="aria-label=|Remover ${participante.nomeCompleto}|">Remover</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="alerta alerta--neutro"
+                 th:if="${!edicaoPermitida and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
+                <svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg>
+                <p>A lista está disponível somente para consulta. Alterações voltam a ser permitidas se a secretaria devolver o documento para correção.</p>
+            </div>
+            <div class="alerta alerta--neutro"
+                 th:if="${!edicaoPermitida and solicitacao.status.name() != 'PENDENTE_DOCUMENTACAO'}">
+                <svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg>
+                <p>A lista está disponível somente para consulta depois que a solicitação avança para análise.</p>
+            </div>
+
+            <div class="grupo-botoes">
+                <a class="botao botao--secundario"
+                   th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Voltar aos detalhes</a>
+            </div>
         </div>
     </main>
 

@@ -13,86 +13,71 @@
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
 
     <main id="conteudo" class="container app-main">
-        <header class="page-heading">
-            <h1 id="page-title">Início</h1>
-            <p>Olá, <span th:text="${nome}">Usuário</span>. Escolha uma das ações disponíveis para sua conta.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo" th:text="|Perfil: ${perfil.descricao}|">Perfil: Aluno</p>
+                <h1 id="page-title">Início</h1>
+                <p>Olá, <span th:text="${nome}">Usuário</span>. Escolha uma das ações disponíveis para sua conta.</p>
+            </div>
         </header>
 
-        <section class="situacao-atual" th:if="${ultimaSolicitacao != null}"
-                 aria-labelledby="situacao-atual-title">
-            <h2 id="situacao-atual-title">Sua solicitação mais recente</h2>
-            <div class="action-card">
-                <h3 class="action-card__title"
-                    th:text="|${#temporals.format(ultimaSolicitacao.solicitacao.dataUtilizacao, 'dd/MM/yyyy')} das ${#temporals.format(ultimaSolicitacao.solicitacao.horarioInicio, 'HH:mm')} às ${#temporals.format(ultimaSolicitacao.solicitacao.horarioFim, 'HH:mm')}|">
-                    20/10/2026 das 08:00 às 09:00
-                </h3>
-                <p class="action-card__status">
-                    <strong class="status-pill"
-                            th:classappend="${ultimaSolicitacao.situacao.autorizada} ? ' status-pill--ok' : ''"
-                            th:text="${ultimaSolicitacao.situacao.titulo}">Pendente de documentação</strong>
-                </p>
-                <p class="status-next" th:text="${ultimaSolicitacao.situacao.explicacao}">
-                    Revise os participantes e envie o PDF preparado e assinado fora do sistema.
-                </p>
-                <div class="form-actions">
-                    <a class="button"
-                       th:href="@{/solicitacoes/{id}(id=${ultimaSolicitacao.solicitacao.id})}">Abrir solicitação</a>
+        <div class="pilha">
+            <section class="painel" th:if="${ultimaSolicitacao != null}"
+                     th:with="solicitacao=${ultimaSolicitacao.solicitacao}"
+                     aria-labelledby="situacao-atual-title">
+                <div class="painel__cabecalho">
+                    <h2 id="situacao-atual-title">Sua solicitação mais recente</h2>
+                    <span th:replace="~{fragments/situacao :: situacao(${solicitacao.status}, ${ultimaSolicitacao.situacao})}"></span>
                 </div>
-            </div>
-        </section>
+                <div class="painel__corpo">
+                    <h3 class="cartao-titulo"
+                        th:text="|${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')} das ${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} às ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">
+                        20/10/2026 das 08:00 às 09:00
+                    </h3>
+                    <p class="texto-suave" th:text="${solicitacao.finalidade}">Treino da turma</p>
+                    <p class="proximo-passo" th:text="${ultimaSolicitacao.situacao.explicacao}">
+                        Revise os participantes e envie o PDF preparado e assinado fora do sistema.
+                    </p>
+                </div>
+                <div class="painel__rodape grupo-botoes">
+                    <a class="botao" th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Abrir solicitação</a>
+                </div>
+            </section>
 
-        <section class="quick-access" aria-labelledby="quick-access-title">
-            <h2 id="quick-access-title">Acesso rápido</h2>
-            <div class="quick-access__item">
-                <div>
-                    <h3>Consultar horários</h3>
-                    <p>Veja o funcionamento e a situação da quadra em uma data.</p>
+            <section aria-labelledby="quick-access-title">
+                <h2 id="quick-access-title" class="titulo-secao">Acesso rápido</h2>
+                <div class="acoes-rapidas">
+                    <a class="acao-rapida acao-rapida--primaria" th:if="${perfil.name() == 'ALUNO'}" th:href="@{/solicitacoes/nova}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('calendario-mais')}"></svg></span>
+                        <span><strong>Nova solicitação</strong><span>Selecione um período disponível e registre uma solicitação preliminar.</span></span>
+                    </a>
+                    <a class="acao-rapida" th:if="${perfil.name() == 'ALUNO'}" th:href="@{/solicitacoes}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('lista')}"></svg></span>
+                        <span><strong>Minhas solicitações</strong><span>Acompanhe as solicitações registradas pela sua conta.</span></span>
+                    </a>
+                    <a class="acao-rapida acao-rapida--primaria" th:if="${perfil.name() == 'ADMINISTRADOR'}" th:href="@{/admin}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('grade')}"></svg></span>
+                        <span><strong>Painel administrativo</strong><span>Analise solicitações e gerencie usuários, horários e bloqueios.</span></span>
+                    </a>
+                    <a class="acao-rapida acao-rapida--primaria" th:if="${perfil.name() == 'SECRETARIA'}" th:href="@{/secretaria/documentos}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('documento-check')}"></svg></span>
+                        <span><strong>Conferir documentos</strong><span>Consulte os PDFs enviados e registre a conferência de cada versão.</span></span>
+                    </a>
+                    <a class="acao-rapida" th:if="${perfil.name() == 'SECRETARIA'}" th:href="@{/secretaria/contribuicoes}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('recibo')}"></svg></span>
+                        <span><strong>Contribuições presenciais</strong><span>Registre recebimentos somente após a validação da versão documental mais recente.</span></span>
+                    </a>
+                    <a class="acao-rapida acao-rapida--primaria" th:if="${perfil.name() == 'SEGURANCA'}" th:href="@{/seguranca/reservas}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('escudo')}"></svg></span>
+                        <span><strong>Reservas autorizadas</strong><span>Consulte as reservas liberadas e os participantes para a conferência de entrada.</span></span>
+                    </a>
+                    <a class="acao-rapida" th:href="@{/quadra}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('calendario')}"></svg></span>
+                        <span><strong>Consultar horários</strong><span>Veja o funcionamento e a situação da quadra em uma data.</span></span>
+                    </a>
                 </div>
-                <a class="button" th:href="@{/quadra}">Acessar</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'ALUNO'}">
-                <div>
-                    <h3>Nova solicitação</h3>
-                    <p>Selecione um período disponível e registre uma solicitação preliminar.</p>
-                </div>
-                <a class="button" th:href="@{/solicitacoes/nova}">Solicitar</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'ALUNO'}">
-                <div>
-                    <h3>Minhas solicitações</h3>
-                    <p>Acompanhe as solicitações registradas pela sua conta.</p>
-                </div>
-                <a class="button button--secondary" th:href="@{/solicitacoes}">Consultar</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'ADMINISTRADOR'}">
-                <div>
-                    <h3>Painel administrativo</h3>
-                    <p>Analise solicitações e gerencie usuários, horários e bloqueios.</p>
-                </div>
-                <a class="button" th:href="@{/admin}">Acessar painel</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'SECRETARIA'}">
-                <div>
-                    <h3>Conferir documentos</h3>
-                    <p>Consulte os PDFs enviados e registre a conferência de cada versão.</p>
-                </div>
-                <a class="button" th:href="@{/secretaria/documentos}">Acessar fila</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'SECRETARIA'}">
-                <div>
-                    <h3>Contribuições presenciais</h3>
-                    <p>Registre recebimentos somente após a validação da versão documental mais recente.</p>
-                </div>
-                <a class="button" th:href="@{/secretaria/contribuicoes}">Consultar contribuições</a>
-            </div>
-            <div class="quick-access__item" th:if="${perfil.name() == 'SEGURANCA'}">
-                <div>
-                    <h3>Reservas autorizadas</h3>
-                    <p>Consulte as reservas liberadas e os participantes para a conferência de entrada.</p>
-                </div>
-                <a class="button" th:href="@{/seguranca/reservas}">Consultar reservas</a>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

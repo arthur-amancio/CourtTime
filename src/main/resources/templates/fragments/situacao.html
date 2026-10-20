@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fragmentos de situação</title>
+</head>
+<body>
+<!--
+  Selo do status gravado da reserva (StatusReserva). Cor, ícone e texto juntos:
+  o significado nunca depende só da cor. O texto vem de StatusReserva.descricao.
+  Uso: <span th:replace="~{fragments/situacao :: selo(${solicitacao.status})}"></span>
+-->
+<span th:fragment="selo(status)" class="badge"
+      th:with="codigo=${status.name()}"
+      th:classappend="${codigo == 'PENDENTE_DOCUMENTACAO'} ? ' badge--documentacao' : (${codigo == 'PENDENTE_ANALISE'} ? ' badge--analise' : (${codigo == 'APROVADA'} ? ' badge--aprovada' : (${codigo == 'REJEITADA'} ? ' badge--rejeitada' : ' badge--cancelada')))">
+    <th:block th:if="${codigo == 'PENDENTE_DOCUMENTACAO'}"><svg th:replace="~{fragments/icones :: icone('documento')}"></svg></th:block>
+    <th:block th:if="${codigo == 'PENDENTE_ANALISE'}"><svg th:replace="~{fragments/icones :: icone('ampulheta')}"></svg></th:block>
+    <th:block th:if="${codigo == 'APROVADA'}"><svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg></th:block>
+    <th:block th:if="${codigo == 'REJEITADA'}"><svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg></th:block>
+    <th:block th:if="${codigo == 'CANCELADA'}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg></th:block>
+    <span th:text="${status.descricao}">Pendente de documentação</span>
+</span>
+
+<!--
+  Selo da situação apresentada (SituacaoSolicitacao.titulo), usado em listas e
+  no início do aluno. A cor segue o status gravado (autorizada = aprovada);
+  o texto é o do serviço.
+-->
+<span th:fragment="situacao(status, situacao)" class="badge"
+      th:with="codigo=${situacao.autorizada ? 'APROVADA' : status.name()}"
+      th:classappend="${codigo == 'PENDENTE_DOCUMENTACAO'} ? ' badge--documentacao' : (${codigo == 'PENDENTE_ANALISE'} ? ' badge--analise' : (${codigo == 'APROVADA'} ? ' badge--aprovada' : (${codigo == 'REJEITADA'} ? ' badge--rejeitada' : ' badge--cancelada')))">
+    <th:block th:if="${codigo == 'PENDENTE_DOCUMENTACAO'}"><svg th:replace="~{fragments/icones :: icone('documento')}"></svg></th:block>
+    <th:block th:if="${codigo == 'PENDENTE_ANALISE'}"><svg th:replace="~{fragments/icones :: icone('ampulheta')}"></svg></th:block>
+    <th:block th:if="${codigo == 'APROVADA'}"><svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg></th:block>
+    <th:block th:if="${codigo == 'REJEITADA'}"><svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg></th:block>
+    <th:block th:if="${codigo == 'CANCELADA'}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg></th:block>
+    <span th:text="${situacao.titulo}">Pendente de documentação</span>
+</span>
+</body>
+</html>
