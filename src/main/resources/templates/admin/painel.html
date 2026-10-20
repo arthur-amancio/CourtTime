@@ -19,56 +19,89 @@
             <span aria-current="page">Administração</span>
         </nav>
 
-        <header class="page-heading">
-            <h1>Painel administrativo</h1>
-            <p>Dados atuais da quadra, dos horários e das solicitações registrados no sistema.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Painel administrativo</h1>
+                <p>Dados atuais da quadra, dos horários e das solicitações registrados no sistema.</p>
+            </div>
+            <div class="cabecalho-pagina__acoes">
+                <a class="botao" th:href="@{/admin/solicitacoes}">
+                    <svg th:replace="~{fragments/icones :: icone('bandeja')}"></svg><span>Analisar solicitações</span>
+                </a>
+            </div>
         </header>
 
-        <nav class="admin-nav" aria-label="Administração da quadra">
-            <a class="button" th:href="@{/admin/solicitacoes}">Analisar solicitações</a>
-            <a class="button" th:href="@{/admin/usuarios}">Gerenciar usuários</a>
-            <a class="button button--secondary" th:href="@{/admin/horarios}">Horários semanais</a>
-            <a class="button button--secondary" th:href="@{/admin/bloqueios}">Bloqueios</a>
-        </nav>
-
-        <section class="admin-section" aria-labelledby="quadra-title">
-            <h2 id="quadra-title">Quadra cadastrada</h2>
-            <div class="admin-summary-card">
-                <div>
-                    <h3 th:text="${painel.quadra.nome}">Quadra Poliesportiva</h3>
-                    <p th:text="${painel.quadra.descricao}">Quadra esportiva da ETEC.</p>
+        <div class="pilha">
+            <section aria-labelledby="requests-title">
+                <div class="secao__titulo">
+                    <h2 id="requests-title">Solicitações registradas</h2>
+                    <p class="campo__ajuda">Contagem por situação gravada.</p>
                 </div>
-                <span class="status-pill"
-                      th:classappend="${painel.quadra.ativa} ? ' status-pill--available' : ' status-pill--unavailable'"
-                      th:text="${painel.quadra.ativa} ? 'Em operação' : 'Inativa'">Em operação</span>
-            </div>
-        </section>
+                <div class="indicadores indicadores--largos">
+                    <div class="indicador">
+                        <strong class="indicador__valor" th:text="${painel.totalSolicitacoes}">0</strong>
+                        <span class="indicador__rotulo">Total</span>
+                    </div>
+                    <div class="indicador">
+                        <strong class="indicador__valor" th:text="${painel.pendentesDocumentacao}">0</strong>
+                        <span class="indicador__rotulo">Aguardando documentação</span>
+                    </div>
+                    <a class="indicador indicador--destaque indicador--link" th:href="@{/admin/solicitacoes}">
+                        <strong class="indicador__valor" th:text="${painel.pendentesAnalise}">0</strong>
+                        <span class="indicador__rotulo">Aguardando análise</span>
+                        <span class="indicador__nota">Abrir fila de análise</span>
+                    </a>
+                    <div class="indicador">
+                        <strong class="indicador__valor" th:text="${painel.aprovadas}">0</strong>
+                        <span class="indicador__rotulo">Aprovadas</span>
+                    </div>
+                    <div class="indicador">
+                        <strong class="indicador__valor" th:text="${painel.rejeitadas}">0</strong>
+                        <span class="indicador__rotulo">Rejeitadas</span>
+                    </div>
+                </div>
+                <p class="campo__ajuda nota-secao">A fila de análise apresenta somente solicitações que concluíram as etapas anteriores.</p>
+            </section>
 
-        <section class="admin-section" aria-labelledby="configuration-title">
-            <h2 id="configuration-title">Configuração atual</h2>
-            <div class="metric-grid">
-                <article class="metric-card">
-                    <strong th:text="${#lists.size(painel.horarios)}">0</strong>
-                    <span>Horários semanais</span>
-                </article>
-                <article class="metric-card">
-                    <strong th:text="${#lists.size(painel.bloqueiosFuturos)}">0</strong>
-                    <span>Bloqueios futuros</span>
-                </article>
-            </div>
-        </section>
+            <div class="grade-detalhe">
+                <section class="painel" aria-labelledby="quadra-title">
+                    <div class="painel__cabecalho">
+                        <h2 id="quadra-title">Quadra cadastrada</h2>
+                        <span class="badge badge--aprovada" th:if="${painel.quadra.ativa}">
+                            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg><span>Em operação</span>
+                        </span>
+                        <span class="badge badge--cancelada" th:unless="${painel.quadra.ativa}">
+                            <svg th:replace="~{fragments/icones :: icone('proibido')}"></svg><span>Inativa</span>
+                        </span>
+                    </div>
+                    <div class="painel__corpo">
+                        <h3 class="cartao-titulo" th:text="${painel.quadra.nome}">Quadra Poliesportiva</h3>
+                        <p class="texto-suave" th:text="${painel.quadra.descricao}">Quadra esportiva da ETEC.</p>
+                    </div>
+                </section>
 
-        <section class="admin-section" aria-labelledby="requests-title">
-            <h2 id="requests-title">Solicitações registradas</h2>
-            <div class="metric-grid metric-grid--requests">
-                <article class="metric-card"><strong th:text="${painel.totalSolicitacoes}">0</strong><span>Total</span></article>
-                <article class="metric-card"><strong th:text="${painel.pendentesDocumentacao}">0</strong><span>Aguardando documentação</span></article>
-                <article class="metric-card"><strong th:text="${painel.pendentesAnalise}">0</strong><span>Aguardando análise</span></article>
-                <article class="metric-card"><strong th:text="${painel.aprovadas}">0</strong><span>Aprovadas</span></article>
-                <article class="metric-card"><strong th:text="${painel.rejeitadas}">0</strong><span>Rejeitadas</span></article>
+                <section class="painel" aria-labelledby="configuration-title">
+                    <div class="painel__cabecalho"><h2 id="configuration-title">Configuração atual</h2></div>
+                    <div class="painel__corpo">
+                        <div class="indicadores">
+                            <div class="indicador">
+                                <strong class="indicador__valor" th:text="${#lists.size(painel.horarios)}">0</strong>
+                                <span class="indicador__rotulo">Horários semanais</span>
+                            </div>
+                            <div class="indicador">
+                                <strong class="indicador__valor" th:text="${#lists.size(painel.bloqueiosFuturos)}">0</strong>
+                                <span class="indicador__rotulo">Bloqueios futuros</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="painel__rodape grupo-botoes">
+                        <a class="botao botao--secundario botao--sm" th:href="@{/admin/horarios}">Horários semanais</a>
+                        <a class="botao botao--secundario botao--sm" th:href="@{/admin/bloqueios}">Bloqueios</a>
+                        <a class="botao botao--secundario botao--sm" th:href="@{/admin/usuarios}">Gerenciar usuários</a>
+                    </div>
+                </section>
             </div>
-            <p class="availability__note">A fila de análise apresenta somente solicitações que concluíram as etapas anteriores.</p>
-        </section>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>
