@@ -7,7 +7,7 @@ usado para executar a jornada destrutiva de Playwright contra
 ## Primeira configuração
 
 - [ ] `java -version` informa Java 17.
-- [ ] PostgreSQL 16 está instalado e o serviço está em execução.
+- [ ] PostgreSQL 18 (ou 16) está instalado e o serviço está em execução.
 - [ ] O banco local de demonstração existe e não contém dados pessoais reais.
 - [ ] `application-local.properties` foi criado a partir de
   `application-local.properties.example` e permanece ignorado pelo Git.
