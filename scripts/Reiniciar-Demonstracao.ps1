@@ -109,4 +109,5 @@ if ($existe -ne '1') {
 & psql @conexao -d postgres -c "CREATE DATABASE `"$Banco`";" | Out-Null
 Parar-SeFalhou "o banco '$Banco' nao foi criado"
 Write-Host "Banco '$Banco' criado e vazio." -ForegroundColor Green
+Write-Host 'Os PDFs ja enviados NAO foram apagados; ficam em COURTTIME_DOCUMENT_STORAGE_PATH.' -ForegroundColor DarkGray
 Write-Host 'Proximo passo: suba a aplicacao com o bootstrap do administrador.' -ForegroundColor Cyan
