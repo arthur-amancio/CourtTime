@@ -138,26 +138,36 @@ async function auditarSequenciaDeFoco(page, tela) {
 }
 
 async function auditarCalendario(page) {
-  const calendario = page.locator('[role="grid"], [aria-label*="calend" i], [data-calendar]').first();
+  const calendario = page.locator('[data-calendario-grade], [role="grid"], [aria-label*="calend" i], [data-calendar]').first();
   if (await calendario.count() === 0) {
     relatorio.pendente('Calendario V2 navegavel por teclado', 'Componente da Fase D ainda nao detectado.');
     return;
   }
   const texto = await calendario.innerText();
-  relatorio.conferir(!/\d+\s+hor.rios?\s+dispon.ve/i.test(texto), 'Calendario opcao A sem contadores por dia');
-  const focoAntes = await page.evaluate(() => document.activeElement?.outerHTML);
-  await calendario.focus();
+  relatorio.conferir(!/\d+\s+hor.rios?\s+(dispon.ve(?:is|l)|livres?)/i.test(texto), 'Calendario opcao A sem contadores por dia');
+  const diaFocavel = calendario.locator(
+    '[data-data]:not(:disabled):not([aria-disabled="true"]), '
+      + '[data-date]:not(:disabled):not([aria-disabled="true"])'
+  ).filter({ visible: true })
+    .first();
+  relatorio.conferir(await diaFocavel.count() === 1, 'Calendario possui dia habilitado e focavel');
+  await diaFocavel.focus();
+  const focoAntes = await page.evaluate(() => document.activeElement?.getAttribute('data-data')
+    || document.activeElement?.getAttribute('data-date'));
   await page.keyboard.press('ArrowRight');
-  const focoDepois = await page.evaluate(() => document.activeElement?.outerHTML);
-  relatorio.conferir(focoAntes !== focoDepois, 'Calendario responde a navegacao por teclado');
-  const passadasHabilitadas = await calendario.locator('[data-date]').evaluateAll(elementos => {
+  const focoDepois = await page.evaluate(() => document.activeElement?.getAttribute('data-data')
+    || document.activeElement?.getAttribute('data-date'));
+  relatorio.conferir(Boolean(focoAntes) && Boolean(focoDepois) && focoAntes !== focoDepois,
+    'Calendario responde a navegacao por teclado', `${focoAntes} -> ${focoDepois}`);
+  const passadasHabilitadas = await calendario.locator('[data-data], [data-date]').evaluateAll(elementos => {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
     return elementos.filter(elemento => {
-      const data = new Date(`${elemento.getAttribute('data-date')}T12:00:00`);
+      const valor = elemento.getAttribute('data-data') || elemento.getAttribute('data-date');
+      const data = new Date(`${valor}T12:00:00`);
       const desabilitado = elemento.matches(':disabled,[aria-disabled="true"]');
       return data < hoje && !desabilitado;
-    }).map(elemento => elemento.getAttribute('data-date'));
+    }).map(elemento => elemento.getAttribute('data-data') || elemento.getAttribute('data-date'));
   });
   relatorio.conferir(passadasHabilitadas.length === 0, 'Calendario nao habilita datas passadas', JSON.stringify(passadasHabilitadas));
 }
