@@ -34,4 +34,3 @@ Variações legítimas de texto, quebra de linha e quantidade de registros vindo
 do servidor não são regressões. São regressões: ação inacessível, contrato de
 formulário alterado, dado fictício, overflow que impede uso, estado incorreto,
 perda de teclado, CSRF ou autorização.
-
