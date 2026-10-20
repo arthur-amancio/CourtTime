@@ -185,5 +185,5 @@ Para exercitar o fluxo completo é preciso respeitar as regras reais:
 ```
 
 Os testes de integração exigem PostgreSQL. O GitHub Actions executa o
-`clean verify` completo com um PostgreSQL 16 temporário a cada push e Pull
+`clean verify` completo com PostgreSQL 16 e 18 temporários a cada push e Pull
 Request.

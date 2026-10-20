@@ -11,7 +11,7 @@ Se a conta da escola não tiver permissão de instalação, **não tente contorn
 as políticas de TI**: peça um equipamento de desenvolvimento autorizado ou
 prepare o ambiente no computador pessoal e faça a apresentação por ele.
 
-Requisitos: Windows 10/11, **JDK 17**, Git, **PostgreSQL 16** com acesso a um
+Requisitos: Windows 10/11, **JDK 17**, Git, **PostgreSQL 18** (ou 16) com acesso a um
 banco local (pgAdmin facilita a configuração), PowerShell e acesso à Internet
 na **primeira** compilação para baixar dependências do Maven Wrapper.
 VS Code é opcional. O Maven global e o Node.js não são necessários para o

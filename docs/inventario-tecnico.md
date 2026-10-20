@@ -321,7 +321,7 @@ Versões efetivamente usadas, conferidas em `pom.xml` e no workflow do CI.
 | JavaScript | **nenhum** | não há arquivo `.js` no projeto |
 | JUnit 5, Mockito, Spring Test | do `spring-boot-starter-test` | testes |
 | Spring Security Test | do Spring Boot 3.5.16 | testes de autorização e CSRF |
-| GitHub Actions | — | CI com PostgreSQL 16 temporário |
+| GitHub Actions | — | CI com PostgreSQL 16 e 18 temporários |
 
 Duas observações que valem no texto acadêmico:
 
