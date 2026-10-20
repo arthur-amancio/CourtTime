@@ -106,7 +106,7 @@ async function verificarMenuMovel(page, perfil, viewport) {
   if (!(await dentro())) escapou++;
   for (let i = 0; i < 12; i++) { await page.keyboard.press('Tab'); if (!(await dentro())) escapou++; }
   for (let i = 0; i < 12; i++) { await page.keyboard.press('Shift+Tab'); if (!(await dentro())) escapou++; }
-  await page.screenshot({ path: path.join(PASTA, `${perfil}-menu-aberto-${viewport.width}.png`) });
+  await page.screenshot({ path: path.join(PASTA, `${perfil}-menu-aberto-${viewport.width}.jpg`), type: 'jpeg', quality: 72 });
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
   const fechado = await botao.first().getAttribute('aria-expanded');
@@ -135,7 +135,7 @@ async function verificarMenuMovel(page, perfil, viewport) {
           registrar(a.overflow ? 'FAIL' : 'PASS', `sem rolagem horizontal — ${rotulo}`);
           registrar(a.h1 === 1 ? 'PASS' : 'FAIL', `um h1 — ${rotulo}`, `h1=${a.h1}`);
           if (perfil !== 'publico') registrar(a.logoutPost ? 'PASS' : 'FAIL', `logout POST com CSRF — ${rotulo}`);
-          await page.screenshot({ path: path.join(PASTA, `${perfil}-${nome}-${viewport.width}.png`), fullPage: true });
+          await page.screenshot({ path: path.join(PASTA, `${perfil}-${nome}-${viewport.width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
         }
         if (perfil !== 'publico' && viewport.width < 1025) {
           await page.goto(`${BASE}/inicio`);
@@ -153,7 +153,7 @@ async function verificarMenuMovel(page, perfil, viewport) {
       const links = await page.evaluate(() => [...document.querySelectorAll('nav a[href]')]
         .filter(a => a.offsetParent !== null).map(a => a.getAttribute('href')));
       registrar(links.length ? 'PASS' : 'FAIL', `navegação sem JavaScript — ${perfil} 390px`, links.join(' '));
-      await page.screenshot({ path: path.join(PASTA, `${perfil}-inicio-sem-js-390.png`), fullPage: true });
+      await page.screenshot({ path: path.join(PASTA, `${perfil}-inicio-sem-js-390.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
       await context.close();
     }
 
@@ -166,7 +166,7 @@ async function verificarMenuMovel(page, perfil, viewport) {
         await page.goto(`${BASE}${url}`);
         const a = await auditarPagina(page);
         registrar(a.overflow ? 'FAIL' : 'PASS', `${rotulo} sem rolagem horizontal — aluno ${url}`);
-        await page.screenshot({ path: path.join(PASTA, `aluno-${rotulo}${url.replace(/\//g, '-')}.png`) });
+        await page.screenshot({ path: path.join(PASTA, `aluno-${rotulo}${url.replace(/\//g, '-')}.jpg`), type: 'jpeg', quality: 72 });
       }
       await context.close();
     }
