@@ -19,6 +19,7 @@ import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.AfterEach;
+import br.com.courttime.support.BancoDeTeste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.AccessDeniedException;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -42,6 +44,9 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
 
     @Autowired
     private ParticipanteReservaService participanteService;
+
+    @Autowired
+    private DataSource dataSource;
     @Autowired
     private ParticipanteReservaRepository participanteRepository;
     @Autowired
@@ -74,6 +79,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoIsolado() {
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         limparBanco();
         quadra = novaQuadra();
         aluno = novoUsuario("aluno.participante@teste.local");

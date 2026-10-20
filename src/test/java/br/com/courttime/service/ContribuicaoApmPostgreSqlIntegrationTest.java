@@ -24,6 +24,7 @@ import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import br.com.courttime.support.BancoDeTeste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -33,6 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -69,6 +71,9 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
 
     @Autowired
     private ContribuicaoApmService contribuicaoService;
+
+    @Autowired
+    private DataSource dataSource;
     @Autowired
     private ConferenciaDocumentoService conferenciaService;
     @Autowired
@@ -106,6 +111,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoEStorage() throws IOException {
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         limparBanco();
         limparArquivos();
         quadra = novaQuadra();

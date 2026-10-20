@@ -18,6 +18,7 @@ import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.support.BancoDeTeste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -30,6 +31,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -46,6 +48,9 @@ class AdministracaoUsuarioPostgreSqlIntegrationTest {
 
     @Autowired
     private AdministracaoUsuarioService administracaoUsuarioService;
+
+    @Autowired
+    private DataSource dataSource;
     @Autowired
     private UsuarioDetailsService usuarioDetailsService;
     @Autowired
@@ -80,6 +85,7 @@ class AdministracaoUsuarioPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoIsolado() {
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         ajusteContribuicaoRepository.deleteAllInBatch();
         contribuicaoRepository.deleteAllInBatch();
         conferenciaDocumentoRepository.deleteAllInBatch();
