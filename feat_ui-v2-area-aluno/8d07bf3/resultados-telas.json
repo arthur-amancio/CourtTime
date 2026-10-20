@@ -1,0 +1,1475 @@
+{
+  "sha": "8d07bf37e65bb51088700178796da3bf06cab017",
+  "resultados": [
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico pagina-inicial 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico pagina-inicial 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-erro 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-erro 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-saida 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-saida 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico pagina-inicial 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico pagina-inicial 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-erro 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-erro 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-saida 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-saida 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico pagina-inicial 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico pagina-inicial 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-erro 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-erro 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-saida 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-saida 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico pagina-inicial 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico pagina-inicial 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-erro 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-erro 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — publico login-saida 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — publico login-saida 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno inicio 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno quadra 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno quadra 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno quadra 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno nova-solicitacao 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno nova-solicitacao 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno nova-solicitacao 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno solicitacoes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno solicitacoes 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno solicitacoes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno detalhe 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno detalhe 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno detalhe 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno participantes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno participantes 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno participantes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno documentos 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno documentos 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno documentos 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel aluno 390px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno inicio 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno quadra 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno quadra 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno quadra 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno nova-solicitacao 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno nova-solicitacao 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno nova-solicitacao 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno solicitacoes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno solicitacoes 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno solicitacoes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno detalhe 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno detalhe 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno detalhe 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno participantes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno participantes 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno participantes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno documentos 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno documentos 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno documentos 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel aluno 430px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno inicio 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno quadra 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno quadra 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno quadra 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno nova-solicitacao 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno nova-solicitacao 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno nova-solicitacao 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno solicitacoes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno solicitacoes 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno solicitacoes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno detalhe 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno detalhe 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno detalhe 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno participantes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno participantes 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno participantes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno documentos 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno documentos 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno documentos 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel aluno 768px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno inicio 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno quadra 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno quadra 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno quadra 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno nova-solicitacao 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno nova-solicitacao 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno nova-solicitacao 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno solicitacoes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno solicitacoes 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno solicitacoes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno detalhe 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno detalhe 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno detalhe 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno participantes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno participantes 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno participantes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — aluno documentos 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — aluno documentos 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — aluno documentos 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador inicio 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador painel 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador painel 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador painel 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador solicitacoes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador solicitacoes 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador solicitacoes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador analise 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador analise 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador analise 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador usuarios 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador usuarios 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador usuarios 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador horarios 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador horarios 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador horarios 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador bloqueios 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador bloqueios 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador bloqueios 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel administrador 390px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador inicio 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador painel 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador painel 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador painel 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador solicitacoes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador solicitacoes 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador solicitacoes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador analise 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador analise 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador analise 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador usuarios 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador usuarios 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador usuarios 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador horarios 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador horarios 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador horarios 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador bloqueios 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador bloqueios 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador bloqueios 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel administrador 430px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador inicio 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador painel 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador painel 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador painel 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador solicitacoes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador solicitacoes 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador solicitacoes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador analise 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador analise 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador analise 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador usuarios 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador usuarios 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador usuarios 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador horarios 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador horarios 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador horarios 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador bloqueios 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador bloqueios 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador bloqueios 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel administrador 768px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador inicio 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador painel 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador painel 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador painel 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador solicitacoes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador solicitacoes 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador solicitacoes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador analise 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador analise 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador analise 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador usuarios 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador usuarios 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador usuarios 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador horarios 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador horarios 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador horarios 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — administrador bloqueios 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — administrador bloqueios 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — administrador bloqueios 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria inicio 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria documentos 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria documentos 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria documentos 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria contribuicoes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria contribuicoes 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria contribuicoes 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel secretaria 390px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria inicio 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria documentos 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria documentos 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria documentos 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria contribuicoes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria contribuicoes 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria contribuicoes 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel secretaria 430px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria inicio 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria documentos 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria documentos 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria documentos 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria contribuicoes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria contribuicoes 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria contribuicoes 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel secretaria 768px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria inicio 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria documentos 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria documentos 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria documentos 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — secretaria contribuicoes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — secretaria contribuicoes 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — secretaria contribuicoes 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca inicio 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca inicio 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca reservas 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca reservas 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca reservas 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca quadra 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca quadra 390px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca quadra 390px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel seguranca 390px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca inicio 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca inicio 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca reservas 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca reservas 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca reservas 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca quadra 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca quadra 430px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca quadra 430px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel seguranca 430px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca inicio 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca inicio 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca reservas 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca reservas 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca reservas 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca quadra 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca quadra 768px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca quadra 768px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "menu móvel seguranca 768px",
+      "detalhe": "aberto=true foraDoMenu=0 fechadoComEsc=true focoRestaurado=true"
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca inicio 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca inicio 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca reservas 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca reservas 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca reservas 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "sem rolagem horizontal — seguranca quadra 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "um h1 — seguranca quadra 1440px",
+      "detalhe": "h1=1"
+    },
+    {
+      "status": "PASS",
+      "nome": "logout POST com CSRF — seguranca quadra 1440px",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "navegação sem JavaScript — aluno 390px",
+      "detalhe": "/inicio /quadra /solicitacoes/nova /solicitacoes"
+    },
+    {
+      "status": "PASS",
+      "nome": "navegação sem JavaScript — administrador 390px",
+      "detalhe": "/inicio /admin /admin/solicitacoes /quadra /admin/horarios /admin/bloqueios /admin/usuarios"
+    },
+    {
+      "status": "PASS",
+      "nome": "navegação sem JavaScript — secretaria 390px",
+      "detalhe": "/inicio /quadra /secretaria/documentos /secretaria/contribuicoes"
+    },
+    {
+      "status": "PASS",
+      "nome": "navegação sem JavaScript — seguranca 390px",
+      "detalhe": "/inicio /quadra /seguranca/reservas"
+    },
+    {
+      "status": "PASS",
+      "nome": "zoom200 sem rolagem horizontal — aluno /inicio",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "zoom200 sem rolagem horizontal — aluno /quadra",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "zoom200 sem rolagem horizontal — aluno /solicitacoes/nova",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "zoom400 sem rolagem horizontal — aluno /inicio",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "zoom400 sem rolagem horizontal — aluno /quadra",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "zoom400 sem rolagem horizontal — aluno /solicitacoes/nova",
+      "detalhe": ""
+    }
+  ]
+}
