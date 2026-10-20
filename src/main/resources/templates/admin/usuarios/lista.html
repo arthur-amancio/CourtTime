@@ -98,6 +98,7 @@
                                           onsubmit="return confirm(this.dataset.confirmacao)">
                                         <button class="botao botao--sm" type="submit"
                                                 th:classappend="${usuario.ativo} ? ' botao--perigo-contorno' : ' botao--secundario'"
+                                                th:aria-label="${usuario.ativo} ? |Desativar a conta de ${usuario.nome}| : |Ativar a conta de ${usuario.nome}|"
                                                 th:text="${usuario.ativo} ? 'Desativar' : 'Ativar'">Desativar</button>
                                     </form>
                                     <span class="badge badge--neutro" th:if="${usuario.id == operadorId}">Conta em uso</span>

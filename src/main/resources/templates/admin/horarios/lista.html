@@ -64,13 +64,13 @@
                             </td>
                             <td class="acoes-celula">
                                 <div class="acoes-tabela">
-                                    <a class="botao botao--secundario botao--sm" th:href="@{/admin/horarios/{id}/editar(id=${horario.id})}">Editar</a>
+                                    <a class="botao botao--secundario botao--sm" th:href="@{/admin/horarios/{id}/editar(id=${horario.id})}">Editar<span class="visually-hidden" th:text="| o horário de ${horario.diaSemana.descricao}, ${#temporals.format(horario.horarioInicio, 'HH:mm')} às ${#temporals.format(horario.horarioFim, 'HH:mm')}|"></span></a>
                                     <form th:action="@{/admin/horarios/{id}/alternar(id=${horario.id})}" method="post"
                                           th:attr="data-confirmacao=${horario.ativa ? 'Desativar este horário?' : 'Ativar este horário?'}"
                                           onsubmit="return confirm(this.dataset.confirmacao)">
                                         <button class="botao botao--sm" type="submit"
-                                                th:classappend="${horario.ativa} ? ' botao--perigo-contorno' : ' botao--secundario'"
-                                                th:text="${horario.ativa} ? 'Desativar' : 'Ativar'">Desativar</button>
+                                                th:classappend="${horario.ativa} ? ' botao--perigo-contorno' : ' botao--secundario'">
+                                            <span th:text="${horario.ativa} ? 'Desativar' : 'Ativar'">Desativar</span><span class="visually-hidden" th:text="| o horário de ${horario.diaSemana.descricao}, ${#temporals.format(horario.horarioInicio, 'HH:mm')} às ${#temporals.format(horario.horarioFim, 'HH:mm')}|"></span></button>
                                     </form>
                                 </div>
                             </td>
