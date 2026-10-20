@@ -128,7 +128,10 @@ async function noCsrfFetch(page, url, fields = {}) {
 
 async function createRequest(page, date, time, purpose) {
   await page.goto(`${BASE}/solicitacoes/nova?data=${date}`);
-  await page.locator('#horarioInicio').selectOption(time);
+  // Fase D: os periodos sao radios nativos name="horarioInicio" (valor HH:mm);
+  // o usuario clica no cartao (label) do periodo.
+  await page.locator(`label[for="horarioInicio-${time.replace(':', '')}"]`).click();
+  assert(await page.locator(`input[type="radio"][name="horarioInicio"][value="${time}"]`).isChecked(), 'cartão do período marca o radio', time);
   await page.locator('#finalidade').fill(purpose);
   await Promise.all([
     page.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
@@ -399,7 +402,7 @@ async function responsiveAudit(page, label, url) {
     assert(blankRejection.text.includes('motivo') && blankRejection.text.includes('obrigatório'), 'rejeição exige motivo');
 
     await alunoA.goto(`${BASE}/solicitacoes/nova?data=${requestDate}`);
-    const availableOptions = await alunoA.locator('#horarioInicio option').evaluateAll(options => options.map(option => option.value));
+    const availableOptions = await alunoA.locator('input[type="radio"][name="horarioInicio"]').evaluateAll(options => options.map(option => option.value));
     assert(!availableOptions.includes('09:00'), 'horário aprovado deixa de aparecer disponível');
 
     await admin.goto(`${BASE}/admin/horarios`);

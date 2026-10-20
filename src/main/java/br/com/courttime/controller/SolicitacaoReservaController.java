@@ -141,8 +141,13 @@ public class SolicitacaoReservaController {
         model.addAttribute("quadra", quadra);
         model.addAttribute("consulta", consulta);
         model.addAttribute("horariosDisponiveis", horariosDisponiveis);
-        model.addAttribute(
-                "dataMinima", calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao());
+        LocalDate dataMinima = calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao();
+        model.addAttribute("dataMinima", dataMinima);
+        model.addAttribute("calendario", CalendarioVisual.montar(
+                data,
+                calendarioDisponibilidadeService.obterDataAtual(),
+                dataMinima,
+                calendarioDisponibilidadeService.obterDiasComFuncionamento(quadra)));
     }
 
     /**
