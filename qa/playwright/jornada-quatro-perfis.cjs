@@ -270,7 +270,7 @@ async function responsiveAudit(page, label, url) {
     await login(paginaSemJavascript, 'alunoA');
     await paginaSemJavascript.goto(`${BASE}/solicitacoes/nova?data=${blockedDate}`);
     await selecionarHorario(paginaSemJavascript, '10:00');
-    await paginaSemJavascript.getByLabel(/finalidade/i).fill('Solicitação sintética sem JavaScript');
+    await paginaSemJavascript.locator('#finalidade').fill('Solicitação sintética sem JavaScript');
     await Promise.all([
       paginaSemJavascript.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
       paginaSemJavascript.getByRole('button', { name: 'Registrar solicitação' }).click(),
