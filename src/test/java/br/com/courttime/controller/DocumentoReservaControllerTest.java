@@ -125,7 +125,7 @@ class DocumentoReservaControllerTest {
                 .andExpect(content().string(containsString(
                         "não comprova nem valida a assinatura")))
                 .andExpect(content().string(containsString(
-                        "modelo oficial do termo ainda deve ser fornecido")))
+                        "Use o formulário oficial da ETEC")))
                 .andExpect(content().string(not(containsString("Assinatura validada"))));
     }
 

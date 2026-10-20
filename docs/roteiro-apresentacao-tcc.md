@@ -115,9 +115,13 @@ sair e entrar o tempo todo.
 4. Preencha e envie. Mostre que a situação nasce **Pendente de documentação** e
    que **nada foi autorizado ainda**.
 5. **Participantes** → cadastre os dez. Mostre o contador de alunos.
-6. **Documentos** → envie o PDF sintético. Diga, com estas palavras: *"o termo é
-   preparado e assinado fora do sistema; o CourtTime guarda a versão enviada"*.
-7. Volte ao **Início**: agora o cartão mostra **Documento aguardando
+6. **Documentos** → **Gerar formulário preenchido** com um CPF fictício válido
+   (ex.: `123.456.789-09`) e o curso. Abra o PDF: é o formulário original da ETEC
+   com data, horário e participantes; assinaturas e campos da direção em branco.
+   Diga que CPF e curso **não ficam gravados**.
+7. Ainda em **Documentos**, envie um PDF sintético. Diga, com estas palavras:
+   *"o termo é assinado fora do sistema; o CourtTime guarda a versão enviada"*.
+8. Volte ao **Início**: agora o cartão mostra **Documento aguardando
    conferência** e o próximo passo.
 
 ### Ato 2 — Secretaria (2 a 3 minutos)
@@ -195,8 +199,8 @@ real, token CSRF real e upload real:
 
 ## Limitações reais — diga à banca antes que perguntem
 
-- O sistema **não gera** o formulário oficial da ETEC preenchido. O termo é
-  preparado fora do sistema.
+- O sistema **gera o formulário oficial preenchido**, mas **não assina**: as
+  assinaturas e os campos da direção e do vigilante são preenchidos à mão.
 - O sistema **não verifica criptograficamente** a assinatura do PDF. A
   conferência da secretaria é **manual e humana**.
 - A remarcação após cancelamento recomeça do zero: **não reaproveita** aprovação, PDF nem contribuição.

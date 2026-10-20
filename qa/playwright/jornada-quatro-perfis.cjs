@@ -290,6 +290,26 @@ async function responsiveAudit(page, label, url) {
     await addTenStudents(alunoB, requestB, 'Participante Sintético B');
     await responsiveAudit(alunoA, 'aluno-participantes', `${BASE}/solicitacoes/${requestA}/participantes`);
 
+    // Formulário oficial preenchido: CPF e curso só no momento da geração.
+    await alunoA.goto(`${BASE}/solicitacoes/${requestA}/documentos`);
+    await alunoA.locator('#cpf').fill('123.456.789-09');
+    await alunoA.locator('#curso').fill('Técnico em Informática para Internet');
+    const [formularioOficial] = await Promise.all([
+      alunoA.waitForEvent('download'),
+      alunoA.getByRole('button', { name: 'Gerar formulário preenchido' }).click(),
+    ]);
+    const formularioBytes = fs.readFileSync(await formularioOficial.path());
+    assert(formularioBytes.subarray(0, 5).toString() === '%PDF-' && formularioOficial.suggestedFilename().endsWith('.pdf'),
+      'formulário oficial preenchido é baixado como PDF', formularioOficial.suggestedFilename());
+    assert(!alunoA.url().includes('123.456.789-09') && !alunoA.url().includes('12345678909'), 'CPF não aparece na URL');
+    await alunoA.locator('#cpf').fill('111.111.111-11');
+    await alunoA.locator('#curso').fill('Informática');
+    await Promise.all([
+      alunoA.waitForURL(url => url.pathname === `/solicitacoes/${requestA}/documentos`),
+      alunoA.getByRole('button', { name: 'Gerar formulário preenchido' }).click(),
+    ]);
+    assert((await alunoA.locator('body').innerText()).includes('Informe um CPF válido'), 'CPF inválido é recusado com mensagem');
+
     let body = await upload(alunoA, requestA, 'nao-e-pdf.pdf', Buffer.from('conteudo inválido'), 'application/pdf');
     assert(body.includes('conteúdo enviado não corresponde') || body.includes('arquivo PDF válido'), 'upload rejeita conteúdo malformado');
 

@@ -62,8 +62,9 @@ autoriza o uso. Só a aprovação da administração autoriza.
 
 Para não prometer na banca o que o código não faz:
 
-- O sistema **não gera** o PDF oficial preenchido. O aluno prepara o documento
-  fora do sistema.
+- O sistema **gera o formulário oficial preenchido** (data, horário,
+  participantes, CPF e curso digitados na hora), mas **não assina** nada: as
+  assinaturas e os campos da direção e do vigilante continuam à mão.
 - O sistema **não verifica** se o PDF enviado está realmente assinado. A
   conferência da secretaria é manual.
 - A **remarcação** após cancelamento cria uma solicitação nova, do início: não
