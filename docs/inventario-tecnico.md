@@ -337,7 +337,7 @@ Duas observações que valem no texto acadêmico:
 
 Para a documentação acadêmica não prometer o que o código não entrega:
 
-- não gera o formulário oficial da ETEC preenchido;
+- gera o formulário oficial preenchido, mas não o assina nem registra aprovação;
 - não verifica criptograficamente assinatura de PDF — a conferência é humana;
 - não calcula o valor da contribuição à APM;
 - remarca após cancelamento só como nova solicitação, sem reaproveitar aprovação, PDF ou contribuição;

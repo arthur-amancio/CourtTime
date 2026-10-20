@@ -189,6 +189,19 @@ class JornadaCompletaE2ETest {
         }
         assertEquals(10, participanteReservaRepository.count());
 
+        // ---------- FORMULÁRIO OFICIAL PREENCHIDO ----------
+        assertTrue(aluno.get("/solicitacoes/" + reservaId + "/documentos").getBody()
+                .contains("Gerar formulário preenchido"));
+        MultiValueMap<String, String> dadosDoTermo = new LinkedMultiValueMap<>();
+        dadosDoTermo.add("cpf", "123.456.789-09");
+        dadosDoTermo.add("curso", "Técnico em Informática para Internet");
+        ResponseEntity<String> formulario = aluno.postComTokenDe(
+                "/solicitacoes/" + reservaId + "/documentos",
+                "/solicitacoes/" + reservaId + "/formulario-oficial", dadosDoTermo);
+        assertEquals(HttpStatus.OK, formulario.getStatusCode());
+        assertEquals(MediaType.APPLICATION_PDF, formulario.getHeaders().getContentType());
+        assertTrue(formulario.getBody().startsWith("%PDF"), "o servidor devolve um PDF");
+
         enviarPdf(aluno, reservaId);
         assertEquals(1, documentoReservaRepository.count(), "o PDF deve ter sido registrado");
 
