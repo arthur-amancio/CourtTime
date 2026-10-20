@@ -158,6 +158,10 @@ sair e entrar o tempo todo.
 3. No **Aluno**: aparece o motivo do cancelamento.
 4. Diga que documento, contribuição, participantes e o registro de quem aprovou
    **continuam preservados** — cancelar não apaga histórico.
+5. Ainda no **Aluno**: **Solicitar outro horário**. Mostre o aviso da reserva de
+   origem, escolha o período liberado e envie. Diga que a nova solicitação
+   recomeça do zero (novo PDF, conferência, contribuição e aprovação) e que só os
+   participantes podem ser copiados.
 
 ## Se algo der errado — plano de contingência
 
@@ -195,7 +199,7 @@ real, token CSRF real e upload real:
   preparado fora do sistema.
 - O sistema **não verifica criptograficamente** a assinatura do PDF. A
   conferência da secretaria é **manual e humana**.
-- **Não há reagendamento** após cancelamento, nem reaproveitamento da contribuição.
+- A remarcação após cancelamento recomeça do zero: **não reaproveita** aprovação, PDF nem contribuição.
 - **Não há registro** de contato com o aluno.
 - **Não há registro de ocorrências** pela segurança.
 - **Não há** regra de retenção dos documentos enviados.

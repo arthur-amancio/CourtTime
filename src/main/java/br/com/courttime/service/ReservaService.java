@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ReservaService {
@@ -106,6 +107,67 @@ public class ReservaService {
         return reservaRepository.findByIdAndSolicitante(reservaId, solicitante)
                 .orElseThrow(() -> new AccessDeniedException(
                         "A solicitação não existe ou não pertence ao usuário autenticado"));
+    }
+
+    /**
+     * Remarcação depois de um cancelamento institucional.
+     *
+     * Cria uma solicitação comum, passando por todas as regras de
+     * criarSolicitacao (antecedência, grade, bloqueios e disponibilidade), e
+     * registra de qual reserva cancelada ela veio. A cancelada não é alterada.
+     * Aprovação, PDF e contribuição nunca são reaproveitados: a nova começa em
+     * PENDENTE_DOCUMENTACAO. Os participantes só são copiados se o aluno pedir,
+     * e continuam editáveis antes do envio do documento.
+     */
+    @Transactional
+    public Reserva criarRemarcacao(
+            Usuario solicitante,
+            Quadra quadra,
+            Long reservaCanceladaId,
+            LocalDate data,
+            LocalTime horarioInicio,
+            LocalTime horarioFim,
+            String finalidade,
+            boolean copiarParticipantes) {
+        validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
+        if (reservaCanceladaId == null) {
+            throw new IllegalArgumentException("A solicitação cancelada é obrigatória");
+        }
+        // Trava a cancelada: dois envios ao mesmo tempo não criam duas remarcações.
+        Reserva cancelada = reservaRepository.findByIdAndSolicitanteIdForUpdate(
+                        reservaCanceladaId, solicitante.getId())
+                .orElseThrow(() -> new AccessDeniedException(
+                        "A solicitação não existe ou não pertence ao usuário autenticado"));
+        validarPodeSerRemarcada(cancelada);
+
+        Reserva nova = criarSolicitacao(
+                solicitante, quadra, data, horarioInicio, horarioFim, finalidade);
+        nova.setRemarcacaoDe(cancelada);
+        nova = reservaRepository.save(nova);
+        if (copiarParticipantes) {
+            participanteService.copiarParticipantes(cancelada, nova);
+        }
+        return nova;
+    }
+
+    /** Reserva cancelada do aluno, conferida antes de abrir a tela de remarcação. */
+    @Transactional(readOnly = true)
+    public Reserva obterParaRemarcacao(Long reservaCanceladaId, Usuario solicitante) {
+        Reserva cancelada = obterSolicitacaoDoUsuario(reservaCanceladaId, solicitante);
+        validarPodeSerRemarcada(cancelada);
+        return cancelada;
+    }
+
+    /** Nova solicitação criada a partir desta reserva cancelada, se houver. */
+    @Transactional(readOnly = true)
+    public Optional<Reserva> obterRemarcacao(Reserva reservaCancelada) {
+        return reservaRepository.findByRemarcacaoDe(reservaCancelada);
+    }
+
+    /** Reserva cancelada que esta solicitação remarca, se for uma remarcação. */
+    @Transactional(readOnly = true)
+    public Optional<Reserva> obterReservaRemarcada(Reserva solicitacao, Usuario solicitante) {
+        return reservaRepository.obterReservaRemarcada(solicitacao.getId(), solicitante);
     }
 
     @Transactional
@@ -263,6 +325,17 @@ public class ReservaService {
             throw new IllegalStateException(
                     "A reserva não pode ser aprovada porque o horário de utilização "
                             + "já começou ou já passou");
+        }
+    }
+
+    private void validarPodeSerRemarcada(Reserva reserva) {
+        if (reserva.getStatus() != StatusReserva.CANCELADA) {
+            throw new IllegalStateException(
+                    "Somente reservas canceladas pela instituição podem ser remarcadas");
+        }
+        if (reservaRepository.existsByRemarcacaoDe(reserva)) {
+            throw new IllegalStateException(
+                    "Esta reserva cancelada já possui uma nova solicitação");
         }
     }
 

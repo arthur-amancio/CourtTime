@@ -311,6 +311,49 @@ class JornadaCompletaE2ETest {
         assertTrue(aluno.get("/solicitacoes/" + reservaId).getBody()
                         .contains("Interdição da quadra para manutenção"),
                 "o aluno deve ver o motivo do cancelamento");
+
+        // ---------- REMARCAÇÃO PELO ALUNO ----------
+        assertTrue(aluno.get("/solicitacoes/" + reservaId).getBody()
+                .contains("Solicitar outro horário"));
+        String telaRemarcacao = aluno.get(
+                "/solicitacoes/nova?origem=" + reservaId + "&data=" + DATA).getBody();
+        assertTrue(telaRemarcacao.contains("Remarcação de reserva cancelada"));
+        assertTrue(telaRemarcacao.contains("value=\"" + INICIO + "\""),
+                "o período liberado pelo cancelamento volta a ser oferecido");
+
+        MultiValueMap<String, String> remarcacao = new LinkedMultiValueMap<>();
+        remarcacao.add("data", DATA.toString());
+        remarcacao.add("horarioInicio", INICIO.toString());
+        remarcacao.add("finalidade", "Treino remarcado após a interdição");
+        remarcacao.add("origemId", reservaId.toString());
+        remarcacao.add("copiarParticipantes", "true");
+        ResponseEntity<String> criada = aluno.post("/solicitacoes", remarcacao);
+        assertEquals(HttpStatus.FOUND, criada.getStatusCode());
+        Long novaId = Long.valueOf(criada.getHeaders().getLocation().getPath()
+                .replaceAll(".*/solicitacoes/", ""));
+
+        Reserva nova = reservaRepository.findById(novaId).orElseThrow();
+        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, nova.getStatus());
+        assertEquals(novaId, reservaRepository.findByRemarcacaoDe(cancelada).orElseThrow().getId(),
+                "a nova solicitação fica vinculada à cancelada");
+        assertEquals(20, participanteReservaRepository.count(),
+                "os dez participantes foram copiados, e os originais continuam na cancelada");
+        assertEquals(1, documentoReservaRepository.count(), "o PDF não é reaproveitado");
+        assertEquals(1, contribuicaoApmRepository.count(), "a contribuição não é reaproveitada");
+        assertEquals(StatusReserva.CANCELADA,
+                reservaRepository.findById(reservaId).orElseThrow().getStatus());
+        assertTrue(aluno.get("/solicitacoes/" + novaId).getBody()
+                .contains("Esta solicitação remarca a reserva de"));
+
+        ResponseEntity<String> repetida = aluno.post("/solicitacoes", remarcacao);
+        assertEquals(HttpStatus.OK, repetida.getStatusCode());
+        assertTrue(repetida.getBody().contains("já possui uma nova solicitação"),
+                "a mesma cancelada não é remarcada duas vezes");
+        assertEquals(20, participanteReservaRepository.count());
+
+        assertEquals(HttpStatus.NOT_FOUND,
+                seguranca.get("/seguranca/reservas/" + novaId).getStatusCode(),
+                "a remarcação ainda não autoriza nada para a segurança");
     }
 
     @Test

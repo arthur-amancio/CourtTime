@@ -411,6 +411,60 @@ class ReservaPostgreSqlIntegrationTest {
         };
     }
 
+    @Test
+    void remarcacoesSimultaneasDaMesmaCanceladaCriamUmaUnicaNovaSolicitacao() throws Exception {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        reservaService.aprovar(pendente.getId(), administrador);
+        Reserva cancelada = reservaService.cancelarInstitucionalmente(
+                pendente.getId(), administrador, "Interdição da quadra");
+
+        List<Boolean> resultados = executarConcorrentemente(
+                () -> tentarRemarcar(cancelada.getId(), INICIO),
+                () -> tentarRemarcar(cancelada.getId(), LocalTime.of(9, 0)));
+
+        assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count(),
+                "dois envios simultâneos não criam duas remarcações");
+        Reserva nova = reservaRepository.findByRemarcacaoDe(cancelada).orElseThrow();
+        assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, nova.getStatus());
+        assertEquals(10L, participanteReservaRepository.countByReserva(nova),
+                "os participantes foram copiados");
+        assertEquals(10L, participanteReservaRepository.countByReserva(cancelada),
+                "os participantes da cancelada continuam nela");
+        assertTrue(contribuicaoApmRepository.obterPorReservaId(nova.getId()).isEmpty(),
+                "a contribuição não é reaproveitada");
+        assertTrue(documentoReservaRepository.obterVersaoMaisRecenteComConferencia(nova).isEmpty(),
+                "o PDF não é reaproveitado");
+
+        Reserva canceladaDepois = reservaRepository.findById(cancelada.getId()).orElseThrow();
+        assertEquals(StatusReserva.CANCELADA, canceladaDepois.getStatus());
+        assertEquals("Interdição da quadra", canceladaDepois.getMotivoCancelamentoInstitucional());
+        assertNotNull(canceladaDepois.getAnalisadaEm(), "o histórico da aprovação é preservado");
+
+        Long restricoesUnicas = jdbcTemplate.queryForObject("""
+                select count(*)
+                from information_schema.table_constraints tc
+                join information_schema.key_column_usage k
+                  on k.constraint_name = tc.constraint_name and k.table_schema = tc.table_schema
+                where tc.table_schema = current_schema()
+                  and tc.table_name = 'reservas'
+                  and tc.constraint_type = 'UNIQUE'
+                  and k.column_name = 'remarcacao_de_id'
+                """, Long.class);
+        assertEquals(1L, restricoesUnicas, "o banco também impede duas remarcações");
+    }
+
+    private boolean tentarRemarcar(Long canceladaId, LocalTime inicio) {
+        Usuario alunoDaTransacao = usuarioRepository.findById(aluno.getId()).orElseThrow();
+        Quadra quadraDaTransacao = quadraRepository.findById(quadra.getId()).orElseThrow();
+        try {
+            reservaService.criarRemarcacao(alunoDaTransacao, quadraDaTransacao, canceladaId,
+                    DATA, inicio, inicio.plusHours(1), "Atividade remarcada", true);
+            return true;
+        } catch (IllegalStateException repeticaoEsperada) {
+            return false;
+        }
+    }
+
     private List<Boolean> executarConcorrentemente(
             Callable<Boolean> primeiraOperacao,
             Callable<Boolean> segundaOperacao) throws Exception {
