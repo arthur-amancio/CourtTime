@@ -43,7 +43,7 @@ coordenado do form Java, controller e testes — não apenas do HTML.
 
 | Fluxo | Campos preservados |
 |---|---|
-| Login | `email`, `senha` |
+| Login | `email`, `password` (o campo de senha tem `id="senha"`) |
 | Solicitação | `data`, `horarioInicio`, `finalidade` |
 | Participante | `nomeCompleto`, `rmOuRg`, `categoria` |
 | Documento | `arquivo` |
