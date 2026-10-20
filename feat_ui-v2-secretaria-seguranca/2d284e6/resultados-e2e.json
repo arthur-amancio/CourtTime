@@ -1,0 +1,1559 @@
+{
+  "sha": "2d284e6fd823c878752cc3a6fc5e9576afcaac54",
+  "dates": {
+    "today": "2026-10-20",
+    "requestDate": "2026-10-28",
+    "blockedDate": "2026-10-29",
+    "day": "QUARTA"
+  },
+  "ids": {
+    "requestA": 1,
+    "requestB": 2,
+    "documentA1": 1,
+    "documentA2": 3,
+    "documentB": 2,
+    "approvedId": 1
+  },
+  "results": [
+    {
+      "status": "PASS",
+      "name": "PDF sintético tecnicamente válido",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade login 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos login 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco login 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura login 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade login 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos login 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco login 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura login 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade login 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos login 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco login 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura login 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade login 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos login 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco login 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura login 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "login admin",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "CSRF rejeita POST administrativo sem token",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "cadastro ALUNO",
+      "detail": "aluno.a@exemplo.local"
+    },
+    {
+      "status": "PASS",
+      "name": "cadastro ALUNO",
+      "detail": "aluno.b@exemplo.local"
+    },
+    {
+      "status": "PASS",
+      "name": "cadastro SECRETARIA",
+      "detail": "secretaria.banca@exemplo.local"
+    },
+    {
+      "status": "PASS",
+      "name": "cadastro SEGURANCA",
+      "detail": "seguranca.banca@exemplo.local"
+    },
+    {
+      "status": "PASS",
+      "name": "grade SEGUNDA",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "grade TERCA",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "grade QUARTA",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "grade QUINTA",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "grade SEXTA",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "grade SABADO",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "grade DOMINGO",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-painel 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-painel 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-painel 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-painel 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-painel 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-painel 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-painel 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-painel 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-painel 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-painel 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-painel 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-painel 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-painel 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-painel 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-painel 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-painel 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-usuarios 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-usuarios 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-usuarios 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-usuarios 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-usuarios 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-usuarios 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-usuarios 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-usuarios 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-usuarios 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-usuarios 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-usuarios 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-usuarios 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-usuarios 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-usuarios 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-usuarios 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-usuarios 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-horarios 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-horarios 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-horarios 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-horarios 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-horarios 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-horarios 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-horarios 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-horarios 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-horarios 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-horarios 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-horarios 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-horarios 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-horarios 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-horarios 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-horarios 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-horarios 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "cadastro de bloqueio futuro",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-bloqueios 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-bloqueios 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-bloqueios 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-bloqueios 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-bloqueios 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-bloqueios 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-bloqueios 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-bloqueios 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-bloqueios 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-bloqueios 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-bloqueios 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-bloqueios 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-bloqueios 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-bloqueios 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-bloqueios 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-bloqueios 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "login alunoA",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "login alunoB",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-quadra 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-quadra 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-quadra 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-quadra 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-quadra 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-quadra 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-quadra 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-quadra 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-quadra 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-quadra 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-quadra 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-quadra 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-quadra 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-quadra 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-quadra 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-quadra 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-solicitacoes 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-solicitacoes 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-solicitacoes 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-solicitacoes 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-solicitacoes 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-solicitacoes 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-solicitacoes 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-solicitacoes 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-solicitacoes 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-solicitacoes 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-solicitacoes 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-solicitacoes 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-solicitacoes 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-solicitacoes 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-solicitacoes 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-solicitacoes 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "timezone America/Sao_Paulo e antecedência mínima",
+      "detail": "min=2026-10-21"
+    },
+    {
+      "status": "PASS",
+      "name": "servidor rejeita solicitação para hoje",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "servidor rejeita período fora da grade",
+      "detail": "HTTP 200:  CourtTime | Nova solicitação Pular para o conteúdo CourtTime Menu Menu CourtTime ETEC Prof. Armando José Farinazzo Fechar menu Aluno Início Consultar quadra Nova solicitação Minhas solicitações Aluna Sintética A Perfil: Aluno Sair Início / Solicitações / Nova Nova solicitação Quadra Poliesportiva — selecione uma data e um período disponível. Depois você cadastra os participantes e envia o PDF assinado. Revise os dados informados: O período selecionado não está disponível 1. Data A solicitação p"
+    },
+    {
+      "status": "PASS",
+      "name": "servidor rejeita período bloqueado",
+      "detail": "HTTP 200:  CourtTime | Nova solicitação Pular para o conteúdo CourtTime Menu Menu CourtTime ETEC Prof. Armando José Farinazzo Fechar menu Aluno Início Consultar quadra Nova solicitação Minhas solicitações Aluna Sintética A Perfil: Aluno Sair Início / Solicitações / Nova Nova solicitação Quadra Poliesportiva — selecione uma data e um período disponível. Depois você cadastra os participantes e envia o PDF assinado. Revise os dados informados: O período selecionado não está disponível 1. Data A solicitação p"
+    },
+    {
+      "status": "PASS",
+      "name": "cartão do período marca o radio",
+      "detail": "09:00"
+    },
+    {
+      "status": "PASS",
+      "name": "criação da solicitação",
+      "detail": "#1"
+    },
+    {
+      "status": "PASS",
+      "name": "cartão do período marca o radio",
+      "detail": "09:00"
+    },
+    {
+      "status": "PASS",
+      "name": "criação da solicitação",
+      "detail": "#2"
+    },
+    {
+      "status": "PASS",
+      "name": "IDOR de solicitação alheia",
+      "detail": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "name": "dez alunos, não dez participantes",
+      "detail": "solicitação #1"
+    },
+    {
+      "status": "PASS",
+      "name": "dez alunos, não dez participantes",
+      "detail": "solicitação #2"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-participantes 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-participantes 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-participantes 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-participantes 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-participantes 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-participantes 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-participantes 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-participantes 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-participantes 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-participantes 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-participantes 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-participantes 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-participantes 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-participantes 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-participantes 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-participantes 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "upload rejeita conteúdo malformado",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "upload rejeita arquivo excessivo",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "upload válido preserva versão 1",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-documentos 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-documentos 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-documentos 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-documentos 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-documentos 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-documentos 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-documentos 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-documentos 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-documentos 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-documentos 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-documentos 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-documentos 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade aluno-documentos 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos aluno-documentos 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco aluno-documentos 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura aluno-documentos 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "lista de participantes fica bloqueada após o envio",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "IDOR de download privado",
+      "detail": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "name": "upload válido da solicitação conflitante",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "login secretaria",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não acessa administração",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-documento 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-documento 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-documento 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-documento 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-documento 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-documento 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-documento 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-documento 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-documento 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-documento 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-documento 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-documento 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-documento 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-documento 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-documento 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-documento 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria baixa o PDF privado permitido",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "devolução documental exige justificativa com mensagem visível",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "PASS",
+      "name": "devolução documental justificada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "aluno acompanha devolução",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "substituição preserva histórico e cria versão 2",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "contribuição recusada antes da conferência",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "PASS",
+      "name": "conferência documental",
+      "detail": "documento #3"
+    },
+    {
+      "status": "PASS",
+      "name": "conferência documental",
+      "detail": "documento #2"
+    },
+    {
+      "status": "PASS",
+      "name": "conferência repetida é recusada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-contribuicoes 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-contribuicoes 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-contribuicoes 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-contribuicoes 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-contribuicoes 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-contribuicoes 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-contribuicoes 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-contribuicoes 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-contribuicoes 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-contribuicoes 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-contribuicoes 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-contribuicoes 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade secretaria-contribuicoes 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos secretaria-contribuicoes 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco secretaria-contribuicoes 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura secretaria-contribuicoes 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "registro de contribuição presencial",
+      "detail": "solicitação #1"
+    },
+    {
+      "status": "PASS",
+      "name": "registro de contribuição presencial",
+      "detail": "solicitação #2"
+    },
+    {
+      "status": "PASS",
+      "name": "contribuição duplicada é recusada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não aprova solicitações",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "login admin",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "concorrência entre aprovações permite exatamente uma",
+      "detail": "A=true, B=false"
+    },
+    {
+      "status": "PASS",
+      "name": "aprovação concorrente perdedora informa conflito",
+      "detail": "recusada #2"
+    },
+    {
+      "status": "PASS",
+      "name": "aprovação repetida é recusada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "rejeição exige motivo",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "horário aprovado deixa de aparecer disponível",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "grade não pode ser desativada sobre reserva aprovada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "bloqueio não pode comprometer reserva aprovada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacao-aprovada 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacao-aprovada 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacao-aprovada 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacao-aprovada 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacao-aprovada 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacao-aprovada 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacao-aprovada 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacao-aprovada 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacao-aprovada 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacao-aprovada 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacao-aprovada 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacao-aprovada 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacao-aprovada 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacao-aprovada 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacao-aprovada 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacao-aprovada 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacoes 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacoes 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacoes 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacoes 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacoes 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacoes 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacoes 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacoes 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacoes 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacoes 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacoes 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacoes 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade admin-solicitacoes 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos admin-solicitacoes 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco admin-solicitacoes 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura admin-solicitacoes 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "login seguranca",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reservas 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reservas 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reservas 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reservas 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reservas 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reservas 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reservas 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reservas 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reservas 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reservas 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reservas 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reservas 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reservas 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reservas 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reservas 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reservas 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "segurança vê somente reserva autorizada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "segurança consulta identificação dos participantes",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não recebe dados internos desnecessários",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não acessa dados financeiros",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não acessa documentos",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reserva 390px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reserva 390px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reserva 390px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reserva 390px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reserva 430px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reserva 430px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reserva 430px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reserva 430px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reserva 768px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reserva 768px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reserva 768px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reserva 768px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "responsividade seguranca-reserva 1440px",
+      "detail": "sem rolagem horizontal global"
+    },
+    {
+      "status": "PASS",
+      "name": "rótulos seguranca-reserva 1440px",
+      "detail": "[]"
+    },
+    {
+      "status": "PASS",
+      "name": "ordem de foco seguranca-reserva 1440px",
+      "detail": "sem tabindex positivo"
+    },
+    {
+      "status": "PASS",
+      "name": "estrutura seguranca-reserva 1440px",
+      "detail": "lang=pt-BR, h1=1"
+    },
+    {
+      "status": "PASS",
+      "name": "cancelamento institucional justificado",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "reserva cancelada desaparece da segurança",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "sessão é invalidada após bloqueio da conta",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "navegação por teclado e foco visível",
+      "detail": "{\"text\":\"Pular para o conteúdo\",\"outline\":\"solid\",\"outlineWidth\":\"3px\",\"top\":12}"
+    },
+    {
+      "status": "PASS",
+      "name": "atalho pula para o conteúdo",
+      "detail": ""
+    }
+  ]
+}
