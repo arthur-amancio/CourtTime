@@ -64,7 +64,7 @@
                             <td class="acoes-celula">
                                 <div class="acoes-tabela">
                                     <form th:if="${bloqueio.ativo}" th:action="@{/admin/bloqueios/{id}/desativar(id=${bloqueio.id})}" method="post" onsubmit="return confirm('Desativar este bloqueio?')">
-                                        <button class="botao botao--perigo-contorno botao--sm" type="submit">Desativar</button>
+                                        <button class="botao botao--perigo-contorno botao--sm" type="submit">Desativar<span class="visually-hidden" th:text="| o bloqueio de ${#temporals.format(bloqueio.data, 'dd/MM/yyyy')}, ${#temporals.format(bloqueio.horarioInicio, 'HH:mm')} às ${#temporals.format(bloqueio.horarioFim, 'HH:mm')}|"></span></button>
                                     </form>
                                     <span class="campo__ajuda" th:unless="${bloqueio.ativo}">Sem ação</span>
                                 </div>
