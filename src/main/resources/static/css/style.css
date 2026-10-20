@@ -1920,3 +1920,9 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
 .campo--erro :is(input, select, textarea) { background: #fffafa; }
 .resumo-escolha { margin: 0 0 var(--esp-3); font-size: var(--texto-sm); color: var(--cor-texto-suave); }
 .resumo-escolha--ativo { padding: var(--esp-3) var(--esp-4); border: 1px solid var(--verde-200); border-radius: var(--raio-md); background: var(--cor-primaria-suave); color: var(--cor-texto); font-weight: 650; }
+.campo__rotulo { font-weight: 700; }
+.tabela tbody th { font-size: var(--texto-sm); font-weight: 700; color: var(--cor-texto); }
+@media (max-width: 640px) {
+    .indicadores { grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); }
+    .indicador { padding: var(--esp-3); }
+}
