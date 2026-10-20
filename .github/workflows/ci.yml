@@ -55,10 +55,10 @@ jobs:
       - name: Diagnostico temporario
         if: failure()
         run: |
-          grep -E 'Tests run:.*Fail|<<< (FAILURE|ERROR)' build.log | head -20 | while IFS= read -r l; do echo "::error::$l"; done
-          for f in target/surefire-reports/*.txt; do
-            if grep -qE 'FAILURE|ERROR' "$f"; then
-              grep -A6 -E 'AssertionFailedError|Exception:|expected' "$f" | head -30 | tr '\n' ' ' | cut -c1-3000 | sed 's/^/::error::/'
-              echo
-            fi
-          done
+          {
+            grep -E '<<< (FAILURE|ERROR)|Tests run:.*(Failures: [1-9]|Errors: [1-9])' build.log | head -8
+            for f in target/surefire-reports/*.txt; do
+              grep -qE '<<< (FAILURE|ERROR)' "$f" && grep -A4 -E 'Error|Exception|expected' "$f" | grep -vE '^\s+at (org\.junit|java\.|jdk\.|org\.apache)' | head -25
+            done
+            grep -E '\[ERROR\].*(COMPILATION|\.java)' build.log | head -10
+          } | tr '\n' ' ' | cut -c1-6000 | sed 's/^/::error::/'
