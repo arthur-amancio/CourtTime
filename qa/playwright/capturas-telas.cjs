@@ -60,6 +60,10 @@ const resultados = [];
 function registrar(status, nome, detalhe = '') {
   resultados.push({ status, nome, detalhe });
   process.stdout.write(`${status} | ${nome}${detalhe ? ` | ${detalhe}` : ''}\n`);
+  // No GitHub Actions, falhas viram anotacoes legiveis pela API da execucao.
+  if (status === 'FAIL' && process.env.GITHUB_ACTIONS === 'true') {
+    process.stdout.write(`::error title=Layout::${nome}${detalhe ? ` (${detalhe})` : ''}\n`);
+  }
 }
 
 async function entrar(page, email) {
@@ -171,6 +175,8 @@ async function verificarMenuMovel(page, perfil, viewport) {
   }
   fs.writeFileSync(path.join(EVIDENCE, 'resultados-telas.json'), JSON.stringify({ sha: TARGET_SHA, resultados }, null, 2));
   const falhas = resultados.filter(r => r.status === 'FAIL').length;
-  process.stdout.write(`SUMMARY | ${resultados.filter(r => r.status === 'PASS').length} aprovadas | ${falhas} reprovadas\n`);
+  const resumo = `${resultados.filter(r => r.status === 'PASS').length} aprovadas | ${falhas} reprovadas`;
+  process.stdout.write(`SUMMARY | ${resumo}\n`);
+  if (process.env.GITHUB_ACTIONS === 'true') process.stdout.write(`::notice title=Capturas de layout::${resumo}\n`);
   process.exitCode = falhas ? 1 : 0;
 })();
