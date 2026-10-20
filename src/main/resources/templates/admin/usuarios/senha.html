@@ -4,9 +4,12 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Redefinir senha</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <script th:replace="~{fragments/layout :: script}"></script>
 </head>
-<body>
-    <header class="site-header"><a class="skip-link" href="#conteudo">Pular para o conteúdo</a><div class="container site-header__inner site-header__inner--authenticated"><a class="brand" th:href="@{/inicio}">CourtTime</a><div class="site-header__actions"><a class="text-link" th:href="@{/admin/usuarios}">Usuários</a><form class="logout-form" th:action="@{/logout}" method="post"><button class="button button--secondary button--small" type="submit">Sair</button></form></div></div></header>
+<body class="app-autenticado">
+    <a th:replace="~{fragments/layout :: pular}"></a>
+    <header th:replace="~{fragments/layout :: topo}"></header>
+    <aside th:replace="~{fragments/layout :: lateral}"></aside>
     <main id="conteudo" class="container app-main app-main--narrow">
         <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/usuarios}">Usuários</a><span aria-hidden="true">/</span><span aria-current="page">Redefinir senha</span></nav>
         <header class="page-heading"><h1>Redefinir senha</h1><p>Defina uma nova credencial para <strong th:text="${usuario.nome}">Usuário</strong>. A senha anterior não será exibida.</p></header>
@@ -36,6 +39,6 @@
             <div class="form-actions"><button class="button" type="submit">Redefinir senha</button><a class="button button--secondary" th:href="@{/admin/usuarios}">Cancelar</a></div>
         </form>
     </main>
-    <footer class="site-footer"><div class="container site-footer__inner"><p class="site-footer__brand">CourtTime</p><p>ETEC Prof. Armando José Farinazzo</p></div></footer>
+    <footer th:replace="~{fragments/layout :: rodape}"></footer>
 </body>
 </html>

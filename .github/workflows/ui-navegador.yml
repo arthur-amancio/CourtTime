@@ -1,0 +1,208 @@
+name: UI — navegador real (banco descartável)
+
+# Executa a aplicacao Spring Boot real contra um PostgreSQL 16 temporario
+# (courttime_e2e) criado so para este job e destruido ao final do runner.
+# Nunca aponta para courttime_demo, courttime_test ou banco persistente.
+
+on:
+  push:
+    branches:
+      - 'feat/ui-v2-**'
+      - 'chore/ui-v2-**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-navegador-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  navegador:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: courttime_e2e
+          POSTGRES_USER: courttime_e2e
+          POSTGRES_PASSWORD: e2e_descartavel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U courttime_e2e -d courttime_e2e"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      COURTTIME_E2E_ACK_ISOLATED_DB: 'YES'
+      COURTTIME_E2E_DATABASE_NAME: courttime_e2e
+      COURTTIME_E2E_BASE_URL: http://127.0.0.1:18081
+      COURTTIME_E2E_EVIDENCE_DIR: ${{ github.workspace }}/evidencias-ui
+      COURTTIME_E2E_TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Configurar Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: qa/playwright/package-lock.json
+
+      - name: Gerar senha sintética desta execução
+        run: |
+          senha="E2e$(openssl rand -hex 12)"
+          echo "::add-mask::$senha"
+          echo "COURTTIME_E2E_PASSWORD=$senha" >> "$GITHUB_ENV"
+
+      - name: Empacotar a aplicação (testes Java rodam no workflow CI)
+        run: ./mvnw -B -q -DskipTests package
+
+      - name: Iniciar a aplicação no banco descartável
+        env:
+          COURTTIME_DB_URL: jdbc:postgresql://localhost:5432/courttime_e2e
+          COURTTIME_DB_USERNAME: courttime_e2e
+          COURTTIME_DB_PASSWORD: e2e_descartavel
+          COURTTIME_DOCUMENT_STORAGE_PATH: ${{ runner.temp }}/documentos-e2e
+          SERVER_PORT: '18081'
+          COURTTIME_BOOTSTRAP_ADMIN_ENABLED: 'true'
+          COURTTIME_DEV_USER_NAME: Administração E2E
+          COURTTIME_DEV_USER_EMAIL: admin.banca@exemplo.local
+          COURTTIME_DEV_USER_PROFILE: ADMINISTRADOR
+        run: |
+          COURTTIME_DEV_USER_PASSWORD="$COURTTIME_E2E_PASSWORD" \
+            nohup java -jar target/courttime-0.0.1-SNAPSHOT.jar > "$RUNNER_TEMP/app.log" 2>&1 &
+          for i in $(seq 1 90); do
+            if curl --silent --fail http://127.0.0.1:18081/login >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          tail -100 "$RUNNER_TEMP/app.log"
+          exit 1
+
+      - name: Confirmar que a aplicação usa somente courttime_e2e
+        env:
+          PGPASSWORD: e2e_descartavel
+        run: |
+          total=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT count(*) FROM usuarios;")
+          admin=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT count(*) FROM usuarios WHERE email = 'admin.banca@exemplo.local';")
+          echo "usuarios=$total admin_bootstrap=$admin"
+          test "$total" -eq 1
+          test "$admin" -eq 1
+
+      - name: Instalar dependências de QA e Chromium
+        working-directory: qa/playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Proteção do ambiente
+        working-directory: qa/playwright
+        run: npm run test:guard
+
+      - name: Jornada dos quatro perfis
+        working-directory: qa/playwright
+        run: npm run test:jornada
+
+      - name: Auditoria de acessibilidade (axe-core)
+        if: always()
+        working-directory: qa/playwright
+        run: npm run test:a11y
+
+      - name: Capturas e verificações de layout
+        if: always()
+        working-directory: qa/playwright
+        run: npm run test:telas
+
+      - name: Resumo legível pela API (anotações)
+        if: always()
+        run: |
+          node - <<'JS'
+          const fs = require('fs');
+          const dir = process.env.COURTTIME_E2E_EVIDENCE_DIR;
+          const ler = f => { try { return JSON.parse(fs.readFileSync(`${dir}/${f}`, 'utf8')); } catch { return null; } };
+          const jornada = ler('resultados-e2e.json') || ler('resultados-e2e-parcial.json');
+          if (jornada) {
+            const r = jornada.results || [];
+            const falhas = r.filter(x => x.status === 'FAIL');
+            console.log(`::notice title=Jornada::${r.length - falhas.length} aprovadas | ${falhas.length} reprovadas${jornada.error ? ' | interrompida' : ''}`);
+            falhas.slice(0, 20).forEach(f => console.log(`::error title=Jornada::${f.name} ${f.detail || ''}`.slice(0, 900)));
+            if (jornada.error) console.log(`::error title=Jornada interrompida::${String(jornada.error).split('\n')[0].slice(0, 900)}`);
+          }
+          const axe = ler('resultados-axe.json');
+          if (axe) {
+            const v = axe.scans.flatMap(s => s.violations.map(x => ({ ...x, pagina: s.name, largura: s.viewport.width })));
+            console.log(`::notice title=axe-core::${axe.scans.length} varreduras | ${v.length} violações`);
+            v.slice(0, 20).forEach(x => console.log(`::warning title=axe ${x.impact}::${x.pagina} ${x.largura}px ${x.id}: ${x.help} — ${JSON.stringify(x.nodes).slice(0, 300)}`));
+          }
+          JS
+
+      - name: Publicar evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-ui-${{ github.sha }}
+          path: evidencias-ui
+          retention-days: 14
+
+  # Copia as capturas (JPEG gerado pelo Playwright, dados sintéticos) para a branch
+  # evidencias/ui-v2, para que revisores vejam as telas reais sem baixar
+  # artefatos. Não altera código nem outras branches.
+  publicar-capturas:
+    needs: navegador
+    if: always() && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: evidencias-ui-v2
+      cancel-in-progress: false
+    steps:
+      - name: Baixar evidências
+        uses: actions/download-artifact@v4
+        with:
+          name: evidencias-ui-${{ github.sha }}
+          path: evidencias
+      - name: Publicar na branch evidencias/ui-v2
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGEM: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          destino="$(echo "$ORIGEM" | tr '/' '_')/${GITHUB_SHA::7}"
+          git init -q repo && cd repo
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch -q --depth 1 origin evidencias/ui-v2; then git checkout -q -b evidencias/ui-v2 FETCH_HEAD; else git checkout -q --orphan evidencias/ui-v2; fi
+          rm -rf "$destino" && mkdir -p "$destino"
+          cp ../evidencias/*.json "$destino"/ 2>/dev/null || true
+          if [ -d ../evidencias/telas ]; then
+            cp ../evidencias/telas/*.jpg "$destino"/ 2>/dev/null || true
+          fi
+          {
+            echo "# Evidências de interface — $ORIGEM"
+            echo
+            echo "Capturas da aplicação real (dados sintéticos, banco descartável courttime_e2e)."
+            echo "Commit: $GITHUB_SHA"
+          } > "$destino/LEIA-ME.md"
+          git add -A
+          git commit -q -m "evidências: $ORIGEM ${GITHUB_SHA::7}"
+          for i in 1 2 3; do
+            if git push -q origin HEAD:evidencias/ui-v2; then exit 0; fi
+            git fetch -q --depth 1 origin evidencias/ui-v2 && git rebase -q FETCH_HEAD || true
+          done
+          exit 1

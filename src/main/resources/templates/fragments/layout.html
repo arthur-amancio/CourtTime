@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fragmentos de layout do CourtTime</title>
+</head>
+<body class="app-autenticado">
+<!--
+  Layout compartilhado das telas autenticadas (Fase B do redesign V2).
+
+  Uso em cada template autenticado (body com class="app-autenticado"):
+    <script th:replace="~{fragments/layout :: script}"></script>   (no <head>)
+    <a th:replace="~{fragments/layout :: pular}"></a>
+    <header th:replace="~{fragments/layout :: topo}"></header>
+    <aside th:replace="~{fragments/layout :: lateral}"></aside>
+    <main id="conteudo" ...> conteudo da pagina </main>
+    <footer th:replace="~{fragments/layout :: rodape}"></footer>
+
+  Os links vem de NavegacaoControllerAdvice e apontam somente para rotas que
+  ja existem. Exibir ou esconder um link NAO concede acesso: o SecurityConfig
+  continua decidindo quem pode abrir cada rota.
+
+  Sem JavaScript, o botao "Menu" e um link para #menu-principal e a barra
+  lateral aparece abaixo do conteudo no celular. Com JavaScript, o mesmo
+  menu abre por cima da pagina, com foco controlado (js/navegacao.js).
+-->
+
+<script th:fragment="script" th:src="@{/js/navegacao.js}" src="/js/navegacao.js"></script>
+
+<a th:fragment="pular" class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header th:fragment="topo" class="topo-app">
+    <a class="marca marca--clara" th:href="@{/inicio}">
+        <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
+        <span class="marca__nome">CourtTime</span>
+    </a>
+    <a class="topo-app__menu" href="#menu-principal" data-menu-link>
+        <svg th:replace="~{fragments/icones :: icone('menu')}"></svg>
+        <span>Menu</span>
+    </a>
+    <button class="topo-app__menu" type="button" aria-controls="menu-principal" aria-expanded="false"
+            data-menu-botao hidden>
+        <svg th:replace="~{fragments/icones :: icone('menu')}"></svg>
+        <span>Menu</span>
+    </button>
+</header>
+
+<aside th:fragment="lateral" id="menu-principal" class="lateral" aria-label="Menu principal">
+    <div class="lateral__topo">
+        <a class="marca marca--clara" th:href="@{/inicio}">
+            <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
+            <span class="marca__texto">
+                <span class="marca__nome">CourtTime</span>
+                <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
+            </span>
+        </a>
+        <button class="lateral__fechar" type="button" data-menu-fechar hidden>
+            <svg th:replace="~{fragments/icones :: icone('x')}"></svg>
+            <span class="visually-hidden">Fechar menu</span>
+        </button>
+    </div>
+
+    <nav class="lateral__navegacao" th:if="${usuarioLogado != null}"
+         th:attr="aria-label=|Navegação do perfil ${usuarioLogado.perfil.descricao}|">
+        <p class="lateral__titulo" th:text="${usuarioLogado.perfil.descricao}">Aluno</p>
+        <a th:each="item : ${menuPrincipal}" class="lateral__link"
+           th:href="@{${item.url}}" th:aria-current="${item.ativo} ? 'page'">
+            <svg th:replace="~{fragments/icones :: icone(${item.icone})}"></svg>
+            <span th:text="${item.rotulo}">Início</span>
+        </a>
+    </nav>
+
+    <div class="lateral__usuario">
+        <p class="lateral__pessoa" th:if="${usuarioLogado != null}">
+            <strong th:if="${usuarioLogado.nome != null}" th:text="${usuarioLogado.nome}">Nome</strong>
+            <span>Perfil: <span th:text="${usuarioLogado.perfil.descricao}">Aluno</span></span>
+        </p>
+        <form class="lateral__sair-form" th:action="@{/logout}" method="post">
+            <button class="lateral__sair" type="submit">
+                <svg th:replace="~{fragments/icones :: icone('sair')}"></svg>
+                <span>Sair</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<footer th:fragment="rodape" class="rodape-app">
+    <p><strong>CourtTime</strong> · ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
+    <p>Trabalho de Conclusão de Curso · Técnico em Informática para Internet</p>
+</footer>
+
+</body>
+</html>
