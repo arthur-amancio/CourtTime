@@ -326,6 +326,8 @@ class JornadaCompletaE2ETest {
 
         assertEquals(HttpStatus.OK, resposta.getStatusCode(),
                 "o formulário é reexibido com erro, não redireciona");
+        assertTrue(resposta.getBody().contains("pelo menos um dia de anteced"),
+                "a recusa deve ser pela regra de antecedência, não por outro motivo");
         assertEquals(0, reservaRepository.count(), "nenhuma reserva deve ser criada");
     }
 
