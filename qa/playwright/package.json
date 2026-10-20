@@ -1,0 +1,14 @@
+{
+  "name": "courttime-playwright-qa",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Jornada funcional e auditoria visual reproduzíveis do CourtTime",
+  "scripts": {
+    "test:jornada": "node jornada-quatro-perfis.cjs",
+    "test:a11y": "node auditoria-acessibilidade.cjs"
+  },
+  "dependencies": {
+    "axe-core": "4.10.3",
+    "playwright": "1.56.1"
+  }
+}

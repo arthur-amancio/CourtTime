@@ -1,5 +1,7 @@
 target/
 .idea/
+qa/playwright/node_modules/
+qa/playwright/evidencias/
 .vscode/
 *.iml
 .classpath
