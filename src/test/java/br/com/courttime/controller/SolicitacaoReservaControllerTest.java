@@ -436,6 +436,7 @@ class SolicitacaoReservaControllerTest {
 
     @Test
     void envioDeRemarcacaoComReservaDeOutroAlunoRespondeNaoEncontrado() throws Exception {
+        prepararFormularioDisponivel();
         when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
                 .thenReturn(Optional.of(aluno));
         when(reservaService.obterSolicitacaoDoUsuario(99L, aluno))
