@@ -8,6 +8,7 @@ import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,8 @@ public class FormularioOficialService {
     private final CalendarioDisponibilidadeService calendarioService;
     private final String caminhoDoModelo;
 
+    // Com dois construtores, o Spring precisa saber qual usar.
+    @Autowired
     public FormularioOficialService(
             ReservaRepository reservaRepository,
             ParticipanteReservaRepository participanteRepository,
