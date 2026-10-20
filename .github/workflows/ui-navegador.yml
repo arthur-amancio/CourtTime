@@ -193,6 +193,12 @@ jobs:
           if [ -d ../evidencias/telas ]; then
             cp ../evidencias/telas/*.jpg "$destino"/ 2>/dev/null || true
           fi
+          # Capturas tiradas durante a jornada, em estados que deixam de existir
+          # no fim dela (fila da secretaria com formulários, reserva ainda
+          # autorizada na segurança). Recebem o prefixo "jornada-".
+          for arquivo in ../evidencias/secretaria-*.png ../evidencias/seguranca-*.png; do
+            if [ -f "$arquivo" ]; then cp "$arquivo" "$destino/jornada-$(basename "$arquivo")"; fi
+          done
           {
             echo "# Evidências de interface — $ORIGEM"
             echo
