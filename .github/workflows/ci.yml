@@ -47,6 +47,21 @@ jobs:
           java-version: '17'
           cache: maven
 
+      - name: Validar sintaxe dos scripts PowerShell
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path 'scripts/Verificar-Ambiente-CourtTime.ps1'),
+            [ref] $tokens,
+            [ref] $errors
+          ) > $null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+
       - name: Compilar e executar os testes
         run: ./mvnw clean verify
 
