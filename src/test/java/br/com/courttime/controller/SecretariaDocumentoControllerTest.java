@@ -198,6 +198,26 @@ class SecretariaDocumentoControllerTest {
                 .andExpect(flash().attribute("mensagemErro", containsString("obrigatória")));
     }
 
+    /**
+     * O teste acima garante que o controller ENVIA a mensagem de erro. Este
+     * garante que a pagina REALMENTE a mostra. Sem ele, a secretaria via a
+     * tela recarregar sem explicacao nenhuma.
+     */
+    @Test
+    void paginaDeConferenciaExibeOErroDevolvidoPeloBackend() throws Exception {
+        prepararSecretaria();
+        when(conferenciaService.obter(30L, secretaria)).thenReturn(documento);
+        when(conferenciaService.podeConferir(documento, secretaria)).thenReturn(true);
+
+        mockMvc.perform(get("/secretaria/documentos/30")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA"))
+                        .flashAttr("mensagemErro",
+                                "A justificativa da devolução é obrigatória"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "A justificativa da devolução é obrigatória")));
+    }
+
     @Test
     void documentoInexistenteRetornaNaoEncontrado() throws Exception {
         prepararSecretaria();
