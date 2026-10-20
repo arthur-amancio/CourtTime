@@ -11,6 +11,7 @@ coordenadas não fazem parte do contrato.
 | `npm run test:navegacao` | Usa sessões independentes e testa links, rotas proibidas, ownership, logout e CSRF. |
 | `npm run test:redesign` | Captura 390, 430, 768 e 1440 px, avalia reflow e testa os contratos interativos da V2 quando presentes. |
 | `npm run test:a11y` | Executa axe-core WCAG 2.0/2.1 A e AA nas páginas reais. |
+| `npm run test:telas` | Registra capturas adicionais e contratos básicos de layout da aplicação real. |
 | `npm run test:qa` | Executa a sequência completa acima. |
 
 `test:navegacao`, `test:redesign` e `test:a11y` devem ser executados depois de
@@ -92,5 +93,29 @@ O teste de zoom usa o equivalente de reflow WCAG sobre uma referência de
 1440 px: viewport CSS de 720 px para 200% e 360 px para 400%. Axe complementa,
 mas não substitui, a verificação manual de teclado, foco e contraste.
 
-A automação gera um PDF sintético identificado como teste. Ele não reproduz o
+A automação usa um PDF sintético identificado como teste. Ele não reproduz o
 termo da ETEC, não contém dados pessoais e não representa assinatura.
+
+## Capturas de layout (`capturas-telas.cjs`)
+
+Rodar **depois** da jornada, com as mesmas variáveis de ambiente:
+
+```bash
+npm run test:telas
+```
+
+Somente leitura: faz login nos quatro perfis e abre páginas por `GET`. Para cada
+página e viewport (390, 430, 768 e 1440 px) verifica rolagem horizontal, um
+único `h1` e o logout como formulário `POST` com CSRF; salva capturas JPEG em
+`$COURTTIME_E2E_EVIDENCE_DIR/telas`. Também verifica o menu móvel por teclado
+(quando existir), a navegação sem JavaScript e o zoom de 200% e 400%.
+
+## Execução no GitHub Actions (`.github/workflows/ui-navegador.yml`)
+
+Para branches `feat/ui-v2-**` e `chore/ui-v2-**`, o workflow sobe um PostgreSQL 16
+temporário com o banco `courttime_e2e`, cria credenciais sintéticas mascaradas,
+inicia a aplicação na porta 18081, **confere pelo `psql` que o único usuário do
+banco é o administrador de bootstrap** e comprova no navegador o marcador da
+instância efêmera antes da primeira mutação. Em seguida roda guarda, jornada,
+navegação, interações da V2, axe-core e capturas. As evidências ficam como
+artefato da execução por 14 dias. Nada é gravado no repositório.
