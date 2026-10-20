@@ -1,71 +1,99 @@
-# Relatório de acessibilidade e responsividade — protótipo visual
+# Relatório de acessibilidade e responsividade — protótipo visual (V2)
 
-Verificações executadas em 20/10/2026 sobre o **protótipo visual** (não sobre a aplicação Spring Boot), servido localmente e aberto em Chromium headless (Playwright 1.56).
+Todas as verificações foram feitas sobre o **protótipo visual**, servido localmente e aberto em Chromium headless (Playwright 1.56, idioma `pt-BR`). Elas **não** testam a aplicação Spring Boot.
 
-## O que foi executado
+Última execução: 20/10/2026, sobre o código da V2. Resultado bruto dos testes de teclado e zoom: `capturas/v2/testes-teclado-zoom.json`.
 
-| Verificação | Escopo | Resultado |
+## Resumo
+
+| Verificação | Escopo | Resultado V2 |
 | --- | --- | --- |
-| Rolagem horizontal indevida (`scrollWidth > clientWidth`) | 25 telas/variações × 4 larguras (390, 430, 768 e 1440 px) = 100 renderizações | **0 ocorrências** na rodada final. Três foram encontradas e corrigidas: botões de controle sem quebra no detalhe da solicitação, email longo na lista de usuários e tabela larga em 768 px (agora vira cartões abaixo de 860 px) |
-| Erros de JavaScript no console | 100 renderizações | **0 erros** |
-| axe-core 4.10.2 (regras WCAG 2.0/2.1 A e AA) | 25 telas × 390 e 1440 px = 50 execuções | **0 violações** |
-| Alvos de toque menores que 32 px | Botões, links-botão, campos, dias e horários | **0 ocorrências**. Padrão 44 px; tamanho pequeno 36 px |
-| Fluxo por teclado e interação | Nova solicitação, detalhe, menu móvel | Ver abaixo |
+| Rolagem horizontal indevida | 34 telas e variações × 390, 430, 768 e 1440 px = 136 renderizações | **0** |
+| Erros de JavaScript no console | 136 renderizações | **0** |
+| axe-core 4.10.2 (WCAG 2.0/2.1 A e AA) | 34 telas e variações × 390 e 1440 px = 68 execuções | **0 violações** |
+| Alvos de toque < 32 px | Botões, links-botão, campos, dias, horários | **0** (o `input type="file"` fica visualmente oculto de propósito; o alvo é o botão “Selecionar PDF”, com 36 px) |
+| Teclado, menu, zoom, envio de PDF e calendário | Roteiro automatizado abaixo | **52 de 52 verificações OK** |
 
-### Fluxo testado automaticamente
+As 34 telas e variações incluem as 25 da V1, as duas variantes do calendário e as oito situações do detalhe da solicitação.
 
-- Enviar sem período → mensagem “Selecione um período disponível…” aparece e recebe foco.
-- No calendário, setas do teclado movem o foco entre dias (22 → 23/10); Enter carrega os horários do dia.
-- Clique em um período disponível → `aria-pressed="true"`, resumo mostra “10:00 – 11:00”.
-- Enviar sem finalidade → campo marcado com `aria-invalid` e mensagem “Informe a finalidade.”
-- Envio completo → vai para o detalhe com “Solicitação registrada” e situação **Pendente de documentação** (sem aprovação automática).
-- Seletor de situação do detalhe alterna corretamente as cinco variações.
-- Menu móvel (390 px): abre com `aria-expanded="true"`, move o foco para o primeiro link e fecha com Esc. Fechado, fica `visibility: hidden` e sai da ordem de tabulação.
-- Barra fixa do celular mostra a data e o período escolhidos.
+## Menu móvel (390, 430 e 768 px)
 
-## Contraste (WCAG 2.1, mínimo 4,5:1 para texto normal)
+Em cada largura, todos os itens abaixo passaram:
 
-| Par | Cores | Razão |
-| --- | --- | --- |
-| Texto / fundo | #1D2D25 sobre #F4F6F4 | 13,3:1 |
-| Texto suave / branco | #526158 sobre #FFFFFF | 6,5:1 |
-| Botão primário | #FFFFFF sobre #17633F | 7,3:1 |
-| Menu / barra lateral | #DCEBE2 sobre #082A1B | 12,5:1 |
-| Badge pendente de documentação | #6F4500 sobre #FDF3DC | 7,5:1 |
-| Badge pendente de análise | #1D4E89 sobre #E7F0FB | 7,3:1 |
-| Badge aprovada | #1F5F3A sobre #E3F2E8 | 6,6:1 |
-| Badge rejeitada | #8B2E2E sobre #FBEAEA | 7,1:1 |
-| Badge cancelada | #44514A sobre #ECEEED | 7,1:1 |
-| Horário indisponível | #8B2E2E sobre #F8E9E9 | 7,1:1 |
-| Contorno de foco | #875C00 sobre #F4F6F4 | 5,4:1 (mínimo 3:1 para elementos não textuais) |
-| Botão desativado | #6B7A71 sobre #EBEFEC | 3,9:1 (desativado é isento, mas permanece legível) |
+- O botão **Menu** abre com Enter, marca `aria-expanded="true"` e leva o foco ao primeiro link do menu.
+- Em 14 Tab e 14 Shift+Tab, o foco não saiu do menu.
+- O conteúdo de fundo, a faixa do protótipo e o link “Pular” ficam com `inert`, e a rolagem da página fica bloqueada.
+- **Esc** fecha o menu, volta `aria-expanded` para `false`, remove o `inert` e devolve o foco ao botão Menu.
+- O botão **Fechar** (×) também fecha e devolve o foco.
+- Escolher uma opção fecha o menu e navega.
+- Fechado, o menu fica com `visibility: hidden` e não entra na ordem de tabulação.
+- Ao passar de 1024 px, o menu fecha sozinho (implementado; não coberto pelo roteiro automático).
 
-## Decisões de acessibilidade aplicadas
+Correção feita durante os testes: a primeira versão perdia o foco ao abrir por teclado, porque a transição de `visibility` deixava o menu invisível no instante do `focus()`. A transição foi ajustada e o teste passou.
 
-- Situação nunca indicada só por cor: todo badge e horário tem ícone **e** texto.
-- Foco visível em todos os elementos interativos (contorno ouro de 3 px, já usado no CSS atual).
-- Link “Pular para o conteúdo” em todas as telas.
-- Breadcrumb com `aria-current="page"`; menu ativo com `aria-current="page"`; etapa atual com `aria-current="step"`.
-- Tabelas com `caption` (oculto visualmente), `scope` nos cabeçalhos e rótulos `data-label` na versão em cartões.
-- Mensagens de erro ligadas aos campos, com `aria-invalid` e foco no primeiro erro.
-- Região `aria-live` anuncia a data carregada e o período selecionado.
-- `prefers-reduced-motion` desativa transições.
+## Nova solicitação — larguras, zoom e barra fixa
 
-## Responsividade
+| Cenário | Sem rolagem horizontal | Horário escolhido pelo teclado | Barra não cobre Finalidade, Registrar e Cancelar quando focados |
+| --- | --- | --- | --- |
+| 390 × 844 | OK | OK | OK |
+| 430 × 932 | OK | OK | OK |
+| 768 × 1024 | OK | OK | OK (barra só existe até 640 px) |
+| 1440 × 900 | OK | OK | OK |
+| Zoom 200% (1440 → 720 × 450 CSS px) | OK | OK | OK |
+| Zoom 400% (1440 → 360 × 225 CSS px) | OK | OK | OK |
+| Teclado virtual simulado (390 × 420, finalidade focada) | — | — | OK: a barra deixa de ser fixa |
 
-Layouts próprios por faixa, não só redução:
+Mudanças que garantem esses resultados:
 
-| Largura | Comportamento |
+- A barra de resumo **some** (`visibility: hidden`) quando o painel “Finalidade e envio” entra na tela. Por isso ela nunca fica sobre o campo nem sobre os botões.
+- `scroll-padding-bottom` reserva espaço para a barra quando um campo recebe foco.
+- Com até 560 px de altura útil (zoom alto, celular deitado ou teclado virtual aberto), a barra e o topo móvel deixam de ser fixos.
+
+O teclado virtual foi **simulado** reduzindo a altura da janela. Não foi testado em celular físico.
+
+## Envio de PDF
+
+| Teste | Resultado |
 | --- | --- |
-| ≥ 1025 px | Barra lateral fixa; calendário mensal ao lado dos horários; resumo da solicitação fixo à direita |
-| 861–1024 px | Barra lateral vira menu deslizante com botão “Menu”; conteúdo em coluna única quando necessário |
-| ≤ 860 px | Calendário mensal é trocado por faixa de dias com rolagem horizontal e contagem de horários livres; tabelas viram cartões; login empilha |
-| ≤ 640 px | Horários em 2 colunas; barra fixa inferior com o período escolhido e botão “Continuar”; botões de ação em largura total |
+| Enviar sem arquivo | Mensagem “Selecione um arquivo PDF antes de enviar.” e foco no seletor |
+| Arquivo `.txt` | “Selecione um arquivo no formato PDF (.pdf).” e `aria-invalid="true"` |
+| PDF com mais de 10 MB | “O arquivo PDF deve possuir no máximo 10 MB.” (mesmo texto e limite do `DocumentoReservaService`) |
+| PDF válido | Mostra o nome, o tamanho e “selecionado, ainda não enviado”; o botão passa a “Trocar arquivo” |
+| Remover | Limpa a seleção e devolve o foco ao seletor |
+| Teclado | O `input type="file"` nativo é alcançado por Tab; o botão “Selecionar PDF” mostra o contorno de foco |
+| Nome acessível | “Arquivo PDF assinado Selecionar PDF” |
 
-## Limitações conhecidas
+O input nativo continua no HTML, focável e funcional. O texto em inglês do Chromium (“Choose File”) não aparece mais. Nenhum arquivo é enviado ou guardado, e nenhuma assinatura é “validada”.
 
-- Testes feitos em Chromium. Safari e Firefox não foram verificados nesta sessão.
-- Não houve teste com leitor de tela real (NVDA/VoiceOver), apenas as regras automáticas e a revisão da marcação.
-- Nas capturas de página inteira em 390/430 px, a barra fixa inferior da nova solicitação aparece no meio da imagem: é o comportamento `position: sticky` registrado no momento da captura, não uma sobreposição real.
-- O botão “Registrar solicitação” usa `aria-disabled` enquanto não há período escolhido; ele continua clicável para explicar o motivo, o que deve ser validado com usuários.
-- O protótipo não foi avaliado com usuários reais (alunos, secretaria, segurança).
+## Calendário
+
+| Teste | Resultado |
+| --- | --- |
+| Faixa de dias (390 px): setas ← → e Enter | OK |
+| Calendário mensal (1440 px): seta ↓ pula uma semana | OK |
+| Consulta: nenhuma data a partir de hoje desabilitada | OK |
+| Nova solicitação: hoje desabilitado (antecedência de 1 dia) | OK |
+| Dia inteiro bloqueado mostra períodos Indisponíveis; domingo mostra “Sem funcionamento” | OK |
+| Quadra inativa: nenhum período selecionável | OK |
+
+## Contraste (WCAG 2.1, mínimo 4,5:1 para texto)
+
+| Par | Razão |
+| --- | --- |
+| Texto #1D2D25 / fundo #F4F6F4 | 13,3:1 |
+| Texto suave #526158 / branco | 6,5:1 |
+| Botão primário: branco / #17633F | 7,3:1 |
+| Menu #DCEBE2 / barra lateral #082A1B | 12,5:1 |
+| Badges: documentação 7,5:1 · análise 7,3:1 · aprovada 6,6:1 · rejeitada 7,1:1 · cancelada 7,1:1 | ≥ 6,6:1 |
+| Marca “Depende de adaptação” #5A3D00 / #FFFCF4 | > 9:1 |
+| Contorno de foco #875C00 / fundo | 5,4:1 (mínimo 3:1 para elementos não textuais) |
+
+## Pendências e limites
+
+- Testado só em Chromium. Safari (iOS) e Firefox ficaram sem teste.
+- Sem leitor de tela real (NVDA, VoiceOver, TalkBack). Foram verificadas as regras automáticas e a marcação.
+- Teclado virtual simulado por redução de altura, não em aparelho físico.
+- O zoom foi emulado por viewport e escala do dispositivo, que é o comportamento de reflow do navegador, e não pelo zoom da interface do Chrome.
+- Sem teste com usuários (alunos, secretaria, segurança).
+- O botão “Registrar solicitação” usa `aria-disabled` enquanto nenhum período foi escolhido. Ele continua clicável para explicar o motivo; convém validar com usuários.
+- Nas capturas de página inteira em celular, a barra fixa aparece no meio da imagem: é a posição `sticky` no momento da captura, não sobreposição.

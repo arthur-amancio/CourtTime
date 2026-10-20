@@ -57,7 +57,7 @@
             </section>
         </div>
 
-        <aside class="resumo-selecao pilha" aria-labelledby="passo2">
+        <aside class="resumo-selecao pilha" aria-labelledby="passo2" data-painel-envio>
             <section class="painel">
                 <div class="painel__cabecalho"><h2 id="passo2"><span class="texto-suave">2.</span> Finalidade e envio</h2></div>
                 <div class="painel__corpo">
@@ -88,11 +88,25 @@
             </section>
         </aside>
 
-        <div class="barra-acao-movel" aria-hidden="false">
+        <div class="barra-acao-movel" role="region" aria-label="Resumo do período escolhido">
             <div data-movel-resumo><span>Nenhum período selecionado</span><strong>Escolha um horário livre</strong></div>
             <a class="botao" href="#campo-finalidade">Continuar</a>
         </div>
     </form>
+
+    <div class="alerta alerta--neutro" style="margin-top: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+        <div>
+            <strong class="alerta__titulo">Controles do protótipo</strong>
+            <p>Horários fictícios. O envio apenas simula o retorno visual; nada é gravado.</p>
+            <label class="controle-prototipo__check"><input type="checkbox" data-simular-inativa> Simular quadra inativa no cadastro</label>
+            <fieldset class="controle-prototipo" data-variante-calendario>
+                <legend>Calendário no celular (abaixo de 860 px)</legend>
+                <label><input type="radio" name="variante-calendario" value="a"> Opção A — dia e funcionamento, sem contagem</label>
+                <label><input type="radio" name="variante-calendario" value="b"> Opção B — com quantidade de horários livres</label>
+            </fieldset>
+        </div>
+    </div>
 </main>
 </body>
 </html>

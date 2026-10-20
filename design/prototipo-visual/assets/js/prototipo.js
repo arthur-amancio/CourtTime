@@ -147,7 +147,8 @@
         lateral.className = "lateral";
         lateral.id = "menu-principal";
         lateral.setAttribute("aria-label", "Menu principal");
-        lateral.innerHTML = marca +
+        lateral.innerHTML = '<div class="lateral__topo">' + marca +
+            '<button type="button" class="lateral__fechar" data-fechar-menu>' + icone("x") + '<span class="visually-hidden">Fechar menu</span></button></div>' +
             '<nav class="lateral__secao" aria-label="Navegação do perfil ' + dados.rotulo + '">' +
             '<p class="lateral__titulo">' + dados.rotulo + "</p>" + links + "</nav>" +
             '<div class="lateral__usuario"><div><strong>' + dados.nome + "</strong><span>" + dados.email + "</span></div>" +
@@ -180,22 +181,58 @@
         conteudo.appendChild(rodape);
         document.body.appendChild(sombra);
 
+        /* Menu do celular e do tablet (até 1024 px):
+           - abre com aria-expanded="true" e leva o foco ao primeiro link;
+           - o restante da página fica inerte (atributo inert) e sem rolagem;
+           - Tab e Shift+Tab circulam somente dentro do menu;
+           - Esc, o botão Fechar, a sombra ou a escolha de um link fecham o menu;
+           - ao fechar, o foco volta ao botão Menu. */
         var botao = topoMovel.querySelector(".topo-movel__menu");
-        function fechar() {
-            lateral.classList.remove("is-aberta"); sombra.hidden = true;
-            botao.setAttribute("aria-expanded", "false");
+        var MOVEL = window.matchMedia("(max-width: 1024px)");
+        function fundo() {
+            return [conteudo, document.querySelector(".faixa-prototipo"), document.querySelector(".skip-link")].filter(Boolean);
         }
-        botao.addEventListener("click", function () {
-            var abrir = !lateral.classList.contains("is-aberta");
-            if (!abrir) { fechar(); botao.focus(); return; }
+        function focaveis() {
+            return Array.prototype.filter.call(lateral.querySelectorAll("a[href], button:not([disabled])"), function (el) {
+                return el.offsetParent !== null;
+            });
+        }
+        function aberto() { return lateral.classList.contains("is-aberta"); }
+        function abrir() {
             lateral.classList.add("is-aberta"); sombra.hidden = false;
             botao.setAttribute("aria-expanded", "true");
-            var primeiro = lateral.querySelector("a"); if (primeiro) { primeiro.focus(); }
+            lateral.setAttribute("role", "dialog"); lateral.setAttribute("aria-modal", "true");
+            fundo().forEach(function (el) { el.inert = true; el.setAttribute("aria-hidden", "true"); });
+            document.documentElement.classList.add("menu-aberto");
+            var primeiro = lateral.querySelector(".lateral__link"); if (primeiro) { primeiro.focus(); }
+        }
+        function fechar(devolverFoco) {
+            if (!aberto()) { return; }
+            lateral.classList.remove("is-aberta"); sombra.hidden = true;
+            botao.setAttribute("aria-expanded", "false");
+            lateral.removeAttribute("role"); lateral.removeAttribute("aria-modal");
+            fundo().forEach(function (el) { el.inert = false; el.removeAttribute("aria-hidden"); });
+            document.documentElement.classList.remove("menu-aberto");
+            if (devolverFoco) { botao.focus(); }
+        }
+        botao.addEventListener("click", function () { if (aberto()) { fechar(true); } else { abrir(); } });
+        lateral.querySelector("[data-fechar-menu]").addEventListener("click", function () { fechar(true); });
+        sombra.addEventListener("click", function () { fechar(true); });
+        lateral.addEventListener("click", function (e) {
+            if (e.target.closest("a[href]") && aberto()) { fechar(false); }
         });
-        sombra.addEventListener("click", fechar);
         document.addEventListener("keydown", function (e) {
-            if (e.key === "Escape" && lateral.classList.contains("is-aberta")) { fechar(); botao.focus(); }
+            if (!aberto()) { return; }
+            if (e.key === "Escape") { e.preventDefault(); fechar(true); return; }
+            if (e.key === "Tab") {
+                var lista = focaveis(); if (!lista.length) { return; }
+                var primeiro = lista[0], ultimo = lista[lista.length - 1];
+                if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo.focus(); }
+                else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro.focus(); }
+            }
         });
+        var aoMudarLargura = function () { if (!MOVEL.matches) { fechar(false); } };
+        if (MOVEL.addEventListener) { MOVEL.addEventListener("change", aoMudarLargura); } else if (MOVEL.addListener) { MOVEL.addListener(aoMudarLargura); }
 
         document.querySelectorAll("[data-somente-perfil]").forEach(function (el) {
             var lista = el.getAttribute("data-somente-perfil").split(/\s+/);
@@ -314,24 +351,49 @@
             anterior.disabled = mesVisivel <= new Date(minimo.getFullYear(), minimo.getMonth(), 1);
         }
 
+        /* Faixa de dias do celular em duas variantes:
+           A — só a grade semanal (dado que a aplicação já possui);
+           B — quantidade de períodos livres por dia (exige dado novo). */
+        function varianteCalendario() {
+            var v = params.get("calendario") || ler("ct-calendario") || "a";
+            return v === "b" ? "b" : "a";
+        }
+
         function desenharFaixa() {
             if (!faixa) { return; }
+            var variante = varianteCalendario();
+            faixa.setAttribute("data-variante", variante);
             var html = "";
             var d = new Date(HOJE);
             for (var i = 0; i < 21; i++) {
                 var funciona = (GRADE[d.getDay()] || []).length > 0;
                 var passado = d < minimo && !mesmaData(d, minimo);
-                var livres = periodosDoDia(d).filter(function (p) { return p.situacao === "disponivel"; }).length;
-                var info = passado ? "—" : (!funciona ? "fechado" : (livres ? livres + " livres" : "lotado"));
-                html += '<button type="button" class="dia-chip" data-data="' + chave(d) + '"' + (passado ? " disabled" : "") +
-                    ' aria-pressed="' + mesmaData(d, selecionada) + '" aria-label="' + dataPorExtenso(d) + ", " + info + '">' +
-                    "<small>" + DIAS_CURTOS[d.getDay()] + "</small><strong>" + d.getDate() + "</strong><span>" + info + "</span></button>";
+                var classes = ["dia-chip"];
+                var info, falado;
+                if (variante === "a") {
+                    if (passado) { info = ""; falado = modo === "solicitacao" ? "fora do prazo de antecedência" : "data passada"; }
+                    else if (funciona) { info = '<i class="dia-chip__ponto" aria-hidden="true"></i>'; falado = "com funcionamento cadastrado"; classes.push("dia-chip--funciona"); }
+                    else { info = "fechado"; falado = "sem funcionamento cadastrado"; classes.push("dia-chip--fechado"); }
+                } else {
+                    var periodosDia = periodosDoDia(d);
+                    var livres = periodosDia.filter(function (p) { return p.situacao === "disponivel"; }).length;
+                    var todosBloqueados = periodosDia.length > 0 && periodosDia.every(function (p) { return p.situacao === "indisponivel"; });
+                    if (passado) { info = "—"; falado = modo === "solicitacao" ? "fora do prazo de antecedência" : "data passada"; }
+                    else if (!quadraAtiva) { info = "inativa"; falado = "quadra inativa"; classes.push("dia-chip--fechado"); }
+                    else if (!funciona) { info = "fechado"; falado = "sem funcionamento cadastrado"; classes.push("dia-chip--fechado"); }
+                    else if (todosBloqueados) { info = "bloqueado"; falado = "dia bloqueado"; classes.push("dia-chip--bloqueado"); }
+                    else if (!livres) { info = "sem vagas"; falado = "nenhum período livre"; classes.push("dia-chip--lotado"); }
+                    else { info = livres + (livres === 1 ? " livre" : " livres"); falado = info; classes.push(livres <= 2 ? "dia-chip--poucos" : "dia-chip--livres"); }
+                }
+                html += '<button type="button" class="' + classes.join(" ") + '" data-data="' + chave(d) + '"' + (passado ? " disabled" : "") +
+                    ' aria-pressed="' + mesmaData(d, selecionada) + '" aria-label="' + dataPorExtenso(d) + ", " + falado + '">' +
+                    '<small aria-hidden="true">' + DIAS_CURTOS[d.getDay()] + '</small><strong aria-hidden="true">' + d.getDate() + '</strong><span aria-hidden="true">' + info + "</span></button>";
                 d.setDate(d.getDate() + 1);
             }
             faixa.innerHTML = html;
             var ativo = faixa.querySelector('[aria-pressed="true"]');
-            if (ativo && ativo.scrollIntoView && faixa.scrollWidth > faixa.clientWidth) {
-                faixa.scrollLeft = Math.max(0, ativo.offsetLeft - 8);
+            if (ativo && faixa.scrollWidth > faixa.clientWidth) {
+                faixa.scrollLeft = Math.max(0, ativo.offsetLeft - faixa.offsetLeft - 8);
             }
         }
 
@@ -441,11 +503,44 @@
             var botaoAlvo = grade.querySelector('[data-data="' + chave(alvo) + '"]');
             if (botaoAlvo) { botaoAlvo.focus(); }
         });
+        if (faixa) {
+            faixa.addEventListener("keydown", function (e) {
+                var atual = e.target.closest(".dia-chip");
+                if (!atual || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) { return; }
+                e.preventDefault();
+                var botoes = Array.prototype.filter.call(faixa.querySelectorAll(".dia-chip"), function (b) { return !b.disabled; });
+                var i = botoes.indexOf(atual) + (e.key === "ArrowRight" ? 1 : -1);
+                if (botoes[i]) { botoes[i].focus(); }
+            });
+        }
+        document.querySelectorAll("[data-variante-calendario]").forEach(function (grupo) {
+            grupo.querySelectorAll("input").forEach(function (r) {
+                r.checked = r.value === varianteCalendario();
+                r.addEventListener("change", function () {
+                    gravar("ct-calendario", r.value);
+                    params.set("calendario", r.value);
+                    if (window.history && window.history.replaceState) { window.history.replaceState(null, "", "?" + params.toString()); }
+                    desenharFaixa();
+                    anunciar("Calendário do celular na opção " + r.value.toUpperCase() + ".");
+                });
+            });
+        });
+
+        // Barra de resumo do celular: some quando o painel de envio está visível,
+        // para nunca cobrir o campo de finalidade nem os botões.
+        var barra = document.querySelector(".barra-acao-movel");
+        var painelEnvio = document.querySelector("[data-painel-envio]");
+        if (barra && painelEnvio && "IntersectionObserver" in window) {
+            new IntersectionObserver(function (entradas) {
+                barra.classList.toggle("is-oculta", entradas[0].isIntersecting);
+            }, { threshold: 0 }).observe(painelEnvio);
+        }
+
         anterior.addEventListener("click", function () { mesVisivel.setMonth(mesVisivel.getMonth() - 1); desenharMes(); });
         proximo.addEventListener("click", function () { mesVisivel.setMonth(mesVisivel.getMonth() + 1); desenharMes(); });
         if (simular) {
             simular.addEventListener("change", function () {
-                quadraAtiva = !simular.checked; horarioEscolhido = null; desenharSlots(); atualizarResumo();
+                quadraAtiva = !simular.checked; horarioEscolhido = null; desenharFaixa(); desenharSlots(); atualizarResumo();
             });
         }
 
@@ -478,30 +573,190 @@
         desenharMes(); desenharFaixa(); desenharSlots(); atualizarResumo();
     }
 
-    /* ---------- Variações de estado da solicitação ----------------------- */
-    function iniciarEstados() {
-        var seletor = document.querySelector("[data-seletor-estado]");
-        if (!seletor) { return; }
-        var estado = params.get("estado") || "documentacao";
-        function aplicar(valor) {
-            document.querySelectorAll("[data-estado]").forEach(function (el) {
-                var lista = el.getAttribute("data-estado").split(/\s+/);
-                el.hidden = lista.indexOf(valor) === -1;
-            });
-            seletor.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.value === valor)); });
+    /* ---------- Detalhe da solicitação (aluno) ---------------------------
+       Separa três coisas que não devem ser confundidas:
+       - status gravado no banco (StatusReserva);
+       - situação apresentada (SituacaoSolicitacaoService: título + explicação);
+       - etapas do processo (apenas orientação visual, não são gravadas). */
+    var ETAPAS = ["Solicitação registrada", "Participantes e PDF", "Conferência da secretaria", "Contribuição presencial", "Decisão administrativa"];
+
+    // Eventos com data já gravada no banco (fictícios). "exibido" indica se a tela atual do aluno já mostra a data.
+    var EVENTOS = {
+        criada:      ["Solicitação registrada", "19/10/2026 07:56", "por você"],
+        v1:          ["Versão 1 do PDF enviada", "19/10/2026 18:20", "por você"],
+        v1devolvida: ["Versão 1 devolvida para correção", "20/10/2026 15:20", "secretaria", "aviso"],
+        v2:          ["Versão 2 do PDF enviada", "21/10/2026 09:12", "por você"],
+        v2validada:  ["Versão 2 validada", "21/10/2026 14:02", "secretaria"],
+        contrib:     ["Contribuição presencial registrada", "21/10/2026 16:40", "secretaria"],
+        aprovada:    ["Aprovada", "22/10/2026 08:05", "administração"],
+        rejeitada:   ["Rejeitada, com motivo", "22/10/2026 08:05", "administração", "perigo"],
+        cancelada:   ["Autorização cancelada, com motivo", "24/10/2026 11:30", "administração", "neutro"]
+    };
+
+    var DOC_V1_AGUARDANDO = { versao: 1, nome: "autorizacao-handebol.pdf", envio: "19/10/2026 18:20", situacao: ["documentacao", "ampulheta", "Aguardando conferência"] };
+    var DOC_V1_DEVOLVIDA = { versao: 1, nome: "autorizacao-handebol.pdf", envio: "19/10/2026 18:20", situacao: ["documentacao", "seta-esq", "Devolvido para correção"],
+        justificativa: "Faltam as assinaturas de dois participantes na página 2. (texto fictício)" };
+    var DOC_V2_VALIDADA = { versao: 2, nome: "autorizacao-handebol-v2.pdf", envio: "21/10/2026 09:12", situacao: ["aprovada", "check", "Validado"] };
+
+    var ESTADOS = {
+        documentacao: { status: "PENDENTE_DOCUMENTACAO", badge: ["documentacao", "documento", "Pendente de documentação"], etapa: 1,
+            msg: ["aviso", "alerta", "Pendente de documentação", "Revise os participantes e envie o PDF preparado e assinado fora do sistema."],
+            docs: [], envio: true, editarParticipantes: true, eventos: ["criada"] },
+        conferencia: { status: "PENDENTE_DOCUMENTACAO", badge: ["documentacao", "ampulheta", "Documento aguardando conferência"], etapa: 2,
+            msg: ["info", "ampulheta", "Documento aguardando conferência", "A secretaria ainda precisa conferir a versão mais recente enviada."],
+            docs: [DOC_V1_AGUARDANDO], envio: false, semEnvio: "Um novo envio só será liberado se a secretaria devolver a versão mais recente para correção.",
+            eventos: ["v1", "criada"] },
+        devolvida: { status: "PENDENTE_DOCUMENTACAO", badge: ["documentacao", "seta-esq", "Documento devolvido para correção"], etapa: 1, retorno: true,
+            msg: ["aviso", "alerta", "Documento devolvido para correção", "Consulte a justificativa, corrija o documento fora do sistema e envie uma nova versão."],
+            docs: [DOC_V1_DEVOLVIDA], envio: true, editarParticipantes: true, eventos: ["v1devolvida", "v1", "criada"] },
+        contribuicao: { status: "PENDENTE_DOCUMENTACAO", badge: ["documentacao", "recibo", "Contribuição pendente"], etapa: 3,
+            msg: ["info", "recibo", "Contribuição pendente", "O documento foi conferido. A secretaria ainda precisa registrar a contribuição presencial."],
+            docs: [DOC_V2_VALIDADA, DOC_V1_DEVOLVIDA], envio: false, semEnvio: "O documento mais recente já foi validado. Não é preciso enviar outra versão.",
+            eventos: ["v2validada", "v2", "v1devolvida", "v1", "criada"] },
+        analise: { status: "PENDENTE_ANALISE", badge: ["analise", "ampulheta", "Pronta para análise administrativa"], etapa: 4,
+            msg: ["info", "ampulheta", "Pronta para análise administrativa", "Documento e contribuição foram registrados. A solicitação aguarda a decisão da administração."],
+            docs: [DOC_V2_VALIDADA, DOC_V1_DEVOLVIDA], envio: false, semEnvio: "Novos envios não são permitidos depois que a solicitação avança para análise.",
+            eventos: ["contrib", "v2validada", "v2", "v1devolvida", "v1", "criada"] },
+        aprovada: { status: "APROVADA", badge: ["aprovada", "check-circulo", "Aprovada"], etapa: 5, final: ["concluida", "check", "Aprovada"],
+            msg: ["sucesso", "check-circulo", "Aprovada", "A utilização da quadra foi autorizada para a data e o horário informados."],
+            docs: [DOC_V2_VALIDADA, DOC_V1_DEVOLVIDA], envio: false, semEnvio: "Novos envios não são permitidos depois que a solicitação avança para análise.",
+            eventos: ["aprovada", "contrib", "v2validada", "v2", "v1devolvida", "v1", "criada"] },
+        rejeitada: { status: "REJEITADA", badge: ["rejeitada", "x-circulo", "Rejeitada"], etapa: 5, final: ["interrompida", "x", "Rejeitada"],
+            msg: ["perigo", "x-circulo", "Rejeitada", "A administração encerrou a análise sem autorizar a utilização.", "Motivo informado: o período coincide com o ensaio geral da Semana Cultural. (texto fictício)"],
+            docs: [DOC_V2_VALIDADA, DOC_V1_DEVOLVIDA], envio: false, semEnvio: "Novos envios não são permitidos depois que a solicitação avança para análise.",
+            eventos: ["rejeitada", "contrib", "v2validada", "v2", "v1devolvida", "v1", "criada"] },
+        cancelada: { status: "CANCELADA", badge: ["cancelada", "proibido", "Cancelada pela administração"], etapa: 5, final: ["neutra", "proibido", "Aprovada e depois cancelada"],
+            msg: ["neutro", "proibido", "Cancelada pela administração", "A reserva deixou de autorizar a utilização da quadra. Consulte o motivo institucional abaixo.",
+                "Motivo: manutenção emergencial da cobertura da quadra. (texto fictício) A equipe da escola ainda precisa registrar qualquer contato ou encaminhamento de reagendamento."],
+            docs: [DOC_V2_VALIDADA, DOC_V1_DEVOLVIDA], envio: false, semEnvio: "Novos envios não são permitidos depois que a solicitação avança para análise.",
+            eventos: ["cancelada", "aprovada", "contrib", "v2validada", "v2", "v1devolvida", "v1", "criada"] }
+    };
+
+    function iniciarSolicitacao() {
+        var raiz = document.querySelector("[data-solicitacao]");
+        if (!raiz) { return; }
+        var seletor = raiz.querySelector("[data-seletor-estado]");
+        function alvo(nome) { return raiz.querySelector('[data-render="' + nome + '"]'); }
+
+        function aplicar(chaveEstado) {
+            var e = ESTADOS[chaveEstado] || ESTADOS.documentacao;
+            alvo("badge").innerHTML = '<span class="badge badge--' + e.badge[0] + '">' + icone(e.badge[1]) + e.badge[2] + "</span>";
+            alvo("status-gravado").textContent = e.status;
+
+            alvo("etapas").innerHTML = ETAPAS.map(function (rotulo, i) {
+                var classe = "etapa", marcador = String(i + 1), extra = "";
+                if (i < e.etapa) { classe += " etapa--concluida"; marcador = icone("check", "icone--sm"); extra = '<span class="visually-hidden">Concluída: </span>'; }
+                else if (i === e.etapa && !e.final) { classe += " etapa--atual"; extra = '<span class="visually-hidden">Etapa atual: </span>'; }
+                if (e.final && i === 4) {
+                    classe = "etapa etapa--" + e.final[0]; marcador = icone(e.final[1], "icone--sm"); rotulo = e.final[2]; extra = "";
+                }
+                if (e.retorno && i === 1) { classe = "etapa etapa--atual etapa--retorno"; marcador = "2"; rotulo = "Participantes e PDF (correção)"; }
+                if (e.retorno && i === 2) { classe = "etapa etapa--devolvida"; marcador = icone("seta-esq", "icone--sm"); rotulo = "Conferência: devolvido"; }
+                var atual = classe.indexOf("etapa--atual") !== -1 ? ' aria-current="step"' : "";
+                return '<li class="' + classe + '"' + atual + '><span class="etapa__marcador" aria-hidden="true">' + marcador +
+                    '</span><span class="etapa__rotulo">' + extra + rotulo + "</span></li>";
+            }).join("");
+
+            var m = e.msg;
+            alvo("mensagem").innerHTML = '<div class="alerta alerta--' + m[0] + '">' + icone(m[1]) + '<div><strong class="alerta__titulo">' + m[2] +
+                "</strong><p>" + m[3] + "</p>" + (m[4] ? '<p style="margin-top:.5rem">' + m[4] + "</p>" : "") + "</div></div>";
+
+            alvo("participantes-acao").innerHTML = e.editarParticipantes
+                ? '<a class="botao botao--secundario" href="aluno-participantes.html">Revisar participantes</a>'
+                : '<a class="botao botao--secundario" href="aluno-participantes.html">Ver participantes</a><span class="campo__ajuda">A lista fica bloqueada durante a conferência e depois da validação.</span>';
+
+            alvo("documentos").innerHTML = e.docs.length ? '<ul class="lista-versoes">' + e.docs.map(function (d) {
+                return '<li class="arquivo-pdf"><span class="arquivo-pdf__icone" aria-hidden="true">PDF</span><div><strong>v' + d.versao + " — " + d.nome +
+                    "</strong><span>Enviada em " + d.envio + "</span>" + (d.justificativa ? '<p class="justificativa"><strong>Justificativa da secretaria:</strong> ' + d.justificativa + "</p>" : "") +
+                    '</div><span class="badge badge--' + d.situacao[0] + '">' + icone(d.situacao[1]) + d.situacao[2] + "</span></li>";
+            }).join("") + "</ul>" : '<div class="vazio vazio--compacto"><span class="vazio__icone">' + icone("documento", "icone--lg") +
+                "</span><strong>Nenhum PDF enviado</strong><p>A solicitação continua aguardando documentação.</p></div>";
+
+            raiz.querySelector("[data-envio]").hidden = !e.envio;
+            var semEnvio = raiz.querySelector("[data-sem-envio]");
+            semEnvio.hidden = e.envio;
+            semEnvio.textContent = e.semEnvio || "";
+
+            alvo("historico").innerHTML = e.eventos.map(function (k) {
+                var ev = EVENTOS[k];
+                var tom = ev[3] ? " historico__ponto--" + ev[3] : "";
+                return '<li><span class="historico__ponto' + tom + '" aria-hidden="true"></span><div><strong>' + ev[0] + "</strong><span>" + ev[1] + " · " + ev[2] + "</span></div></li>";
+            }).join("");
+
+            seletor.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.value === chaveEstado)); });
         }
-        seletor.addEventListener("click", function (e) {
-            var b = e.target.closest("button"); if (!b) { return; }
+
+        seletor.addEventListener("click", function (ev) {
+            var b = ev.target.closest("button"); if (!b) { return; }
             aplicar(b.value);
-            if (window.history && window.history.replaceState) {
-                window.history.replaceState(null, "", "?estado=" + b.value);
+            if (window.history && window.history.replaceState) { window.history.replaceState(null, "", "?estado=" + b.value); }
+        });
+        aplicar(ESTADOS[params.get("estado")] ? params.get("estado") : "documentacao");
+        if (params.get("nova") === "1") { raiz.querySelector("[data-aviso-nova]").hidden = false; }
+    }
+
+    /* ---------- Envio de PDF: controle em português sobre o input nativo ----
+       O <input type="file"> continua existindo, focável e funcional.
+       O protótipo só valida extensão e tamanho para mostrar o retorno visual;
+       nada é enviado nem guardado. */
+    var LIMITE_PDF = 10 * 1024 * 1024; // igual a DocumentoReservaService.TAMANHO_MAXIMO_BYTES
+
+    function formatarTamanho(bytes) {
+        if (bytes < 1024 * 1024) { return Math.max(1, Math.round(bytes / 1024)) + " KB"; }
+        return (bytes / (1024 * 1024)).toFixed(1).replace(".", ",") + " MB";
+    }
+
+    function iniciarUpload() {
+        document.querySelectorAll("[data-upload]").forEach(function (caixa) {
+            var input = caixa.querySelector('input[type="file"]');
+            var estado = caixa.querySelector("[data-upload-estado]");
+            var erro = caixa.querySelector("[data-upload-erro]");
+            var remover = caixa.querySelector("[data-upload-remover]");
+            var rotulo = caixa.querySelector("[data-upload-rotulo]");
+            var area = caixa.querySelector("[data-upload-caixa]");
+
+            function mostrarErro(texto) {
+                erro.textContent = texto; erro.hidden = !texto;
+                input.setAttribute("aria-invalid", texto ? "true" : "false");
+                area.classList.toggle("upload__caixa--erro", !!texto);
+            }
+            function atualizar() {
+                var arquivo = input.files && input.files[0];
+                mostrarErro("");
+                if (!arquivo) {
+                    estado.textContent = "Nenhum arquivo selecionado.";
+                    area.classList.remove("upload__caixa--selecionado");
+                    remover.hidden = true; rotulo.textContent = "Selecionar PDF";
+                    return;
+                }
+                var ehPdf = /\.pdf$/i.test(arquivo.name) && (!arquivo.type || arquivo.type === "application/pdf");
+                if (!ehPdf) {
+                    estado.textContent = "Arquivo não aceito: " + arquivo.name;
+                    mostrarErro("Selecione um arquivo no formato PDF (.pdf).");
+                } else if (arquivo.size > LIMITE_PDF) {
+                    estado.textContent = "Arquivo grande demais: " + arquivo.name + " (" + formatarTamanho(arquivo.size) + ")";
+                    mostrarErro("O arquivo PDF deve possuir no máximo 10 MB.");
+                } else {
+                    estado.innerHTML = '<span class="upload__nome">' + arquivo.name.replace(/[<>&]/g, "") + '</span><span class="upload__meta">' + formatarTamanho(arquivo.size) + " · selecionado, ainda não enviado</span>";
+                }
+                area.classList.toggle("upload__caixa--selecionado", ehPdf && arquivo.size <= LIMITE_PDF);
+                remover.hidden = false; rotulo.textContent = "Trocar arquivo";
+            }
+            input.addEventListener("change", atualizar);
+            remover.addEventListener("click", function () { input.value = ""; atualizar(); input.focus(); });
+
+            var form = caixa.closest("form[data-upload-form]");
+            if (form) {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    var ok = form.querySelector("[data-upload-ok]");
+                    ok.hidden = true;
+                    if (!input.files || !input.files[0]) { mostrarErro("Selecione um arquivo PDF antes de enviar."); input.focus(); return; }
+                    if (input.getAttribute("aria-invalid") === "true") { input.focus(); return; }
+                    ok.hidden = false; ok.focus();
+                });
             }
         });
-        aplicar(estado);
-        if (params.get("nova") === "1") {
-            var aviso = document.querySelector("[data-aviso-nova]");
-            if (aviso) { aviso.hidden = false; }
-        }
     }
 
     /* ---------- Pequenos comportamentos ---------------------------------- */
@@ -558,7 +813,8 @@
         montarMoldura();
         hidratarIcones();
         document.querySelectorAll("[data-agenda]").forEach(iniciarAgenda);
-        iniciarEstados();
+        iniciarSolicitacao();
+        iniciarUpload();
         iniciarContadores();
         iniciarDemonstracoes();
     });

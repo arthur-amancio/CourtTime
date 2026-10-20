@@ -63,10 +63,13 @@
         <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
         <div>
             <strong class="alerta__titulo">Controles do protótipo</strong>
-            <p>Horários, bloqueios e reservas desta tela são fictícios. Use a opção abaixo para ver como a tela diferencia o estado da quadra da disponibilidade de cada período.</p>
-            <label style="display:inline-flex; gap:.5rem; align-items:center; margin-top:.5rem; font-weight:650; font-size:.875rem; color: var(--cor-texto)">
-                <input type="checkbox" data-simular-inativa> Simular quadra inativa no cadastro
-            </label>
+            <p>Horários, bloqueios e reservas desta tela são fictícios. Use as opções abaixo para ver o estado da quadra e as duas variantes do calendário no celular.</p>
+            <label class="controle-prototipo__check"><input type="checkbox" data-simular-inativa> Simular quadra inativa no cadastro</label>
+            <fieldset class="controle-prototipo" data-variante-calendario>
+                <legend>Calendário no celular (abaixo de 860 px)</legend>
+                <label><input type="radio" name="variante-calendario" value="a"> Opção A — dia e funcionamento, sem contagem</label>
+                <label><input type="radio" name="variante-calendario" value="b"> Opção B — com quantidade de horários livres</label>
+            </fieldset>
         </div>
     </div>
 </main>

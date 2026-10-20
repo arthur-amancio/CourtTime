@@ -1,0 +1,262 @@
+[
+ [
+  "Menu 390px: abre com Enter (aria-expanded=true) e foco no menu",
+  true,
+  ""
+ ],
+ [
+  "Menu 390px: Tab/Shift+Tab presos no menu (28 passos)",
+  true,
+  "[]"
+ ],
+ [
+  "Menu 390px: fundo inerte e sem rolagem",
+  true,
+  "hidden"
+ ],
+ [
+  "Menu 390px: Esc fecha e devolve o foco ao botão Menu",
+  true,
+  ""
+ ],
+ [
+  "Menu 390px: menu fechado fica fora da tabulação",
+  true,
+  "hidden"
+ ],
+ [
+  "Menu 390px: botão Fechar fecha e devolve foco",
+  true,
+  ""
+ ],
+ [
+  "Menu 390px: escolher opção navega com o menu fechado",
+  true,
+  ""
+ ],
+ [
+  "Menu 430px: abre com Enter (aria-expanded=true) e foco no menu",
+  true,
+  ""
+ ],
+ [
+  "Menu 430px: Tab/Shift+Tab presos no menu (28 passos)",
+  true,
+  "[]"
+ ],
+ [
+  "Menu 430px: fundo inerte e sem rolagem",
+  true,
+  "hidden"
+ ],
+ [
+  "Menu 430px: Esc fecha e devolve o foco ao botão Menu",
+  true,
+  ""
+ ],
+ [
+  "Menu 430px: menu fechado fica fora da tabulação",
+  true,
+  "hidden"
+ ],
+ [
+  "Menu 430px: botão Fechar fecha e devolve foco",
+  true,
+  ""
+ ],
+ [
+  "Menu 430px: escolher opção navega com o menu fechado",
+  true,
+  ""
+ ],
+ [
+  "Menu 768px: abre com Enter (aria-expanded=true) e foco no menu",
+  true,
+  ""
+ ],
+ [
+  "Menu 768px: Tab/Shift+Tab presos no menu (28 passos)",
+  true,
+  "[]"
+ ],
+ [
+  "Menu 768px: fundo inerte e sem rolagem",
+  true,
+  "hidden"
+ ],
+ [
+  "Menu 768px: Esc fecha e devolve o foco ao botão Menu",
+  true,
+  ""
+ ],
+ [
+  "Menu 768px: menu fechado fica fora da tabulação",
+  true,
+  "hidden"
+ ],
+ [
+  "Menu 768px: botão Fechar fecha e devolve foco",
+  true,
+  ""
+ ],
+ [
+  "Menu 768px: escolher opção navega com o menu fechado",
+  true,
+  ""
+ ],
+ [
+  "Nova solicitação 390: sem rolagem horizontal",
+  true,
+  "0"
+ ],
+ [
+  "Nova solicitação 390: horário escolhido pelo teclado",
+  true,
+  ""
+ ],
+ [
+  "Nova solicitação 390: barra não cobre finalidade/Registrar/Cancelar",
+  true,
+  "[{\"sobre\": false, \"barra\": [844, 913], \"alvo\": [350, 468], \"pos\": \"sticky\", \"vis\": false}, {\"sobre\": false, \"barra\": [844, 913], \"alvo\": [704, 748], \"pos\": \"sticky\", \"vis\": false}, {\"sobre\": false, \"barra\": [530, 599], \"alvo\": [352, 396], \"pos\": \"sticky\", \"vis\": false}]"
+ ],
+ [
+  "Nova solicitação 430: sem rolagem horizontal",
+  true,
+  "0"
+ ],
+ [
+  "Nova solicitação 430: horário escolhido pelo teclado",
+  true,
+  ""
+ ],
+ [
+  "Nova solicitação 430: barra não cobre finalidade/Registrar/Cancelar",
+  true,
+  "[{\"sobre\": false, \"barra\": [932, 1001], \"alvo\": [394, 512], \"pos\": \"sticky\", \"vis\": false}, {\"sobre\": false, \"barra\": [932, 1001], \"alvo\": [765, 809], \"pos\": \"sticky\", \"vis\": false}, {\"sobre\": false, \"barra\": [932, 1001], \"alvo\": [792, 836], \"pos\": \"sticky\", \"vis\": false}]"
+ ],
+ [
+  "Nova solicitação 768: sem rolagem horizontal",
+  true,
+  "0"
+ ],
+ [
+  "Nova solicitação 768: horário escolhido pelo teclado",
+  true,
+  ""
+ ],
+ [
+  "Nova solicitação 768: barra não cobre finalidade/Registrar/Cancelar",
+  true,
+  "[{\"sobre\": false, \"barra\": [0, 0], \"alvo\": [489, 607], \"pos\": \"static\", \"vis\": false}, {\"sobre\": false, \"barra\": [0, 0], \"alvo\": [824, 868], \"pos\": \"static\", \"vis\": false}, {\"sobre\": false, \"barra\": [0, 0], \"alvo\": [824, 868], \"pos\": \"static\", \"vis\": false}]"
+ ],
+ [
+  "Nova solicitação 1440: sem rolagem horizontal",
+  true,
+  "0"
+ ],
+ [
+  "Nova solicitação 1440: horário escolhido pelo teclado",
+  true,
+  ""
+ ],
+ [
+  "Nova solicitação 1440: barra não cobre finalidade/Registrar/Cancelar",
+  true,
+  "[{\"sobre\": false, \"barra\": [0, 0], \"alvo\": [486, 604], \"pos\": \"static\", \"vis\": false}, {\"sobre\": false, \"barra\": [0, 0], \"alvo\": [856, 900], \"pos\": \"static\", \"vis\": false}, {\"sobre\": false, \"barra\": [0, 0], \"alvo\": [558, 602], \"pos\": \"static\", \"vis\": false}]"
+ ],
+ [
+  "Nova solicitação zoom200: sem rolagem horizontal",
+  true,
+  "0"
+ ],
+ [
+  "Nova solicitação zoom200: horário escolhido pelo teclado",
+  true,
+  ""
+ ],
+ [
+  "Nova solicitação zoom200: barra não cobre finalidade/Registrar/Cancelar",
+  true,
+  "[{\"sobre\": false, \"barra\": [0, 0], \"alvo\": [201, 319], \"pos\": \"static\", \"vis\": false}, {\"sobre\": false, \"barra\": [0, 0], \"alvo\": [203, 247], \"pos\": \"static\", \"vis\": false}, {\"sobre\": false, \"barra\": [0, 0], \"alvo\": [203, 247], \"pos\": \"static\", \"vis\": false}]"
+ ],
+ [
+  "Nova solicitação zoom400: sem rolagem horizontal",
+  true,
+  "0"
+ ],
+ [
+  "Nova solicitação zoom400: horário escolhido pelo teclado",
+  true,
+  ""
+ ],
+ [
+  "Nova solicitação zoom400: barra não cobre finalidade/Registrar/Cancelar",
+  true,
+  "[{\"sobre\": false, \"barra\": [647, 717], \"alvo\": [90, 208], \"pos\": \"static\", \"vis\": true}, {\"sobre\": false, \"barra\": [255, 325], \"alvo\": [90, 134], \"pos\": \"static\", \"vis\": true}, {\"sobre\": false, \"barra\": [255, 325], \"alvo\": [146, 190], \"pos\": \"static\", \"vis\": true}]"
+ ],
+ [
+  "Teclado virtual simulado (390×420): barra deixa de ser fixa e não cobre o campo",
+  true,
+  "{\"sobre\": false, \"barra\": [722, 792], \"alvo\": [186, 304], \"pos\": \"static\", \"vis\": true}"
+ ],
+ [
+  "Upload: enviar sem arquivo mostra erro e foca o seletor",
+  true,
+  "Selecione um arquivo PDF antes de enviar."
+ ],
+ [
+  "Upload: arquivo não PDF é recusado com mensagem",
+  true,
+  "Selecione um arquivo no formato PDF (.pdf)."
+ ],
+ [
+  "Upload: PDF acima de 10 MB é recusado",
+  true,
+  "O arquivo PDF deve possuir no máximo 10 MB."
+ ],
+ [
+  "Upload: PDF válido mostra nome, tamanho e 'Trocar arquivo'",
+  true,
+  "termo-assinado.pdf\n27 KB · selecionado, ainda não enviado"
+ ],
+ [
+  "Upload: Remover limpa a seleção e devolve foco",
+  true,
+  ""
+ ],
+ [
+  "Upload: input nativo alcançado por Tab e o botão Selecionar PDF mostra contorno",
+  true,
+  "nome acessível: Arquivo PDF assinado Selecionar PDF"
+ ],
+ [
+  "Calendário 390px: setas + Enter na faixa de dias",
+  true,
+  "Quarta-feira, 21 de outubro"
+ ],
+ [
+  "Calendário (consulta): nenhuma data a partir de hoje desabilitada",
+  true,
+  "0"
+ ],
+ [
+  "Calendário (solicitação): hoje desabilitado pela antecedência de 1 dia",
+  true,
+  ""
+ ],
+ [
+  "Bloqueio de dia inteiro aparece como Indisponível; domingo sem funcionamento",
+  true,
+  ""
+ ],
+ [
+  "Quadra inativa: nenhum período selecionável",
+  true,
+  ""
+ ],
+ [
+  "Calendário 1440px: seta para baixo pula uma semana",
+  true,
+  ""
+ ]
+]
