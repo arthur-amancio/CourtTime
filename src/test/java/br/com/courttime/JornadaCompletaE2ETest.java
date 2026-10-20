@@ -24,9 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,6 +38,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -75,7 +81,13 @@ class JornadaCompletaE2ETest {
     @LocalServerPort
     private int porta;
 
-    @Autowired private TestRestTemplate rest;
+    /**
+     * Cliente HTTP proprio: nao segue redirecionamento e nao lanca excecao em
+     * 4xx. Sem isso, um POST que responde 302 seria seguido ate a pagina de
+     * destino e o teste veria 200, escondendo o resultado real.
+     */
+    private final RestTemplate rest = clienteSemRedirecionamento();
+
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private QuadraRepository quadraRepository;
     @Autowired private UsuarioRepository usuarioRepository;
@@ -90,6 +102,25 @@ class JornadaCompletaE2ETest {
     @Autowired private AuditoriaUsuarioRepository auditoriaUsuarioRepository;
 
     private Quadra quadra;
+
+    private static RestTemplate clienteSemRedirecionamento() {
+        SimpleClientHttpRequestFactory fabrica = new SimpleClientHttpRequestFactory() {
+            @Override
+            protected void prepareConnection(HttpURLConnection conexao, String metodo)
+                    throws IOException {
+                super.prepareConnection(conexao, metodo);
+                conexao.setInstanceFollowRedirects(false);
+            }
+        };
+        RestTemplate template = new RestTemplate(fabrica);
+        template.setErrorHandler(new DefaultResponseErrorHandler() {
+            @Override
+            public boolean hasError(ClientHttpResponse resposta) {
+                return false;
+            }
+        });
+        return template;
+    }
 
     @BeforeEach
     void prepararCenario() {
@@ -222,10 +253,10 @@ class JornadaCompletaE2ETest {
         assertEquals(StatusReserva.APROVADA,
                 reservaRepository.findById(reservaId).orElseThrow().getStatus());
 
-        // o horário aprovado deixa de estar disponível
-        assertFalse(admin.get("/quadra?data=" + DATA).getBody()
+        // o horário aprovado deixa de ser oferecido como período disponível
+        assertFalse(aluno.get("/solicitacoes/nova?data=" + DATA).getBody()
                         .contains("value=\"" + INICIO + "\""),
-                "o período aprovado não deve mais ser oferecido");
+                "o período aprovado não deve mais ser oferecido ao aluno");
 
         // ---------- SEGURANCA ----------
         Sessao seguranca = entrar("seguranca.demo@exemplo.local");
