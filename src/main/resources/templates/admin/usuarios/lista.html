@@ -14,78 +14,106 @@
 
     <main id="conteudo" class="container app-main">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
-            <a th:href="@{/admin}">Administração</a>
-            <span aria-hidden="true">/</span>
+            <a th:href="@{/inicio}">Início</a><span aria-hidden="true">/</span>
+            <a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span>
             <span aria-current="page">Usuários</span>
         </nav>
 
-        <header class="page-heading page-heading--actions">
-            <div>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
                 <h1>Gerenciar usuários</h1>
-                <p>Consulte e administre as contas persistidas no CourtTime.</p>
+                <p>Consulte e administre as contas persistidas no CourtTime. Contas são desativadas, nunca excluídas.</p>
             </div>
-            <a class="button" th:href="@{/admin/usuarios/novo}">Novo usuário</a>
+            <div class="cabecalho-pagina__acoes">
+                <a class="botao" th:href="@{/admin/usuarios/novo}">
+                    <svg th:replace="~{fragments/icones :: icone('mais')}"></svg><span>Novo usuário</span>
+                </a>
+            </div>
         </header>
 
-        <p class="form-message form-message--success" role="status"
-           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" role="alert"
-           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
-
-        <form class="filter-form" th:action="@{/admin/usuarios}" method="get">
-            <div class="form-field filter-form__search">
-                <label for="busca">Nome ou email</label>
-                <input id="busca" name="busca" type="search" th:value="${busca}" maxlength="254">
-            </div>
-            <div class="form-field">
-                <label for="perfil">Perfil</label>
-                <select id="perfil" name="perfil">
-                    <option value="">Todos</option>
-                    <option th:each="item : ${perfis}" th:value="${item}" th:text="${item.descricao}" th:selected="${item == perfilSelecionado}">Aluno</option>
-                </select>
-            </div>
-            <div class="form-field">
-                <label for="ativo">Situação</label>
-                <select id="ativo" name="ativo">
-                    <option value="">Todas</option>
-                    <option value="true" th:selected="${ativoSelecionado == true}">Ativas</option>
-                    <option value="false" th:selected="${ativoSelecionado == false}">Inativas</option>
-                </select>
-            </div>
-            <button class="button" type="submit">Filtrar</button>
-            <a class="button button--secondary" th:href="@{/admin/usuarios}">Limpar</a>
-        </form>
-
-        <p class="empty-message" th:if="${usuarios.empty}">Nenhum usuário foi encontrado com os filtros informados.</p>
-
-        <div class="table-wrapper" th:unless="${usuarios.empty}">
-            <table class="schedule-table admin-table users-table table-cards">
-                <caption class="visually-hidden">Usuários cadastrados no CourtTime</caption>
-                <thead><tr><th scope="col">Nome</th><th scope="col">Email</th><th scope="col">Perfil</th><th scope="col">Situação</th><th scope="col">Ações</th></tr></thead>
-                <tbody>
-                    <tr th:each="usuario : ${usuarios.content}">
-                        <td data-label="Nome" th:text="${usuario.nome}">Nome completo</td>
-                        <td data-label="Email" th:text="${usuario.email}">usuario@escola.test</td>
-                        <td data-label="Perfil" th:text="${usuario.perfil.descricao}">Aluno</td>
-                        <td data-label="Situação"><span class="status-pill" th:classappend="${usuario.ativo} ? ' status-pill--available' : ' status-pill--unavailable'" th:text="${usuario.ativo} ? 'Ativa' : 'Inativa'">Ativa</span></td>
-                        <td data-label="Ações" class="table-actions table-actions--users">
-                            <a class="text-link" th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}">Editar</a>
-                            <a class="text-link" th:href="@{/admin/usuarios/{id}/senha(id=${usuario.id})}">Redefinir senha</a>
-                            <form th:if="${usuario.id != operadorId}" th:action="@{/admin/usuarios/{id}/alternar(id=${usuario.id})}" method="post" th:attr="data-confirmacao=${usuario.ativo ? 'Desativar esta conta?' : 'Ativar esta conta?'}" onsubmit="return confirm(this.dataset.confirmacao)">
-                                <button class="button button--secondary button--small" type="submit" th:text="${usuario.ativo} ? 'Desativar' : 'Ativar'">Desativar</button>
-                            </form>
-                            <span class="field-help" th:if="${usuario.id == operadorId}">Conta em uso</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Operação concluída.</p>
+        </div>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
         </div>
 
-        <nav class="pagination" aria-label="Paginação" th:if="${usuarios.totalPages > 1}">
-            <a class="button button--secondary button--small" th:if="${usuarios.hasPrevious()}" th:href="@{/admin/usuarios(busca=${busca},perfil=${perfilSelecionado},ativo=${ativoSelecionado},pagina=${usuarios.number - 1})}">Anterior</a>
-            <span th:text="|Página ${usuarios.number + 1} de ${usuarios.totalPages}|">Página 1 de 1</span>
-            <a class="button button--secondary button--small" th:if="${usuarios.hasNext()}" th:href="@{/admin/usuarios(busca=${busca},perfil=${perfilSelecionado},ativo=${ativoSelecionado},pagina=${usuarios.number + 1})}">Próxima</a>
-        </nav>
+        <section class="painel" aria-labelledby="usuarios-titulo">
+            <h2 id="usuarios-titulo" class="visually-hidden">Usuários cadastrados</h2>
+            <form class="filtros" th:action="@{/admin/usuarios}" method="get" role="search" aria-label="Filtrar usuários">
+                <div class="campo">
+                    <label for="busca">Nome ou email</label>
+                    <input id="busca" name="busca" type="search" th:value="${busca}" maxlength="254">
+                </div>
+                <div class="campo">
+                    <label for="perfil">Perfil</label>
+                    <select id="perfil" name="perfil">
+                        <option value="">Todos</option>
+                        <option th:each="item : ${perfis}" th:value="${item}" th:text="${item.descricao}" th:selected="${item == perfilSelecionado}">Aluno</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="ativo">Situação</label>
+                    <select id="ativo" name="ativo">
+                        <option value="">Todas</option>
+                        <option value="true" th:selected="${ativoSelecionado == true}">Ativas</option>
+                        <option value="false" th:selected="${ativoSelecionado == false}">Inativas</option>
+                    </select>
+                </div>
+                <div class="grupo-botoes">
+                    <button class="botao botao--secundario" type="submit">Filtrar</button>
+                    <a class="botao botao--fantasma" th:href="@{/admin/usuarios}">Limpar</a>
+                </div>
+            </form>
+
+            <div class="vazio" th:if="${usuarios.empty}">
+                <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg></span>
+                <strong>Nenhum usuário encontrado</strong>
+                <p>Nenhum usuário foi encontrado com os filtros informados.</p>
+            </div>
+
+            <div class="tabela-wrapper" th:unless="${usuarios.empty}">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Usuários cadastrados no CourtTime</caption>
+                    <thead><tr><th scope="col">Nome</th><th scope="col">Email</th><th scope="col">Perfil</th><th scope="col">Situação</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+                    <tbody>
+                        <tr th:each="usuario : ${usuarios.content}">
+                            <th scope="row" data-label="Nome" th:text="${usuario.nome}">Nome completo</th>
+                            <td data-label="Email" class="celula-quebra" th:text="${usuario.email}">usuario@escola.test</td>
+                            <td data-label="Perfil" th:text="${usuario.perfil.descricao}">Aluno</td>
+                            <td data-label="Situação">
+                                <span class="badge badge--aprovada" th:if="${usuario.ativo}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg><span>Ativa</span></span>
+                                <span class="badge badge--cancelada" th:unless="${usuario.ativo}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg><span>Inativa</span></span>
+                            </td>
+                            <td class="acoes-celula">
+                                <div class="acoes-tabela">
+                                    <a class="botao botao--secundario botao--sm" th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}"
+                                       th:attr="aria-label=|Editar ${usuario.nome}|">Editar</a>
+                                    <a class="botao botao--secundario botao--sm" th:href="@{/admin/usuarios/{id}/senha(id=${usuario.id})}"
+                                       th:attr="aria-label=|Redefinir senha de ${usuario.nome}|">Redefinir senha</a>
+                                    <form th:if="${usuario.id != operadorId}" th:action="@{/admin/usuarios/{id}/alternar(id=${usuario.id})}" method="post"
+                                          th:attr="data-confirmacao=${usuario.ativo ? 'Desativar esta conta?' : 'Ativar esta conta?'}"
+                                          onsubmit="return confirm(this.dataset.confirmacao)">
+                                        <button class="botao botao--sm" type="submit"
+                                                th:classappend="${usuario.ativo} ? ' botao--perigo-contorno' : ' botao--secundario'"
+                                                th:text="${usuario.ativo} ? 'Desativar' : 'Ativar'">Desativar</button>
+                                    </form>
+                                    <span class="badge badge--neutro" th:if="${usuario.id == operadorId}">Conta em uso</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav class="painel__rodape paginacao" aria-label="Paginação" th:if="${usuarios.totalPages > 1}">
+                <a class="botao botao--secundario botao--sm" th:if="${usuarios.hasPrevious()}" th:href="@{/admin/usuarios(busca=${busca},perfil=${perfilSelecionado},ativo=${ativoSelecionado},pagina=${usuarios.number - 1})}">Anterior</a>
+                <span th:text="|Página ${usuarios.number + 1} de ${usuarios.totalPages}|">Página 1 de 1</span>
+                <a class="botao botao--secundario botao--sm" th:if="${usuarios.hasNext()}" th:href="@{/admin/usuarios(busca=${busca},perfil=${perfilSelecionado},ativo=${ativoSelecionado},pagina=${usuarios.number + 1})}">Próxima</a>
+            </nav>
+        </section>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

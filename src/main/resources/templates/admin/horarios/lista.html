@@ -12,34 +12,73 @@
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
 
     <main id="conteudo" class="container app-main">
-        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><span aria-current="page">Horários</span></nav>
-        <header class="page-heading page-heading--actions"><div><h1>Horários semanais</h1><p>Defina os períodos de funcionamento usados pelo calendário da quadra.</p></div><a class="button" th:href="@{/admin/horarios/novo}">Novo horário</a></header>
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a><span aria-hidden="true">/</span>
+            <a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span>
+            <span aria-current="page">Horários</span>
+        </nav>
 
-        <p class="form-message form-message--success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
-        <p class="empty-message" th:if="${#lists.isEmpty(horarios)}">Nenhum horário semanal foi cadastrado.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Horários semanais</h1>
+                <p>Defina os períodos de funcionamento usados pelo calendário da quadra.</p>
+            </div>
+            <div class="cabecalho-pagina__acoes">
+                <a class="botao" th:href="@{/admin/horarios/novo}">
+                    <svg th:replace="~{fragments/icones :: icone('mais')}"></svg><span>Novo horário</span>
+                </a>
+            </div>
+        </header>
 
-        <div class="table-wrapper" th:unless="${#lists.isEmpty(horarios)}">
-            <table class="schedule-table admin-table table-cards">
-                <caption class="visually-hidden">Horários semanais da quadra</caption>
-                <thead><tr><th scope="col">Dia</th><th scope="col">Início</th><th scope="col">Fim</th><th scope="col">Estado</th><th scope="col">Ações</th></tr></thead>
-                <tbody>
-                    <tr th:each="horario : ${horarios}">
-                        <td data-label="Dia" th:text="${horario.diaSemana.descricao}">Segunda-feira</td>
-                        <td data-label="Início" th:text="${#temporals.format(horario.horarioInicio, 'HH:mm')}">08:00</td>
-                        <td data-label="Fim" th:text="${#temporals.format(horario.horarioFim, 'HH:mm')}">12:00</td>
-                        <td data-label="Estado"><span class="status-pill" th:classappend="${horario.ativa} ? ' status-pill--available' : ' status-pill--unavailable'" th:text="${horario.ativa} ? 'Ativo' : 'Inativo'">Ativo</span></td>
-                        <td data-label="Ações" class="table-actions">
-                            <a class="text-link" th:href="@{/admin/horarios/{id}/editar(id=${horario.id})}">Editar</a>
-                            <form th:action="@{/admin/horarios/{id}/alternar(id=${horario.id})}" method="post" th:attr="data-confirmacao=${horario.ativa ? 'Desativar este horário?' : 'Ativar este horário?'}" onsubmit="return confirm(this.dataset.confirmacao)">
-                                <button class="button button--secondary button--small" type="submit" th:text="${horario.ativa} ? 'Desativar' : 'Ativar'">Desativar</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Operação concluída.</p>
         </div>
-        <p class="availability__note">Horários contíguos são aceitos. Períodos sobrepostos e alterações que invalidem reservas aprovadas são recusados.</p>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
+        </div>
+
+        <section class="painel" aria-labelledby="horarios-titulo">
+            <div class="painel__cabecalho">
+                <h2 id="horarios-titulo">Faixas cadastradas</h2>
+                <p class="campo__ajuda">Horários contíguos são aceitos. Períodos sobrepostos e alterações que invalidem reservas aprovadas são recusados.</p>
+            </div>
+            <div class="vazio" th:if="${#lists.isEmpty(horarios)}">
+                <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('relogio')}"></svg></span>
+                <strong>Nenhum horário</strong>
+                <p>Nenhum horário semanal foi cadastrado. Sem horários, o calendário não oferece períodos.</p>
+            </div>
+            <div class="tabela-wrapper" th:unless="${#lists.isEmpty(horarios)}">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Horários semanais da quadra</caption>
+                    <thead><tr><th scope="col">Dia</th><th scope="col">Início</th><th scope="col">Fim</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+                    <tbody>
+                        <tr th:each="horario : ${horarios}">
+                            <th scope="row" data-label="Dia" th:text="${horario.diaSemana.descricao}">Segunda-feira</th>
+                            <td data-label="Início" th:text="${#temporals.format(horario.horarioInicio, 'HH:mm')}">08:00</td>
+                            <td data-label="Fim" th:text="${#temporals.format(horario.horarioFim, 'HH:mm')}">12:00</td>
+                            <td data-label="Estado">
+                                <span class="badge badge--aprovada" th:if="${horario.ativa}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg><span>Ativo</span></span>
+                                <span class="badge badge--cancelada" th:unless="${horario.ativa}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg><span>Inativo</span></span>
+                            </td>
+                            <td class="acoes-celula">
+                                <div class="acoes-tabela">
+                                    <a class="botao botao--secundario botao--sm" th:href="@{/admin/horarios/{id}/editar(id=${horario.id})}">Editar</a>
+                                    <form th:action="@{/admin/horarios/{id}/alternar(id=${horario.id})}" method="post"
+                                          th:attr="data-confirmacao=${horario.ativa ? 'Desativar este horário?' : 'Ativar este horário?'}"
+                                          onsubmit="return confirm(this.dataset.confirmacao)">
+                                        <button class="botao botao--sm" type="submit"
+                                                th:classappend="${horario.ativa} ? ' botao--perigo-contorno' : ' botao--secundario'"
+                                                th:text="${horario.ativa} ? 'Desativar' : 'Ativar'">Desativar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
     <footer th:replace="~{fragments/layout :: rodape}"></footer>
 </body>

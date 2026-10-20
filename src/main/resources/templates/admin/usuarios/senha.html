@@ -11,32 +11,32 @@
     <header th:replace="~{fragments/layout :: topo}"></header>
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
     <main id="conteudo" class="container app-main app-main--narrow">
-        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/usuarios}">Usuários</a><span aria-hidden="true">/</span><span aria-current="page">Redefinir senha</span></nav>
-        <header class="page-heading"><h1>Redefinir senha</h1><p>Defina uma nova credencial para <strong th:text="${usuario.nome}">Usuário</strong>. A senha anterior não será exibida.</p></header>
-        <form class="request-form" th:action="@{/admin/usuarios/{id}/senha(id=${usuario.id})}" th:object="${form}" method="post">
-            <div class="form-message form-message--error" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/inicio}">Início</a><span aria-hidden="true">/</span><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/usuarios}">Usuários</a><span aria-hidden="true">/</span><span aria-current="page">Redefinir senha</span></nav>
+        <header class="cabecalho-pagina"><div class="cabecalho-pagina__texto"><h1>Redefinir senha</h1><p>Defina uma nova credencial para <strong th:text="${usuario.nome}">Usuário</strong>. A senha anterior não será exibida.</p></div></header>
+        <form class="painel formulario-painel" th:action="@{/admin/usuarios/{id}/senha(id=${usuario.id})}" th:object="${form}" method="post">
+            <div class="alerta alerta--perigo" role="alert" th:if="${#fields.hasAnyErrors()}">
                 <strong>Revise os dados informados.</strong>
                 <ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro</li></ul>
             </div>
-            <div class="form-grid">
-                <div class="form-field">
+            <div class="campos-linha">
+                <div class="campo">
                     <label for="novaSenha">Nova senha</label>
                     <input id="novaSenha" name="novaSenha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required
                            th:attr="aria-invalid=${#fields.hasErrors('novaSenha')},aria-describedby=${#fields.hasErrors('novaSenha')} ? 'novaSenha-erro' : null">
-                    <p id="novaSenha-erro" class="field-error" th:if="${#fields.hasErrors('novaSenha')}" th:errors="*{novaSenha}">Informe uma nova senha válida.</p>
+                    <p id="novaSenha-erro" class="campo__erro" th:if="${#fields.hasErrors('novaSenha')}" th:errors="*{novaSenha}">Informe uma nova senha válida.</p>
                 </div>
-                <div class="form-field">
+                <div class="campo">
                     <label for="confirmacaoSenha">Confirmar nova senha</label>
                     <input id="confirmacaoSenha" name="confirmacaoSenha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required
                            th:attr="aria-invalid=${#fields.hasErrors('confirmacaoSenha') or #fields.hasErrors('confirmacaoValida')},aria-describedby=${#fields.hasErrors('confirmacaoSenha') or #fields.hasErrors('confirmacaoValida')} ? 'confirmacaoSenha-erro' : null">
                     <div id="confirmacaoSenha-erro" th:if="${#fields.hasErrors('confirmacaoSenha') or #fields.hasErrors('confirmacaoValida')}">
-                        <p class="field-error" th:each="erro : ${#fields.errors('confirmacaoSenha')}" th:text="${erro}">Confirme a nova senha.</p>
-                        <p class="field-error" th:each="erro : ${#fields.errors('confirmacaoValida')}" th:text="${erro}">A confirmação deve ser igual à nova senha.</p>
+                        <p class="campo__erro" th:each="erro : ${#fields.errors('confirmacaoSenha')}" th:text="${erro}">Confirme a nova senha.</p>
+                        <p class="campo__erro" th:each="erro : ${#fields.errors('confirmacaoValida')}" th:text="${erro}">A confirmação deve ser igual à nova senha.</p>
                     </div>
                 </div>
             </div>
-            <p class="request-notice">Após a redefinição, as sessões anteriores dessa conta serão encerradas na próxima requisição.</p>
-            <div class="form-actions"><button class="button" type="submit">Redefinir senha</button><a class="button button--secondary" th:href="@{/admin/usuarios}">Cancelar</a></div>
+            <p class="alerta alerta--info">Após a redefinição, as sessões anteriores dessa conta serão encerradas na próxima requisição.</p>
+            <div class="grupo-botoes formulario-painel__acoes"><button class="botao" type="submit">Redefinir senha</button><a class="botao botao--fantasma" th:href="@{/admin/usuarios}">Cancelar</a></div>
         </form>
     </main>
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

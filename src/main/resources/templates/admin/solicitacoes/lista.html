@@ -21,81 +21,107 @@
             <span aria-current="page">Solicitações</span>
         </nav>
 
-        <p class="form-message form-message--success" role="status"
-           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" role="alert"
-           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
-
-        <header class="page-heading">
-            <h1>Análise de solicitações</h1>
-            <p>Fila de solicitações com documento conferido, participantes válidos e contribuição registrada.</p>
-        </header>
-
-        <p class="empty-message" th:if="${#lists.isEmpty(solicitacoes)}">
-            Não há solicitações prontas para análise administrativa.
-        </p>
-
-        <div class="table-wrapper" role="region" aria-labelledby="fila-title" tabindex="0"
-             th:unless="${#lists.isEmpty(solicitacoes)}">
-            <h2 id="fila-title" class="visually-hidden">Fila de solicitações prontas para análise</h2>
-            <table class="schedule-table requests-table table-cards">
-                <caption class="visually-hidden">Solicitações aguardando decisão administrativa</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Solicitante</th>
-                        <th scope="col">Data</th>
-                        <th scope="col">Horário</th>
-                        <th scope="col">Finalidade</th>
-                        <th scope="col"><span class="visually-hidden">Ação</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="solicitacao : ${solicitacoes}">
-                        <td data-label="Solicitante" th:text="${solicitacao.solicitante.nome}">Ana Souza</td>
-                        <td data-label="Data" th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
-                        <td data-label="Horário" th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
-                        <td data-label="Finalidade" th:text="${solicitacao.finalidade}">Treino da turma</td>
-                        <td><a class="text-link" th:href="@{/admin/solicitacoes/{id}(id=${solicitacao.id})}">Analisar</a></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Operação concluída.</p>
+        </div>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
         </div>
 
-        <section class="admin-section" aria-labelledby="autorizadas-title">
-            <header class="page-heading">
-                <h2 id="autorizadas-title">Reservas autorizadas</h2>
-                <p>Reservas de hoje em diante que ainda autorizam a utilização da quadra.</p>
-            </header>
-
-            <p class="empty-message" th:if="${#lists.isEmpty(reservasAutorizadas)}">
-                Não há reservas autorizadas atuais ou futuras.
-            </p>
-
-            <div class="table-wrapper" role="region" aria-label="Tabela de reservas autorizadas" tabindex="0"
-                 th:unless="${#lists.isEmpty(reservasAutorizadas)}">
-                <table class="schedule-table requests-table table-cards">
-                    <caption class="visually-hidden">Reservas autorizadas disponíveis para consulta administrativa</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Solicitante</th>
-                            <th scope="col">Data</th>
-                            <th scope="col">Horário</th>
-                            <th scope="col">Finalidade</th>
-                            <th scope="col"><span class="visually-hidden">Ação</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="reserva : ${reservasAutorizadas}">
-                            <td data-label="Solicitante" th:text="${reserva.solicitante.nome}">Ana Souza</td>
-                            <td data-label="Data" th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
-                            <td data-label="Horário" th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
-                            <td data-label="Finalidade" th:text="${reserva.finalidade}">Treino da turma</td>
-                            <td><a class="text-link" th:href="@{/admin/solicitacoes/{id}(id=${reserva.id})}">Abrir</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Análise de solicitações</h1>
+                <p>Fila de solicitações com documento conferido, participantes válidos e contribuição registrada.</p>
             </div>
-        </section>
+        </header>
+
+        <div class="pilha">
+            <section class="painel" aria-labelledby="fila-title">
+                <div class="painel__cabecalho">
+                    <h2 id="fila-title">Prontas para análise</h2>
+                    <span class="badge badge--analise">
+                        <svg th:replace="~{fragments/icones :: icone('ampulheta')}"></svg>
+                        <span th:text="|${#lists.size(solicitacoes)} na fila|">2 na fila</span>
+                    </span>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(solicitacoes)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('bandeja')}"></svg></span>
+                    <strong>Fila vazia</strong>
+                    <p>Não há solicitações prontas para análise administrativa. Elas aparecem aqui depois da conferência documental e do registro da contribuição.</p>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(solicitacoes)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Solicitações aguardando decisão administrativa</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Solicitante</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Horário</th>
+                                <th scope="col">Finalidade</th>
+                                <th scope="col"><span class="visually-hidden">Ação</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="solicitacao : ${solicitacoes}">
+                                <th scope="row" data-label="Solicitante">
+                                    <span th:text="${solicitacao.solicitante.nome}">Ana Souza</span>
+                                    <span class="tabela__secundario" th:text="|Solicitação #${solicitacao.id}|">Solicitação #20</span>
+                                </th>
+                                <td data-label="Data" th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                                <td data-label="Horário" th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                                <td data-label="Finalidade" th:text="${solicitacao.finalidade}">Treino da turma</td>
+                                <td class="acoes-celula">
+                                    <div class="acoes-tabela">
+                                        <a class="botao botao--sm" th:href="@{/admin/solicitacoes/{id}(id=${solicitacao.id})}">Analisar<span class="visually-hidden" th:text="| a solicitação #${solicitacao.id}|"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="autorizadas-title">
+                <div class="painel__cabecalho">
+                    <h2 id="autorizadas-title">Reservas autorizadas</h2>
+                    <p class="campo__ajuda">Reservas de hoje em diante que ainda autorizam a utilização da quadra. Uma reserva aprovada pode ser cancelada com motivo institucional.</p>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(reservasAutorizadas)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('escudo')}"></svg></span>
+                    <strong>Nenhuma reserva autorizada</strong>
+                    <p>Não há reservas autorizadas atuais ou futuras.</p>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(reservasAutorizadas)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Reservas autorizadas disponíveis para consulta administrativa</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Solicitante</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Horário</th>
+                                <th scope="col">Finalidade</th>
+                                <th scope="col"><span class="visually-hidden">Ação</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reserva : ${reservasAutorizadas}">
+                                <th scope="row" data-label="Solicitante" th:text="${reserva.solicitante.nome}">Ana Souza</th>
+                                <td data-label="Data" th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
+                                <td data-label="Horário" th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                                <td data-label="Finalidade" th:text="${reserva.finalidade}">Treino da turma</td>
+                                <td class="acoes-celula">
+                                    <div class="acoes-tabela">
+                                        <a class="botao botao--secundario botao--sm" th:href="@{/admin/solicitacoes/{id}(id=${reserva.id})}">Abrir<span class="visually-hidden" th:text="| a reserva #${reserva.id}|"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

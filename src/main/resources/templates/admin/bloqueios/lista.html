@@ -11,17 +11,69 @@
     <header th:replace="~{fragments/layout :: topo}"></header>
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
     <main id="conteudo" class="container app-main">
-        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><span aria-current="page">Bloqueios</span></nav>
-        <header class="page-heading page-heading--actions"><div><h1>Bloqueios da quadra</h1><p>Consulte e registre indisponibilidades futuras sem alterar o funcionamento semanal.</p></div><a class="button" th:href="@{/admin/bloqueios/novo}">Novo bloqueio</a></header>
-        <p class="form-message form-message--success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
-        <p class="empty-message" th:if="${#lists.isEmpty(bloqueios)}">Nenhum bloqueio futuro foi cadastrado.</p>
-        <div class="table-wrapper" th:unless="${#lists.isEmpty(bloqueios)}">
-            <table class="schedule-table admin-table table-cards"><caption class="visually-hidden">Bloqueios futuros da quadra</caption><thead><tr><th scope="col">Data</th><th scope="col">Período</th><th scope="col">Motivo</th><th scope="col">Estado</th><th scope="col">Ação</th></tr></thead>
-                <tbody><tr th:each="bloqueio : ${bloqueios}"><td data-label="Data" th:text="${#temporals.format(bloqueio.data, 'dd/MM/yyyy')}">19/10/2026</td><td data-label="Período" th:text="|${#temporals.format(bloqueio.horarioInicio, 'HH:mm')} – ${#temporals.format(bloqueio.horarioFim, 'HH:mm')}|">08:00 – 09:00</td><td data-label="Motivo" th:text="${bloqueio.motivo}">Manutenção</td><td data-label="Estado"><span class="status-pill" th:classappend="${bloqueio.ativo} ? ' status-pill--unavailable' : ''" th:text="${bloqueio.ativo} ? 'Ativo' : 'Inativo'">Ativo</span></td><td data-label="Ação"><form th:if="${bloqueio.ativo}" th:action="@{/admin/bloqueios/{id}/desativar(id=${bloqueio.id})}" method="post" onsubmit="return confirm('Desativar este bloqueio?')"><button class="button button--secondary button--small" type="submit">Desativar</button></form><span th:unless="${bloqueio.ativo}">—</span></td></tr></tbody>
-            </table>
+        <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a><span aria-hidden="true">/</span>
+            <a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span>
+            <span aria-current="page">Bloqueios</span>
+        </nav>
+
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Bloqueios da quadra</h1>
+                <p>Consulte e registre indisponibilidades futuras sem alterar o funcionamento semanal.</p>
+            </div>
+            <div class="cabecalho-pagina__acoes">
+                <a class="botao" th:href="@{/admin/bloqueios/novo}">
+                    <svg th:replace="~{fragments/icones :: icone('mais')}"></svg><span>Novo bloqueio</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Operação concluída.</p>
         </div>
-        <p class="availability__note">Um bloqueio que atinja uma reserva aprovada não será aceito.</p>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
+        </div>
+
+        <section class="painel" aria-labelledby="bloqueios-titulo">
+            <div class="painel__cabecalho">
+                <h2 id="bloqueios-titulo">Bloqueios futuros</h2>
+                <p class="campo__ajuda">Um bloqueio que atinja uma reserva aprovada não será aceito.</p>
+            </div>
+            <div class="vazio" th:if="${#lists.isEmpty(bloqueios)}">
+                <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg></span>
+                <strong>Nenhum bloqueio</strong>
+                <p>Nenhum bloqueio futuro foi cadastrado.</p>
+            </div>
+            <div class="tabela-wrapper" th:unless="${#lists.isEmpty(bloqueios)}">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Bloqueios futuros da quadra</caption>
+                    <thead><tr><th scope="col">Data</th><th scope="col">Período</th><th scope="col">Motivo</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Ação</span></th></tr></thead>
+                    <tbody>
+                        <tr th:each="bloqueio : ${bloqueios}">
+                            <th scope="row" data-label="Data" th:text="${#temporals.format(bloqueio.data, 'dd/MM/yyyy')}">19/10/2026</th>
+                            <td data-label="Período" th:text="|${#temporals.format(bloqueio.horarioInicio, 'HH:mm')} – ${#temporals.format(bloqueio.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                            <td data-label="Motivo" th:text="${bloqueio.motivo}">Manutenção</td>
+                            <td data-label="Estado">
+                                <span class="badge badge--rejeitada" th:if="${bloqueio.ativo}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg><span>Ativo</span></span>
+                                <span class="badge badge--cancelada" th:unless="${bloqueio.ativo}"><span>Inativo</span></span>
+                            </td>
+                            <td class="acoes-celula">
+                                <div class="acoes-tabela">
+                                    <form th:if="${bloqueio.ativo}" th:action="@{/admin/bloqueios/{id}/desativar(id=${bloqueio.id})}" method="post" onsubmit="return confirm('Desativar este bloqueio?')">
+                                        <button class="botao botao--perigo-contorno botao--sm" type="submit">Desativar</button>
+                                    </form>
+                                    <span class="campo__ajuda" th:unless="${bloqueio.ativo}">Sem ação</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
     <footer th:replace="~{fragments/layout :: rodape}"></footer>
 </body>
