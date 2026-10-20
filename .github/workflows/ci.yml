@@ -99,9 +99,12 @@ jobs:
           python3 - <<'PY'
           import re
           from pathlib import Path
+          padrao = re.compile(r'^\s*(?:<{7}(?:\s|$)|>{7}(?:\s|$)|={7}\s*$)')
+          assert padrao.match('=======') and padrao.match('<<<<<<< HEAD') and padrao.match('>>>>>>> feature')
+          assert not padrao.match('================================================================== */')
           for path in Path('src/main/resources/static/css').glob('*.css'):
               for numero, linha in enumerate(path.read_text(encoding='utf-8').splitlines(), start=1):
-                  if re.match(r'^\s*(?:<{7}(?:\s|$)|>{7}(?:\s|$)|={7}\s*$)', linha):
+                  if padrao.match(linha):
                       raise SystemExit(f'Marcador de conflito em {path}:{numero}: {linha}')
           PY
 
