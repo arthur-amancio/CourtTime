@@ -5,27 +5,22 @@
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
-const { verificarAmbienteIsolado } = require('./seguranca-ambiente.cjs');
+const { carregarConfiguracao } = require('./suporte/configuracao.cjs');
+const { autenticar } = require('./suporte/sessoes.cjs');
 
-const BASE = process.env.COURTTIME_E2E_BASE_URL || 'http://127.0.0.1:18081';
-verificarAmbienteIsolado({
-  baseUrl: BASE,
-  consentimento: process.env.COURTTIME_E2E_ACK_ISOLATED_DB,
-  nomeBanco: process.env.COURTTIME_E2E_DATABASE_NAME,
-});
-const EVIDENCE = process.env.COURTTIME_E2E_EVIDENCE_DIR || '/tmp/courttime-banca-evidence';
-const TARGET_SHA = process.env.COURTTIME_E2E_TARGET_SHA || 'nao-informado';
-const CHROMIUM_EXECUTABLE = process.env.COURTTIME_E2E_CHROMIUM_PATH;
-const PASSWORD = process.env.COURTTIME_E2E_PASSWORD;
-if (!PASSWORD) throw new Error('Defina COURTTIME_E2E_PASSWORD somente no ambiente da execução.');
+const CONFIG = carregarConfiguracao();
+const BASE = CONFIG.baseUrl;
+const EVIDENCE = CONFIG.evidencias;
+const TARGET_SHA = CONFIG.targetSha;
+const CHROMIUM_EXECUTABLE = CONFIG.chromiumExecutable;
 const PASTA = path.join(EVIDENCE, 'telas');
 fs.mkdirSync(PASTA, { recursive: true });
 
 const CONTAS = {
-  aluno: 'aluno.a@exemplo.local',
-  secretaria: 'secretaria.banca@exemplo.local',
-  administrador: 'admin.banca@exemplo.local',
-  seguranca: 'seguranca.banca@exemplo.local',
+  aluno: 'alunoA',
+  secretaria: 'secretaria',
+  administrador: 'admin',
+  seguranca: 'seguranca',
 };
 const VIEWPORTS = [
   { width: 390, height: 844 },
@@ -71,14 +66,8 @@ function registrar(status, nome, detalhe = '') {
   }
 }
 
-async function entrar(page, email) {
-  await page.goto(`${BASE}/login`);
-  await page.locator('#email').fill(email);
-  await page.locator('#senha').fill(PASSWORD);
-  await Promise.all([
-    page.waitForURL(url => url.pathname === '/inicio'),
-    page.getByRole('button', { name: 'Entrar' }).click(),
-  ]);
+async function entrar(page, perfil) {
+  await autenticar(page, CONFIG, CONTAS[perfil]);
 }
 
 async function auditarPagina(page) {
@@ -131,7 +120,7 @@ async function verificarMenuMovel(page, perfil, viewport) {
       for (const viewport of VIEWPORTS) {
         const context = await browser.newContext({ viewport, locale: 'pt-BR' });
         const page = await context.newPage();
-        if (perfil !== 'publico') await entrar(page, CONTAS[perfil]);
+        if (perfil !== 'publico') await entrar(page, perfil);
         for (const [nome, url] of paginas) {
           if (!url) { registrar('INFO', `${perfil} ${nome}`, 'sem identificador da jornada'); continue; }
           await page.goto(`${BASE}${url}`);
@@ -154,7 +143,7 @@ async function verificarMenuMovel(page, perfil, viewport) {
     for (const perfil of ['aluno', 'administrador', 'secretaria', 'seguranca']) {
       const context = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false, locale: 'pt-BR' });
       const page = await context.newPage();
-      await entrar(page, CONTAS[perfil]);
+      await entrar(page, perfil);
       const links = await page.evaluate(() => [...document.querySelectorAll('nav a[href]')]
         .filter(a => a.offsetParent !== null).map(a => a.getAttribute('href')));
       registrar(links.length ? 'PASS' : 'FAIL', `navegação sem JavaScript — ${perfil} 390px`, links.join(' '));
@@ -166,7 +155,7 @@ async function verificarMenuMovel(page, perfil, viewport) {
     for (const [rotulo, viewport, escala] of [['zoom200', { width: 720, height: 500 }, 2], ['zoom400', { width: 360, height: 250 }, 4]]) {
       const context = await browser.newContext({ viewport, deviceScaleFactor: escala, locale: 'pt-BR' });
       const page = await context.newPage();
-      await entrar(page, CONTAS.aluno);
+      await entrar(page, 'aluno');
       for (const url of ['/inicio', '/quadra', '/solicitacoes/nova']) {
         await page.goto(`${BASE}${url}`);
         const a = await auditarPagina(page);

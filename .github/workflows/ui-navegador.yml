@@ -9,6 +9,7 @@ on:
     branches:
       - 'feat/ui-v2-**'
       - 'chore/ui-v2-**'
+      - 'test/qa-redesign-v2'
   workflow_dispatch:
 
 permissions:
@@ -44,6 +45,8 @@ jobs:
       COURTTIME_E2E_BASE_URL: http://127.0.0.1:18081
       COURTTIME_E2E_EVIDENCE_DIR: ${{ github.workspace }}/evidencias-ui
       COURTTIME_E2E_TARGET_SHA: ${{ github.sha }}
+      COURTTIME_E2E_INSTANCE_TOKEN: qa${{ github.run_id }}
+      COURTTIME_E2E_ADMIN_EMAIL: admin.qa${{ github.run_id }}@e2e.invalid
 
     steps:
       - name: Baixar o código
@@ -80,8 +83,8 @@ jobs:
           COURTTIME_DOCUMENT_STORAGE_PATH: ${{ runner.temp }}/documentos-e2e
           SERVER_PORT: '18081'
           COURTTIME_BOOTSTRAP_ADMIN_ENABLED: 'true'
-          COURTTIME_DEV_USER_NAME: Administração E2E
-          COURTTIME_DEV_USER_EMAIL: admin.banca@exemplo.local
+          COURTTIME_DEV_USER_NAME: Administrador E2E qa${{ github.run_id }}
+          COURTTIME_DEV_USER_EMAIL: ${{ env.COURTTIME_E2E_ADMIN_EMAIL }}
           COURTTIME_DEV_USER_PROFILE: ADMINISTRADOR
         run: |
           COURTTIME_DEV_USER_PASSWORD="$COURTTIME_E2E_PASSWORD" \
@@ -98,8 +101,10 @@ jobs:
           PGPASSWORD: e2e_descartavel
         run: |
           total=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT count(*) FROM usuarios;")
-          admin=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT count(*) FROM usuarios WHERE email = 'admin.banca@exemplo.local';")
-          echo "usuarios=$total admin_bootstrap=$admin"
+          banco=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT current_database();")
+          admin=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT count(*) FROM usuarios WHERE email = '$COURTTIME_E2E_ADMIN_EMAIL';")
+          echo "banco=$banco usuarios=$total admin_bootstrap=$admin"
+          test "$banco" = "courttime_e2e"
           test "$total" -eq 1
           test "$admin" -eq 1
 
@@ -116,6 +121,15 @@ jobs:
       - name: Jornada dos quatro perfis
         working-directory: qa/playwright
         run: npm run test:jornada
+
+      - name: Contratos de navegação e autorização
+        working-directory: qa/playwright
+        run: npm run test:navegacao
+
+      - name: Interações e responsividade da V2
+        if: always()
+        working-directory: qa/playwright
+        run: npm run test:redesign
 
       - name: Auditoria de acessibilidade (axe-core)
         if: always()

@@ -2,15 +2,9 @@ name: QA — proteção da automação de navegador
 
 on:
   pull_request:
-    paths:
-      - 'qa/playwright/**'
-      - '.github/workflows/qa-guard.yml'
   push:
     branches:
       - main
-    paths:
-      - 'qa/playwright/**'
-      - '.github/workflows/qa-guard.yml'
 
 permissions:
   contents: read
@@ -21,5 +15,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Recusar marcadores de conflito versionados
+        run: |
+          if git grep -n -E '^(<<<<<<<|=======|>>>>>>>)' -- .; then
+            echo '::error::Há marcadores de conflito versionados no repositório.'
+            exit 1
+          fi
+      - name: Validar sintaxe dos executáveis de QA
+        run: |
+          for arquivo in qa/playwright/*.cjs qa/playwright/suporte/*.cjs; do
+            node --check "$arquivo"
+          done
+          node -e "JSON.parse(require('fs').readFileSync('qa/playwright/package.json', 'utf8'))"
       - name: Verificar protecao sem baixar dependencias
         run: node --test qa/playwright/seguranca-ambiente.test.cjs

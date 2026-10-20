@@ -5,9 +5,12 @@
   "description": "Jornada funcional e auditoria visual reproduzíveis do CourtTime",
   "scripts": {
     "test:jornada": "node jornada-quatro-perfis.cjs",
+    "test:navegacao": "node navegacao-quatro-perfis.cjs",
+    "test:redesign": "node interacoes-redesign-v2.cjs",
     "test:a11y": "node auditoria-acessibilidade.cjs",
     "test:telas": "node capturas-telas.cjs",
-    "test:guard": "node --test seguranca-ambiente.test.cjs"
+    "test:guard": "node --test seguranca-ambiente.test.cjs",
+    "test:qa": "npm run test:guard && npm run test:jornada && npm run test:navegacao && npm run test:redesign && npm run test:a11y && npm run test:telas"
   },
   "dependencies": {
     "axe-core": "4.10.3",

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,7 +56,7 @@ public class AdministracaoQuadraService {
         LocalDate hoje = calendarioService.obterDataAtual();
         return new PainelAdministrativo(
                 quadra,
-                disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra),
+                obterHorariosOrdenados(quadra),
                 bloqueioRepository
                         .findByQuadraAndDataGreaterThanEqualOrderByDataAscHorarioInicioAsc(
                                 quadra, hoje)
@@ -73,7 +74,17 @@ public class AdministracaoQuadraService {
     public List<DisponibilidadeQuadra> listarHorarios(Usuario administrador) {
         validarAdministrador(administrador);
         Quadra quadra = quadraService.obterQuadra();
-        return disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra);
+        return obterHorariosOrdenados(quadra);
+    }
+
+    private List<DisponibilidadeQuadra> obterHorariosOrdenados(Quadra quadra) {
+        // EnumType.STRING e ordenado alfabeticamente no PostgreSQL; a ordem
+        // cronologica deve seguir a declaracao de DiaSemana (segunda a domingo).
+        return disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra)
+                .stream()
+                .sorted(Comparator.comparing(DisponibilidadeQuadra::getDiaSemana)
+                        .thenComparing(DisponibilidadeQuadra::getHorarioInicio))
+                .toList();
     }
 
     @Transactional(readOnly = true)

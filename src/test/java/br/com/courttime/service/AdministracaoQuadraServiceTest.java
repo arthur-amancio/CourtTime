@@ -74,6 +74,25 @@ class AdministracaoQuadraServiceTest {
     }
 
     @Test
+    void listaHorariosEmOrdemCronologicaMesmoQuandoBancoRetornaOrdemAlfabetica() {
+        when(quadraService.obterQuadra()).thenReturn(quadra);
+        DisponibilidadeQuadra domingo = horario(
+                1L, DiaSemana.DOMINGO, 9, 0, 10, 0, true);
+        DisponibilidadeQuadra quarta = horario(
+                2L, DiaSemana.QUARTA, 8, 0, 9, 0, true);
+        DisponibilidadeQuadra segundaTarde = horario(
+                3L, DiaSemana.SEGUNDA, 14, 0, 15, 0, true);
+        DisponibilidadeQuadra segundaManha = horario(
+                4L, DiaSemana.SEGUNDA, 8, 0, 9, 0, true);
+        when(disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra))
+                .thenReturn(List.of(domingo, quarta, segundaTarde, segundaManha));
+
+        List<DisponibilidadeQuadra> resultado = service.listarHorarios(administrador);
+
+        assertEquals(List.of(segundaManha, segundaTarde, quarta, domingo), resultado);
+    }
+
+    @Test
     void administradorCadastraHorarioComMinutosSemExigirHoraCheia() {
         prepararBloqueioDaQuadra();
         when(disponibilidadeRepository.findByQuadraAndDiaSemanaOrderByHorarioInicioAsc(
