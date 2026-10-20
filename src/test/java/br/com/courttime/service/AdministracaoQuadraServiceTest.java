@@ -74,6 +74,40 @@ class AdministracaoQuadraServiceTest {
     }
 
     @Test
+    void horariosDaAdministracaoSaoExibidosDeSegundaADomingoEmOrdemDeInicio() {
+        DisponibilidadeQuadra domingo = horario(1L, DiaSemana.DOMINGO, 8, 0, 9, 0, true);
+        DisponibilidadeQuadra quarta = horario(2L, DiaSemana.QUARTA, 12, 0, 13, 0, true);
+        DisponibilidadeQuadra segundaTarde = horario(3L, DiaSemana.SEGUNDA, 15, 0, 16, 0, true);
+        DisponibilidadeQuadra segundaManha = horario(4L, DiaSemana.SEGUNDA, 8, 0, 9, 0, true);
+        DisponibilidadeQuadra terca = horario(5L, DiaSemana.TERCA, 10, 0, 11, 0, true);
+
+        when(quadraService.obterQuadra()).thenReturn(quadra);
+        when(disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra))
+                .thenReturn(List.of(domingo, quarta, segundaTarde, segundaManha, terca));
+
+        assertEquals(
+                List.of(segundaManha, segundaTarde, terca, quarta, domingo),
+                service.listarHorarios(administrador));
+    }
+
+    @Test
+    void painelAdministrativoUsaAMesmaOrdenacaoSemModificarOPersistido() {
+        DisponibilidadeQuadra domingo = horario(1L, DiaSemana.DOMINGO, 8, 0, 9, 0, true);
+        DisponibilidadeQuadra segunda = horario(2L, DiaSemana.SEGUNDA, 8, 0, 9, 0, true);
+
+        when(quadraService.obterQuadra()).thenReturn(quadra);
+        when(calendarioService.obterDataAtual()).thenReturn(HOJE);
+        when(disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra))
+                .thenReturn(List.of(domingo, segunda));
+        when(bloqueioRepository.findByQuadraAndDataGreaterThanEqualOrderByDataAscHorarioInicioAsc(
+                quadra, HOJE)).thenReturn(List.of());
+
+        PainelAdministrativo painel = service.carregarPainel(administrador);
+
+        assertEquals(List.of(segunda, domingo), painel.horarios());
+    }
+
+    @Test
     void administradorCadastraHorarioComMinutosSemExigirHoraCheia() {
         prepararBloqueioDaQuadra();
         when(disponibilidadeRepository.findByQuadraAndDiaSemanaOrderByHorarioInicioAsc(

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +26,15 @@ import java.util.Objects;
 public class AdministracaoQuadraService {
 
     private static final int TAMANHO_MAXIMO_MOTIVO = 200;
+
+    // DiaSemana declara SEGUNDA..DOMINGO nessa ordem. No PostgreSQL, o
+    // EnumType.STRING e ordenado alfabeticamente, e nao cronologicamente.
+    // A ordenacao aqui e somente de apresentacao, sem alterar consultas
+    // utilizadas pela validacao das reservas.
+    private static final Comparator<DisponibilidadeQuadra> ORDEM_SEMANAL =
+            Comparator.comparingInt((DisponibilidadeQuadra horario) -> horario.getDiaSemana().ordinal())
+                    .thenComparing(DisponibilidadeQuadra::getHorarioInicio)
+                    .thenComparing(DisponibilidadeQuadra::getHorarioFim);
 
     private final QuadraService quadraService;
     private final QuadraRepository quadraRepository;
@@ -55,7 +65,7 @@ public class AdministracaoQuadraService {
         LocalDate hoje = calendarioService.obterDataAtual();
         return new PainelAdministrativo(
                 quadra,
-                disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra),
+                listarHorariosOrdenados(quadra),
                 bloqueioRepository
                         .findByQuadraAndDataGreaterThanEqualOrderByDataAscHorarioInicioAsc(
                                 quadra, hoje)
@@ -73,7 +83,14 @@ public class AdministracaoQuadraService {
     public List<DisponibilidadeQuadra> listarHorarios(Usuario administrador) {
         validarAdministrador(administrador);
         Quadra quadra = quadraService.obterQuadra();
-        return disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra);
+        return listarHorariosOrdenados(quadra);
+    }
+
+    private List<DisponibilidadeQuadra> listarHorariosOrdenados(Quadra quadra) {
+        return disponibilidadeRepository.findByQuadraOrderByDiaSemanaAscHorarioInicioAsc(quadra)
+                .stream()
+                .sorted(ORDEM_SEMANAL)
+                .toList();
     }
 
     @Transactional(readOnly = true)
