@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ParticipanteReservaService {
@@ -177,6 +178,38 @@ public class ParticipanteReservaService {
             throw new IllegalArgumentException(
                     "Já existe um participante com este RM ou RG na solicitação");
         }
+    }
+
+    /**
+     * Copia nome, RM/RG e categoria dos participantes de uma reserva cancelada
+     * para a remarcação dela. Chamado pelo ReservaService na mesma transação que
+     * já conferiu o dono e a situação da reserva cancelada.
+     */
+    @Transactional
+    public int copiarParticipantes(Reserva cancelada, Reserva remarcacao) {
+        if (cancelada == null || remarcacao == null
+                || cancelada.getStatus() != StatusReserva.CANCELADA
+                || remarcacao.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO
+                || !Objects.equals(
+                        cancelada.getSolicitante().getId(),
+                        remarcacao.getSolicitante().getId())) {
+            throw new IllegalStateException(
+                    "Os participantes só podem ser copiados para uma nova solicitação do mesmo aluno");
+        }
+        List<ParticipanteReserva> originais =
+                participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(cancelada);
+        for (ParticipanteReserva original : originais) {
+            ParticipanteReserva copia = new ParticipanteReserva();
+            copia.setReserva(remarcacao);
+            copia.setNomeCompleto(original.getNomeCompleto());
+            copia.setRmOuRg(original.getRmOuRg());
+            copia.setCategoria(original.getCategoria());
+            participanteRepository.save(copia);
+        }
+        if (!originais.isEmpty()) {
+            incrementarRevisao(remarcacao);
+        }
+        return originais.size();
     }
 
     private void incrementarRevisao(Reserva reserva) {

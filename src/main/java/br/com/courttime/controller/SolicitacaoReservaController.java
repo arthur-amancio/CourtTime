@@ -70,12 +70,33 @@ public class SolicitacaoReservaController {
     public String exibirFormulario(
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
-            Model model) {
+            @RequestParam(required = false) Long origem,
+            Authentication authentication,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         LocalDate dataSelecionada = ajustarParaDataSolicitavel(data);
         SolicitacaoReservaForm form = new SolicitacaoReservaForm();
         form.setData(dataSelecionada);
+
+        Reserva reservaCancelada = null;
+        if (origem != null) {
+            // Remarcação: só a partir de uma reserva cancelada do próprio aluno.
+            Usuario usuario = obterUsuarioAutenticado(authentication);
+            try {
+                reservaCancelada = reservaService.obterParaRemarcacao(origem, usuario);
+            } catch (AccessDeniedException exception) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            } catch (IllegalStateException exception) {
+                redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
+                return "redirect:/solicitacoes/" + origem;
+            }
+            form.setOrigemId(reservaCancelada.getId());
+            form.setFinalidade(reservaCancelada.getFinalidade());
+            form.setCopiarParticipantes(true);
+        }
+
         model.addAttribute("form", form);
-        prepararFormulario(model, dataSelecionada);
+        prepararFormulario(model, dataSelecionada, reservaCancelada);
         return "solicitacoes/formulario";
     }
 
@@ -87,9 +108,10 @@ public class SolicitacaoReservaController {
             Model model,
             RedirectAttributes redirectAttributes) {
         LocalDate dataSelecionada = ajustarParaDataSolicitavel(form.getData());
+        Reserva reservaCancelada = obterReservaCanceladaDoFormulario(form, authentication);
 
         if (bindingResult.hasErrors()) {
-            prepararFormulario(model, dataSelecionada);
+            prepararFormulario(model, dataSelecionada, reservaCancelada);
             return "solicitacoes/formulario";
         }
 
@@ -98,13 +120,26 @@ public class SolicitacaoReservaController {
         LocalTime horarioFim = form.getHorarioInicio().plusHours(1);
 
         try {
-            Reserva reserva = reservaService.criarSolicitacao(
-                    usuario,
-                    quadra,
-                    form.getData(),
-                    form.getHorarioInicio(),
-                    horarioFim,
-                    form.getFinalidade());
+            Reserva reserva;
+            if (reservaCancelada == null) {
+                reserva = reservaService.criarSolicitacao(
+                        usuario,
+                        quadra,
+                        form.getData(),
+                        form.getHorarioInicio(),
+                        horarioFim,
+                        form.getFinalidade());
+            } else {
+                reserva = reservaService.criarRemarcacao(
+                        usuario,
+                        quadra,
+                        reservaCancelada.getId(),
+                        form.getData(),
+                        form.getHorarioInicio(),
+                        horarioFim,
+                        form.getFinalidade(),
+                        form.isCopiarParticipantes());
+            }
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso",
                     "Solicitação registrada. A utilização da quadra ainda depende "
@@ -112,8 +147,24 @@ public class SolicitacaoReservaController {
             return "redirect:/solicitacoes/" + reserva.getId();
         } catch (IllegalArgumentException | IllegalStateException exception) {
             bindingResult.reject("solicitacao.invalida", exception.getMessage());
-            prepararFormulario(model, dataSelecionada);
+            prepararFormulario(model, dataSelecionada, reservaCancelada);
             return "solicitacoes/formulario";
+        } catch (AccessDeniedException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /** A reserva cancelada informada no formulário, conferindo que é do aluno. */
+    private Reserva obterReservaCanceladaDoFormulario(
+            SolicitacaoReservaForm form, Authentication authentication) {
+        if (form.getOrigemId() == null) {
+            return null;
+        }
+        try {
+            return reservaService.obterSolicitacaoDoUsuario(
+                    form.getOrigemId(), obterUsuarioAutenticado(authentication));
+        } catch (AccessDeniedException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -125,13 +176,23 @@ public class SolicitacaoReservaController {
             Reserva solicitacao = reservaService.obterSolicitacaoDoUsuario(id, usuario);
             model.addAttribute("solicitacao", solicitacao);
             model.addAttribute("situacao", situacaoService.descrever(solicitacao));
+            // Vínculos de remarcação, nos dois sentidos.
+            model.addAttribute("remarcacao",
+                    reservaService.obterRemarcacao(solicitacao).orElse(null));
+            model.addAttribute("reservaRemarcada",
+                    reservaService.obterReservaRemarcada(solicitacao, usuario).orElse(null));
         } catch (AccessDeniedException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return "solicitacoes/detalhe";
     }
 
-    private void prepararFormulario(Model model, LocalDate data) {
+    private void prepararFormulario(Model model, LocalDate data, Reserva reservaCancelada) {
+        // Na remarcação, a navegação do calendário mantém a reserva de origem.
+        model.addAttribute("reservaCancelada", reservaCancelada);
+        model.addAttribute("rotaCalendario", reservaCancelada == null
+                ? "/solicitacoes/nova"
+                : "/solicitacoes/nova?origem=" + reservaCancelada.getId());
         Quadra quadra = quadraService.obterQuadra();
         ConsultaDisponibilidade consulta = calendarioDisponibilidadeService.consultar(quadra, data);
         List<HorarioDisponibilidade> horariosDisponiveis = consulta.horarios().stream()

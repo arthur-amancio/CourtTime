@@ -31,6 +31,18 @@
             </div>
         </header>
 
+        <div class="alerta alerta--info bloco" th:if="${reservaCancelada}">
+            <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+            <div>
+                <p><strong>Remarcação de reserva cancelada</strong></p>
+                <p th:if="${reservaCancelada.status.name() == 'CANCELADA'}"
+                   th:text="|A reserva de ${#temporals.format(reservaCancelada.dataUtilizacao, 'dd/MM/yyyy')}, das ${#temporals.format(reservaCancelada.horarioInicio, 'HH:mm')} às ${#temporals.format(reservaCancelada.horarioFim, 'HH:mm')}, foi cancelada pela instituição. Escolha outra data e outro período.|">
+                    A reserva de 21/10/2026, das 08:00 às 09:00, foi cancelada pela instituição.
+                </p>
+                <p>A nova solicitação recomeça do início: é preciso enviar um novo PDF assinado, passar pela conferência da secretaria, registrar a contribuição e aguardar a aprovação. A reserva cancelada continua no histórico.</p>
+            </div>
+        </div>
+
         <div class="alerta alerta--perigo bloco" role="alert" th:if="${#fields.hasAnyErrors()}">
             <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
             <div>
@@ -52,7 +64,7 @@
                     </p>
                 </div>
                 <div class="agenda-interna">
-                    <section th:replace="~{fragments/calendario :: mes(${calendario}, '/solicitacoes/nova')}"></section>
+                    <section th:replace="~{fragments/calendario :: mes(${calendario}, ${rotaCalendario})}"></section>
                     <div class="agenda-interna__horarios">
                         <div class="horarios__topo">
                             <div>
@@ -61,8 +73,9 @@
                             </div>
                         </div>
                         <div class="painel__corpo">
-                            <nav th:replace="~{fragments/calendario :: faixa(${calendario}, '/solicitacoes/nova')}"></nav>
+                            <nav th:replace="~{fragments/calendario :: faixa(${calendario}, ${rotaCalendario})}"></nav>
                             <form class="data-form" method="get" th:action="@{/solicitacoes/nova}">
+                                <input type="hidden" name="origem" th:if="${reservaCancelada}" th:value="${reservaCancelada.id}">
                                 <label for="data-consulta">Outra data</label>
                                 <input id="data-consulta" name="data" type="date" required
                                        aria-describedby="data-consulta-ajuda"
@@ -92,6 +105,7 @@
                 </div>
                 <div class="painel__corpo">
                     <input type="hidden" th:field="*{data}">
+                    <input type="hidden" th:field="*{origemId}" th:if="${reservaCancelada}">
 
                     <fieldset class="grupo-horarios"
                               th:attr="aria-describedby=${#fields.hasErrors('horarioInicio')} ? 'horarioInicio-ajuda horarioInicio-erro' : 'horarioInicio-ajuda'">
@@ -135,6 +149,14 @@
                         </p>
                         <p id="finalidade-erro" class="campo__erro" th:if="${#fields.hasErrors('finalidade')}"
                            th:errors="*{finalidade}">Informe a finalidade.</p>
+                    </div>
+
+                    <div class="campo campo--espacado" th:if="${reservaCancelada}">
+                        <label class="opcao-marcavel" for="copiarParticipantes1">
+                            <input type="checkbox" th:field="*{copiarParticipantes}" aria-describedby="copiar-ajuda">
+                            <span>Copiar os participantes da reserva cancelada</span>
+                        </label>
+                        <p id="copiar-ajuda" class="campo__ajuda">A lista copiada continua editável antes do envio do PDF. O PDF, a contribuição e a aprovação anteriores não são reaproveitados.</p>
                     </div>
 
                     <div class="alerta alerta--info">
