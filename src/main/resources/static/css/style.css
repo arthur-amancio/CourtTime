@@ -1921,8 +1921,7 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
 .resumo-escolha { margin: 0 0 var(--esp-3); font-size: var(--texto-sm); color: var(--cor-texto-suave); }
 .resumo-escolha--ativo { padding: var(--esp-3) var(--esp-4); border: 1px solid var(--verde-200); border-radius: var(--raio-md); background: var(--cor-primaria-suave); color: var(--cor-texto); font-weight: 650; }
 
-/* ==========================================================================
-   CourtTime V2 — FASE E: administracao.
+/* ===================================================================   CourtTime V2 — FASE E: administracao.
    Somente indicadores que o backend ja calcula (PainelAdministrativo).
    ========================================================================== */
 .secao__titulo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--esp-2) var(--esp-4); margin-bottom: var(--esp-4); }
@@ -1966,3 +1965,10 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
 }
 .formulario-painel > .alerta { display: block; }
 .celula-quebra { overflow-wrap: anywhere; }
+=======
+.campo__rotulo { font-weight: 700; }
+.tabela tbody th { font-size: var(--texto-sm); font-weight: 700; color: var(--cor-texto); }
+@media (max-width: 640px) {
+    .indicadores { grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); }
+    .indicador { padding: var(--esp-3); }
+}
