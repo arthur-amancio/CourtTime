@@ -19,42 +19,57 @@
             <span aria-current="page">Reservas autorizadas</span>
         </nav>
 
-        <header class="page-heading">
-            <h1>Reservas autorizadas</h1>
-            <p>Consulte as reservas liberadas para hoje e para as próximas datas.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Reservas autorizadas</h1>
+                <p>Consulte as reservas liberadas para hoje e para as próximas datas.</p>
+            </div>
         </header>
 
-        <p class="empty-message" th:if="${#lists.isEmpty(reservas)}">
-            Não há reservas autorizadas para hoje ou para as próximas datas.
-        </p>
-
-        <div class="table-wrapper" role="region" aria-labelledby="reservas-title" tabindex="0"
-             th:unless="${#lists.isEmpty(reservas)}">
-            <h2 id="reservas-title" class="visually-hidden">Lista de reservas autorizadas</h2>
-            <table class="schedule-table table-cards">
-                <caption class="visually-hidden">Reservas autorizadas disponíveis para conferência</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Data</th>
-                        <th scope="col">Horário</th>
-                        <th scope="col">Quadra</th>
-                        <th scope="col">Solicitante</th>
-                        <th scope="col">Participantes</th>
-                        <th scope="col"><span class="visually-hidden">Ação</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="reserva : ${reservas}">
-                        <td data-label="Data" th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</td>
-                        <td data-label="Horário" th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
-                        <td data-label="Quadra" th:text="${reserva.quadra}">Quadra Poliesportiva</td>
-                        <td data-label="Solicitante" th:text="${reserva.solicitante}">Ana Souza</td>
-                        <td data-label="Participantes" th:text="${reserva.quantidadeParticipantes}">10</td>
-                        <td><a class="text-link" th:href="@{/seguranca/reservas/{id}(id=${reserva.id})}">Conferir</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <section class="painel" aria-labelledby="reservas-title">
+            <div class="painel__cabecalho">
+                <h2 id="reservas-title">Hoje e próximas datas</h2>
+                <span class="badge badge--aprovada" th:unless="${#lists.isEmpty(reservas)}">
+                    <svg th:replace="~{fragments/icones :: icone('escudo')}"></svg>
+                    <span th:text="${#lists.size(reservas) == 1} ? '1 reserva' : |${#lists.size(reservas)} reservas|">2 reservas</span>
+                </span>
+            </div>
+            <div class="vazio" th:if="${#lists.isEmpty(reservas)}">
+                <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('escudo')}"></svg></span>
+                <strong>Nenhuma reserva para conferir</strong>
+                <p>Não há reservas autorizadas para hoje ou para as próximas datas.</p>
+            </div>
+            <div class="tabela-wrapper" th:unless="${#lists.isEmpty(reservas)}">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Reservas autorizadas disponíveis para conferência</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Data e horário</th>
+                            <th scope="col">Quadra</th>
+                            <th scope="col">Solicitante</th>
+                            <th scope="col">Participantes</th>
+                            <th scope="col"><span class="visually-hidden">Ação</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="reserva : ${reservas}">
+                            <th scope="row" data-label="Data e horário">
+                                <span th:text="${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</span>
+                                <span class="tabela__secundario" th:text="|${#temporals.format(reserva.horarioInicio, 'HH:mm')} – ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">08:00 – 09:00</span>
+                            </th>
+                            <td data-label="Quadra" th:text="${reserva.quadra}">Quadra Poliesportiva</td>
+                            <td data-label="Solicitante" th:text="${reserva.solicitante}">Ana Souza</td>
+                            <td data-label="Participantes" th:text="${reserva.quantidadeParticipantes}">10</td>
+                            <td class="acoes-celula">
+                                <div class="acoes-tabela">
+                                    <a class="botao botao--sm" th:href="@{/seguranca/reservas/{id}(id=${reserva.id})}">Conferir<span class="visually-hidden" th:text="| a reserva de ${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')}, ${#temporals.format(reserva.horarioInicio, 'HH:mm')}|"></span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

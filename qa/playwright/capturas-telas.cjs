@@ -47,7 +47,12 @@ const PAGINAS = {
     ['analise', comId('/admin/solicitacoes/{id}', 'requestB')],
     ['usuarios', '/admin/usuarios'], ['horarios', '/admin/horarios'], ['bloqueios', '/admin/bloqueios'],
   ],
-  secretaria: [['inicio', '/inicio'], ['documentos', '/secretaria/documentos'], ['contribuicoes', '/secretaria/contribuicoes']],
+  secretaria: [
+    ['inicio', '/inicio'], ['documentos', '/secretaria/documentos'], ['contribuicoes', '/secretaria/contribuicoes'],
+    ['documento-validado', comId('/secretaria/documentos/{id}', 'documentA2')],
+    ['documento-devolvido', comId('/secretaria/documentos/{id}', 'documentA1')],
+    ['contribuicao', comId('/secretaria/contribuicoes/solicitacoes/{id}', 'requestA')],
+  ],
   seguranca: [['inicio', '/inicio'], ['reservas', '/seguranca/reservas'], ['quadra', '/quadra']],
 };
 

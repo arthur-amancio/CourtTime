@@ -19,96 +19,108 @@
             <span aria-current="page">Contribuições presenciais</span>
         </nav>
 
-        <p class="form-message form-message--success" role="status"
-           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">Operação concluída.</p>
-        <p class="form-message form-message--error" role="alert"
-           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível concluir.</p>
-
-        <header class="page-heading">
-            <h1>Contribuições presenciais</h1>
-            <p>Registre somente valores efetivamente recebidos na escola, após a conferência do documento.</p>
-        </header>
-
-        <div class="request-notice">
-            <strong>Referência institucional pendente</strong>
-            <p>O valor de R$ 2,00 por participante/hora ainda depende de confirmação da ETEC. O sistema não calcula nem confirma valores automaticamente.</p>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Operação concluída.</p>
+        </div>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível concluir.</p>
         </div>
 
-        <section class="admin-section" aria-labelledby="pendentes-title">
-            <h2 id="pendentes-title">Aguardando registro</h2>
-            <p class="empty-message" th:if="${#lists.isEmpty(pendentes)}">
-                Não há solicitações com a versão documental mais recente validada e sem contribuição registrada.
-            </p>
-            <ul class="action-list" th:unless="${#lists.isEmpty(pendentes)}">
-                <li class="action-card" th:each="reserva : ${pendentes}">
-                    <h3 class="action-card__title" th:text="|Solicitação #${reserva.id}|">Solicitação #20</h3>
-                    <dl class="details-list">
-                        <div>
-                            <dt>Solicitante</dt>
-                            <dd th:text="${reserva.solicitante.nome}">Ana Souza</dd>
-                        </div>
-                        <div>
-                            <dt>Uso da quadra</dt>
-                            <dd th:text="|${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')} das ${#temporals.format(reserva.horarioInicio, 'HH:mm')} às ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">
-                                20/10/2026 das 08:00 às 09:00
-                            </dd>
-                        </div>
-                    </dl>
-                    <form class="request-form"
-                          th:action="@{/secretaria/contribuicoes/solicitacoes/{id}(id=${reserva.id})}"
-                          method="post">
-                        <div class="form-field">
-                            <label th:for="|valor-${reserva.id}|">Valor recebido (R$)</label>
-                            <input th:id="|valor-${reserva.id}|" name="valor" type="number"
-                                   min="0.01" max="9999999999.99" step="0.01"
-                                   inputmode="decimal" required>
-                        </div>
-                        <div class="form-field">
-                            <label th:for="|observacoes-${reserva.id}|">Observações</label>
-                            <textarea th:id="|observacoes-${reserva.id}|" name="observacoes"
-                                      maxlength="500" rows="3"></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button class="button" type="submit">Registrar recebimento</button>
-                        </div>
-                    </form>
-                </li>
-            </ul>
-
-        </section>
-
-        <section class="admin-section" aria-labelledby="historico-title">
-            <h2 id="historico-title">Histórico de contribuições</h2>
-            <p class="empty-message" th:if="${#lists.isEmpty(registradas)}">
-                Nenhuma contribuição presencial foi registrada.
-            </p>
-            <div class="table-wrapper" th:unless="${#lists.isEmpty(registradas)}">
-                <table class="schedule-table table-cards">
-                    <caption class="visually-hidden">Histórico de contribuições presenciais</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Solicitação</th>
-                            <th scope="col">Valor atual</th>
-                            <th scope="col">Registrado por</th>
-                            <th scope="col">Data</th>
-                            <th scope="col">Detalhes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="contribuicao : ${registradas}">
-                            <td data-label="Solicitação" th:text="|#${contribuicao.reserva.id}|">#20</td>
-                            <td data-label="Valor atual" th:text="|R$ ${#numbers.formatDecimal(contribuicao.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 20,00</td>
-                            <td data-label="Registrado por" th:text="${contribuicao.registradaPor.nome}">Secretaria</td>
-                            <td data-label="Data" th:text="${#temporals.format(contribuicao.registradaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
-                            <td data-label="Detalhes">
-                                <a class="button button--secondary button--small"
-                                   th:href="@{/secretaria/contribuicoes/solicitacoes/{id}(id=${contribuicao.reserva.id})}">Consultar</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Contribuições presenciais</h1>
+                <p>Registre somente valores efetivamente recebidos na escola, após a conferência do documento.</p>
             </div>
-        </section>
+        </header>
+
+        <div class="alerta alerta--aviso bloco">
+            <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
+            <div>
+                <strong>Referência institucional pendente</strong>
+                <p>O valor de R$ 2,00 por participante/hora ainda depende de confirmação da ETEC. O sistema não calcula nem confirma valores automaticamente.</p>
+            </div>
+        </div>
+
+        <div class="pilha">
+            <section class="painel" aria-labelledby="pendentes-title">
+                <div class="painel__cabecalho">
+                    <h2 id="pendentes-title">Aguardando registro</h2>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(pendentes)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('recibo')}"></svg></span>
+                    <strong>Nenhum registro pendente</strong>
+                    <p>Não há solicitações com a versão documental mais recente validada e sem contribuição registrada.</p>
+                </div>
+                <ul class="operacoes" th:unless="${#lists.isEmpty(pendentes)}">
+                    <li class="operacao" th:each="reserva : ${pendentes}">
+                        <h3 class="operacao__titulo" th:text="|Solicitação #${reserva.id}|">Solicitação #20</h3>
+                        <dl class="dados">
+                            <div><dt>Solicitante</dt><dd th:text="${reserva.solicitante.nome}">Ana Souza</dd></div>
+                            <div><dt>Uso da quadra</dt><dd th:text="|${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')} das ${#temporals.format(reserva.horarioInicio, 'HH:mm')} às ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">20/10/2026 das 08:00 às 09:00</dd></div>
+                        </dl>
+                        <form class="operacao__form" method="post"
+                              th:action="@{/secretaria/contribuicoes/solicitacoes/{id}(id=${reserva.id})}">
+                            <div class="campo">
+                                <label th:for="|valor-${reserva.id}|">Valor recebido (R$)</label>
+                                <input th:id="|valor-${reserva.id}|" name="valor" type="number"
+                                       min="0.01" max="9999999999.99" step="0.01"
+                                       inputmode="decimal" required>
+                            </div>
+                            <div class="campo">
+                                <label th:for="|observacoes-${reserva.id}|">Observações</label>
+                                <textarea th:id="|observacoes-${reserva.id}|" name="observacoes"
+                                          maxlength="500" rows="3"></textarea>
+                            </div>
+                            <div>
+                                <button class="botao" type="submit">
+                                    <svg th:replace="~{fragments/icones :: icone('recibo')}"></svg><span>Registrar recebimento</span>
+                                </button>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="painel" aria-labelledby="historico-title">
+                <div class="painel__cabecalho">
+                    <h2 id="historico-title">Histórico de contribuições</h2>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(registradas)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('lista')}"></svg></span>
+                    <strong>Sem histórico</strong>
+                    <p>Nenhuma contribuição presencial foi registrada.</p>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(registradas)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Histórico de contribuições presenciais</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Solicitação</th>
+                                <th scope="col">Valor atual</th>
+                                <th scope="col">Registrado por</th>
+                                <th scope="col">Data</th>
+                                <th scope="col"><span class="visually-hidden">Detalhes</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="contribuicao : ${registradas}">
+                                <th scope="row" data-label="Solicitação" th:text="|#${contribuicao.reserva.id}|">#20</th>
+                                <td data-label="Valor atual" th:text="|R$ ${#numbers.formatDecimal(contribuicao.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 20,00</td>
+                                <td data-label="Registrado por" th:text="${contribuicao.registradaPor.nome}">Secretaria</td>
+                                <td data-label="Data" th:text="${#temporals.format(contribuicao.registradaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
+                                <td class="acoes-celula">
+                                    <div class="acoes-tabela">
+                                        <a class="botao botao--secundario botao--sm" th:href="@{/secretaria/contribuicoes/solicitacoes/{id}(id=${contribuicao.reserva.id})}">Consultar<span class="visually-hidden" th:text="| a contribuição da solicitação #${contribuicao.reserva.id}|"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

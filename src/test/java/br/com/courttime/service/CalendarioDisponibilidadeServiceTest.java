@@ -354,4 +354,27 @@ class CalendarioDisponibilidadeServiceTest {
         reserva.setStatus(StatusReserva.APROVADA);
         return reserva;
     }
+
+    @Test
+    void operatingDaysComeOnlyFromActiveWeeklySchedule() {
+        DisponibilidadeQuadra segunda = new DisponibilidadeQuadra();
+        segunda.setDiaSemana(DiaSemana.SEGUNDA);
+        DisponibilidadeQuadra outraSegunda = new DisponibilidadeQuadra();
+        outraSegunda.setDiaSemana(DiaSemana.SEGUNDA);
+        DisponibilidadeQuadra sabado = new DisponibilidadeQuadra();
+        sabado.setDiaSemana(DiaSemana.SABADO);
+        when(disponibilidadeQuadraRepository.findByQuadraAndAtivaTrue(quadra))
+                .thenReturn(List.of(segunda, outraSegunda, sabado));
+
+        assertEquals(java.util.Set.of(DiaSemana.SEGUNDA, DiaSemana.SABADO),
+                service.obterDiasComFuncionamento(quadra));
+    }
+
+    @Test
+    void inactiveCourtHasNoOperatingDays() {
+        quadra.setAtiva(false);
+
+        assertTrue(service.obterDiasComFuncionamento(quadra).isEmpty());
+        verify(disponibilidadeQuadraRepository, never()).findByQuadraAndAtivaTrue(quadra);
+    }
 }

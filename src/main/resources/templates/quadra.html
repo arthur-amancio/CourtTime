@@ -19,73 +19,92 @@
             <span aria-current="page">Quadra</span>
         </nav>
 
-        <section class="court-summary" aria-labelledby="page-title">
-            <div>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
                 <h1 id="page-title" th:text="${quadra.nome}">Quadra Poliesportiva</h1>
                 <p th:text="${quadra.descricao}">Quadra esportiva da ETEC.</p>
             </div>
-            <p class="court-status">
-                <span>Estado da quadra:</span>
-                <strong class="status-pill status-pill--available" th:if="${quadra.ativa}">Ativa</strong>
-                <strong class="status-pill status-pill--unavailable" th:unless="${quadra.ativa}">Inativa</strong>
-            </p>
-        </section>
+            <div class="cabecalho-pagina__acoes"
+                 th:if="${usuarioLogado != null and usuarioLogado.perfil.name() == 'ALUNO'}">
+                <a class="botao" th:href="@{/solicitacoes/nova(data=${consulta.data})}">
+                    <svg th:replace="~{fragments/icones :: icone('mais')}"></svg>
+                    <span>Nova solicitação</span>
+                </a>
+            </div>
+        </header>
 
-        <section class="availability" aria-labelledby="availability-title">
-            <div class="availability__heading">
-                <div>
-                    <h2 id="availability-title">Disponibilidade por data</h2>
-                    <p>Os agendamentos são organizados em períodos de uma hora.</p>
-                </div>
-                <form class="date-form" method="get" th:action="@{/quadra}">
-                    <label for="data">Data da consulta</label>
-                    <div class="date-form__controls">
-                        <input id="data" name="data" type="date" required th:value="${consulta.data}">
-                        <button class="button" type="submit">Consultar</button>
+        <div class="agenda">
+            <section th:replace="~{fragments/calendario :: mes(${calendario}, '/quadra')}"></section>
+
+            <section class="painel" aria-labelledby="availability-title">
+                <div class="horarios__topo">
+                    <div>
+                        <p class="sobretitulo">Data consultada</p>
+                        <h2 id="availability-title" class="horarios__data" th:text="${consulta.dataFormatada}">Segunda-feira, 12 de outubro de 2026</h2>
                     </div>
-                </form>
-            </div>
+                    <p class="estado-quadra">
+                        <span>Estado da quadra:</span>
+                        <strong class="badge badge--aprovada" th:if="${quadra.ativa}">
+                            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>Ativa
+                        </strong>
+                        <strong class="badge badge--cancelada" th:unless="${quadra.ativa}">
+                            <svg th:replace="~{fragments/icones :: icone('proibido')}"></svg>Inativa
+                        </strong>
+                        <small th:if="${quadra.ativa}">Estar ativa não garante horário livre: confira cada período.</small>
+                    </p>
+                </div>
 
-            <nav class="date-navigation" aria-label="Navegação entre datas">
-                <a class="button button--secondary button--small"
-                   th:href="@{/quadra(data=${dataAnterior})}">Dia anterior</a>
-                <p th:text="${consulta.dataFormatada}">Segunda-feira, 12 de outubro de 2026</p>
-                <a class="button button--secondary button--small"
-                   th:href="@{/quadra(data=${dataSeguinte})}">Dia seguinte</a>
-            </nav>
+                <div class="painel__corpo">
+                    <nav th:replace="~{fragments/calendario :: faixa(${calendario}, '/quadra')}"></nav>
 
-            <p class="empty-message empty-message--warning" th:unless="${consulta.quadraAtiva}">
-                A quadra está inativa. Não há horários disponíveis para a data selecionada.
-            </p>
-            <p class="empty-message"
-               th:if="${consulta.quadraAtiva and #lists.isEmpty(consulta.horarios)}">
-                Não há horários de funcionamento cadastrados para esta data.
-            </p>
-            <div class="table-wrapper" th:unless="${#lists.isEmpty(consulta.horarios)}">
-                <table class="schedule-table">
-                    <caption class="visually-hidden">Disponibilidade da quadra na data selecionada</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Horário</th>
-                            <th scope="col">Situação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="horario : ${consulta.horarios}">
-                            <th scope="row" th:text="${horario.periodoFormatado}">08:00 – 09:00</th>
-                            <td>
-                                <strong class="status-pill"
-                                        th:classappend="${horario.disponivel} ? 'status-pill--available' : 'status-pill--unavailable'"
-                                        th:text="${horario.situacao.descricao}">Disponível</strong>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p class="availability__note">
-                Períodos que não aparecem na lista estão fora do horário de funcionamento cadastrado.
-            </p>
-        </section>
+                    <div class="navegacao-data">
+                        <a class="botao botao--secundario botao--sm" th:href="@{/quadra(data=${dataAnterior})}">
+                            <svg th:replace="~{fragments/icones :: icone('chevron-esq')}"></svg><span>Dia anterior</span>
+                        </a>
+                        <form class="data-form" method="get" th:action="@{/quadra}">
+                            <label for="data">Outra data</label>
+                            <input id="data" name="data" type="date" required th:value="${consulta.data}">
+                            <button class="botao botao--secundario botao--sm" type="submit">Consultar</button>
+                        </form>
+                        <a class="botao botao--secundario botao--sm" th:href="@{/quadra(data=${dataSeguinte})}">
+                            <span>Dia seguinte</span><svg th:replace="~{fragments/icones :: icone('chevron-dir')}"></svg>
+                        </a>
+                    </div>
+
+                    <div class="alerta alerta--neutro" role="status" th:unless="${consulta.quadraAtiva}">
+                        <svg th:replace="~{fragments/icones :: icone('proibido')}"></svg>
+                        <p>A quadra está inativa. Não há horários disponíveis para a data selecionada.</p>
+                    </div>
+                    <div class="vazio" th:if="${consulta.quadraAtiva and #lists.isEmpty(consulta.horarios)}">
+                        <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('calendario')}"></svg></span>
+                        <strong>Sem funcionamento nesta data</strong>
+                        <p>Não há horários de funcionamento cadastrados para esta data.</p>
+                    </div>
+
+                    <ul class="slots" th:unless="${#lists.isEmpty(consulta.horarios)}"
+                        aria-label="Situação de cada período de uma hora">
+                        <li th:each="horario : ${consulta.horarios}" class="slot"
+                            th:with="tipo=${horario.situacao.name()}"
+                            th:classappend="${tipo == 'DISPONIVEL'} ? ' slot--disponivel' : (${tipo == 'RESERVADO'} ? ' slot--reservado' : ' slot--indisponivel')">
+                            <span class="slot__hora" th:text="${horario.periodoFormatado}">08:00 – 09:00</span>
+                            <span class="slot__estado">
+                                <th:block th:if="${tipo == 'DISPONIVEL'}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></th:block>
+                                <th:block th:if="${tipo == 'RESERVADO'}"><svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg></th:block>
+                                <th:block th:if="${tipo == 'BLOQUEADO'}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg></th:block>
+                                <span th:text="${horario.situacao.descricao}">Disponível</span>
+                            </span>
+                        </li>
+                    </ul>
+
+                    <p class="calendario__legenda" th:unless="${#lists.isEmpty(consulta.horarios)}">
+                        <span class="legenda-item"><span class="legenda-amostra legenda-amostra--disponivel" aria-hidden="true"></span>Disponível</span>
+                        <span class="legenda-item"><span class="legenda-amostra legenda-amostra--reservado" aria-hidden="true"></span>Reservado (solicitação aprovada)</span>
+                        <span class="legenda-item"><span class="legenda-amostra legenda-amostra--indisponivel" aria-hidden="true"></span>Indisponível (bloqueio)</span>
+                    </p>
+                    <p class="campo__ajuda">Os agendamentos são organizados em períodos de uma hora. Períodos que não aparecem estão fora do horário de funcionamento cadastrado.</p>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>

@@ -41,6 +41,11 @@ public class QuadraController {
         model.addAttribute("consulta", consulta);
         model.addAttribute("dataAnterior", dataSelecionada.minusDays(1));
         model.addAttribute("dataSeguinte", dataSelecionada.plusDays(1));
+        model.addAttribute("calendario", CalendarioVisual.montar(
+                dataSelecionada,
+                calendarioDisponibilidadeService.obterDataAtual(),
+                null,
+                calendarioDisponibilidadeService.obterDiasComFuncionamento(quadra)));
         return "quadra";
     }
 }

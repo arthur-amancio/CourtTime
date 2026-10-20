@@ -18,8 +18,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
 
 @Service
@@ -88,6 +90,23 @@ public class CalendarioDisponibilidadeService {
         }
 
         return new ConsultaDisponibilidade(data, true, new ArrayList<>(horarios.values()));
+    }
+
+    /**
+     * Dias da semana com ao menos um horario semanal ativo. Usado apenas para
+     * indicar, no calendario, quais dias tem funcionamento cadastrado; nao
+     * informa vagas nem substitui a consulta do dia.
+     */
+    @Transactional(readOnly = true)
+    public Set<DiaSemana> obterDiasComFuncionamento(Quadra quadra) {
+        Objects.requireNonNull(quadra, "A quadra é obrigatória");
+        if (!quadra.isAtiva()) {
+            return Set.of();
+        }
+        EnumSet<DiaSemana> dias = EnumSet.noneOf(DiaSemana.class);
+        disponibilidadeQuadraRepository.findByQuadraAndAtivaTrue(quadra)
+                .forEach(disponibilidade -> dias.add(disponibilidade.getDiaSemana()));
+        return Set.copyOf(dias);
     }
 
     @Transactional(readOnly = true)

@@ -6,13 +6,14 @@
     <title>CourtTime | Nova solicitação</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
     <script th:replace="~{fragments/layout :: script}"></script>
+    <script th:src="@{/js/solicitacao.js}" src="/js/solicitacao.js" defer></script>
 </head>
 <body class="app-autenticado">
     <a th:replace="~{fragments/layout :: pular}"></a>
     <header th:replace="~{fragments/layout :: topo}"></header>
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
 
-    <main id="conteudo" class="container app-main app-main--narrow">
+    <main id="conteudo" class="container app-main" th:object="${form}">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
             <a th:href="@{/inicio}">Início</a>
             <span aria-hidden="true">/</span>
@@ -21,87 +22,141 @@
             <span aria-current="page">Nova</span>
         </nav>
 
-        <header class="page-heading">
-            <h1>Nova solicitação</h1>
-            <p th:text="|${quadra.nome} — selecione uma data e um período disponível.|">
-                Quadra Poliesportiva — selecione uma data e um período disponível.
-            </p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <h1>Nova solicitação</h1>
+                <p th:text="|${quadra.nome} — selecione uma data e um período disponível. Depois você cadastra os participantes e envia o PDF assinado.|">
+                    Quadra Poliesportiva — selecione uma data e um período disponível.
+                </p>
+            </div>
         </header>
 
-        <section class="form-section" aria-labelledby="date-title">
-            <h2 id="date-title">1. Consultar data</h2>
-            <form class="date-form" method="get" th:action="@{/solicitacoes/nova}">
-                <label for="data-consulta">Data de utilização</label>
-                <div class="date-form__controls">
-                    <input id="data-consulta" name="data" type="date" required
-                           aria-describedby="data-consulta-ajuda"
-                           th:min="${dataMinima}" th:value="${consulta.data}">
-                    <button class="button button--secondary" type="submit">Ver horários</button>
-                </div>
-                <p id="data-consulta-ajuda" class="field-help">
-                    A solicitação precisa ser feita com pelo menos um dia de antecedência.
-                    A primeira data disponível é
-                    <strong th:text="${#temporals.format(dataMinima, 'dd/MM/yyyy')}">20/10/2026</strong>.
-                </p>
-            </form>
-        </section>
-
-        <section class="form-section" aria-labelledby="request-title" th:object="${form}">
-            <h2 id="request-title">2. Informar a solicitação</h2>
-
-            <div class="form-message form-message--error" role="alert"
-                 th:if="${#fields.hasAnyErrors()}">
-                <p>Revise os dados informados:</p>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <div>
+                <p><strong>Revise os dados informados:</strong></p>
                 <ul>
                     <li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li>
                 </ul>
             </div>
+        </div>
 
-            <p class="empty-message empty-message--warning" th:unless="${consulta.quadraAtiva}">
-                A quadra está inativa e não aceita novas solicitações nesta data.
-            </p>
-            <p class="empty-message" th:if="${consulta.quadraAtiva and #lists.isEmpty(horariosDisponiveis)}">
-                Não há períodos completos disponíveis para a data selecionada.
-            </p>
-
-            <form class="request-form" th:action="@{/solicitacoes}" method="post"
-                  th:unless="${#lists.isEmpty(horariosDisponiveis)}">
-                <input type="hidden" th:field="*{data}">
-
-                <div class="form-field">
-                    <label for="horarioInicio">Período disponível</label>
-                    <select id="horarioInicio" th:field="*{horarioInicio}" required>
-                        <option value="">Selecione</option>
-                        <option th:each="horario : ${horariosDisponiveis}"
-                                th:value="${horario.horarioInicio}"
-                                th:text="${horario.periodoFormatado}">08:00 – 09:00</option>
-                    </select>
-                    <p class="field-error" th:if="${#fields.hasErrors('horarioInicio')}"
-                       th:errors="*{horarioInicio}">Selecione um horário.</p>
-                </div>
-
-                <div class="form-field">
-                    <label for="finalidade">Finalidade da utilização</label>
-                    <textarea id="finalidade" th:field="*{finalidade}" rows="5" maxlength="300"
-                              aria-describedby="finalidade-ajuda" required></textarea>
-                    <p id="finalidade-ajuda" class="field-help">
-                        Descreva de forma objetiva a atividade que será realizada. Máximo de 300 caracteres.
+        <div class="pilha">
+            <section class="painel" aria-labelledby="date-title">
+                <div class="painel__cabecalho">
+                    <h2 id="date-title"><span class="texto-suave">1.</span> Data</h2>
+                    <p class="campo__ajuda">
+                        A solicitação precisa ser feita com pelo menos um dia de antecedência.
+                        A primeira data disponível é
+                        <strong th:text="${#temporals.format(dataMinima, 'dd/MM/yyyy')}">21/10/2026</strong>.
                     </p>
-                    <p class="field-error" th:if="${#fields.hasErrors('finalidade')}"
-                       th:errors="*{finalidade}">Informe a finalidade.</p>
                 </div>
+                <div class="agenda-interna">
+                    <section th:replace="~{fragments/calendario :: mes(${calendario}, '/solicitacoes/nova')}"></section>
+                    <div class="agenda-interna__horarios">
+                        <div class="horarios__topo">
+                            <div>
+                                <p class="sobretitulo">Data escolhida</p>
+                                <p class="horarios__data" th:text="${consulta.dataFormatada}">Quarta-feira, 21 de outubro de 2026</p>
+                            </div>
+                        </div>
+                        <div class="painel__corpo">
+                            <nav th:replace="~{fragments/calendario :: faixa(${calendario}, '/solicitacoes/nova')}"></nav>
+                            <form class="data-form" method="get" th:action="@{/solicitacoes/nova}">
+                                <label for="data-consulta">Outra data</label>
+                                <input id="data-consulta" name="data" type="date" required
+                                       aria-describedby="data-consulta-ajuda"
+                                       th:min="${dataMinima}" th:value="${consulta.data}">
+                                <button class="botao botao--secundario botao--sm" type="submit">Ver horários</button>
+                                <p id="data-consulta-ajuda" class="visually-hidden">Datas anteriores à primeira data disponível não são aceitas.</p>
+                            </form>
 
-                <div class="request-notice">
-                    <strong>Importante</strong>
-                    <p>O envio registra uma solicitação preliminar. A utilização da quadra ainda depende da documentação e da aprovação da instituição.</p>
+                            <div class="alerta alerta--neutro" role="status" th:unless="${consulta.quadraAtiva}">
+                                <svg th:replace="~{fragments/icones :: icone('proibido')}"></svg>
+                                <p>A quadra está inativa e não aceita novas solicitações nesta data.</p>
+                            </div>
+                            <div class="vazio" th:if="${consulta.quadraAtiva and #lists.isEmpty(horariosDisponiveis)}">
+                                <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('calendario')}"></svg></span>
+                                <strong>Nenhum período livre</strong>
+                                <p>Não há períodos completos disponíveis para a data selecionada. Escolha outra data no calendário.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-                <div class="form-actions">
-                    <button class="button" type="submit">Registrar solicitação</button>
-                    <a class="button button--secondary" th:href="@{/solicitacoes}">Cancelar</a>
+            <form class="painel" th:action="@{/solicitacoes}" method="post"
+                  th:unless="${#lists.isEmpty(horariosDisponiveis)}" aria-labelledby="request-title">
+                <div class="painel__cabecalho">
+                    <h2 id="request-title"><span class="texto-suave">2.</span> Período e finalidade</h2>
+                </div>
+                <div class="painel__corpo">
+                    <input type="hidden" th:field="*{data}">
+
+                    <fieldset class="grupo-horarios"
+                              th:attr="aria-describedby=${#fields.hasErrors('horarioInicio')} ? 'horarioInicio-ajuda horarioInicio-erro' : 'horarioInicio-ajuda'">
+                        <legend class="campo__rotulo">Período de uma hora</legend>
+                        <p id="horarioInicio-ajuda" class="campo__ajuda">Escolha um período disponível. Períodos reservados ou indisponíveis aparecem apenas para consulta.</p>
+                        <ul class="slots">
+                            <li th:each="horario : ${consulta.horarios}" th:with="tipo=${horario.situacao.name()}">
+                                <th:block th:if="${horario.disponivel}">
+                                    <input class="slot__radio" type="radio" name="horarioInicio" required
+                                           th:id="|horarioInicio-${#temporals.format(horario.horarioInicio, 'HHmm')}|"
+                                           th:value="${horario.horarioInicio}"
+                                           th:checked="${form.horarioInicio != null and form.horarioInicio == horario.horarioInicio}">
+                                    <label class="slot slot--disponivel slot--selecionavel"
+                                           th:for="|horarioInicio-${#temporals.format(horario.horarioInicio, 'HHmm')}|">
+                                        <span class="slot__hora" th:text="${horario.periodoFormatado}">08:00 – 09:00</span>
+                                        <span class="slot__estado slot__estado--livre"><svg th:replace="~{fragments/icones :: icone('check')}"></svg>Disponível</span>
+                                        <span class="slot__estado slot__estado--escolhido"><svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>Escolhido</span>
+                                    </label>
+                                </th:block>
+                                <div th:unless="${horario.disponivel}" class="slot"
+                                     th:classappend="${tipo == 'RESERVADO'} ? ' slot--reservado' : ' slot--indisponivel'">
+                                    <span class="slot__hora" th:text="${horario.periodoFormatado}">09:00 – 10:00</span>
+                                    <span class="slot__estado">
+                                        <th:block th:if="${tipo == 'RESERVADO'}"><svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg></th:block>
+                                        <th:block th:unless="${tipo == 'RESERVADO'}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg></th:block>
+                                        <span th:text="${horario.situacao.descricao}">Reservado</span>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                        <p id="horarioInicio-erro" class="campo__erro" th:if="${#fields.hasErrors('horarioInicio')}"
+                           th:errors="*{horarioInicio}">Selecione um horário disponível.</p>
+                    </fieldset>
+
+                    <div class="campo campo--espacado" th:classappend="${#fields.hasErrors('finalidade')} ? ' campo--erro'">
+                        <label for="finalidade">Finalidade da utilização</label>
+                        <textarea id="finalidade" th:field="*{finalidade}" rows="4" maxlength="300" required
+                                  th:attr="aria-invalid=${#fields.hasErrors('finalidade')},aria-describedby=${#fields.hasErrors('finalidade')} ? 'finalidade-ajuda finalidade-erro' : 'finalidade-ajuda'"></textarea>
+                        <p id="finalidade-ajuda" class="campo__ajuda">
+                            Descreva de forma objetiva a atividade que será realizada. Máximo de 300 caracteres.
+                        </p>
+                        <p id="finalidade-erro" class="campo__erro" th:if="${#fields.hasErrors('finalidade')}"
+                           th:errors="*{finalidade}">Informe a finalidade.</p>
+                    </div>
+
+                    <div class="alerta alerta--info">
+                        <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+                        <div>
+                            <p><strong>O envio não autoriza o uso da quadra.</strong></p>
+                            <p>O envio registra uma solicitação preliminar, que começa como Pendente de documentação. A utilização ainda depende da documentação e da aprovação da instituição.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="painel__rodape">
+                    <p class="resumo-escolha" id="resumo-escolha" aria-live="polite" data-resumo-horario
+                       th:attr="data-data-extenso=${consulta.dataFormatada}">
+                        Escolha um período disponível e informe a finalidade para registrar a solicitação.
+                    </p>
+                    <div class="grupo-botoes">
+                        <button class="botao" type="submit" aria-describedby="resumo-escolha">Registrar solicitação</button>
+                        <a class="botao botao--fantasma" th:href="@{/solicitacoes}">Cancelar</a>
+                    </div>
                 </div>
             </form>
-        </section>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: rodape}"></footer>
