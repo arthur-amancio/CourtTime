@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuários | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="administrador" data-pagina="usuarios">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=administrador">Início</a></li><li><a href="admin-painel.html">Administração</a></li><li><span aria-current="page">Usuários</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Gerenciar usuários</h1>
+            <p>Consulte e administre as contas do CourtTime. Contas são desativadas, nunca excluídas.</p>
+        </div>
+        <div class="cabecalho-pagina__acoes"><a class="botao" href="#"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo usuário</a></div>
+    </header>
+
+    <section class="painel" aria-labelledby="lista-titulo">
+        <h2 id="lista-titulo" class="visually-hidden">Usuários cadastrados</h2>
+        <form class="filtros" role="search" aria-label="Filtrar usuários" onsubmit="return false">
+            <div class="campo"><label for="busca">Nome ou email</label><input id="busca" type="search" placeholder="Buscar"></div>
+            <div class="campo"><label for="perfil">Perfil</label><select id="perfil"><option>Todos</option><option>Aluno</option><option>Secretaria</option><option>Segurança</option><option>Administrador</option></select></div>
+            <div class="campo"><label for="ativo">Situação</label><select id="ativo"><option>Todas</option><option>Ativas</option><option>Inativas</option></select></div>
+            <div class="grupo-botoes"><button class="botao botao--secundario" type="submit">Filtrar</button><button class="botao botao--fantasma" type="reset">Limpar</button></div>
+        </form>
+        <div class="tabela-wrapper" style="border: 0">
+            <table class="tabela tabela--cartoes">
+                <caption class="visually-hidden">Usuários cadastrados no CourtTime (dados fictícios)</caption>
+                <thead><tr><th scope="col">Nome</th><th scope="col">Perfil</th><th scope="col">Situação</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+                <tbody>
+                    <tr><td data-label="Nome"><div class="pessoa"><span class="avatar" aria-hidden="true">RM</span><span><strong>Ricardo Menezes</strong><span class="tabela__secundario">admin.ficticio@exemplo.test</span></span></div></td><td data-label="Perfil">Administrador</td><td data-label="Situação"><span class="badge badge--aprovada" data-icone="check">Ativa</span></td><td class="tabela__acoes"><span class="badge badge--neutro">Conta em uso</span></td></tr>
+                    <tr><td data-label="Nome"><div class="pessoa"><span class="avatar" aria-hidden="true">MC</span><span><strong>Mariana Costa</strong><span class="tabela__secundario">secretaria.ficticia@exemplo.test</span></span></div></td><td data-label="Perfil">Secretaria</td><td data-label="Situação"><span class="badge badge--aprovada" data-icone="check">Ativa</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#">Editar</a> <a class="botao botao--secundario botao--sm" href="#">Redefinir senha</a> <button class="botao botao--perigo-contorno botao--sm" type="button">Desativar</button></td></tr>
+                    <tr><td data-label="Nome"><div class="pessoa"><span class="avatar" aria-hidden="true">JP</span><span><strong>José Carlos Pereira</strong><span class="tabela__secundario">seguranca.ficticio@exemplo.test</span></span></div></td><td data-label="Perfil">Segurança</td><td data-label="Situação"><span class="badge badge--aprovada" data-icone="check">Ativa</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#">Editar</a> <a class="botao botao--secundario botao--sm" href="#">Redefinir senha</a> <button class="botao botao--perigo-contorno botao--sm" type="button">Desativar</button></td></tr>
+                    <tr><td data-label="Nome"><div class="pessoa"><span class="avatar" aria-hidden="true">LA</span><span><strong>Lucas Andrade</strong><span class="tabela__secundario">aluno.ficticio@exemplo.test</span></span></div></td><td data-label="Perfil">Aluno</td><td data-label="Situação"><span class="badge badge--aprovada" data-icone="check">Ativa</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#">Editar</a> <a class="botao botao--secundario botao--sm" href="#">Redefinir senha</a> <button class="botao botao--perigo-contorno botao--sm" type="button">Desativar</button></td></tr>
+                    <tr><td data-label="Nome"><div class="pessoa"><span class="avatar" aria-hidden="true">TF</span><span><strong>Tiago Fernandes</strong><span class="tabela__secundario">aluno2.ficticio@exemplo.test</span></span></div></td><td data-label="Perfil">Aluno</td><td data-label="Situação"><span class="badge badge--cancelada" data-icone="proibido">Inativa</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#">Editar</a> <button class="botao botao--secundario botao--sm" type="button">Ativar</button></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="painel__rodape" style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap">
+            <span class="campo__ajuda">Página 1 de 1</span>
+            <div class="grupo-botoes"><button class="botao botao--secundario botao--sm" disabled>Anterior</button><button class="botao botao--secundario botao--sm" disabled>Próxima</button></div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

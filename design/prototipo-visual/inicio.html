@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Início | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="variavel" data-pagina="inicio">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <p class="sobretitulo">Perfil: <span data-rotulo-perfil>Aluno</span></p>
+            <h1>Olá, <span data-nome-usuario>Lucas</span>.</h1>
+            <p>Escolha uma das ações disponíveis para a sua conta.</p>
+        </div>
+    </header>
+
+    <!-- ALUNO -->
+    <div data-somente-perfil="aluno" class="pilha">
+        <section aria-labelledby="atalhos-aluno">
+            <h2 id="atalhos-aluno" class="visually-hidden">Acesso rápido</h2>
+            <div class="acoes-rapidas">
+                <a class="acao-rapida acao-rapida--primaria" href="aluno-nova-solicitacao.html"><span class="acao-rapida__icone" data-icone="calendario-mais"></span><span><strong>Nova solicitação</strong><span>Escolha um período disponível</span></span></a>
+                <a class="acao-rapida" href="quadra.html?perfil=aluno"><span class="acao-rapida__icone" data-icone="calendario"></span><span><strong>Consultar horários</strong><span>Situação da quadra por data</span></span></a>
+                <a class="acao-rapida" href="aluno-solicitacoes.html"><span class="acao-rapida__icone" data-icone="lista"></span><span><strong>Minhas solicitações</strong><span>4 registradas pela sua conta</span></span></a>
+            </div>
+        </section>
+        <section class="painel" aria-labelledby="recente">
+            <div class="painel__cabecalho">
+                <div><h2 id="recente">Sua solicitação mais recente</h2><p>Próxima etapa indicada abaixo.</p></div>
+                <span class="badge badge--documentacao" data-icone="documento">Pendente de documentação</span>
+            </div>
+            <div class="painel__corpo">
+                <div class="celula-data" style="margin-bottom: 1rem">
+                    <span class="data-bloco"><small>out</small><strong>26</strong></span>
+                    <div><strong>Campeonato de handebol entre turmas do 2º ano</strong><span class="tabela__secundario">Segunda-feira, 26/10/2026 · 14:00 – 15:00 · Solicitação #16</span></div>
+                </div>
+                <div class="alerta alerta--aviso">
+                    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2 2.8 19.5h18.4z"/><path d="M12 10v4.2M12 17h.01"/></svg>
+                    <div><strong class="alerta__titulo">Próxima etapa: documentação</strong><p>Revise os participantes e envie o PDF preparado e assinado fora do sistema.</p></div>
+                </div>
+            </div>
+            <div class="painel__rodape grupo-botoes">
+                <a class="botao" href="aluno-solicitacao.html?estado=documentacao">Abrir solicitação</a>
+                <a class="botao botao--secundario" href="aluno-participantes.html">Revisar participantes</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- SECRETARIA -->
+    <div data-somente-perfil="secretaria" class="pilha">
+        <section class="indicadores" aria-label="Pendências da secretaria">
+            <a class="indicador indicador--destaque" href="secretaria-documentos.html"><span class="indicador__topo" data-icone="documento-check">Documentos a conferir</span><span class="indicador__valor">2</span><span class="indicador__nota">Versão mais recente de cada solicitação</span></a>
+            <a class="indicador" href="secretaria-contribuicoes.html"><span class="indicador__topo" data-icone="recibo">Contribuições a registrar</span><span class="indicador__valor">1</span><span class="indicador__nota">Documento já validado</span></a>
+        </section>
+        <div class="acoes-rapidas">
+            <a class="acao-rapida acao-rapida--primaria" href="secretaria-documentos.html"><span class="acao-rapida__icone" data-icone="documento-check"></span><span><strong>Conferir documentos</strong><span>Validar ou devolver com justificativa</span></span></a>
+            <a class="acao-rapida" href="secretaria-contribuicoes.html"><span class="acao-rapida__icone" data-icone="recibo"></span><span><strong>Contribuições presenciais</strong><span>Registrar valores recebidos na escola</span></span></a>
+            <a class="acao-rapida" href="quadra.html?perfil=secretaria"><span class="acao-rapida__icone" data-icone="calendario"></span><span><strong>Consultar horários</strong><span>Situação da quadra por data</span></span></a>
+        </div>
+    </div>
+
+    <!-- ADMINISTRADOR -->
+    <div data-somente-perfil="administrador" class="pilha">
+        <section class="indicadores" aria-label="Situação atual">
+            <a class="indicador indicador--destaque" href="admin-solicitacoes.html"><span class="indicador__topo" data-icone="bandeja">Prontas para análise</span><span class="indicador__valor">2</span><span class="indicador__nota">Documento conferido e contribuição registrada</span></a>
+            <a class="indicador" href="admin-bloqueios.html"><span class="indicador__topo" data-icone="proibido">Bloqueios futuros</span><span class="indicador__valor">2</span><span class="indicador__nota">Datas com indisponibilidade</span></a>
+            <a class="indicador" href="admin-usuarios.html"><span class="indicador__topo" data-icone="usuarios">Contas ativas</span><span class="indicador__valor">7</span><span class="indicador__nota">Todos os perfis</span></a>
+        </section>
+        <div class="acoes-rapidas">
+            <a class="acao-rapida acao-rapida--primaria" href="admin-solicitacoes.html"><span class="acao-rapida__icone" data-icone="bandeja"></span><span><strong>Analisar solicitações</strong><span>Aprovar ou rejeitar com motivo</span></span></a>
+            <a class="acao-rapida" href="admin-painel.html"><span class="acao-rapida__icone" data-icone="grade"></span><span><strong>Painel administrativo</strong><span>Quadra, horários e solicitações</span></span></a>
+            <a class="acao-rapida" href="admin-usuarios.html"><span class="acao-rapida__icone" data-icone="usuarios"></span><span><strong>Gerenciar usuários</strong><span>Contas e perfis de acesso</span></span></a>
+        </div>
+    </div>
+
+    <!-- SEGURANÇA -->
+    <div data-somente-perfil="seguranca" class="pilha">
+        <section class="painel" aria-labelledby="hoje-seg">
+            <div class="painel__cabecalho"><div><h2 id="hoje-seg">Reservas autorizadas para hoje</h2><p>Terça-feira, 20/10/2026</p></div><a class="botao botao--sm botao--secundario" href="seguranca-reservas.html">Ver todas</a></div>
+            <div class="painel__corpo">
+                <div class="reserva-portaria">
+                    <p class="reserva-portaria__hora">16:00 – 17:00<small>Quadra Poliesportiva</small></p>
+                    <div><strong>Futsal — treino da turma do 3º DS</strong><p>Solicitante: Gabriel Souza · 12 participantes</p></div>
+                    <a class="botao botao--sm" href="seguranca-conferencia.html">Conferir entrada</a>
+                </div>
+            </div>
+        </section>
+        <div class="acoes-rapidas">
+            <a class="acao-rapida acao-rapida--primaria" href="seguranca-reservas.html"><span class="acao-rapida__icone" data-icone="escudo"></span><span><strong>Reservas autorizadas</strong><span>Hoje e próximas datas</span></span></a>
+            <a class="acao-rapida" href="quadra.html?perfil=seguranca"><span class="acao-rapida__icone" data-icone="calendario"></span><span><strong>Consultar horários</strong><span>Situação da quadra por data</span></span></a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

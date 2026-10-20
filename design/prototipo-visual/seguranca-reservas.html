@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reservas autorizadas | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="seguranca" data-pagina="reservas">
+<main id="conteudo" class="conteudo__main conteudo__main--estreito" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=seguranca">Início</a></li><li><span aria-current="page">Reservas autorizadas</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Reservas autorizadas</h1>
+            <p>Somente reservas aprovadas, de hoje em diante. Use os dados apenas para a conferência presencial.</p>
+        </div>
+    </header>
+
+    <section class="dia-reservas" aria-labelledby="hoje">
+        <div class="dia-reservas__titulo"><span class="data-bloco"><small>out</small><strong>20</strong></span><div><h2 id="hoje">Hoje</h2><p class="texto-suave" style="font-size:.875rem">Terça-feira, 20/10/2026 · 1 reserva</p></div></div>
+        <article class="reserva-portaria">
+            <p class="reserva-portaria__hora">16:00 – 17:00<small>Quadra Poliesportiva</small></p>
+            <div>
+                <span class="badge badge--aprovada" data-icone="escudo">Autorizada</span>
+                <h3 style="font-size: 1rem; margin-top: .375rem">Solicitante: Gabriel Souza</h3>
+                <p>12 participantes · documento com foto na entrada</p>
+            </div>
+            <a class="botao" href="seguranca-conferencia.html">Conferir participantes</a>
+        </article>
+    </section>
+
+    <section class="dia-reservas" aria-labelledby="amanha">
+        <div class="dia-reservas__titulo"><span class="data-bloco"><small>out</small><strong>21</strong></span><div><h2 id="amanha">Amanhã</h2><p class="texto-suave" style="font-size:.875rem">Quarta-feira, 21/10/2026 · 1 reserva</p></div></div>
+        <article class="reserva-portaria">
+            <p class="reserva-portaria__hora">09:00 – 10:00<small>Quadra Poliesportiva</small></p>
+            <div>
+                <span class="badge badge--aprovada" data-icone="escudo">Autorizada</span>
+                <h3 style="font-size: 1rem; margin-top: .375rem">Solicitante: Camila Rocha</h3>
+                <p>10 participantes</p>
+            </div>
+            <a class="botao botao--secundario" href="seguranca-conferencia.html">Conferir participantes</a>
+        </article>
+    </section>
+
+    <section class="dia-reservas" aria-labelledby="proximas">
+        <div class="dia-reservas__titulo"><span class="data-bloco"><small>out</small><strong>27</strong></span><div><h2 id="proximas">Terça-feira, 27/10</h2><p class="texto-suave" style="font-size:.875rem">1 reserva</p></div></div>
+        <article class="reserva-portaria">
+            <p class="reserva-portaria__hora">08:00 – 09:00<small>Quadra Poliesportiva</small></p>
+            <div>
+                <span class="badge badge--aprovada" data-icone="escudo">Autorizada</span>
+                <h3 style="font-size: 1rem; margin-top: .375rem">Solicitante: Pedro Alves</h3>
+                <p>14 participantes</p>
+            </div>
+            <a class="botao botao--secundario" href="seguranca-conferencia.html">Conferir participantes</a>
+        </article>
+    </section>
+
+    <div class="alerta alerta--neutro secao">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+        <div><p>Reservas pendentes, rejeitadas, canceladas ou antigas não aparecem aqui. PDFs, contribuições, emails e histórico interno não são exibidos para este perfil.</p></div>
+    </div>
+</main>
+</body>
+</html>

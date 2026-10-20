@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Horários semanais | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="administrador" data-pagina="horarios">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=administrador">Início</a></li><li><a href="admin-painel.html">Administração</a></li><li><span aria-current="page">Horários</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Horários semanais</h1>
+            <p>Defina os períodos de funcionamento usados pelo calendário da quadra.</p>
+        </div>
+        <div class="cabecalho-pagina__acoes"><a class="botao" href="#novo-horario"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo horário</a></div>
+    </header>
+
+    <div class="alerta alerta--aviso" style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2 2.8 19.5h18.4z"/><path d="M12 10v4.2M12 17h.01"/></svg>
+        <div><strong class="alerta__titulo">Grade fictícia</strong><p>Os horários abaixo servem apenas para demonstrar a tela. O CourtTime não cria horários oficiais automaticamente.</p></div>
+    </div>
+
+    <section class="painel secao" aria-labelledby="visao-titulo">
+        <div class="painel__cabecalho"><div><h2 id="visao-titulo">Visão da semana</h2><p>Cada faixa é dividida em períodos de uma hora no calendário.</p></div></div>
+        <div class="painel__corpo">
+            <div class="semana">
+                <div class="semana__dia"><h3>Segunda</h3><span class="semana__faixa">08:00 – 12:00<small>Ativo</small></span><span class="semana__faixa">13:00 – 18:00<small>Ativo</small></span></div>
+                <div class="semana__dia"><h3>Terça</h3><span class="semana__faixa">08:00 – 12:00<small>Ativo</small></span><span class="semana__faixa">13:00 – 18:00<small>Ativo</small></span></div>
+                <div class="semana__dia"><h3>Quarta</h3><span class="semana__faixa">08:00 – 12:00<small>Ativo</small></span><span class="semana__faixa">13:00 – 18:00<small>Ativo</small></span></div>
+                <div class="semana__dia"><h3>Quinta</h3><span class="semana__faixa">08:00 – 12:00<small>Ativo</small></span><span class="semana__faixa">13:00 – 18:00<small>Ativo</small></span></div>
+                <div class="semana__dia"><h3>Sexta</h3><span class="semana__faixa">08:00 – 12:00<small>Ativo</small></span><span class="semana__faixa">13:00 – 17:00<small>Ativo</small></span></div>
+                <div class="semana__dia"><h3>Sábado</h3><span class="semana__faixa">08:00 – 12:00<small>Ativo</small></span><span class="semana__faixa semana__faixa--inativa">13:00 – 17:00<small>Inativo</small></span></div>
+                <div class="semana__dia"><h3>Domingo</h3><span class="semana__vazio">Sem funcionamento cadastrado</span></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="grade-2 secao">
+        <section aria-labelledby="tabela-titulo">
+            <div class="secao__titulo"><h2 id="tabela-titulo">Faixas cadastradas</h2></div>
+            <div class="tabela-wrapper">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Horários semanais da quadra</caption>
+                    <thead><tr><th scope="col">Dia</th><th scope="col">Início</th><th scope="col">Fim</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row" data-label="Dia">Segunda-feira</th><td data-label="Início" class="tabular">08:00</td><td data-label="Fim" class="tabular">12:00</td><td data-label="Estado"><span class="badge badge--aprovada" data-icone="check">Ativo</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#novo-horario">Editar</a> <button class="botao botao--perigo-contorno botao--sm" type="button">Desativar</button></td></tr>
+                        <tr><th scope="row" data-label="Dia">Segunda-feira</th><td data-label="Início" class="tabular">13:00</td><td data-label="Fim" class="tabular">18:00</td><td data-label="Estado"><span class="badge badge--aprovada" data-icone="check">Ativo</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#novo-horario">Editar</a> <button class="botao botao--perigo-contorno botao--sm" type="button">Desativar</button></td></tr>
+                        <tr><th scope="row" data-label="Dia">Sábado</th><td data-label="Início" class="tabular">13:00</td><td data-label="Fim" class="tabular">17:00</td><td data-label="Estado"><span class="badge badge--cancelada" data-icone="proibido">Inativo</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#novo-horario">Editar</a> <button class="botao botao--secundario botao--sm" type="button">Ativar</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="campo__ajuda" style="margin-top: .75rem">Horários contíguos são aceitos. Períodos sobrepostos e alterações que invalidem reservas aprovadas são recusados.</p>
+        </section>
+
+        <section class="painel" id="novo-horario" aria-labelledby="form-titulo">
+            <div class="painel__cabecalho"><h2 id="form-titulo">Novo horário</h2></div>
+            <form data-demo="horario-ok" novalidate>
+                <div class="painel__corpo">
+                    <div class="campo"><label for="dia">Dia da semana</label>
+                        <select id="dia" required><option value="">Selecione</option><option>Segunda-feira</option><option>Terça-feira</option><option>Quarta-feira</option><option>Quinta-feira</option><option>Sexta-feira</option><option>Sábado</option><option>Domingo</option></select>
+                        <p class="campo__erro" hidden>Selecione o dia.</p></div>
+                    <div class="campos-linha" style="margin-top: 1.25rem">
+                        <div class="campo"><label for="ini">Início</label><input id="ini" type="time" step="3600" required><p class="campo__erro" hidden>Informe o início.</p></div>
+                        <div class="campo"><label for="fim">Fim</label><input id="fim" type="time" step="3600" required><p class="campo__erro" hidden>Informe o fim.</p></div>
+                    </div>
+                    <div class="alerta alerta--sucesso" role="status" id="horario-ok" hidden style="margin-top: 1rem">
+                        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+                        <div><strong class="alerta__titulo">Horário salvo (simulação).</strong></div>
+                    </div>
+                </div>
+                <div class="painel__rodape grupo-botoes"><button class="botao" type="submit">Salvar horário</button></div>
+            </form>
+        </section>
+    </div>
+</main>
+</body>
+</html>

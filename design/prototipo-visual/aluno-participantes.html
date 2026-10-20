@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Participantes | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="aluno" data-pagina="solicitacoes">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=aluno">Início</a></li><li><a href="aluno-solicitacoes.html">Solicitações</a></li><li><a href="aluno-solicitacao.html?estado=documentacao">Detalhes</a></li><li><span aria-current="page">Participantes</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <p class="sobretitulo">Solicitação #16 · 26/10/2026 · 14:00 – 15:00</p>
+            <h1>Participantes</h1>
+            <p>Revise a lista antes de enviar o PDF. O documento deve trazer os mesmos participantes.</p>
+        </div>
+    </header>
+
+    <div class="grade-2">
+        <div class="pilha">
+            <section class="indicadores" aria-label="Resumo da lista">
+                <div class="indicador"><span class="indicador__topo" data-icone="usuario">Alunos</span><span class="indicador__valor">11</span><span class="indicador__nota">Mínimo exigido: 10</span></div>
+                <div class="indicador"><span class="indicador__topo" data-icone="usuarios">Demais participantes</span><span class="indicador__valor">1</span><span class="indicador__nota">Categoria Outro</span></div>
+                <div class="indicador"><span class="indicador__topo" data-icone="lista">Total</span><span class="indicador__valor">12</span><span class="indicador__nota">Limite máximo a confirmar</span></div>
+            </section>
+            <div class="alerta alerta--sucesso">
+                <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+                <div><strong class="alerta__titulo">Mínimo de alunos atendido</strong><p>A lista possui ao menos dez participantes na categoria Aluno.</p></div>
+            </div>
+
+            <div class="tabela-wrapper">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Participantes vinculados à solicitação (dados fictícios)</caption>
+                    <thead><tr><th scope="col">Nome completo</th><th scope="col">RM ou RG</th><th scope="col">Categoria</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row" data-label="Nome">Matheus Ribeiro</th><td data-label="RM ou RG" class="mono">RM 23103</td><td data-label="Categoria">Aluno</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#form-participante" aria-label="Editar Matheus Ribeiro">Editar</a> <button class="botao botao--perigo-contorno botao--sm" type="button" aria-label="Remover Matheus Ribeiro">Remover</button></td></tr>
+                        <tr><th scope="row" data-label="Nome">Rafael Oliveira</th><td data-label="RM ou RG" class="mono">RM 23104</td><td data-label="Categoria">Aluno</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#form-participante" aria-label="Editar Rafael Oliveira">Editar</a> <button class="botao botao--perigo-contorno botao--sm" type="button" aria-label="Remover Rafael Oliveira">Remover</button></td></tr>
+                        <tr><th scope="row" data-label="Nome">Ana Clara Ferreira</th><td data-label="RM ou RG" class="mono">RM 23112</td><td data-label="Categoria">Aluno</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#form-participante" aria-label="Editar Ana Clara Ferreira">Editar</a> <button class="botao botao--perigo-contorno botao--sm" type="button" aria-label="Remover Ana Clara Ferreira">Remover</button></td></tr>
+                        <tr><th scope="row" data-label="Nome">Júlia Mendes</th><td data-label="RM ou RG" class="mono">RM 23118</td><td data-label="Categoria">Aluno</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#form-participante" aria-label="Editar Júlia Mendes">Editar</a> <button class="botao botao--perigo-contorno botao--sm" type="button" aria-label="Remover Júlia Mendes">Remover</button></td></tr>
+                        <tr><th scope="row" data-label="Nome">Paulo Henrique Dias</th><td data-label="RM ou RG" class="mono">RG 00.000.000-0</td><td data-label="Categoria">Outro</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="#form-participante" aria-label="Editar Paulo Henrique Dias">Editar</a> <button class="botao botao--perigo-contorno botao--sm" type="button" aria-label="Remover Paulo Henrique Dias">Remover</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="campo__ajuda">Mostrando 5 de 12 participantes fictícios.</p>
+        </div>
+
+        <aside class="resumo-selecao">
+            <section class="painel" id="form-participante" aria-labelledby="novo-part">
+                <div class="painel__cabecalho"><h2 id="novo-part">Adicionar participante</h2></div>
+                <form data-demo="part-ok" novalidate>
+                    <div class="painel__corpo">
+                        <div class="campo">
+                            <label for="nome">Nome completo</label>
+                            <input id="nome" maxlength="150" required autocomplete="off">
+                            <p class="campo__erro" hidden>Informe o nome completo.</p>
+                        </div>
+                        <div class="campo">
+                            <label for="rm">RM ou RG</label>
+                            <input id="rm" maxlength="30" required autocomplete="off" aria-describedby="rm-ajuda">
+                            <p id="rm-ajuda" class="campo__ajuda">Não pode se repetir na mesma solicitação.</p>
+                            <p class="campo__erro" hidden>Informe o RM ou o RG.</p>
+                        </div>
+                        <fieldset class="campo" style="border: 0; padding: 0; margin: 1.25rem 0 0">
+                            <legend class="campo__rotulo" style="margin-bottom: .5rem">Categoria</legend>
+                            <label style="display:flex; gap:.5rem; align-items:center; font-weight: 500"><input type="radio" name="categoria" value="ALUNO" checked style="width:auto; min-height:auto"> Aluno</label>
+                            <label style="display:flex; gap:.5rem; align-items:center; font-weight: 500"><input type="radio" name="categoria" value="OUTRO" style="width:auto; min-height:auto"> Outro</label>
+                        </fieldset>
+                        <div class="alerta alerta--sucesso" role="status" id="part-ok" hidden style="margin-top: 1rem">
+                            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+                            <div><strong class="alerta__titulo">Participante adicionado (simulação).</strong></div>
+                        </div>
+                    </div>
+                    <div class="painel__rodape grupo-botoes grupo-botoes--empilhar">
+                        <button class="botao" type="submit">Adicionar</button>
+                        <a class="botao botao--fantasma" href="aluno-solicitacao.html?estado=documentacao">Voltar à solicitação</a>
+                    </div>
+                </form>
+            </section>
+        </aside>
+    </div>
+</main>
+</body>
+</html>

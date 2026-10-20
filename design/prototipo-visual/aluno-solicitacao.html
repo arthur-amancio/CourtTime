@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalhes da solicitação | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="aluno" data-pagina="solicitacoes">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=aluno">Início</a></li><li><a href="aluno-solicitacoes.html">Solicitações</a></li><li><span aria-current="page">Detalhes</span></li></ol></nav>
+
+    <div class="alerta alerta--neutro" style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+        <div>
+            <strong class="alerta__titulo">Controles do protótipo — ver a tela em cada situação</strong>
+            <div class="abas" role="group" aria-label="Situação demonstrada" data-seletor-estado style="margin-top: .5rem">
+                <button type="button" value="documentacao" aria-pressed="true">Pendente de documentação</button>
+                <button type="button" value="analise" aria-pressed="false">Pendente de análise</button>
+                <button type="button" value="aprovada" aria-pressed="false">Aprovada</button>
+                <button type="button" value="rejeitada" aria-pressed="false">Rejeitada</button>
+                <button type="button" value="cancelada" aria-pressed="false">Cancelada</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="alerta alerta--sucesso" role="status" data-aviso-nova hidden style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+        <div><strong class="alerta__titulo">Solicitação registrada.</strong><p>Ela ainda não autoriza o uso da quadra. Cadastre os participantes e envie o PDF assinado para continuar.</p></div>
+    </div>
+
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <p class="sobretitulo">Solicitação #16 · Quadra Poliesportiva</p>
+            <h1>Campeonato de handebol entre turmas do 2º ano</h1>
+            <p class="tabular">Segunda-feira, 26/10/2026 · 14:00 – 15:00</p>
+        </div>
+        <div>
+            <span class="badge badge--documentacao" data-estado="documentacao" data-icone="documento">Pendente de documentação</span>
+            <span class="badge badge--analise" data-estado="analise" data-icone="ampulheta" hidden>Pendente de análise</span>
+            <span class="badge badge--aprovada" data-estado="aprovada" data-icone="check-circulo" hidden>Aprovada</span>
+            <span class="badge badge--rejeitada" data-estado="rejeitada" data-icone="x-circulo" hidden>Rejeitada</span>
+            <span class="badge badge--cancelada" data-estado="cancelada" data-icone="proibido" hidden>Cancelada pela administração</span>
+        </div>
+    </header>
+
+    <section class="painel" aria-labelledby="etapas-titulo" style="margin-bottom: 1.5rem">
+        <div class="painel__corpo">
+            <h2 id="etapas-titulo" class="visually-hidden">Etapas da solicitação</h2>
+            <!-- Pendente de documentação -->
+            <ol class="etapas" data-estado="documentacao">
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"><span class="visually-hidden">Concluída:</span></span><span class="etapa__rotulo">Solicitação registrada</span></li>
+                <li class="etapa etapa--atual" aria-current="step"><span class="etapa__marcador">2</span><span class="etapa__rotulo">Participantes e PDF</span></li>
+                <li class="etapa"><span class="etapa__marcador">3</span><span class="etapa__rotulo">Conferência da secretaria</span></li>
+                <li class="etapa"><span class="etapa__marcador">4</span><span class="etapa__rotulo">Contribuição presencial</span></li>
+                <li class="etapa"><span class="etapa__marcador">5</span><span class="etapa__rotulo">Análise administrativa</span></li>
+            </ol>
+            <!-- Pendente de análise -->
+            <ol class="etapas" data-estado="analise" hidden>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Solicitação registrada</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Participantes e PDF</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Conferência da secretaria</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Contribuição presencial</span></li>
+                <li class="etapa etapa--atual" aria-current="step"><span class="etapa__marcador">5</span><span class="etapa__rotulo">Análise administrativa</span></li>
+            </ol>
+            <!-- Aprovada -->
+            <ol class="etapas" data-estado="aprovada" hidden>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Solicitação registrada</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Participantes e PDF</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Conferência da secretaria</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Contribuição presencial</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Aprovada pela administração</span></li>
+            </ol>
+            <!-- Rejeitada -->
+            <ol class="etapas" data-estado="rejeitada" hidden>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Solicitação registrada</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Participantes e PDF</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Conferência da secretaria</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Contribuição presencial</span></li>
+                <li class="etapa etapa--interrompida"><span class="etapa__marcador" data-icone="x" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Rejeitada pela administração</span></li>
+            </ol>
+            <!-- Cancelada -->
+            <ol class="etapas" data-estado="cancelada" hidden>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Solicitação registrada</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Participantes e PDF</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Conferência da secretaria</span></li>
+                <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Contribuição presencial</span></li>
+                <li class="etapa etapa--neutra"><span class="etapa__marcador" data-icone="proibido" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Aprovada e depois cancelada</span></li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- Mensagens por situação (textos do SituacaoSolicitacaoService) -->
+    <div class="alerta alerta--aviso" data-estado="documentacao" style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2 2.8 19.5h18.4z"/><path d="M12 10v4.2M12 17h.01"/></svg>
+        <div><strong class="alerta__titulo">Pendente de documentação</strong><p>Revise os participantes e envie o PDF preparado e assinado fora do sistema.</p></div>
+    </div>
+    <div class="alerta alerta--info" data-estado="analise" hidden style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10M7 20.5h10M8 3.5c0 4.2 8 4.6 8 8.5s-8 4.3-8 8.5M16 3.5c0 2-1.8 3.2-4 4.6"/></svg>
+        <div><strong class="alerta__titulo">Pronta para análise administrativa</strong><p>Documento e contribuição foram registrados. A solicitação aguarda a decisão da administração.</p></div>
+    </div>
+    <div class="alerta alerta--sucesso" data-estado="aprovada" hidden style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+        <div><strong class="alerta__titulo">Aprovada</strong><p>A utilização da quadra foi autorizada para a data e o horário informados. Os participantes devem levar documento com foto.</p></div>
+    </div>
+    <div class="alerta alerta--perigo" data-estado="rejeitada" hidden style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/></svg>
+        <div><strong class="alerta__titulo">Rejeitada</strong><p>A administração encerrou a análise sem autorizar a utilização.</p><p style="margin-top:.5rem"><strong>Motivo informado:</strong> o período coincide com o ensaio geral da Semana Cultural já previsto pela coordenação. (texto fictício)</p></div>
+    </div>
+    <div class="alerta alerta--neutro" data-estado="cancelada" hidden style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m6 6 12 12"/></svg>
+        <div><strong class="alerta__titulo" style="color: var(--neutro-texto)">Cancelamento institucional registrado</strong><p>A reserva deixou de autorizar a utilização da quadra. <strong>Motivo:</strong> manutenção emergencial do telhado da quadra. (texto fictício)</p><p style="margin-top:.5rem">A equipe da escola ainda precisa registrar qualquer contato ou encaminhamento de reagendamento.</p></div>
+    </div>
+
+    <div class="grade-2">
+        <div class="pilha">
+            <section class="painel" aria-labelledby="dados-titulo">
+                <div class="painel__cabecalho"><h2 id="dados-titulo">Dados da solicitação</h2></div>
+                <div class="painel__corpo">
+                    <dl class="dados">
+                        <div><dt>Data</dt><dd class="tabular">26/10/2026</dd></div>
+                        <div><dt>Horário</dt><dd class="tabular">14:00 – 15:00</dd></div>
+                        <div><dt>Quadra</dt><dd>Quadra Poliesportiva</dd></div>
+                        <div style="grid-column: 1 / -1"><dt>Finalidade</dt><dd style="font-weight: 500">Campeonato de handebol entre turmas do 2º ano, organizado pelos representantes de sala.</dd></div>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="part-titulo">
+                <div class="painel__cabecalho">
+                    <div><h2 id="part-titulo">Participantes</h2><p>12 cadastrados: 11 alunos e 1 demais participante.</p></div>
+                    <span class="badge badge--aprovada" data-icone="check">Mínimo de 10 alunos atendido</span>
+                </div>
+                <div class="painel__corpo">
+                    <div class="progresso" aria-hidden="true">
+                        <div class="progresso__texto"><span>Alunos cadastrados</span><strong class="tabular">11 / mínimo 10</strong></div>
+                        <div class="progresso__barra"><span style="width: 100%"></span></div>
+                    </div>
+                </div>
+                <div class="painel__rodape grupo-botoes">
+                    <a class="botao botao--secundario" href="aluno-participantes.html" data-estado="documentacao">Revisar participantes</a>
+                    <a class="botao botao--secundario" href="aluno-participantes.html" data-estado="analise aprovada rejeitada cancelada" hidden>Ver participantes</a>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="doc-titulo">
+                <div class="painel__cabecalho"><div><h2 id="doc-titulo">Documento assinado (PDF)</h2><p>O CourtTime preserva cada versão original e não valida assinaturas.</p></div></div>
+                <div class="painel__corpo pilha" style="gap: 1rem">
+                    <div data-estado="documentacao" class="pilha" style="gap: 1rem">
+                        <div class="alerta alerta--neutro">
+                            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+                            <div><strong class="alerta__titulo" style="color: var(--cor-texto)">Antes de enviar</strong>
+                                <ul><li>Prepare e assine o documento fora do sistema.</li><li>Confira se a lista do PDF corresponde ao cadastro e tem ao menos dez alunos.</li><li>Depois do envio, a lista fica bloqueada até a conferência.</li></ul></div>
+                        </div>
+                        <form data-demo="envio-ok" novalidate>
+                            <div class="arquivo campo">
+                                <svg class="icone icone--lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4.5M7.5 9 12 4.5 16.5 9"/><path d="M4.5 15.5v2.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2.5"/></svg>
+                                <label for="arquivo">Arquivo PDF</label>
+                                <input id="arquivo" type="file" accept="application/pdf,.pdf" required aria-describedby="arquivo-ajuda">
+                                <span id="arquivo-ajuda" class="campo__ajuda">Somente .pdf, até 10 MB. O original será preservado sem alterações.</span>
+                                <p class="campo__erro" hidden>Selecione um arquivo PDF.</p>
+                            </div>
+                            <button class="botao" type="submit" style="margin-top: 1rem">Enviar nova versão</button>
+                        </form>
+                        <div class="alerta alerta--sucesso" role="status" id="envio-ok" hidden>
+                            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+                            <div><strong class="alerta__titulo">PDF enviado (simulação).</strong><p>A versão aguarda a conferência da secretaria.</p></div>
+                        </div>
+                    </div>
+                    <div data-estado="analise aprovada rejeitada cancelada" hidden>
+                        <div class="arquivo-pdf">
+                            <span class="arquivo-pdf__icone">PDF</span>
+                            <div><strong>autorizacao-handebol-v2.pdf</strong><span>Versão 2 · enviada em 21/10/2026 09:12 · 284 KB</span></div>
+                            <span class="badge badge--aprovada" data-icone="check">Validado</span>
+                        </div>
+                        <p class="campo__ajuda" style="margin-top: .75rem">Versão 1 devolvida para correção em 20/10/2026. Novos envios não são permitidos depois que a solicitação avança para análise.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <aside class="pilha">
+            <section class="painel" aria-labelledby="hist-titulo">
+                <div class="painel__cabecalho"><h2 id="hist-titulo">Histórico</h2></div>
+                <div class="painel__corpo">
+                    <ol class="historico" data-estado="documentacao">
+                        <li><span class="historico__ponto"></span><div><strong>Solicitação registrada</strong><span>19/10/2026 07:56 · por você</span></div></li>
+                    </ol>
+                    <ol class="historico" data-estado="analise aprovada rejeitada cancelada" hidden>
+                        <li data-estado="cancelada" hidden><span class="historico__ponto" style="border-color: var(--neutro-texto)"></span><div><strong>Cancelada pela administração</strong><span>24/10/2026 11:30</span></div></li>
+                        <li data-estado="aprovada cancelada" hidden><span class="historico__ponto"></span><div><strong>Aprovada pela administração</strong><span>22/10/2026 08:05</span></div></li>
+                        <li data-estado="rejeitada" hidden><span class="historico__ponto" style="border-color: var(--perigo-texto)"></span><div><strong>Rejeitada pela administração</strong><span>22/10/2026 08:05 · com motivo</span></div></li>
+                        <li><span class="historico__ponto"></span><div><strong>Contribuição presencial registrada</strong><span>21/10/2026 16:40 · secretaria</span></div></li>
+                        <li><span class="historico__ponto"></span><div><strong>Versão 2 validada</strong><span>21/10/2026 14:02 · secretaria</span></div></li>
+                        <li><span class="historico__ponto"></span><div><strong>Versão 2 do PDF enviada</strong><span>21/10/2026 09:12</span></div></li>
+                        <li><span class="historico__ponto" style="border-color: var(--aviso-borda)"></span><div><strong>Versão 1 devolvida para correção</strong><span>20/10/2026 15:20 · secretaria</span></div></li>
+                        <li><span class="historico__ponto"></span><div><strong>Solicitação registrada</strong><span>19/10/2026 07:56 · por você</span></div></li>
+                    </ol>
+                </div>
+            </section>
+            <a class="botao botao--fantasma" href="aluno-solicitacoes.html"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Voltar às solicitações</a>
+        </aside>
+    </div>
+</main>
+</body>
+</html>

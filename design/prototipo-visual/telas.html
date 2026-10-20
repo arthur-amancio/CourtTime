@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Telas do protótipo | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-pagina="telas">
+    <header class="topo-publico">
+        <div class="container topo-publico__inner">
+            <a class="marca" href="telas.html"><span class="marca__simbolo" data-icone="quadra"></span><span class="marca__texto"><span class="marca__nome">CourtTime</span><span class="marca__escola">Protótipo visual</span></span></a>
+            <nav class="topo-publico__nav" aria-label="Documentação do protótipo"><a href="direcoes.html">Direções visuais</a><a href="design-system.html">Design system</a><a class="botao botao--sm" href="index.html">Abrir protótipo</a></nav>
+        </div>
+    </header>
+    <main id="conteudo" class="container" style="padding-block: 2.5rem 4rem">
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo">Mapa do protótipo</p>
+                <h1>Todas as telas</h1>
+                <p>Protótipo navegável em HTML, CSS e JavaScript simples. Nada é gravado e todos os dados são fictícios. A aplicação Spring Boot não foi alterada.</p>
+            </div>
+        </header>
+
+        <div class="grade-2--igual grade-2">
+            <section class="painel" aria-labelledby="t-pub">
+                <div class="painel__cabecalho"><h2 id="t-pub">Público</h2></div>
+                <div class="painel__corpo"><ul class="pilha" style="gap:.5rem; padding-left:1.1rem">
+                    <li><a href="index.html">Tela 1 — Página inicial pública</a></li>
+                    <li><a href="login.html">Tela 2 — Login</a> (com atalhos demonstrativos por perfil)</li>
+                </ul></div>
+            </section>
+            <section class="painel" aria-labelledby="t-aluno">
+                <div class="painel__cabecalho"><h2 id="t-aluno">Aluno</h2></div>
+                <div class="painel__corpo"><ul class="pilha" style="gap:.5rem; padding-left:1.1rem">
+                    <li><a href="inicio.html?perfil=aluno">Início do aluno</a></li>
+                    <li><a href="quadra.html?perfil=aluno">Tela 3 — Consultar quadra (calendário)</a></li>
+                    <li><a href="aluno-nova-solicitacao.html">Tela 4 — Nova solicitação</a></li>
+                    <li><a href="aluno-solicitacoes.html">Minhas solicitações (5 situações)</a></li>
+                    <li><a href="aluno-solicitacao.html?estado=documentacao">Detalhe e acompanhamento</a> — <a href="aluno-solicitacao.html?estado=analise">análise</a>, <a href="aluno-solicitacao.html?estado=aprovada">aprovada</a>, <a href="aluno-solicitacao.html?estado=rejeitada">rejeitada</a>, <a href="aluno-solicitacao.html?estado=cancelada">cancelada</a></li>
+                    <li><a href="aluno-participantes.html">Participantes</a></li>
+                </ul></div>
+            </section>
+            <section class="painel" aria-labelledby="t-admin">
+                <div class="painel__cabecalho"><h2 id="t-admin">Administrador</h2></div>
+                <div class="painel__corpo"><ul class="pilha" style="gap:.5rem; padding-left:1.1rem">
+                    <li><a href="admin-painel.html">Tela 5 — Painel administrativo</a></li>
+                    <li><a href="admin-solicitacoes.html">Análise de solicitações</a></li>
+                    <li><a href="admin-solicitacao.html">Análise de uma solicitação</a></li>
+                    <li><a href="admin-usuarios.html">Usuários</a></li>
+                    <li><a href="admin-horarios.html">Horários semanais</a></li>
+                    <li><a href="admin-bloqueios.html">Bloqueios</a></li>
+                </ul></div>
+            </section>
+            <section class="painel" aria-labelledby="t-sec">
+                <div class="painel__cabecalho"><h2 id="t-sec">Secretaria e Segurança (Tela 6)</h2></div>
+                <div class="painel__corpo"><ul class="pilha" style="gap:.5rem; padding-left:1.1rem">
+                    <li><a href="secretaria-documentos.html">Secretaria — conferência documental</a></li>
+                    <li><a href="secretaria-conferencia.html">Secretaria — conferir documento</a></li>
+                    <li><a href="secretaria-contribuicoes.html">Secretaria — contribuições presenciais</a></li>
+                    <li><a href="seguranca-reservas.html">Segurança — reservas autorizadas</a></li>
+                    <li><a href="seguranca-conferencia.html">Segurança — conferência de entrada</a></li>
+                </ul></div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Consultar quadra | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="variavel" data-pagina="quadra">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html">Início</a></li><li><span aria-current="page">Consultar quadra</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Quadra Poliesportiva</h1>
+            <p>Consulte a situação de cada período de uma hora. Períodos fora do funcionamento cadastrado não aparecem.</p>
+        </div>
+        <div class="cabecalho-pagina__acoes" data-somente-perfil="aluno">
+            <a class="botao" href="aluno-nova-solicitacao.html"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova solicitação</a>
+        </div>
+    </header>
+
+    <div class="agenda" data-agenda="consulta">
+        <section class="painel calendario" aria-labelledby="cal-titulo">
+            <h2 id="cal-titulo" class="visually-hidden">Calendário</h2>
+            <div class="calendario__topo">
+                <p class="calendario__mes" data-calendario-mes aria-live="polite">outubro de 2026</p>
+                <div class="calendario__nav">
+                    <button type="button" class="botao-icone" data-mes-anterior aria-label="Mês anterior"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg></button>
+                    <button type="button" class="botao-icone" data-mes-proximo aria-label="Próximo mês"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button>
+                </div>
+            </div>
+            <table class="calendario__grade" data-calendario-grade aria-label="Datas do mês"></table>
+            <div class="calendario__legenda">
+                <span class="legenda-item"><span class="legenda-amostra legenda-amostra--ponto"></span>Dia com funcionamento cadastrado</span>
+                <span class="legenda-item"><span class="legenda-amostra" style="border-color: var(--cor-primaria); background: var(--cor-primaria)"></span>Data selecionada</span>
+            </div>
+        </section>
+
+        <section class="painel" aria-labelledby="horarios-titulo">
+            <div class="horarios__topo">
+                <div>
+                    <h2 id="horarios-titulo" class="visually-hidden">Períodos da data selecionada</h2>
+                    <p class="sobretitulo">Data consultada</p>
+                    <p class="horarios__data" data-data-titulo>quarta-feira, 21 de outubro</p>
+                </div>
+                <div class="estado-quadra" data-estado-quadra></div>
+            </div>
+            <div class="painel__corpo">
+                <div class="faixa-dias" data-faixa-dias role="group" aria-label="Próximos dias"></div>
+                <p class="visually-hidden" aria-live="polite" data-anuncio></p>
+                <div data-slots></div>
+                <div class="calendario__legenda">
+                    <span class="legenda-item"><span class="legenda-amostra legenda-amostra--disponivel"></span>Disponível</span>
+                    <span class="legenda-item"><span class="legenda-amostra legenda-amostra--reservado"></span>Reservado (solicitação aprovada)</span>
+                    <span class="legenda-item"><span class="legenda-amostra legenda-amostra--indisponivel"></span>Indisponível (bloqueio)</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="alerta alerta--neutro" style="margin-top: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+        <div>
+            <strong class="alerta__titulo">Controles do protótipo</strong>
+            <p>Horários, bloqueios e reservas desta tela são fictícios. Use a opção abaixo para ver como a tela diferencia o estado da quadra da disponibilidade de cada período.</p>
+            <label style="display:inline-flex; gap:.5rem; align-items:center; margin-top:.5rem; font-weight:650; font-size:.875rem; color: var(--cor-texto)">
+                <input type="checkbox" data-simular-inativa> Simular quadra inativa no cadastro
+            </label>
+        </div>
+    </div>
+</main>
+</body>
+</html>

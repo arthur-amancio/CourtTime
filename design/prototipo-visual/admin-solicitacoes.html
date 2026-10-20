@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Análise de solicitações | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="administrador" data-pagina="analise">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=administrador">Início</a></li><li><a href="admin-painel.html">Administração</a></li><li><span aria-current="page">Solicitações</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Análise de solicitações</h1>
+            <p>Fila de solicitações com documento conferido, participantes válidos e contribuição registrada.</p>
+        </div>
+    </header>
+
+    <section class="secao" aria-labelledby="fila-titulo">
+        <div class="secao__titulo"><h2 id="fila-titulo">Prontas para análise</h2><p>2 solicitações · ordem por data de uso</p></div>
+        <div class="tabela-wrapper">
+            <table class="tabela tabela--cartoes">
+                <caption class="visually-hidden">Solicitações aguardando decisão administrativa</caption>
+                <thead><tr><th scope="col">Uso da quadra</th><th scope="col">Solicitante</th><th scope="col">Finalidade</th><th scope="col">Participantes</th><th scope="col">Situação</th><th scope="col"><span class="visually-hidden">Ação</span></th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Uso"><div class="celula-data"><span class="data-bloco"><small>out</small><strong>22</strong></span><span><strong class="tabular">18:00 – 19:00</strong><span class="tabela__secundario">quinta-feira</span></span></div></td>
+                        <td data-label="Solicitante"><div class="pessoa"><span class="avatar" aria-hidden="true">BL</span><span><strong>Beatriz Lima</strong><span class="tabela__secundario">Solicitação #15</span></span></div></td>
+                        <td data-label="Finalidade">Treino de vôlei feminino — preparação para os jogos interclasse</td>
+                        <td data-label="Participantes" class="tabular">11 alunos</td>
+                        <td data-label="Situação"><span class="badge badge--analise" data-icone="ampulheta">Pendente de análise</span></td>
+                        <td class="tabela__acoes"><a class="botao botao--sm" href="admin-solicitacao.html">Analisar</a></td>
+                    </tr>
+                    <tr>
+                        <td data-label="Uso"><div class="celula-data"><span class="data-bloco"><small>out</small><strong>30</strong></span><span><strong class="tabular">15:00 – 16:00</strong><span class="tabela__secundario">sexta-feira</span></span></div></td>
+                        <td data-label="Solicitante"><div class="pessoa"><span class="avatar" aria-hidden="true">LA</span><span><strong>Lucas Andrade</strong><span class="tabela__secundario">Solicitação #14</span></span></div></td>
+                        <td data-label="Finalidade">Treino de vôlei para os jogos interclasse</td>
+                        <td data-label="Participantes" class="tabular">10 alunos, 2 outros</td>
+                        <td data-label="Situação"><span class="badge badge--analise" data-icone="ampulheta">Pendente de análise</span></td>
+                        <td class="tabela__acoes"><a class="botao botao--sm" href="admin-solicitacao.html">Analisar</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="secao" aria-labelledby="aut-titulo">
+        <div class="secao__titulo"><h2 id="aut-titulo">Reservas autorizadas</h2><p>De hoje em diante, que ainda autorizam o uso da quadra</p></div>
+        <div class="tabela-wrapper">
+            <table class="tabela tabela--cartoes">
+                <caption class="visually-hidden">Reservas autorizadas</caption>
+                <thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Solicitante</th><th scope="col">Finalidade</th><th scope="col"><span class="visually-hidden">Ação</span></th></tr></thead>
+                <tbody>
+                    <tr><td data-label="Data" class="tabular">20/10/2026</td><td data-label="Horário" class="tabular">16:00 – 17:00</td><td data-label="Solicitante">Gabriel Souza</td><td data-label="Finalidade">Futsal — treino da turma do 3º DS</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="admin-solicitacao.html">Abrir</a></td></tr>
+                    <tr><td data-label="Data" class="tabular">21/10/2026</td><td data-label="Horário" class="tabular">09:00 – 10:00</td><td data-label="Solicitante">Camila Rocha</td><td data-label="Finalidade">Treino de basquete da turma do 1º ano</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="admin-solicitacao.html">Abrir</a></td></tr>
+                    <tr><td data-label="Data" class="tabular">27/10/2026</td><td data-label="Horário" class="tabular">08:00 – 09:00</td><td data-label="Solicitante">Pedro Alves</td><td data-label="Finalidade">Handebol — torneio do grêmio</td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="admin-solicitacao.html">Abrir</a></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="secao painel" aria-labelledby="vazio-titulo">
+        <h2 id="vazio-titulo" class="visually-hidden">Exemplo de estado vazio</h2>
+        <div class="vazio">
+            <span class="vazio__icone"><svg class="icone icone--lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13.5 6.5 5h11l2.5 8.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 13.5h4.5l1.5 2.5h4l1.5-2.5H20"/></svg></span>
+            <strong>Exemplo de fila vazia</strong>
+            <p>Não há solicitações prontas para análise administrativa. Elas aparecem aqui depois da conferência documental e do registro da contribuição.</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

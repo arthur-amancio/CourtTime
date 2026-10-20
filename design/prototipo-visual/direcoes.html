@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Direções visuais | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+    <style>
+        .mini { position: relative; height: 100%; padding: 14px; display: grid; gap: 8px; font-size: 0; }
+        .mini i { display: block; border-radius: 4px; }
+        .mini--a { background: #f4f6f4; grid-template-columns: 1.1fr 1fr; align-items: center; }
+        .mini--b { background: #fff; grid-template-columns: repeat(4, 1fr); align-content: center; }
+        .mini--c { background: #f4f6f4; grid-template-columns: 52px 1fr; padding: 0; }
+        .mini--d { background: #f6f8f6; grid-template-columns: 1fr 1fr; align-items: center; }
+    </style>
+</head>
+<body data-pagina="direcoes">
+    <header class="topo-publico">
+        <div class="container topo-publico__inner">
+            <a class="marca" href="telas.html"><span class="marca__simbolo" data-icone="quadra"></span><span class="marca__texto"><span class="marca__nome">CourtTime</span><span class="marca__escola">Direções visuais</span></span></a>
+            <nav class="topo-publico__nav" aria-label="Documentação do protótipo"><a href="telas.html">Telas</a><a href="design-system.html">Design system</a><a class="botao botao--sm" href="index.html">Abrir protótipo</a></nav>
+        </div>
+    </header>
+    <main id="conteudo" class="container" style="padding-block: 2.5rem 4rem">
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo">Comparação</p>
+                <h1>Três direções e o protótipo do Lovable</h1>
+                <p>Resumo das alternativas avaliadas. A justificativa completa está em <code class="mono">docs/DIRECOES-VISUAIS.md</code>.</p>
+            </div>
+        </header>
+
+        <div class="direcoes">
+            <article class="painel direcao">
+                <div class="direcao__amostra"><div class="mini mini--a" aria-hidden="true">
+                    <div style="display:grid;gap:7px"><i style="height:8px;width:60%;background:#b7d8c3"></i><i style="height:16px;background:#1d2d25"></i><i style="height:16px;width:80%;background:#17633f"></i><i style="height:6px;width:90%;background:#c3cec7"></i><i style="height:14px;width:40%;background:#17633f;border-radius:4px"></i></div>
+                    <i style="height:100px;background:#114b31"></i></div></div>
+                <div class="direcao__corpo">
+                    <h2>A — Institucional Premium</h2>
+                    <ul><li>Superfícies claras, verde sóbrio, tipografia firme.</li><li>Imagem da escola equilibrada, sem hero gigante.</li><li>Pró: credibilidade institucional. Contra: pouco foco no calendário.</li></ul>
+                </div>
+            </article>
+            <article class="painel direcao">
+                <div class="direcao__amostra"><div class="mini mini--b" aria-hidden="true">
+                    <i style="height:30px;background:#dcece2;border:1px solid #b7d8c3"></i><i style="height:30px;background:#17633f"></i><i style="height:30px;background:#dcece2;border:1px solid #b7d8c3"></i><i style="height:30px;background:#ebefec"></i>
+                    <i style="height:30px;background:#dcece2;border:1px solid #b7d8c3"></i><i style="height:30px;background:#f8e9e9"></i><i style="height:30px;background:#dcece2;border:1px solid #b7d8c3"></i><i style="height:30px;background:#dcece2;border:1px solid #b7d8c3"></i>
+                    <i style="grid-column:1/-1;height:22px;background:#17633f;border-radius:6px"></i></div></div>
+                <div class="direcao__corpo">
+                    <h2>B — Sport Booking</h2>
+                    <ul><li>Calendário e blocos de horário em destaque.</li><li>Ações evidentes, ótimo no celular.</li><li>Pró: rapidez para o aluno. Contra: risco de visual comercial genérico.</li></ul>
+                </div>
+            </article>
+            <article class="painel direcao">
+                <div class="direcao__amostra"><div class="mini mini--c" aria-hidden="true">
+                    <i style="height:100%;background:#082a1b;border-radius:0"></i>
+                    <div style="display:grid;gap:7px;padding:14px;align-content:start"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><i style="height:30px;background:#fff;border:1px solid #d9e1dc"></i><i style="height:30px;background:#e7f0fb;border:1px solid #b3cbea"></i><i style="height:30px;background:#fff;border:1px solid #d9e1dc"></i></div><i style="height:12px;background:#ebefec"></i><i style="height:12px;background:#fff"></i><i style="height:12px;background:#fff"></i><i style="height:12px;background:#fff"></i></div></div></div>
+                <div class="direcao__corpo">
+                    <h2>C — Dashboard Contemporâneo</h2>
+                    <ul><li>Barra lateral, indicadores e tabelas refinadas.</li><li>Navegação estável entre filas e cadastros.</li><li>Pró: produtividade administrativa. Contra: frio para o aluno e para a página pública.</li></ul>
+                </div>
+            </article>
+            <article class="painel direcao">
+                <div class="direcao__amostra"><div class="mini mini--d" aria-hidden="true">
+                    <div style="display:grid;gap:7px"><i style="height:8px;width:70%;background:#cfe5d6;border-radius:99px"></i><i style="height:20px;background:#0f3d2a"></i><i style="height:20px;width:70%;background:#0f3d2a"></i><i style="height:16px;width:45%;background:#0f3d2a;border-radius:8px"></i></div>
+                    <i style="height:110px;background:#6c8a7a;border-radius:14px"></i></div></div>
+                <div class="direcao__corpo">
+                    <h2>D — Protótipo do Lovable</h2>
+                    <ul><li>Bom acabamento: barra lateral verde, grade de horários, etapas.</li><li>Problemas: foto não verificada, dados de reserva na página pública, fontes externas, termos e estados que não existem.</li><li>Decisão: <strong>adotar partes</strong>, sem importar código.</li></ul>
+                </div>
+            </article>
+        </div>
+
+        <section class="painel direcao--escolhida secao" aria-labelledby="escolha">
+            <div class="painel__cabecalho"><h2 id="escolha">Direção escolhida: identidade única A + B no aluno, A + C na administração</h2><span class="badge badge--analise" data-icone="ampulheta">Aguardando revisão externa</span></div>
+            <div class="painel__corpo grade-2--igual grade-2">
+                <div>
+                    <h3 style="margin-bottom:.5rem">Por quê</h3>
+                    <ul style="padding-left:1.1rem; color: var(--cor-texto-suave)">
+                        <li>A base A mantém o CourtTime claramente institucional e coerente com o verde atual.</li>
+                        <li>B entra onde gera valor: calendário, blocos de 1 hora e barra de ação no celular.</li>
+                        <li>C organiza filas e cadastros dos perfis administrativos com a mesma barra lateral.</li>
+                        <li>Um único conjunto de tokens e componentes serve os quatro perfis.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="margin-bottom:.5rem">O que veio do Lovable</h3>
+                    <ul style="padding-left:1.1rem; color: var(--cor-texto-suave)">
+                        <li>Login dividido em painel institucional e formulário.</li>
+                        <li>Barra lateral verde escura e etapas da solicitação.</li>
+                        <li>Blocos de horário clicáveis no lugar de uma tabela.</li>
+                        <li>Descartado: fotografia, fontes externas, “próxima reserva” pública, “Ocupado”, código React/Tailwind.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

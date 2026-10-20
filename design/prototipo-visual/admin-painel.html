@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Painel administrativo | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="administrador" data-pagina="painel">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=administrador">Início</a></li><li><span aria-current="page">Administração</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Painel administrativo</h1>
+            <p>Dados atuais da quadra, dos horários e das solicitações registrados no sistema.</p>
+        </div>
+        <div class="cabecalho-pagina__acoes">
+            <a class="botao" href="admin-solicitacoes.html"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13.5 6.5 5h11l2.5 8.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 13.5h4.5l1.5 2.5h4l1.5-2.5H20"/></svg>Analisar solicitações</a>
+        </div>
+    </header>
+
+    <section class="secao" aria-labelledby="sol-titulo">
+        <div class="secao__titulo"><h2 id="sol-titulo">Solicitações registradas</h2><p>Contagem por situação</p></div>
+        <div class="indicadores">
+            <div class="indicador"><span class="indicador__topo" data-icone="lista">Total</span><span class="indicador__valor">16</span></div>
+            <div class="indicador"><span class="indicador__topo" data-icone="documento">Aguardando documentação</span><span class="indicador__valor">5</span></div>
+            <a class="indicador indicador--destaque" href="admin-solicitacoes.html"><span class="indicador__topo" data-icone="ampulheta">Aguardando análise</span><span class="indicador__valor">2</span><span class="indicador__nota">Abrir fila →</span></a>
+            <div class="indicador"><span class="indicador__topo" data-icone="check-circulo">Aprovadas</span><span class="indicador__valor">6</span></div>
+            <div class="indicador"><span class="indicador__topo" data-icone="x-circulo">Rejeitadas</span><span class="indicador__valor">2</span></div>
+            <div class="indicador"><span class="indicador__topo" data-icone="proibido">Canceladas</span><span class="indicador__valor">1</span><span class="indicador__nota">Contagem a incluir no painel real</span></div>
+        </div>
+    </section>
+
+    <div class="grade-2 secao">
+        <section class="painel" aria-labelledby="fila-titulo">
+            <div class="painel__cabecalho">
+                <div><h2 id="fila-titulo">Fila de análise</h2><p>Documento conferido, participantes válidos e contribuição registrada.</p></div>
+                <a class="botao botao--sm botao--secundario" href="admin-solicitacoes.html">Ver fila completa</a>
+            </div>
+            <div class="tabela-wrapper" style="border: 0; border-radius: 0 0 var(--raio-lg) var(--raio-lg)">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Solicitações aguardando decisão administrativa</caption>
+                    <thead><tr><th scope="col">Data</th><th scope="col">Solicitante</th><th scope="col">Finalidade</th><th scope="col"><span class="visually-hidden">Ação</span></th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Data"><div class="celula-data"><span class="data-bloco"><small>out</small><strong>22</strong></span><span class="tabular">18:00 – 19:00</span></div></td>
+                            <td data-label="Solicitante">Beatriz Lima</td>
+                            <td data-label="Finalidade">Treino de vôlei feminino</td>
+                            <td class="tabela__acoes"><a class="botao botao--sm" href="admin-solicitacao.html">Analisar</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Data"><div class="celula-data"><span class="data-bloco"><small>out</small><strong>30</strong></span><span class="tabular">15:00 – 16:00</span></div></td>
+                            <td data-label="Solicitante">Lucas Andrade</td>
+                            <td data-label="Finalidade">Treino de vôlei para os jogos interclasse</td>
+                            <td class="tabela__acoes"><a class="botao botao--sm" href="admin-solicitacao.html">Analisar</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="pilha">
+            <section class="painel" aria-labelledby="quadra-titulo">
+                <div class="painel__cabecalho"><h2 id="quadra-titulo">Quadra cadastrada</h2><span class="badge badge--aprovada" data-icone="check-circulo">Em operação</span></div>
+                <div class="painel__corpo">
+                    <p><strong>Quadra Poliesportiva</strong></p>
+                    <p class="texto-suave" style="font-size:.875rem">Quadra esportiva da ETEC. (descrição fictícia)</p>
+                </div>
+            </section>
+            <section class="painel" aria-labelledby="config-titulo">
+                <div class="painel__cabecalho"><h2 id="config-titulo">Configuração atual</h2></div>
+                <div class="painel__corpo">
+                    <dl class="dados" style="grid-template-columns: 1fr 1fr">
+                        <div><dt>Horários semanais</dt><dd class="indicador__valor" style="font-size: 1.75rem">11</dd></div>
+                        <div><dt>Bloqueios futuros</dt><dd class="indicador__valor" style="font-size: 1.75rem">2</dd></div>
+                    </dl>
+                </div>
+                <div class="painel__rodape grupo-botoes">
+                    <a class="botao botao--secundario botao--sm" href="admin-horarios.html">Horários semanais</a>
+                    <a class="botao botao--secundario botao--sm" href="admin-bloqueios.html">Bloqueios</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <section class="painel secao" aria-labelledby="aut-titulo">
+        <div class="painel__cabecalho"><div><h2 id="aut-titulo">Próximas reservas autorizadas</h2><p>De hoje em diante. Uma reserva aprovada pode ser cancelada com motivo institucional.</p></div></div>
+        <div class="tabela-wrapper" style="border: 0">
+            <table class="tabela tabela--cartoes">
+                <caption class="visually-hidden">Reservas autorizadas atuais e futuras</caption>
+                <thead><tr><th scope="col">Data</th><th scope="col">Horário</th><th scope="col">Solicitante</th><th scope="col">Finalidade</th><th scope="col">Situação</th><th scope="col"><span class="visually-hidden">Ação</span></th></tr></thead>
+                <tbody>
+                    <tr><td data-label="Data" class="tabular">20/10/2026</td><td data-label="Horário" class="tabular">16:00 – 17:00</td><td data-label="Solicitante">Gabriel Souza</td><td data-label="Finalidade">Futsal — treino da turma do 3º DS</td><td data-label="Situação"><span class="badge badge--aprovada" data-icone="check-circulo">Aprovada</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="admin-solicitacao.html">Abrir</a></td></tr>
+                    <tr><td data-label="Data" class="tabular">21/10/2026</td><td data-label="Horário" class="tabular">09:00 – 10:00</td><td data-label="Solicitante">Camila Rocha</td><td data-label="Finalidade">Treino de basquete da turma do 1º ano</td><td data-label="Situação"><span class="badge badge--aprovada" data-icone="check-circulo">Aprovada</span></td><td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="admin-solicitacao.html">Abrir</a></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

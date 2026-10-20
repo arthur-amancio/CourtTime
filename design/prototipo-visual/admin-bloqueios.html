@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bloqueios | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="administrador" data-pagina="bloqueios">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=administrador">Início</a></li><li><a href="admin-painel.html">Administração</a></li><li><span aria-current="page">Bloqueios</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Bloqueios da quadra</h1>
+            <p>Registre indisponibilidades em datas específicas sem alterar o funcionamento semanal.</p>
+        </div>
+    </header>
+
+    <div class="grade-2">
+        <section aria-labelledby="lista-titulo">
+            <div class="secao__titulo"><h2 id="lista-titulo">Bloqueios futuros</h2><p>2 ativos</p></div>
+            <div class="tabela-wrapper">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Bloqueios futuros da quadra</caption>
+                    <thead><tr><th scope="col">Data</th><th scope="col">Período</th><th scope="col">Motivo</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Ação</span></th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Data"><div class="celula-data"><span class="data-bloco"><small>out</small><strong>23</strong></span><span class="tabular">sexta-feira</span></div></td><td data-label="Período" class="tabular">13:00 – 15:00</td><td data-label="Motivo">Manutenção da rede de proteção</td><td data-label="Estado"><span class="badge badge--aprovada" data-icone="check">Ativo</span></td><td class="tabela__acoes"><button class="botao botao--perigo-contorno botao--sm" type="button">Desativar</button></td></tr>
+                        <tr><td data-label="Data"><div class="celula-data"><span class="data-bloco"><small>out</small><strong>28</strong></span><span class="tabular">quarta-feira</span></div></td><td data-label="Período" class="tabular">08:00 – 18:00</td><td data-label="Motivo">Evento institucional na quadra</td><td data-label="Estado"><span class="badge badge--aprovada" data-icone="check">Ativo</span></td><td class="tabela__acoes"><button class="botao botao--perigo-contorno botao--sm" type="button">Desativar</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="campo__ajuda" style="margin-top: .75rem">Motivos fictícios. Um bloqueio que atinja uma reserva aprovada não é aceito.</p>
+        </section>
+
+        <section class="painel" aria-labelledby="form-titulo">
+            <div class="painel__cabecalho"><h2 id="form-titulo">Novo bloqueio</h2></div>
+            <form novalidate data-demo="bloqueio-erro">
+                <div class="painel__corpo">
+                    <div class="campo"><label for="data">Data</label><input id="data" type="date" min="2026-10-21" required><p class="campo__erro" hidden>Informe a data.</p></div>
+                    <div class="campos-linha" style="margin-top: 1.25rem">
+                        <div class="campo"><label for="ini">Início</label><input id="ini" type="time" step="3600" required><p class="campo__erro" hidden>Informe o início.</p></div>
+                        <div class="campo"><label for="fim">Fim</label><input id="fim" type="time" step="3600" required><p class="campo__erro" hidden>Informe o fim.</p></div>
+                    </div>
+                    <div class="campo"><label for="motivo">Motivo</label><input id="motivo" maxlength="200" required><p class="campo__erro" hidden>Informe o motivo.</p></div>
+                    <div class="alerta alerta--perigo" role="alert" id="bloqueio-erro" hidden style="margin-top: 1rem">
+                        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/></svg>
+                        <div><strong class="alerta__titulo">Não foi possível concluir.</strong><p>Exemplo de erro: o período informado atinge uma reserva aprovada.</p></div>
+                    </div>
+                </div>
+                <div class="painel__rodape grupo-botoes"><button class="botao" type="submit">Registrar bloqueio</button></div>
+            </form>
+        </section>
+    </div>
+</main>
+</body>
+</html>
