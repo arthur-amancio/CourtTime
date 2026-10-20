@@ -4,6 +4,12 @@ Base funcional inicial: `8c00b358de36fb03d113e8e2a8de6497c4cc1dfb`.
 Referência visual: PR #49, commit
 `766c430fde14ece94c3f524e2a8b31b768ae5581` — **não mesclar**.
 
+Estado de integração observado em 20/10/2026: a `main`
+`5540488f948b0ec0791599b2f2ff18c8451eaf86` já contém as Fases B a E
+(PRs #52 a #55). A Fase F continua no PR #56. A `main` contém o marcador
+literal `=======` em `style.css:1968`; a atualização do PR de QA fica
+bloqueada até a limpeza desse artefato, pois o guard deve rejeitá-lo.
+
 Revisões reais registradas nesta matriz:
 
 - Fase B, PR #52: `8b11183c24903598b809c31c2c545607e70232fb`;
@@ -30,7 +36,7 @@ design system) está integrada; diferenças visuais esperadas não são defeitos
 | Calendário | `quadra--1440.png` e `calendario-opcao-a-390.png` | Opção A implementada na Fase D, PR #54 | Nenhuma divergência funcional na grade controlada; sem contadores por dia | P1 | Usa grade/bloqueios reais, recusa reserva no passado e antecedência inválida, mantém `horarioInicio=HH:mm`, teclado e alternativa sem JS. |
 | Nova solicitação | `nova-solicitacao--390/430/768/1440.png` | Migrada na Fase D, PR #54 | Nenhuma divergência funcional; radios preservam `horarioInicio=HH:mm` | P1 | Preserva nomes, rota, CSRF e duração calculada no backend; validação legível e nenhum envio automático. |
 | Participantes e documentos | capturas de detalhe do aluno no PR #49 | Migrados na Fase D, PR #54 | Nenhuma divergência bloqueadora nas jornadas de dez alunos, upload, substituição e download | P1 | Mantém ownership, campos confirmados, original privado, versões, limite e validação no servidor; funciona sem JavaScript. |
-| Painel administrativo | `admin-painel--390/1440.png` | Migrado na Fase E, PR #55 | `style.css` contém um marcador `=======`; deve ser removido antes da integração | P1 | Solicitações, usuários, horários e bloqueios permanecem alcançáveis; nenhuma permissão da secretaria é ampliada e não há artefatos de conflito. |
+| Painel administrativo | `admin-painel--390/1440.png` | Fase E integrada pelo PR #55 | `style.css:1968` contém um marcador `=======` na `main`; correção mínima ainda necessária | P1 | Solicitações, usuários, horários e bloqueios permanecem alcançáveis; nenhuma permissão da secretaria é ampliada e não há artefatos de conflito. |
 | Secretaria | `secretaria-conferencia--1440.png` | Migrada na Fase F, PR #56 | O topo da pilha contém dois marcadores `=======` no CSS herdado/mesclado | P1 | Devolução exige justificativa com mensagem visível; download, validação e contribuição preservam CSRF, integridade e duplicidade. |
 | Segurança | `seguranca-conferencia--390.png` e `seguranca-reservas--1440.png` | Migrada na Fase F, PR #56 | Nenhuma divergência própria nas telas; integração depende da limpeza do CSS | P1 | Exibe apenas reservas autorizadas e identificação necessária; omite documentos, finanças e edição; canceladas retornam 404. |
 
