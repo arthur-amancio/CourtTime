@@ -1018,3 +1018,236 @@ textarea {
         min-height: 44px;
     }
 }
+
+
+/* ==========================================================================
+   CourtTime V2 — FASE A: tokens e componentes.
+   Referencia: PR #49 / design/prototipo-visual/docs/DESIGN-SYSTEM.md.
+   Classes legadas (.button, .status-pill, .form-message etc.) continuam ativas.
+   Nenhuma regra de negocio, dado ou rota depende deste bloco.
+   ========================================================================== */
+:root {
+    /* Identidade institucional aprovada no prototipo */
+    --verde-50: #eef6f1;
+    --verde-100: #dcece2;
+    --verde-200: #b7d8c3;
+    --verde-500: #2a7d52;
+    --verde-600: #17633f;
+    --verde-700: #114b31;
+    --verde-800: #0c3a26;
+    --verde-900: #082a1b;
+    --ouro-100: #fbf1d9;
+    --ouro-500: #c08a1e;
+    --ouro-700: #875c00;
+    --cinza-0: #fff;
+    --cinza-50: #f4f6f4;
+    --cinza-100: #ebefec;
+    --cinza-200: #d9e1dc;
+    --cinza-300: #c3cec7;
+    --cinza-600: #526158;
+    --cinza-900: #1d2d25;
+
+    /* Correspondencia com os tokens do CSS atual */
+    --cor-fundo: var(--page);
+    --cor-superficie: var(--surface);
+    --cor-texto: var(--text);
+    --cor-texto-suave: var(--muted);
+    --cor-borda: var(--border);
+    --cor-primaria: var(--accent);
+    --cor-primaria-escura: var(--accent-dark);
+    --cor-primaria-suave: var(--accent-soft);
+    --cor-foco: var(--ouro-700);
+
+    /* Status com texto + cor, sem depender so de cor */
+    --sucesso-texto: #1f5f3a;
+    --sucesso-fundo: #e3f2e8;
+    --sucesso-borda: #a9d3b8;
+    --aviso-texto: #6f4500;
+    --aviso-fundo: #fdf3dc;
+    --aviso-borda: #ebcf8f;
+    --info-texto: #1d4e89;
+    --info-fundo: #e7f0fb;
+    --info-borda: #b3cbea;
+    --perigo-texto: #8b2e2e;
+    --perigo-fundo: #fbeaea;
+    --perigo-borda: #e4b5b5;
+    --neutro-texto: #44514a;
+    --neutro-fundo: #eceeed;
+    --neutro-borda: #cfd5d1;
+
+    --fonte: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --texto-xs: .75rem;
+    --texto-sm: .875rem;
+    --texto-md: 1rem;
+    --texto-lg: 1.125rem;
+    --texto-xl: 1.25rem;
+    --texto-2xl: 1.5rem;
+    --texto-3xl: 1.875rem;
+    --esp-1: .25rem;
+    --esp-2: .5rem;
+    --esp-3: .75rem;
+    --esp-4: 1rem;
+    --esp-5: 1.25rem;
+    --esp-6: 1.5rem;
+    --esp-8: 2rem;
+    --esp-10: 2.5rem;
+    --esp-12: 3rem;
+    --raio-sm: 6px;
+    --raio-md: 10px;
+    --raio-lg: 14px;
+    --raio-pill: 999px;
+    --sombra-1: 0 1px 2px rgba(16, 40, 28, .06);
+    --sombra-2: 0 2px 8px rgba(16, 40, 28, .08);
+    --largura-conteudo: 1200px;
+    --largura-texto: 46rem;
+    --largura-formulario: 44rem;
+    --largura-lateral: 264px;
+}
+
+/* Componentes futuros: opt-in por classe, sem alterar a interface legada. */
+.botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--esp-2);
+    min-height: 44px;
+    padding: .625rem 1.125rem;
+    border: 1px solid var(--cor-primaria);
+    border-radius: var(--raio-sm);
+    background: var(--cor-primaria);
+    color: #fff;
+    font: inherit;
+    font-size: var(--texto-md);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s, color .15s;
+}
+.botao:hover {
+    background: var(--cor-primaria-escura);
+    border-color: var(--cor-primaria-escura);
+    color: #fff;
+}
+.botao--secundario {
+    background: var(--cor-superficie);
+    color: var(--cor-primaria);
+    border-color: var(--cor-borda);
+}
+.botao--secundario:hover {
+    background: var(--cor-primaria-suave);
+    color: var(--cor-primaria-escura);
+}
+.botao--fantasma {
+    background: transparent;
+    color: var(--cor-primaria);
+    border-color: transparent;
+}
+.botao--fantasma:hover {
+    background: var(--cor-primaria-suave);
+    color: var(--cor-primaria-escura);
+}
+.botao--perigo {
+    background: var(--perigo-texto);
+    border-color: var(--perigo-texto);
+    color: #fff;
+}
+.botao--perigo:hover {
+    background: #6e2323;
+    border-color: #6e2323;
+}
+.botao--sm { min-height: 36px; padding: .5rem .75rem; font-size: var(--texto-sm); }
+.botao--bloco { width: 100%; }
+.botao:is(:disabled, [aria-disabled="true"]) {
+    opacity: .65;
+    cursor: not-allowed;
+}
+.botao:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 3px; }
+
+/* Nomes do prototipo, preservando input, labels e validacao HTML nativos. */
+.campo { display: grid; gap: .4rem; min-width: 0; }
+.campo > label { font-weight: 700; }
+.campo__ajuda { margin: 0; font-size: var(--texto-sm); color: var(--cor-texto-suave); }
+.campo__erro { margin: 0; font-size: var(--texto-sm); font-weight: 700; color: var(--perigo-texto); }
+.campo--erro :is(input, select, textarea) { border-color: var(--perigo-texto); }
+.campo :is(input, select, textarea):focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+.campos-linha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-4); }
+
+/* Alertas: o texto e o role (no HTML) comunicam o significado. */
+.alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--esp-3);
+    padding: var(--esp-4);
+    border: 1px solid var(--neutro-borda);
+    border-radius: var(--raio-md);
+    background: var(--neutro-fundo);
+    color: var(--neutro-texto);
+}
+.alerta p:last-child { margin-bottom: 0; }
+.alerta--sucesso { border-color: var(--sucesso-borda); background: var(--sucesso-fundo); color: var(--sucesso-texto); }
+.alerta--aviso { border-color: var(--aviso-borda); background: var(--aviso-fundo); color: var(--aviso-texto); }
+.alerta--info { border-color: var(--info-borda); background: var(--info-fundo); color: var(--info-texto); }
+.alerta--perigo { border-color: var(--perigo-borda); background: var(--perigo-fundo); color: var(--perigo-texto); }
+.alerta--neutro { border-color: var(--neutro-borda); background: var(--neutro-fundo); color: var(--neutro-texto); }
+
+/* Situacoes de reserva. Nao criar novos status de negocio. */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .25rem .6rem;
+    border: 1px solid var(--neutro-borda);
+    border-radius: var(--raio-pill);
+    background: var(--neutro-fundo);
+    color: var(--neutro-texto);
+    font-size: var(--texto-sm);
+    font-weight: 700;
+    line-height: 1.35;
+}
+.badge--documentacao { border-color: var(--aviso-borda); background: var(--aviso-fundo); color: var(--aviso-texto); }
+.badge--analise { border-color: var(--info-borda); background: var(--info-fundo); color: var(--info-texto); }
+.badge--aprovada { border-color: var(--sucesso-borda); background: var(--sucesso-fundo); color: var(--sucesso-texto); }
+.badge--rejeitada { border-color: var(--perigo-borda); background: var(--perigo-fundo); color: var(--perigo-texto); }
+.badge--cancelada, .badge--neutro { border-color: var(--neutro-borda); background: var(--neutro-fundo); color: var(--neutro-texto); }
+
+/* Agrupamentos semanticos: migrados tela por tela em fases posteriores. */
+.painel {
+    min-width: 0;
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-1);
+    overflow: hidden;
+}
+.painel__cabecalho, .painel__corpo, .painel__rodape { padding: var(--esp-5); }
+.painel__cabecalho + .painel__corpo, .painel__corpo + .painel__rodape { border-top: 1px solid var(--cor-borda); }
+.painel__cabecalho h2, .painel__cabecalho h3 { margin-bottom: 0; }
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: var(--esp-3); }
+.indicador {
+    display: grid;
+    align-content: start;
+    gap: .375rem;
+    padding: var(--esp-4);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-md);
+    background: var(--cor-superficie);
+}
+.indicador strong { font-size: var(--texto-2xl); font-variant-numeric: tabular-nums; }
+.indicador--destaque { border-color: var(--info-borda); background: var(--info-fundo); }
+.tabela-wrapper { min-width: 0; overflow-x: auto; }
+.tabela { width: 100%; border-collapse: collapse; }
+.tabela th, .tabela td { padding: .75rem; border-bottom: 1px solid var(--cor-borda); text-align: left; vertical-align: top; }
+.tabela th { font-size: var(--texto-xs); font-weight: 750; color: var(--cor-texto-suave); }
+.vazio { padding: var(--esp-8); text-align: center; color: var(--cor-texto-suave); }
+.vazio strong { display: block; margin-bottom: var(--esp-2); color: var(--cor-texto); }
+
+/* A grade de formularios nao deve provocar overflow horizontal no celular. */
+@media (max-width: 620px) {
+    .campos-linha { grid-template-columns: 1fr; }
+    .botao--sm { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .botao { transition: none; }
+}
