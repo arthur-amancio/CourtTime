@@ -7,16 +7,51 @@ instalação completa no Windows.
 
 ## Antes da apresentação
 
+### 0. Conferir o ambiente
+
+Rode primeiro, de preferência um dia antes:
+
+```powershell
+.\scripts\Verificar-Ambiente-CourtTime.ps1
+```
+
+Ele não altera nada. Confere Java 17, `JAVA_HOME`, Maven Wrapper, `psql`, as
+variáveis de conexão, e avisa sobre duas variáveis perigosas esquecidas
+ligadas: `COURTTIME_POSTGRES_TEST`, que faz os testes apagarem o banco
+configurado, e `COURTTIME_BOOTSTRAP_ADMIN_ENABLED`, que impede a aplicação de
+iniciar quando já existe administrador.
+
 ### 1. Banco de demonstração isolado
 
-Nunca use um banco com dados existentes. No `psql`, conectado ao `postgres`:
+Nunca use um banco com dados existentes.
+
+**Use o script, que confere o banco antes de apagar qualquer coisa:**
+
+```powershell
+.\scripts\Reiniciar-Demonstracao.ps1
+```
+
+Ele recusa qualquer nome que não termine em `_demo`, recusa `postgres`,
+`courttime` e `courttime_test`, mostra quantas tabelas e contas existem no
+banco, e **exige que você digite o nome do banco** antes de apagar.
+
+**Equivalente manual**, se preferir fazer à mão. Confirme primeiro onde você
+está conectado:
+
+```sql
+SELECT current_database();
+```
+
+Só continue se a resposta for **exatamente** `courttime_demo`. Depois, do banco
+`postgres`:
 
 ```sql
 DROP DATABASE IF EXISTS courttime_demo;
 CREATE DATABASE courttime_demo;
 ```
 
-O `DROP` no início é proposital: é assim que se reinicia a demonstração do zero.
+Nunca execute o `DROP` sem antes confirmar o nome. É o comando mais perigoso
+deste guia.
 
 ### 2. Subir a aplicação
 
@@ -123,7 +158,7 @@ sair e entrar o tempo todo.
 | "A solicitação deve ser feita com pelo menos um dia de antecedência" | Você escolheu hoje. Use amanhã |
 | Aplicação não sobe com erro de administrador | As variáveis do bootstrap ficaram definidas. Remova-as e suba de novo |
 | Não consegue validar o documento | A lista de participantes mudou depois do envio, ou há menos de dez alunos |
-| Banco em estado confuso | `DROP DATABASE courttime_demo;` e recomece do zero |
+| Banco em estado confuso | Rode `.\scripts\Reiniciar-Demonstracao.ps1` e recomece do zero |
 | **A demonstração ao vivo falhar** | Mostre a execução automatizada: o teste `JornadaCompletaE2ETest` percorre exatamente este roteiro no GitHub Actions, com PostgreSQL isolado. É a mesma jornada, executada pela máquina |
 
 Tenha a aba do GitHub Actions aberta antes de começar. É a sua rede de proteção.
