@@ -3,7 +3,29 @@
 Análise técnica para preencher automaticamente o documento
 `formulario_de_reserva_da_quadra.pdf`, sem alterá-lo.
 
-**Nada disto está implementado.** Este documento existe para a equipe decidir.
+## Situação: implementado
+
+Na tela **Documentos** da solicitação, enquanto ela aguarda documentação, o aluno
+informa CPF e curso e clica em **Gerar formulário preenchido**. O sistema devolve
+o PDF oficial com os dados escritos por cima; o aluno imprime, assina e envia o
+PDF assinado na mesma tela.
+
+| Decisão | O que foi feito |
+|---|---|
+| Biblioteca | Apache PDFBox 3.0.5 (Apache-2.0), única dependência nova |
+| Modelo | o arquivo original, sem alteração, em `src/main/resources/modelos/formulario-reserva-quadra.pdf` |
+| Como preenche | texto acrescentado no modo `APPEND` nas coordenadas medidas abaixo (`FormularioReservaPdf`) |
+| CPF e curso | **alternativa A**: digitados na geração, só entram no PDF; não são gravados no banco, em arquivo nem em log. O CPF vai no corpo de um POST, nunca na URL, e é conferido pelos dígitos verificadores |
+| Mais de 30 participantes | **a página oficial de participantes é repetida** (cópia do próprio modelo), com o aviso "Participantes 31 a N de N". Ninguém é omitido e nenhum limite é imposto |
+| Nomes longos | a fonte diminui até caber; se preciso, o nome quebra em duas linhas na própria célula |
+| Vínculo do "Outro" | o "X" é marcado em `( ) Outro`, e o texto do vínculo fica em branco para preencher à mão (o sistema não guarda esse dado) |
+| Nunca preenchido | assinaturas, presença e nome do vigilante, data de aprovação e assinatura da direção |
+| Modelo ausente | a geração é recusada com a mensagem "O modelo oficial do formulário da ETEC não está disponível no sistema"; nenhum termo substituto é criado |
+
+Observação de desempenho: na primeira geração após iniciar a aplicação, o PDFBox
+cria um cache das fontes do sistema (alguns segundos). As seguintes são imediatas.
+
+O restante deste documento é a análise que levou a essas decisões.
 
 ## O ponto de partida
 
@@ -145,7 +167,9 @@ humana:
 4. **Gerar as 30 primeiras e avisar.** Pior opção: omite participantes em
    silêncio para quem não ler o aviso.
 
-**Nenhuma deve ser implementada antes da resposta da escola.**
+**Implementado:** a alternativa 2, porque a missão de finalização pediu para
+tratar a capacidade sem omitir participantes e sem inventar limite. Se a ETEC
+definir um limite, ele deve ser aplicado na lista de participantes, não no PDF.
 
 ## Limites que o sistema nunca deve cruzar
 

@@ -136,6 +136,10 @@ Antes do primeiro envio, ou depois de uma devolução documental para correção
 
 O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho, SHA-256 e a revisão da lista de participantes; versões anteriores não são substituídas. Enquanto a versão aguarda conferência, a lista e um novo upload permanecem bloqueados. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
 
+### Formulário oficial preenchido
+
+Na mesma tela, enquanto a solicitação aguarda documentação, o aluno informa CPF e curso e baixa o **formulário oficial da ETEC preenchido** com o nome do solicitante, a data, o horário, a data de preenchimento e os participantes. O arquivo original (`src/main/resources/modelos/formulario-reserva-quadra.pdf`) é usado como modelo sem alteração: o texto é sobreposto com Apache PDFBox. CPF e curso não são gravados; o CPF é enviado por POST e conferido pelos dígitos verificadores. Acima de 30 participantes, a página oficial de participantes é repetida, sem omitir ninguém. Assinaturas, presença, nome do vigilante e data de aprovação nunca são preenchidos pelo sistema. Detalhes e coordenadas em `docs/integracao-pdf-oficial.md`.
+
 A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. A validação exige que a lista não tenha mudado e contenha ao menos dez alunos. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência é manual: não comprova criptograficamente uma assinatura digital e não aprova a reserva. Retenção, descarte e eventual verificação técnica de assinatura permanecem pendentes de definição da ETEC.
 
 ## Contribuições presenciais
