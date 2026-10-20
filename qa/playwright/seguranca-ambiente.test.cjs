@@ -18,7 +18,7 @@ test('recusa banco demo e banco de testes da CI', () => {
   assert.throws(() => verificarAmbienteIsolado({ ...correto, nomeBanco: 'courttime_demo' }), /bloqueada/);
   assert.throws(() => verificarAmbienteIsolado({ ...correto, nomeBanco: 'courttime_test' }), /bloqueada/);
 });
-test('recusa marcador ausente, previsivel demais ou inconsistente com o administrador', () => {
+test('recusa marcador ausente, malformado ou inconsistente com o administrador', () => {
   assert.throws(() => verificarAmbienteIsolado({ ...correto, marcadorInstancia: undefined }), /bloqueada/);
   assert.throws(() => verificarAmbienteIsolado({ ...correto, marcadorInstancia: 'curto' }), /bloqueada/);
   assert.throws(() => verificarAmbienteIsolado({ ...correto, marcadorInstancia: 'QA_8C00B35' }), /bloqueada/);

@@ -21,5 +21,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Validar sintaxe dos executáveis de QA
+        run: |
+          for arquivo in qa/playwright/*.cjs qa/playwright/suporte/*.cjs; do
+            node --check "$arquivo"
+          done
+          node -e "JSON.parse(require('fs').readFileSync('qa/playwright/package.json', 'utf8'))"
       - name: Verificar protecao sem baixar dependencias
         run: node --test qa/playwright/seguranca-ambiente.test.cjs
