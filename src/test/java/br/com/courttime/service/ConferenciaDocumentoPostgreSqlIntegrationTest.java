@@ -107,7 +107,6 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoEStorage() throws IOException {
-        BancoDeTeste.exigirBancoDedicado(dataSource);
         limparBanco();
         limparArquivos();
         quadra = novaQuadra();
@@ -298,6 +297,9 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
     }
 
     private void limparBanco() {
+        // A guarda fica aqui, e nao so no @BeforeEach: o JUnit executa o @AfterEach
+        // mesmo quando o @BeforeEach falha, e este metodo tambem e chamado por ele.
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         ajusteContribuicaoRepository.deleteAllInBatch();
         contribuicaoRepository.deleteAllInBatch();
         conferenciaRepository.deleteAllInBatch();
