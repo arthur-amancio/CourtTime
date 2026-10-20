@@ -49,3 +49,91 @@ jobs:
 
       - name: Compilar e executar os testes
         run: ./mvnw clean verify
+
+
+      - name: Validar dados ficticios no PostgreSQL descartavel
+        env:
+          COURTTIME_DB_URL: jdbc:postgresql://localhost:5432/courttime_demo
+          COURTTIME_DB_USERNAME: courttime
+          COURTTIME_DB_PASSWORD: courttime_test
+          COURTTIME_POSTGRES_TEST: 'false'
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+          PGHOST: localhost
+          PGPORT: '5432'
+          PGUSER: courttime
+          PGPASSWORD: courttime_test
+        run: |
+          set -euo pipefail
+          if ! command -v psql >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq postgresql-client
+          fi
+
+          # Isolado do courttime_test usado pela suite Maven.
+          psql -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE courttime_demo;"
+          java -jar target/courttime-0.0.1-SNAPSHOT.jar > "$RUNNER_TEMP/demo-app.log" 2>&1 &
+          app_pid=$!
+          trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+          ready=false
+          for i in $(seq 1 90); do
+            if curl --silent --fail http://localhost:8080/ >/dev/null; then
+              ready=true
+              break
+            fi
+            if ! kill -0 "$app_pid" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [ "$ready" != true ]; then
+            tail -100 "$RUNNER_TEMP/demo-app.log"
+            exit 1
+          fi
+          kill "$app_pid"
+          wait "$app_pid" 2>/dev/null || true
+          trap - EXIT
+
+          # Senha ficticia somente no runner descartavel, jamais no repositorio.
+          python3 - <<'PY'
+          from pathlib import Path
+          sql = Path('scripts/popular-demo.sql').read_text()
+          before = "SET LOCAL courttime.demo_password = 'TROQUE_A_SENHA_DEMO_AQUI';"
+          assert sql.count(before) == 1, 'Placeholder de senha nao encontrado'
+          Path('/tmp/courttime-seed-ci.sql').write_text(
+              sql.replace(before, "SET LOCAL courttime.demo_password = 'senha-demo-ci-apenas';")
+          )
+          PY
+
+          psql -d courttime_demo -v ON_ERROR_STOP=1 -f /tmp/courttime-seed-ci.sql
+          totais=$(psql -d courttime_demo -At -c "
+            SELECT
+              (SELECT count(*) FROM usuarios WHERE email LIKE '%.demo@exemplo.invalid') || ':' ||
+              (SELECT count(*) FROM disponibilidades_quadra) || ':' ||
+              (SELECT count(*) FROM bloqueios_quadra WHERE motivo LIKE 'DEMO -%') || ':' ||
+              (SELECT count(*) FROM reservas WHERE finalidade LIKE '[DEMO]%') || ':' ||
+              (SELECT count(*) FROM participantes_reserva);
+          ")
+          echo "Totais apos seed: $totais"
+          IFS=: read -r usuarios horarios bloqueios reservas participantes <<< "$totais"
+          test "$usuarios" -eq 17
+          test "$horarios" -eq 8
+          test "$bloqueios" -eq 24
+          test "$reservas" -ge 20
+          test "$participantes" -eq 180
+
+          # Reexecucao nao pode duplicar nem alterar registros.
+          psql -d courttime_demo -v ON_ERROR_STOP=1 -f /tmp/courttime-seed-ci.sql >/dev/null
+          depois=$(psql -d courttime_demo -At -c "
+            SELECT
+              (SELECT count(*) FROM usuarios WHERE email LIKE '%.demo@exemplo.invalid') || ':' ||
+              (SELECT count(*) FROM disponibilidades_quadra) || ':' ||
+              (SELECT count(*) FROM bloqueios_quadra WHERE motivo LIKE 'DEMO -%') || ':' ||
+              (SELECT count(*) FROM reservas WHERE finalidade LIKE '[DEMO]%') || ':' ||
+              (SELECT count(*) FROM participantes_reserva);
+          ")
+          test "$totais" = "$depois"
+
+          # Nome incorreto: recusado antes de qualquer escrita.
+          if psql -d courttime_test -v ON_ERROR_STOP=1 -f /tmp/courttime-seed-ci.sql >/dev/null 2>&1; then
+            echo "ERRO: o seed nao bloqueou um banco diferente de courttime_demo"
+            exit 1
+          fi
+          echo "Seed validado: isolado, repetivel e restrito a courttime_demo."
