@@ -55,24 +55,44 @@ $psql = Get-Command psql -ErrorAction SilentlyContinue
 Resultado ([bool]$psql) 'Cliente psql disponivel' `
     $(if (-not $psql) { 'Adicione a pasta bin do PostgreSQL ao PATH.' } else { $psql.Source })
 
-# 5. Variaveis de conexao ----------------------------------------------------
-Resultado ([bool]$env:COURTTIME_DB_URL) 'COURTTIME_DB_URL definida' $env:COURTTIME_DB_URL
-Resultado ([bool]$env:COURTTIME_DB_PASSWORD) 'COURTTIME_DB_PASSWORD definida' `
-    $(if ($env:COURTTIME_DB_PASSWORD) { '(valor nao exibido)' } else { 'Defina a senha apenas nesta sessao.' })
-
-# 6. O banco configurado e mesmo o de demonstracao? --------------------------
-# Importante: os testes de integracao apagam todas as tabelas. Apontar para um
-# banco que nao seja o de demonstracao e o erro mais caro possivel aqui.
-if ($env:COURTTIME_DB_URL) {
-    $nomeBanco = ($env:COURTTIME_DB_URL -split '/')[-1] -replace '\?.*$', ''
-    Resultado ($nomeBanco -eq $BancoEsperado) "Banco configurado e $BancoEsperado" `
-        "Encontrado: $nomeBanco"
+# 5. Credenciais: arquivo local ignorado ou variaveis de ambiente --------
+# application.properties importa opcionalmente o application-local.properties
+# localizado na raiz do projeto. Nao mostrar senhas em texto claro.
+$props = @{}
+$arquivoLocal = '.\\application-local.properties'
+if (Test-Path -LiteralPath $arquivoLocal) {
+    foreach ($linha in (Get-Content -LiteralPath $arquivoLocal)) {
+        if ($linha -match '^\\s*([^#!\\s][^=]*)=(.*)$') {
+            $props[$Matches[1].Trim()] = $Matches[2].Trim()
+        }
+    }
+    Resultado $true 'Configuracao local encontrada' '(senha nao exibida)'
+} else {
+    Write-Host '  [-]    application-local.properties ausente; verificando variaveis de ambiente' -ForegroundColor DarkGray
 }
+
+$url = if ($env:COURTTIME_DB_URL) { $env:COURTTIME_DB_URL }
+       elseif ($props.ContainsKey('spring.datasource.url')) { $props['spring.datasource.url'] }
+       else { 'jdbc:postgresql://localhost:5432/courttime' }
+$senhaConfigurada = if ($env:COURTTIME_DB_PASSWORD) { $true }
+                    elseif ($props.ContainsKey('spring.datasource.password')) {
+                        $valor = $props['spring.datasource.password']
+                        -not [string]::IsNullOrWhiteSpace($valor) -and
+                        $valor -notmatch '^TROQUE_'
+                    } else { $false }
+
+Resultado $senhaConfigurada 'Senha PostgreSQL configurada (arquivo local ou ambiente)' `
+    $(if (-not $senhaConfigurada) { 'Copie application-local.properties.example e substitua o placeholder.' } else { '(valor nao exibido)' })
+
+# 6. Banco configurado deve ser exatamente o banco isolado de demonstracao.
+$nomeBanco = ($url -split '/')[-1] -replace '\\?.*$', ''
+Resultado ($nomeBanco -eq $BancoEsperado) "Banco configurado e $BancoEsperado" `
+    "Encontrado: $nomeBanco"
 
 # 7. Variavel perigosa ligada por engano? ------------------------------------
 if ($env:COURTTIME_POSTGRES_TEST -eq 'true') {
     Resultado $false 'COURTTIME_POSTGRES_TEST NAO deve ficar ligada na demonstracao' `
-        'Com ela ligada, "mvnw clean verify" apaga as tabelas do banco configurado. Use: Remove-Item Env:COURTTIME_POSTGRES_TEST'
+        'Com ela ligada, os testes de integracao podem limpar tabelas de um banco dedicado de testes. Use: Remove-Item Env:COURTTIME_POSTGRES_TEST'
 } else {
     Resultado $true 'COURTTIME_POSTGRES_TEST desligada' $null
 }
