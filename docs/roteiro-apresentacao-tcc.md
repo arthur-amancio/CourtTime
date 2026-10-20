@@ -38,6 +38,12 @@ banco, recusa apagar com a aplicação ainda no ar, e **exige que você digite o
 nome do banco** antes de apagar. Se o PostgreSQL recusar qualquer passo, o
 script para e diz o motivo, em vez de anunciar sucesso.
 
+O script **não apaga os PDFs** já enviados: eles ficam na pasta definida em
+`COURTTIME_DOCUMENT_STORAGE_PATH` (padrão `./data/documentos`). Sem o banco,
+esses arquivos ficam órfãos e não aparecem no sistema. Para recomeçar de fato
+do zero, apague também o conteúdo dessa pasta **apenas se ela for exclusiva da
+demonstração**.
+
 **Equivalente manual**, se preferir fazer à mão. Confirme primeiro onde você
 está conectado:
 
