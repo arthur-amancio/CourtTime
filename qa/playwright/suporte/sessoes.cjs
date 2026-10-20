@@ -10,9 +10,11 @@ async function autenticar(page, configuracao, perfil, { comprovarInstancia = fal
     page.waitForURL(url => url.pathname === '/inicio'),
     page.getByRole('button', { name: 'Entrar' }).click(),
   ]);
-  const corpo = await page.locator('body').innerText();
-  assert.match(corpo, /Perfil:/, `Login do perfil ${perfil} nao concluiu.`);
+  assert.equal(new URL(page.url()).pathname, '/inicio', `Login do perfil ${perfil} nao concluiu.`);
+  const logout = page.locator('form[action="/logout"][method="post" i]');
+  assert.equal(await logout.count(), 1, `Login do perfil ${perfil} nao criou uma sessao autenticada.`);
   if (comprovarInstancia) {
+    const corpo = await page.locator('body').textContent();
     assert.match(
       corpo,
       new RegExp(configuracao.marcadorInstancia, 'i'),

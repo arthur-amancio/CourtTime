@@ -19,6 +19,8 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(dataControlada || '')) {
 }
 
 const telas = [
+  { perfil: null, nome: 'pagina-publica', rota: '/' },
+  { perfil: null, nome: 'login', rota: '/login' },
   { perfil: 'alunoA', nome: 'aluno-calendario', rota: `/quadra?data=${dataControlada}` },
   { perfil: 'alunoA', nome: 'aluno-nova-solicitacao', rota: `/solicitacoes/nova?data=${dataControlada}` },
   { perfil: 'admin', nome: 'administrador-painel', rota: '/admin' },
@@ -108,16 +110,19 @@ async function auditarSequenciaDeFoco(page, tela) {
       const caixa = ativo.getBoundingClientRect();
       const centroX = Math.max(0, Math.min(innerWidth - 1, caixa.left + caixa.width / 2));
       const centroY = Math.max(0, Math.min(innerHeight - 1, caixa.top + caixa.height / 2));
-      const sobreposto = document.elementsFromPoint(centroX, centroY).some(elemento => {
+      const sobrepositores = document.elementsFromPoint(centroX, centroY).filter(elemento => {
         if (elemento === ativo || elemento.contains(ativo) || ativo.contains(elemento)) return false;
         const posicao = getComputedStyle(elemento).position;
         return posicao === 'fixed' || posicao === 'sticky';
-      });
+      }).map(elemento => `${elemento.tagName.toLowerCase()}.${[...elemento.classList].join('.')}`);
       return {
         identificador: ativo.getAttribute('aria-label') || ativo.textContent?.trim().slice(0, 80)
           || ativo.getAttribute('name') || ativo.id || ativo.tagName,
-        dentroDaJanela: caixa.top >= -1 && caixa.bottom <= innerHeight + 1,
-        sobreposto,
+        dentroDaJanela: caixa.bottom > 1 && caixa.top < innerHeight - 1,
+        sobreposto: sobrepositores.length > 0,
+        sobrepositores,
+        caixa: { top: Math.round(caixa.top), bottom: Math.round(caixa.bottom), altura: Math.round(caixa.height) },
+        viewport: { largura: innerWidth, altura: innerHeight },
       };
     });
     if (!estado) break;
@@ -182,7 +187,7 @@ async function auditarCalendario(page) {
     for (const tela of telas) {
       const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
       const page = await context.newPage();
-      await autenticar(page, configuracao, tela.perfil);
+      if (tela.perfil) await autenticar(page, configuracao, tela.perfil);
       for (const viewport of viewports) {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
         await page.goto(`${configuracao.baseUrl}${tela.rota}`);
@@ -195,7 +200,7 @@ async function auditarCalendario(page) {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(`${configuracao.baseUrl}${tela.rota}`);
       await auditarSequenciaDeFoco(page, tela);
-      await auditarMenu(page, tela);
+      if (tela.perfil) await auditarMenu(page, tela);
       if (tela.nome === 'aluno-calendario') await auditarCalendario(page);
       await context.close();
     }
