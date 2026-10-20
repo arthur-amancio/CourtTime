@@ -97,7 +97,7 @@ class InicioControllerTest {
 
         mockMvc.perform(get("/inicio").with(user(aluno.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("status-pill--ok")))
+                .andExpect(content().string(containsString("badge--aprovada")))
                 .andExpect(content().string(containsString("Aprovada")));
     }
 

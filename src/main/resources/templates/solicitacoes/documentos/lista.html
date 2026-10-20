@@ -6,6 +6,7 @@
     <title>CourtTime | Documentos enviados</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
     <script th:replace="~{fragments/layout :: script}"></script>
+    <script th:src="@{/js/envio-pdf.js}" src="/js/envio-pdf.js" defer></script>
 </head>
 <body class="app-autenticado">
     <a th:replace="~{fragments/layout :: pular}"></a>
@@ -14,6 +15,8 @@
 
     <main id="conteudo" class="container app-main app-main--narrow">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
+            <a th:href="@{/inicio}">Início</a>
+            <span aria-hidden="true">/</span>
             <a th:href="@{/solicitacoes}">Solicitações</a>
             <span aria-hidden="true">/</span>
             <a th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Detalhes</a>
@@ -21,100 +24,123 @@
             <span aria-current="page">Documentos</span>
         </nav>
 
-        <p class="form-message form-message--success" role="status"
-           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">PDF enviado.</p>
-        <p class="form-message form-message--error" role="alert"
-           th:if="${mensagemErro}" th:text="${mensagemErro}">Não foi possível enviar.</p>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">PDF enviado.</p>
+        </div>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível enviar.</p>
+        </div>
 
-        <header class="page-heading">
-            <h1>Documentos enviados</h1>
-            <p>Consulte as versões enviadas para esta solicitação.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo" th:text="|Solicitação #${solicitacao.id}|">Solicitação #16</p>
+                <h1>Documentos enviados</h1>
+                <p>Consulte as versões enviadas para esta solicitação. O CourtTime guarda cada original sem alterações e não valida assinaturas.</p>
+            </div>
         </header>
 
-        <section class="form-section" aria-labelledby="envio-title" th:if="${envioPermitido}">
-            <h2 id="envio-title">Enviar PDF</h2>
-            <div class="request-notice">
-                <strong>Assinatura externa</strong>
-                <p>O PDF deve ser preparado e assinado fora do sistema. O envio ao CourtTime não comprova nem valida a assinatura.</p>
-            </div>
-            <p class="request-notice">
-                Antes do envio, confira se a lista do documento corresponde ao cadastro e contém no mínimo dez alunos.
-            </p>
-            <p class="empty-message">
-                O modelo oficial do termo ainda deve ser fornecido pela ETEC. Não gere um termo substituto pelo sistema.
-            </p>
-            <form class="request-form" method="post" enctype="multipart/form-data"
-                  th:action="@{/solicitacoes/{id}/documentos(id=${solicitacao.id})}">
-                <div class="form-field">
-                    <label for="arquivo">Arquivo PDF</label>
-                    <input id="arquivo" name="arquivo" type="file"
-                           accept="application/pdf,.pdf" required
-                           aria-describedby="arquivo-ajuda">
-                    <p id="arquivo-ajuda" class="field-help">
-                        Máximo técnico de 10 MB. O original enviado será preservado sem alterações.
-                    </p>
+        <div class="pilha">
+            <section class="painel" aria-labelledby="envio-title" th:if="${envioPermitido}">
+                <div class="painel__cabecalho">
+                    <h2 id="envio-title">Enviar PDF</h2>
                 </div>
-                <div class="form-actions">
-                    <button class="button" type="submit">Enviar nova versão</button>
+                <div class="painel__corpo pilha pilha--compacta">
+                    <div class="alerta alerta--neutro">
+                        <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+                        <div>
+                            <p><strong>Assinatura externa</strong></p>
+                            <p>O PDF deve ser preparado e assinado fora do sistema. O envio ao CourtTime não comprova nem valida a assinatura.</p>
+                            <ul>
+                                <li>Antes do envio, confira se a lista do documento corresponde ao cadastro e contém no mínimo dez alunos.</li>
+                                <li>O modelo oficial do termo ainda deve ser fornecido pela ETEC. Não gere um termo substituto pelo sistema.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <form class="pilha pilha--compacta" method="post" enctype="multipart/form-data"
+                          th:action="@{/solicitacoes/{id}/documentos(id=${solicitacao.id})}" data-envio-pdf>
+                        <div class="upload" data-upload>
+                            <label class="campo__rotulo" for="arquivo">Arquivo PDF</label>
+                            <input class="upload__input" id="arquivo" name="arquivo" type="file"
+                                   accept="application/pdf,.pdf" required
+                                   aria-describedby="arquivo-ajuda arquivo-estado arquivo-erro">
+                            <div class="upload__caixa" data-upload-caixa>
+                                <span class="upload__icone"><svg th:replace="~{fragments/icones :: icone('upload')}"></svg></span>
+                                <div class="upload__texto">
+                                    <p class="upload__estado" id="arquivo-estado" aria-live="polite" data-upload-estado>Nenhum arquivo selecionado.</p>
+                                    <p class="campo__ajuda" id="arquivo-ajuda">Somente arquivos PDF, com no máximo 10 MB (limite técnico). O original enviado será preservado sem alterações.</p>
+                                </div>
+                                <label class="botao botao--secundario botao--sm upload__selecionar" for="arquivo" data-upload-rotulo>Selecionar PDF</label>
+                            </div>
+                            <p class="campo__erro" id="arquivo-erro" role="alert" data-upload-erro hidden></p>
+                        </div>
+                        <div class="grupo-botoes">
+                            <button class="botao" type="submit">Enviar nova versão</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </section>
+            </section>
 
-        <p class="request-notice"
-           th:if="${!envioPermitido and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
-            Um novo envio só será liberado se a secretaria devolver a versão mais recente para correção.
-        </p>
-        <p class="request-notice"
-           th:if="${!envioPermitido and solicitacao.status.name() != 'PENDENTE_DOCUMENTACAO'}">
-            Novos envios não são permitidos depois que a solicitação avança para análise.
-        </p>
-
-        <section class="form-section" aria-labelledby="historico-title">
-            <h2 id="historico-title">Histórico de envios</h2>
-            <p class="empty-message" th:if="${#lists.isEmpty(documentos)}">
-                Nenhum PDF foi enviado. A solicitação continua aguardando documentação.
-            </p>
-            <div class="table-wrapper" th:unless="${#lists.isEmpty(documentos)}">
-                <table class="schedule-table table-cards">
-                    <caption class="visually-hidden">Versões de documentos enviadas para a solicitação</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Versão</th>
-                            <th scope="col">Arquivo original</th>
-                            <th scope="col">Enviado em</th>
-                            <th scope="col">Situação</th>
-                            <th scope="col">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="documento : ${documentos}">
-                            <td data-label="Versão" th:text="|v${documento.versao}|">v1</td>
-                            <td data-label="Arquivo original" th:text="${documento.nomeOriginal}">termo.pdf</td>
-                            <td data-label="Enviado em" th:text="${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</td>
-                            <td data-label="Situação">
-                                <span th:if="${documento.conferencia == null and documento.versao == versaoMaisRecente}">Aguardando conferência</span>
-                                <span th:if="${documento.conferencia == null and documento.versao != versaoMaisRecente}">Substituída por versão mais recente</span>
-                                <span th:if="${documento.conferencia != null}"
-                                      th:text="${documento.conferencia.resultado.descricao}">Validado</span>
-                                <p class="field-error"
-                                   th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}"
-                                   th:text="${documento.conferencia.justificativa}">Correção solicitada.</p>
-                            </td>
-                            <td data-label="Ação">
-                                <a class="button button--secondary button--small"
-                                   th:href="@{/solicitacoes/{reservaId}/documentos/{documentoId}/baixar(reservaId=${solicitacao.id}, documentoId=${documento.id})}">
-                                    Baixar original
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="alerta alerta--neutro"
+                 th:if="${!envioPermitido and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
+                <svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg>
+                <p>Um novo envio só será liberado se a secretaria devolver a versão mais recente para correção.</p>
             </div>
-        </section>
+            <div class="alerta alerta--neutro"
+                 th:if="${!envioPermitido and solicitacao.status.name() != 'PENDENTE_DOCUMENTACAO'}">
+                <svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg>
+                <p>Novos envios não são permitidos depois que a solicitação avança para análise.</p>
+            </div>
 
-        <div class="form-actions">
-            <a class="button button--secondary"
-               th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Voltar aos detalhes</a>
+            <section class="painel" aria-labelledby="historico-title">
+                <div class="painel__cabecalho">
+                    <h2 id="historico-title">Histórico de envios</h2>
+                </div>
+                <div class="vazio" th:if="${#lists.isEmpty(documentos)}">
+                    <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('documento')}"></svg></span>
+                    <strong>Nenhum PDF enviado</strong>
+                    <p>Nenhum PDF foi enviado. A solicitação continua aguardando documentação.</p>
+                </div>
+                <ul class="lista-versoes" th:unless="${#lists.isEmpty(documentos)}">
+                    <li class="arquivo-pdf" th:each="documento : ${documentos}">
+                        <span class="arquivo-pdf__icone" aria-hidden="true">PDF</span>
+                        <div class="arquivo-pdf__dados">
+                            <strong th:text="|v${documento.versao} — ${documento.nomeOriginal}|">v1 — termo.pdf</strong>
+                            <span th:text="|Enviado em ${#temporals.format(documento.enviadoEm, 'dd/MM/yyyy HH:mm')}|">Enviado em 18/10/2026 10:00</span>
+                            <p class="justificativa"
+                               th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}">
+                                <strong>Justificativa da secretaria:</strong>
+                                <span th:text="${documento.conferencia.justificativa}">Correção solicitada.</span>
+                            </p>
+                        </div>
+                        <span class="badge badge--documentacao" th:if="${documento.conferencia == null and documento.versao == versaoMaisRecente}">
+                            <svg th:replace="~{fragments/icones :: icone('ampulheta')}"></svg>Aguardando conferência
+                        </span>
+                        <span class="badge badge--neutro" th:if="${documento.conferencia == null and documento.versao != versaoMaisRecente}">
+                            Substituída por versão mais recente
+                        </span>
+                        <th:block th:if="${documento.conferencia != null}">
+                            <span class="badge" th:classappend="${documento.conferencia.resultado.name() == 'VALIDADO'} ? ' badge--aprovada' : ' badge--documentacao'">
+                                <th:block th:if="${documento.conferencia.resultado.name() == 'VALIDADO'}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></th:block>
+                                <th:block th:unless="${documento.conferencia.resultado.name() == 'VALIDADO'}"><svg th:replace="~{fragments/icones :: icone('seta-esq')}"></svg></th:block>
+                                <span th:text="${documento.conferencia.resultado.descricao}">Validado</span>
+                            </span>
+                        </th:block>
+                        <a class="botao botao--secundario botao--sm"
+                           th:href="@{/solicitacoes/{reservaId}/documentos/{documentoId}/baixar(reservaId=${solicitacao.id}, documentoId=${documento.id})}">
+                            <svg th:replace="~{fragments/icones :: icone('download')}"></svg>
+                            <span>Baixar original</span><span class="visually-hidden" th:text="| da versão ${documento.versao}|"> da versão 1</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="grupo-botoes">
+                <a class="botao botao--secundario"
+                   th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">Voltar aos detalhes</a>
+            </div>
         </div>
     </main>
 

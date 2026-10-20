@@ -12,7 +12,8 @@
     <header th:replace="~{fragments/layout :: topo}"></header>
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
 
-    <main id="conteudo" class="container app-main app-main--narrow">
+    <main id="conteudo" class="container app-main"
+          th:with="status=${solicitacao.status.name()},etapa=${status == 'PENDENTE_DOCUMENTACAO' ? 1 : (status == 'PENDENTE_ANALISE' ? 2 : 3)}">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
             <a th:href="@{/inicio}">Início</a>
             <span aria-hidden="true">/</span>
@@ -21,59 +22,128 @@
             <span aria-current="page">Detalhes</span>
         </nav>
 
-        <p class="form-message form-message--success" role="status"
-           th:if="${mensagemSucesso}" th:text="${mensagemSucesso}">
-            Solicitação registrada.
-        </p>
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Solicitação registrada.</p>
+        </div>
 
-        <header class="page-heading">
-            <h1>Detalhes da solicitação</h1>
-            <p>A solicitação não representa autorização imediata para utilizar a quadra.</p>
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo" th:text="|Solicitação #${solicitacao.id} · Quadra Poliesportiva|">Solicitação #16</p>
+                <h1>Detalhes da solicitação</h1>
+                <p>A solicitação não representa autorização imediata para utilizar a quadra.</p>
+            </div>
+            <span th:replace="~{fragments/situacao :: selo(${solicitacao.status})}"></span>
         </header>
 
-        <section class="request-details" aria-labelledby="status-title">
-            <div class="request-details__status">
-                <h2 id="status-title">Situação</h2>
-                <strong class="status-pill" th:text="${situacao.titulo}">Pendente de documentação</strong>
+        <!-- Etapas do processo: orientação visual derivada somente do status gravado.
+             Não são estados do banco; a situação detalhada vem do SituacaoSolicitacaoService. -->
+        <section class="painel bloco" aria-labelledby="etapas-titulo">
+            <div class="painel__cabecalho">
+                <h2 id="etapas-titulo">Etapas do processo</h2>
+                <p class="campo__ajuda">Caminho até a decisão. O status da solicitação é o indicado no selo acima.</p>
             </div>
-
-            <p class="request-notice" th:text="${situacao.explicacao}">
-                A solicitação aguarda a próxima etapa institucional.
-            </p>
-            <p class="form-message form-message--error" th:if="${solicitacao.status.name() == 'REJEITADA'}">
-                Solicitação rejeitada.<br>
-                <span th:if="${solicitacao.motivoRejeicao}" th:text="${solicitacao.motivoRejeicao}">Motivo informado pela instituição.</span>
-            </p>
-            <div class="form-message form-message--error" th:if="${solicitacao.status.name() == 'CANCELADA'}">
-                <p><strong>Cancelamento institucional registrado.</strong></p>
-                <p th:text="${solicitacao.motivoCancelamentoInstitucional}">Motivo informado pela instituição.</p>
-                <p>A equipe da escola ainda precisa registrar qualquer contato ou encaminhamento de reagendamento.</p>
+            <div class="painel__corpo">
+                <ol class="etapas">
+                    <li class="etapa etapa--concluida">
+                        <span class="etapa__marcador" aria-hidden="true"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></span>
+                        <span class="etapa__rotulo"><span class="visually-hidden">Concluída: </span>Solicitação registrada</span>
+                    </li>
+                    <li class="etapa" th:classappend="${etapa > 1} ? ' etapa--concluida' : ' etapa--atual'"
+                        th:aria-current="${etapa == 1} ? 'step'">
+                        <span class="etapa__marcador" aria-hidden="true">
+                            <th:block th:if="${etapa > 1}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></th:block>
+                            <th:block th:unless="${etapa > 1}">2</th:block>
+                        </span>
+                        <span class="etapa__rotulo">
+                            <span class="visually-hidden" th:text="${etapa > 1} ? 'Concluída: ' : 'Etapa atual: '">Etapa atual: </span>Documentação e contribuição
+                        </span>
+                    </li>
+                    <li class="etapa" th:classappend="${etapa > 2} ? ' etapa--concluida' : (${etapa == 2} ? ' etapa--atual' : '')"
+                        th:aria-current="${etapa == 2} ? 'step'">
+                        <span class="etapa__marcador" aria-hidden="true">
+                            <th:block th:if="${etapa > 2}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></th:block>
+                            <th:block th:unless="${etapa > 2}">3</th:block>
+                        </span>
+                        <span class="etapa__rotulo">
+                            <span class="visually-hidden" th:if="${etapa == 2}">Etapa atual: </span>Análise administrativa
+                        </span>
+                    </li>
+                    <li class="etapa"
+                        th:classappend="${status == 'APROVADA'} ? ' etapa--concluida' : (${status == 'REJEITADA'} ? ' etapa--interrompida' : (${status == 'CANCELADA'} ? ' etapa--neutra' : ''))">
+                        <span class="etapa__marcador" aria-hidden="true">
+                            <th:block th:if="${status == 'APROVADA'}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></th:block>
+                            <th:block th:if="${status == 'REJEITADA'}"><svg th:replace="~{fragments/icones :: icone('x')}"></svg></th:block>
+                            <th:block th:if="${status == 'CANCELADA'}"><svg th:replace="~{fragments/icones :: icone('proibido')}"></svg></th:block>
+                            <th:block th:if="${etapa < 3}">4</th:block>
+                        </span>
+                        <span class="etapa__rotulo" th:text="${status == 'APROVADA'} ? 'Aprovada' : (${status == 'REJEITADA'} ? 'Rejeitada' : (${status == 'CANCELADA'} ? 'Aprovada e depois cancelada' : 'Decisão'))">Decisão</span>
+                    </li>
+                </ol>
             </div>
-
-            <dl class="details-list">
-                <div>
-                    <dt>Data</dt>
-                    <dd th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</dd>
-                </div>
-                <div>
-                    <dt>Horário</dt>
-                    <dd th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</dd>
-                </div>
-                <div>
-                    <dt>Finalidade</dt>
-                    <dd th:text="${solicitacao.finalidade}">Treino da turma</dd>
-                </div>
-            </dl>
         </section>
 
-        <div class="form-actions">
-            <a class="button button--secondary" th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">
-                Revisar participantes
-            </a>
-            <a class="button button--secondary" th:href="@{/solicitacoes/{id}/documentos(id=${solicitacao.id})}">
-                Documentos enviados
-            </a>
-            <a class="button button--secondary" th:href="@{/solicitacoes}">Voltar às solicitações</a>
+        <!-- Situação apresentada: texto calculado pelo SituacaoSolicitacaoService. -->
+        <div class="alerta bloco"
+             th:classappend="${status == 'APROVADA'} ? ' alerta--sucesso' : (${status == 'REJEITADA'} ? ' alerta--perigo' : (${status == 'CANCELADA'} ? ' alerta--neutro' : (${status == 'PENDENTE_ANALISE'} ? ' alerta--info' : ' alerta--aviso')))">
+            <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+            <div>
+                <p><strong th:text="${situacao.titulo}">Pendente de documentação</strong></p>
+                <p th:text="${situacao.explicacao}">A solicitação aguarda a próxima etapa institucional.</p>
+                <p class="bloco-texto" th:if="${status == 'REJEITADA' and solicitacao.motivoRejeicao != null}">
+                    <strong>Motivo informado:</strong> <span th:text="${solicitacao.motivoRejeicao}">Motivo informado pela instituição.</span>
+                </p>
+                <th:block th:if="${status == 'CANCELADA'}">
+                    <p class="bloco-texto"><strong>Cancelamento institucional registrado.</strong>
+                        <span th:text="${solicitacao.motivoCancelamentoInstitucional}">Motivo informado pela instituição.</span></p>
+                    <p>A equipe da escola ainda precisa registrar qualquer contato ou encaminhamento de reagendamento.</p>
+                </th:block>
+            </div>
+        </div>
+
+        <div class="grade-detalhe">
+            <section class="painel" aria-labelledby="dados-titulo">
+                <div class="painel__cabecalho"><h2 id="dados-titulo">Dados da solicitação</h2></div>
+                <div class="painel__corpo">
+                    <dl class="dados">
+                        <div>
+                            <dt>Data</dt>
+                            <dd th:text="${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')}">19/10/2026</dd>
+                        </div>
+                        <div>
+                            <dt>Horário</dt>
+                            <dd th:text="|${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">08:00 – 09:00</dd>
+                        </div>
+                        <div>
+                            <dt>Status da solicitação</dt>
+                            <dd th:text="${solicitacao.status.descricao}">Pendente de documentação</dd>
+                        </div>
+                        <div class="dados__largo">
+                            <dt>Finalidade</dt>
+                            <dd class="dados__texto" th:text="${solicitacao.finalidade}">Treino da turma</dd>
+                        </div>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="acoes-titulo">
+                <div class="painel__cabecalho"><h2 id="acoes-titulo">Participantes e documento</h2></div>
+                <div class="painel__corpo pilha pilha--compacta">
+                    <a class="acao-rapida" th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg></span>
+                        <span><strong>Revisar participantes</strong><span>Lista com no mínimo dez alunos</span></span>
+                    </a>
+                    <a class="acao-rapida" th:href="@{/solicitacoes/{id}/documentos(id=${solicitacao.id})}">
+                        <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('documento')}"></svg></span>
+                        <span><strong>Documentos enviados</strong><span>PDF assinado fora do sistema</span></span>
+                    </a>
+                </div>
+                <div class="painel__rodape">
+                    <a class="botao botao--fantasma" th:href="@{/solicitacoes}">
+                        <svg th:replace="~{fragments/icones :: icone('seta-esq')}"></svg><span>Voltar às solicitações</span>
+                    </a>
+                </div>
+            </section>
         </div>
     </main>
 
