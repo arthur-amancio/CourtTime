@@ -21,6 +21,7 @@ import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import br.com.courttime.support.BancoDeTeste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -31,6 +32,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -67,6 +69,9 @@ class DocumentoReservaPostgreSqlIntegrationTest {
 
     @Autowired
     private DocumentoReservaService documentoService;
+
+    @Autowired
+    private DataSource dataSource;
     @Autowired
     private ConferenciaDocumentoRepository conferenciaRepository;
     @Autowired
@@ -100,6 +105,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
 
     @BeforeEach
     void prepararBancoEStorageIsolados() throws IOException {
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         limparBanco();
         limparArquivos();
         quadra = novaQuadra();

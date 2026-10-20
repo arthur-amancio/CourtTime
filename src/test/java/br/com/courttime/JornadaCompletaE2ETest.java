@@ -19,6 +19,7 @@ import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.CalendarioDisponibilidadeService;
+import br.com.courttime.support.BancoDeTeste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -41,6 +42,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
@@ -67,7 +69,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Não usa navegador: é o protocolo HTTP da aplicação. Nenhuma dependência nova
  * foi adicionada ao projeto.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        // Os PDFs do teste ficam sob target/, que o "mvn clean" remove, para
+        // nao deixar arquivos espalhados no diretorio de trabalho.
+        properties = "courttime.documentos.diretorio=target/documentos-jornada-e2e")
 @EnabledIfEnvironmentVariable(named = "COURTTIME_POSTGRES_TEST", matches = "true")
 class JornadaCompletaE2ETest {
 
@@ -88,6 +94,7 @@ class JornadaCompletaE2ETest {
      */
     private final RestTemplate rest = clienteSemRedirecionamento();
 
+    @Autowired private DataSource dataSource;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private QuadraRepository quadraRepository;
     @Autowired private UsuarioRepository usuarioRepository;
@@ -124,6 +131,7 @@ class JornadaCompletaE2ETest {
 
     @BeforeEach
     void prepararCenario() {
+        BancoDeTeste.exigirBancoDedicado(dataSource);
         ajusteContribuicaoApmRepository.deleteAllInBatch();
         contribuicaoApmRepository.deleteAllInBatch();
         conferenciaDocumentoRepository.deleteAllInBatch();
@@ -203,6 +211,8 @@ class JornadaCompletaE2ETest {
                 aluno.postSemCsrf("/solicitacoes/" + reservaId + "/participantes", semToken)
                         .getStatusCode(),
                 "POST sem token CSRF deve ser recusado");
+        assertEquals(10, participanteReservaRepository.count(),
+                "a recusa por CSRF nao pode ter criado o participante");
 
         // ---------- perfil errado não entra na área da secretaria ----------
         assertEquals(HttpStatus.FORBIDDEN, aluno.get("/secretaria/documentos").getStatusCode(),
@@ -241,6 +251,9 @@ class JornadaCompletaE2ETest {
                         "/admin/solicitacoes/" + reservaId + "/aprovar",
                         new LinkedMultiValueMap<>()).getStatusCode(),
                 "a secretaria não pode aprovar, mesmo com token CSRF válido");
+        assertEquals(StatusReserva.PENDENTE_ANALISE,
+                reservaRepository.findById(reservaId).orElseThrow().getStatus(),
+                "a tentativa da secretaria nao pode ter mudado o estado da reserva");
 
         // ---------- ADMINISTRACAO ----------
         Sessao admin = entrar("admin.demo@exemplo.local");
