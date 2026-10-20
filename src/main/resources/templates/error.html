@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<!--/*
+    Comentario de parser do Thymeleaf: nao e enviado ao navegador.
+    Pagina de erro do CourtTime. O Spring Boot usa automaticamente o template
+    "error" no lugar da "Whitelabel Error Page" em ingles. Nao mostra mensagem
+    tecnica nem detalhes internos: apenas o que o usuario pode fazer.
+*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Página indisponível</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+        <div class="container site-header__inner">
+            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+        </div>
+    </header>
+
+    <main id="conteudo" class="container auth-main">
+        <section class="auth-panel" aria-labelledby="page-title">
+            <th:block th:if="${status == 403}">
+                <h1 id="page-title">Acesso não permitido</h1>
+                <p class="auth-panel__intro">O seu perfil não tem permissão para abrir esta página.</p>
+            </th:block>
+            <th:block th:if="${status == 404}">
+                <h1 id="page-title">Não encontrado</h1>
+                <p class="auth-panel__intro">
+                    A página ou o registro não existe ou não está mais disponível para o seu perfil.
+                    Uma reserva cancelada, por exemplo, deixa de aparecer para a segurança.
+                </p>
+            </th:block>
+            <th:block th:unless="${status == 403 or status == 404}">
+                <h1 id="page-title">Não foi possível concluir</h1>
+                <p class="auth-panel__intro">
+                    Ocorreu um erro inesperado. Tente novamente e, se continuar, avise a administração.
+                </p>
+            </th:block>
+            <p><a class="button" th:href="@{/inicio}">Voltar ao início</a></p>
+        </section>
+    </main>
+</body>
+</html>
