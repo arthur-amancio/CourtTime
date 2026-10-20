@@ -1,0 +1,25 @@
+name: QA — proteção da automação de navegador
+
+on:
+  pull_request:
+    paths:
+      - 'qa/playwright/**'
+      - '.github/workflows/qa-guard.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'qa/playwright/**'
+      - '.github/workflows/qa-guard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verificar protecao sem baixar dependencias
+        run: node --test qa/playwright/seguranca-ambiente.test.cjs

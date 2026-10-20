@@ -2,7 +2,14 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
+const { verificarAmbienteIsolado } = require('./seguranca-ambiente.cjs');
 const BASE = process.env.COURTTIME_E2E_BASE_URL || 'http://127.0.0.1:18081';
+// Interromper antes de gerar evidencias, autenticar ou modificar o banco.
+verificarAmbienteIsolado({
+  baseUrl: BASE,
+  consentimento: process.env.COURTTIME_E2E_ACK_ISOLATED_DB,
+  nomeBanco: process.env.COURTTIME_E2E_DATABASE_NAME,
+});
 const EVIDENCE = process.env.COURTTIME_E2E_EVIDENCE_DIR || '/tmp/courttime-banca-evidence';
 const TARGET_SHA = process.env.COURTTIME_E2E_TARGET_SHA || 'nao-informado';
 const CHROMIUM_EXECUTABLE = process.env.COURTTIME_E2E_CHROMIUM_PATH;
