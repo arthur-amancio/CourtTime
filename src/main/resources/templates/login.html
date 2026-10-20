@@ -6,50 +6,65 @@
     <title>CourtTime | Entrar</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
-<body>
-    <header class="site-header">
-        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-        <div class="container site-header__inner">
-            <a class="brand" th:href="@{/}">CourtTime</a>
-            <a class="text-link" th:href="@{/}">Voltar</a>
-        </div>
-    </header>
+<body class="pagina-login">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <div class="login">
+        <header class="login__institucional">
+            <a class="marca marca--clara" th:href="@{/}" aria-label="CourtTime, página inicial">
+                <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
+                <span class="marca__texto">
+                    <span class="marca__nome">CourtTime</span>
+                    <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
+                </span>
+            </a>
+            <div class="login__frase">
+                <p class="login__slogan">Pedido, documento e autorização no mesmo lugar.</p>
+                <p>Cada etapa da solicitação fica registrada para que a quadra seja usada com organização e segurança.</p>
+            </div>
+            <p class="login__local">ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
+            <svg class="login__arte" viewBox="0 0 400 240" aria-hidden="true" focusable="false">
+                <g fill="none" stroke="#2a7d52" stroke-width="3">
+                    <rect x="4" y="4" width="392" height="232" rx="6"/>
+                    <path d="M200 4v232"/><circle cx="200" cy="120" r="40"/>
+                    <path d="M4 52h48a68 68 0 0 1 0 136H4M396 52h-48a68 68 0 0 0 0 136h48"/>
+                </g>
+            </svg>
+        </header>
 
-    <main id="conteudo" class="container auth-main">
-        <section class="auth-panel" aria-labelledby="page-title">
-            <h1 id="page-title">Acessar o CourtTime</h1>
-            <p class="auth-panel__intro">Informe o email e a senha da sua conta autorizada.</p>
+        <main id="conteudo" class="login__formulario">
+            <div class="login__caixa">
+                <h1 class="login__titulo">Entrar</h1>
+                <p class="login__subtitulo">Informe o email e a senha da sua conta autorizada.</p>
 
-            <p class="form-message form-message--error" th:if="${param.erro}">
-                Email ou senha inválidos.
-            </p>
-            <p class="form-message form-message--success" th:if="${param.logout}">
-                Logout realizado.
-            </p>
-            <p class="form-message form-message--error" th:if="${param.expirada}">
-                Sua sessão foi encerrada porque a conta ou as permissões foram alteradas. Entre novamente.
-            </p>
-
-            <form class="auth-form" th:action="@{/login}" method="post">
-                <div>
-                    <label for="email">Email</label>
-                    <input id="email" name="email" type="email" autocomplete="username" required autofocus>
+                <div class="alerta alerta--perigo" role="alert" th:if="${param.erro}">
+                    <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+                    <p>Email ou senha inválidos.</p>
                 </div>
-                <div>
-                    <label for="senha">Senha</label>
-                    <input id="senha" name="password" type="password" autocomplete="current-password" required>
+                <div class="alerta alerta--sucesso" role="status" th:if="${param.logout}">
+                    <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+                    <p>Logout realizado.</p>
                 </div>
-                <button class="button" type="submit">Entrar</button>
-            </form>
-            <p class="auth-help">Se você não possui acesso ou precisa redefinir sua senha, procure um administrador autorizado.</p>
-        </section>
-    </main>
+                <div class="alerta alerta--aviso" role="alert" th:if="${param.expirada}">
+                    <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
+                    <p>Sua sessão foi encerrada porque a conta ou as permissões foram alteradas. Entre novamente.</p>
+                </div>
 
-    <footer class="site-footer">
-        <div class="container site-footer__inner">
-            <p class="site-footer__brand">CourtTime</p>
-            <p>ETEC Prof. Armando José Farinazzo</p>
-        </div>
-    </footer>
+                <!-- Contrato do Spring Security: email em "email" e senha em "password" (id "senha"). -->
+                <form class="login__form" th:action="@{/login}" method="post">
+                    <div class="campo">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" autocomplete="username" inputmode="email" required autofocus>
+                    </div>
+                    <div class="campo">
+                        <label for="senha">Senha</label>
+                        <input id="senha" name="password" type="password" autocomplete="current-password" required>
+                    </div>
+                    <button class="botao botao--lg botao--bloco login__entrar" type="submit">Entrar</button>
+                </form>
+                <p class="campo__ajuda login__ajuda">Se você não possui acesso ou precisa redefinir sua senha, procure um administrador autorizado. Não há cadastro público.</p>
+                <p class="login__voltar"><a th:href="@{/}">Voltar à página inicial</a></p>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

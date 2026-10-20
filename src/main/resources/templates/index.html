@@ -4,34 +4,161 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Gerenciamento da quadra</title>
+    <meta name="description" content="Consulta e solicitação de uso da quadra da ETEC Prof. Armando José Farinazzo.">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
-<body>
-    <header class="site-header">
-        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-        <div class="container site-header__inner">
-            <a class="brand" th:href="@{/}">CourtTime</a>
-            <a class="button button--small" th:href="@{/login}">Entrar</a>
+<body class="pagina-publica">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="topo-publico">
+        <div class="container topo-publico__inner">
+            <a class="marca" th:href="@{/}" aria-label="CourtTime, página inicial">
+                <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
+                <span class="marca__texto">
+                    <span class="marca__nome">CourtTime</span>
+                    <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
+                </span>
+            </a>
+            <nav class="topo-publico__nav" aria-label="Navegação pública">
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#requisitos">Requisitos</a>
+                <a class="botao botao--sm" th:href="@{/login}">Entrar</a>
+            </nav>
         </div>
     </header>
 
-    <main id="conteudo" class="container public-main">
-        <section class="public-intro" aria-labelledby="page-title">
-            <h1 id="page-title">Consulta e solicitação de uso da quadra</h1>
-            <p>O CourtTime reúne os horários da quadra esportiva da ETEC Professor Armando José Farinazzo e permite que alunos autorizados registrem solicitações de uso.</p>
-            <a class="button" th:href="@{/login}">Entrar no sistema</a>
+    <main id="conteudo" class="container inicio-publico">
+        <section class="apresentacao" aria-labelledby="page-title">
+            <div class="apresentacao__texto">
+                <p class="selo-escola">
+                    <svg th:replace="~{fragments/icones :: icone('bandeira')}"></svg>
+                    <span>Fernandópolis/SP · Centro Paula Souza</span>
+                </p>
+                <h1 id="page-title">Consulta e solicitação de uso da quadra <span>da ETEC</span></h1>
+                <p class="apresentacao__lead">O CourtTime reúne os horários da Quadra Poliesportiva da ETEC Professor Armando José Farinazzo e acompanha cada solicitação, do pedido do aluno até a decisão da administração.</p>
+                <div class="grupo-botoes">
+                    <a class="botao botao--lg" th:href="@{/login}">
+                        <span>Entrar no sistema</span>
+                        <svg th:replace="~{fragments/icones :: icone('seta-dir')}"></svg>
+                    </a>
+                    <a class="botao botao--lg botao--secundario" href="#como-funciona">Ver as etapas</a>
+                </div>
+                <p class="apresentacao__nota">
+                    <svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg>
+                    <span>Acesso restrito a contas criadas pela administração. Não há cadastro público.</span>
+                </p>
+            </div>
+
+            <figure class="ilustracao-quadra">
+                <svg class="ilustracao-quadra__arte" viewBox="0 0 640 480" role="img" aria-labelledby="arte-titulo">
+                    <title id="arte-titulo">Ilustração com a planta de uma quadra poliesportiva. Não é uma fotografia.</title>
+                    <rect width="640" height="480" fill="#114b31"/>
+                    <g opacity=".14" stroke="#ffffff" stroke-width="1">
+                        <path d="M0 40h640M0 80h640M0 120h640M0 160h640M0 200h640M0 240h640M0 280h640M0 320h640M0 360h640M0 400h640M0 440h640"/>
+                        <path d="M40 0v480M80 0v480M120 0v480M160 0v480M200 0v480M240 0v480M280 0v480M320 0v480M360 0v480M400 0v480M440 0v480M480 0v480M520 0v480M560 0v480M600 0v480"/>
+                    </g>
+                    <g transform="translate(320 214) skewX(-14) translate(-200 -120)">
+                        <rect x="0" y="0" width="400" height="240" rx="6" fill="#17633f" stroke="#cfe8d8" stroke-width="4"/>
+                        <rect x="12" y="12" width="376" height="216" fill="none" stroke="#9fd2b3" stroke-width="2"/>
+                        <path d="M200 12v216" stroke="#cfe8d8" stroke-width="3"/>
+                        <circle cx="200" cy="120" r="38" fill="none" stroke="#cfe8d8" stroke-width="3"/>
+                        <circle cx="200" cy="120" r="4" fill="#cfe8d8"/>
+                        <path d="M12 52h46a68 68 0 0 1 0 136H12M388 52h-46a68 68 0 0 0 0 136h46" fill="none" stroke="#cfe8d8" stroke-width="3"/>
+                        <path d="M12 98h-10v44h10M388 98h10v44h-10" fill="none" stroke="#f2c14e" stroke-width="4"/>
+                    </g>
+                    <g fill="#cfe8d8" font-family="system-ui, sans-serif" font-weight="700">
+                        <text x="40" y="58" font-size="15" letter-spacing="2" opacity=".85">QUADRA POLIESPORTIVA</text>
+                        <text x="40" y="82" font-size="13" opacity=".6">ETEC Prof. Armando José Farinazzo</text>
+                    </g>
+                </svg>
+            </figure>
         </section>
 
-        <section class="usage-note" aria-labelledby="usage-title">
-            <h2 id="usage-title">Acesso autorizado</h2>
-            <p>Entre com sua conta do CourtTime para consultar os horários e acessar as funções permitidas para o seu perfil. Uma solicitação registrada ainda depende das etapas institucionais de documentação e aprovação.</p>
+        <section class="faixa-info" aria-label="Resumo do funcionamento">
+            <div>
+                <svg th:replace="~{fragments/icones :: icone('quadra')}"></svg>
+                <p><strong>Uma quadra</strong><span>Quadra Poliesportiva da ETEC</span></p>
+            </div>
+            <div>
+                <svg th:replace="~{fragments/icones :: icone('relogio')}"></svg>
+                <p><strong>Períodos de 1 hora</strong><span>Conforme a grade semanal cadastrada</span></p>
+            </div>
+            <div>
+                <svg th:replace="~{fragments/icones :: icone('calendario')}"></svg>
+                <p><strong>1 dia de antecedência</strong><span>Prazo mínimo para solicitar</span></p>
+            </div>
+            <div>
+                <svg th:replace="~{fragments/icones :: icone('escudo')}"></svg>
+                <p><strong>Aprovação institucional</strong><span>A solicitação não autoriza o uso imediato</span></p>
+            </div>
+        </section>
+
+        <section class="como-funciona" id="como-funciona" aria-labelledby="como-titulo">
+            <div class="como-funciona__cabecalho">
+                <div>
+                    <p class="sobretitulo">Do pedido à autorização</p>
+                    <h2 id="como-titulo">Como funciona</h2>
+                </div>
+                <p class="texto-suave">Cada etapa fica registrada com responsável e data.</p>
+            </div>
+            <ol class="passos">
+                <li class="passo">
+                    <span class="passo__numero" aria-hidden="true">1</span>
+                    <h3>Solicitação</h3>
+                    <p>O aluno escolhe uma data e um período disponível, informa a finalidade e cadastra os participantes.</p>
+                    <span class="passo__perfil">Aluno</span>
+                </li>
+                <li class="passo">
+                    <span class="passo__numero" aria-hidden="true">2</span>
+                    <h3>Documento assinado</h3>
+                    <p>O aluno envia o PDF preparado e assinado fora do sistema. Cada envio vira uma nova versão.</p>
+                    <span class="passo__perfil">Aluno</span>
+                </li>
+                <li class="passo">
+                    <span class="passo__numero" aria-hidden="true">3</span>
+                    <h3>Conferência e contribuição</h3>
+                    <p>A secretaria confere o documento e registra a contribuição presencial à APM.</p>
+                    <span class="passo__perfil">Secretaria</span>
+                </li>
+                <li class="passo">
+                    <span class="passo__numero" aria-hidden="true">4</span>
+                    <h3>Decisão</h3>
+                    <p>A administração aprova ou rejeita com motivo. A reserva aprovada passa a constar para a segurança.</p>
+                    <span class="passo__perfil">Administração e Segurança</span>
+                </li>
+            </ol>
+        </section>
+
+        <section class="regras" id="requisitos" aria-labelledby="regras-titulo">
+            <div>
+                <p class="sobretitulo">Antes de solicitar</p>
+                <h2 id="regras-titulo">Requisitos para usar a quadra</h2>
+                <p class="texto-suave">Regras do formulário institucional de reserva da quadra. Dúvidas devem ser tratadas com a secretaria da escola.</p>
+            </div>
+            <ul class="regras__lista">
+                <li>
+                    <svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg>
+                    <p><strong>Mínimo de 10 alunos</strong>Participantes cadastrados na categoria Aluno.</p>
+                </li>
+                <li>
+                    <svg th:replace="~{fragments/icones :: icone('calendario')}"></svg>
+                    <p><strong>1 dia de antecedência</strong>A data mais próxima disponível é o dia seguinte.</p>
+                </li>
+                <li>
+                    <svg th:replace="~{fragments/icones :: icone('identidade')}"></svg>
+                    <p><strong>Documento com foto</strong>Os participantes são conferidos na entrada.</p>
+                </li>
+                <li>
+                    <svg th:replace="~{fragments/icones :: icone('recibo')}"></svg>
+                    <p><strong>Contribuição presencial à APM</strong>Feita na escola. O valor de referência ainda depende de confirmação.</p>
+                </li>
+            </ul>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="container site-footer__inner">
-            <p class="site-footer__brand">CourtTime</p>
-            <p>ETEC Prof. Armando José Farinazzo</p>
+    <footer class="rodape-publico">
+        <div class="container rodape-publico__inner">
+            <p><strong>CourtTime</strong> · Trabalho de Conclusão de Curso · Técnico em Informática para Internet</p>
+            <p>ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
         </div>
     </footer>
 </body>
