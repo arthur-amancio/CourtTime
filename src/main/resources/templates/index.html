@@ -48,28 +48,12 @@
                 </p>
             </div>
 
-            <figure class="ilustracao-quadra">
-                <svg class="ilustracao-quadra__arte" viewBox="0 0 640 480" role="img" aria-labelledby="arte-titulo">
-                    <title id="arte-titulo">Ilustração com a planta de uma quadra poliesportiva. Não é uma fotografia.</title>
-                    <rect width="640" height="480" fill="#114b31"/>
-                    <g opacity=".14" stroke="#ffffff" stroke-width="1">
-                        <path d="M0 40h640M0 80h640M0 120h640M0 160h640M0 200h640M0 240h640M0 280h640M0 320h640M0 360h640M0 400h640M0 440h640"/>
-                        <path d="M40 0v480M80 0v480M120 0v480M160 0v480M200 0v480M240 0v480M280 0v480M320 0v480M360 0v480M400 0v480M440 0v480M480 0v480M520 0v480M560 0v480M600 0v480"/>
-                    </g>
-                    <g transform="translate(320 214) skewX(-14) translate(-200 -120)">
-                        <rect x="0" y="0" width="400" height="240" rx="6" fill="#17633f" stroke="#cfe8d8" stroke-width="4"/>
-                        <rect x="12" y="12" width="376" height="216" fill="none" stroke="#9fd2b3" stroke-width="2"/>
-                        <path d="M200 12v216" stroke="#cfe8d8" stroke-width="3"/>
-                        <circle cx="200" cy="120" r="38" fill="none" stroke="#cfe8d8" stroke-width="3"/>
-                        <circle cx="200" cy="120" r="4" fill="#cfe8d8"/>
-                        <path d="M12 52h46a68 68 0 0 1 0 136H12M388 52h-46a68 68 0 0 0 0 136h46" fill="none" stroke="#cfe8d8" stroke-width="3"/>
-                        <path d="M12 98h-10v44h10M388 98h10v44h-10" fill="none" stroke="#f2c14e" stroke-width="4"/>
-                    </g>
-                    <g fill="#cfe8d8" font-family="system-ui, sans-serif" font-weight="700">
-                        <text x="40" y="58" font-size="15" letter-spacing="2" opacity=".85">QUADRA POLIESPORTIVA</text>
-                        <text x="40" y="82" font-size="13" opacity=".6">ETEC Prof. Armando José Farinazzo</text>
-                    </g>
-                </svg>
+            <figure class="foto-escola">
+                <img th:src="@{/img/etec-vista-aerea-960.jpg}" src="/img/etec-vista-aerea-960.jpg"
+                     th:srcset="@{/img/etec-vista-aerea-960.jpg} + ' 960w, ' + @{/img/etec-vista-aerea-1600.jpg} + ' 1600w'"
+                     sizes="(max-width: 1024px) 100vw, 50vw" width="960" height="720"
+                     alt="Vista aérea do prédio da ETEC Prof. Armando José Farinazzo, na esquina de duas ruas de Fernandópolis.">
+                <figcaption>ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</figcaption>
             </figure>
         </section>
 
@@ -157,8 +141,9 @@
 
     <footer class="rodape-publico">
         <div class="container rodape-publico__inner">
+            <img class="logos-institucionais" th:src="@{/img/logos-etec-cps-governo-sp.png}" src="/img/logos-etec-cps-governo-sp.png"
+                 width="563" height="89" alt="ETEC Prof. Armando José Farinazzo, Centro Paula Souza e Governo do Estado de São Paulo">
             <p><strong>CourtTime</strong> · Trabalho de Conclusão de Curso · Técnico em Informática para Internet</p>
-            <p>ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
         </div>
     </footer>
 </body>

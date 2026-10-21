@@ -18,7 +18,7 @@ public class SecurityConfig {
             RevalidacaoSessaoUsuarioFilter revalidacaoSessaoUsuarioFilter) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/css/**", "/login").permitAll()
+                        .requestMatchers("/", "/css/**", "/img/**", "/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/secretaria/**").hasRole("SECRETARIA")
                         .requestMatchers("/seguranca/**").hasRole("SEGURANCA")
