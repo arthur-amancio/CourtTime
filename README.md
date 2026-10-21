@@ -146,9 +146,9 @@ A secretaria pode conferir somente a versão mais recente, validá-la ou devolv�
 
 ## Contribuições presenciais
 
-Após a validação da versão documental mais recente, a secretaria pode registrar uma única contribuição presencial por solicitação. O valor informado, a secretaria responsável e o instante do registro ficam vinculados à conferência documental exata. Na mesma transação, a solicitação passa para `PENDENTE_ANALISE`. Ajustes de valor ou observações exigem justificativa e criam eventos históricos com o estado anterior e o novo; não existe exclusão, estorno, reembolso nem pagamento eletrônico nesse fluxo.
+Após a validação da versão documental mais recente, a secretaria pode registrar uma única contribuição presencial por solicitação. O valor devido é calculado pelo sistema (R03): R$ 2,00 por participante, de qualquer categoria. O valor devido, o valor recebido, a secretaria responsável e o instante do registro ficam vinculados à conferência documental exata. Na mesma transação, a solicitação passa para `PENDENTE_ANALISE`. Ajustes de valor ou observações exigem justificativa e criam eventos históricos com o estado anterior e o novo; não existe exclusão, estorno, reembolso nem pagamento eletrônico nesse fluxo.
 
-O valor de R$ 2,00 por participante/hora é apenas uma referência institucional ainda sujeita à confirmação. Por isso, o CourtTime não calcula, preenche nem valida automaticamente o valor recebido. O registro da contribuição não aprova a reserva: a administração ainda revisa os dados e registra aprovação ou rejeição. A rejeição exige motivo; a aprovação comum não exige justificativa.
+A secretaria não digita o valor: ela confirma o recebimento do valor calculado. O pagamento continua presencial, sem integração bancária. O registro da contribuição não aprova a reserva: a administração ainda revisa os dados e registra aprovação ou rejeição. A rejeição exige motivo; a aprovação comum não exige justificativa.
 
 ## Análise administrativa
 

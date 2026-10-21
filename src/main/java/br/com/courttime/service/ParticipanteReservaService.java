@@ -73,6 +73,12 @@ public class ParticipanteReservaService {
         return alteracaoEstaPermitida(reserva);
     }
 
+    /** Total de participantes da solicitação, de qualquer categoria. */
+    @Transactional(readOnly = true)
+    public long contarParticipantes(Reserva reserva) {
+        return participanteRepository.countByReserva(reserva);
+    }
+
     @Transactional(readOnly = true)
     public void validarDocumentoAtual(Reserva reserva, DocumentoReserva documento) {
         if (reserva == null || documento == null) {

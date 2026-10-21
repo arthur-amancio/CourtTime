@@ -400,7 +400,9 @@ async function responsiveAudit(page, label, url) {
     await responsiveAudit(secretaria, 'secretaria-contribuicoes', `${BASE}/secretaria/contribuicoes`);
     for (const requestId of [requestA, requestB]) {
       const operacao = secretaria.getByRole('heading', { name: `Solicitação #${requestId}` }).locator('..');
-      await operacao.getByLabel('Valor recebido').fill('20.00');
+      const textoOperacao = await operacao.innerText();
+      assert(textoOperacao.includes('participantes × R$ 2,00 = R$ '), 'R03: valor devido calculado na tela', `solicitação #${requestId}`);
+      assert(await operacao.locator('input[name="valor"]').count() === 0, 'R03: secretaria não digita o valor', `solicitação #${requestId}`);
       await operacao.getByLabel('Observações').fill('Recebimento sintético para validação da banca');
       await Promise.all([
         secretaria.waitForURL(url => url.pathname === `/secretaria/contribuicoes/solicitacoes/${requestId}`),

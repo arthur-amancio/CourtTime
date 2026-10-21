@@ -65,6 +65,8 @@ autoriza o uso. Só a aprovação da administração autoriza.
 - São necessários no mínimo **dez alunos** participantes para validar o documento.
 - A aprovação é recusada se o horário de utilização **já começou ou já passou**.
 - A contribuição só pode ser registrada depois de o documento ser validado.
+- A contribuição é calculada: **R$ 2,00 por participante**, Aluno ou Outro
+  (R03). A secretaria só registra o recebimento.
 - Um administrador não analisa a própria solicitação.
 - O último administrador ativo não pode ser desativado.
 
@@ -83,7 +85,6 @@ Para não prometer na banca o que o código não faz:
 - **Não há registro** de contato com o aluno.
 - **Não há registro de ocorrências** pela segurança.
 - **Não há** regra de retenção dos documentos enviados.
-- O sistema **não calcula** o valor da contribuição.
 
 ## Decisões da ETEC
 

@@ -58,14 +58,13 @@ public class SecretariaContribuicaoController {
     @PostMapping("/solicitacoes/{reservaId}")
     public String registrar(
             @PathVariable Long reservaId,
-            @RequestParam(required = false) String valor,
             @RequestParam(required = false) String observacoes,
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
         Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
             DetalheContribuicaoApm detalhe = contribuicaoService.registrar(
-                    reservaId, secretaria, valor, observacoes);
+                    reservaId, secretaria, observacoes);
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso", "Contribuição presencial registrada.");
             return redirecionarDetalhe(detalhe);
