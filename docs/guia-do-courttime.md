@@ -63,6 +63,8 @@ autoriza o uso. Só a aprovação da administração autoriza.
   oficial ganha páginas adicionais.
 - O período é sempre de **uma hora**, alinhado à grade cadastrada.
 - São necessários no mínimo **dez alunos** participantes para validar o documento.
+- Na categoria **Outro**, o vínculo é obrigatório (R09): ex-aluno da ETEC, pai
+  ou mãe de aluno, irmão ou irmã de aluno, ou professor da ETEC.
 - A aprovação é recusada se o horário de utilização **já começou ou já passou**.
 - A contribuição só pode ser registrada depois de o documento ser validado.
 - A contribuição é calculada: **R$ 2,00 por participante**, Aluno ou Outro

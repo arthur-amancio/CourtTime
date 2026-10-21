@@ -8,6 +8,7 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -24,6 +25,11 @@ public class ParticipanteReservaService {
     private static final int TAMANHO_MAXIMO_NOME = 150;
     private static final int TAMANHO_MAXIMO_RM_OU_RG = 30;
     public static final int MINIMO_DE_ALUNOS = 10;
+
+    public static final String MENSAGEM_VINCULO_OBRIGATORIO =
+            "Na categoria Outro, escolha o vínculo: ex-aluno, pai ou mãe, irmão ou irmã de aluno, ou professor da ETEC";
+    public static final String MENSAGEM_VINCULO_SOMENTE_OUTRO =
+            "O vínculo só é informado na categoria Outro";
 
     private final ParticipanteReservaRepository participanteRepository;
     private final ReservaRepository reservaRepository;
@@ -79,6 +85,13 @@ public class ParticipanteReservaService {
         return participanteRepository.countByReserva(reserva);
     }
 
+    /** R09.4: participantes Outro cadastrados antes da regra, sem vínculo. */
+    @Transactional(readOnly = true)
+    public long contarOutrosSemVinculo(Reserva reserva) {
+        return participanteRepository.countByReservaAndCategoriaAndVinculoIsNull(
+                reserva, CategoriaParticipante.OUTRO);
+    }
+
     @Transactional(readOnly = true)
     public void validarDocumentoAtual(Reserva reserva, DocumentoReserva documento) {
         if (reserva == null || documento == null) {
@@ -102,12 +115,13 @@ public class ParticipanteReservaService {
             Usuario solicitante,
             String nomeCompleto,
             String rmOuRg,
-            CategoriaParticipante categoria) {
+            CategoriaParticipante categoria,
+            VinculoParticipante vinculo) {
         Reserva reserva = obterReservaEditavel(reservaId, solicitante);
 
         ParticipanteReserva participante = new ParticipanteReserva();
         participante.setReserva(reserva);
-        preencher(participante, nomeCompleto, rmOuRg, categoria);
+        preencher(participante, nomeCompleto, rmOuRg, categoria, vinculo);
         impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), null);
         participante = participanteRepository.save(participante);
         incrementarRevisao(reserva);
@@ -121,10 +135,11 @@ public class ParticipanteReservaService {
             Usuario solicitante,
             String nomeCompleto,
             String rmOuRg,
-            CategoriaParticipante categoria) {
+            CategoriaParticipante categoria,
+            VinculoParticipante vinculo) {
         Reserva reserva = obterReservaEditavel(reservaId, solicitante);
         ParticipanteReserva participante = obterParticipanteDaReserva(participanteId, reserva);
-        preencher(participante, nomeCompleto, rmOuRg, categoria);
+        preencher(participante, nomeCompleto, rmOuRg, categoria, vinculo);
         impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), participante.getId());
         participante = participanteRepository.save(participante);
         incrementarRevisao(reserva);
@@ -187,7 +202,7 @@ public class ParticipanteReservaService {
     }
 
     /**
-     * Copia nome, RM/RG e categoria dos participantes de uma reserva cancelada
+     * Copia nome, RM/RG, categoria e vínculo dos participantes de uma reserva cancelada
      * para a remarcação dela. Chamado pelo ReservaService na mesma transação que
      * já conferiu o dono e a situação da reserva cancelada.
      */
@@ -210,6 +225,7 @@ public class ParticipanteReservaService {
             copia.setNomeCompleto(original.getNomeCompleto());
             copia.setRmOuRg(original.getRmOuRg());
             copia.setCategoria(original.getCategoria());
+            copia.setVinculo(original.getVinculo());
             participanteRepository.save(copia);
         }
         if (!originais.isEmpty()) {
@@ -237,7 +253,8 @@ public class ParticipanteReservaService {
             ParticipanteReserva participante,
             String nomeCompleto,
             String rmOuRg,
-            CategoriaParticipante categoria) {
+            CategoriaParticipante categoria,
+            VinculoParticipante vinculo) {
         participante.setNomeCompleto(normalizarCampo(
                 nomeCompleto,
                 TAMANHO_MAXIMO_NOME,
@@ -249,7 +266,15 @@ public class ParticipanteReservaService {
         if (categoria == null) {
             throw new IllegalArgumentException("A categoria do participante é obrigatória");
         }
+        // R09: só entra como Outro quem tem um dos vínculos da ETEC.
+        if (categoria == CategoriaParticipante.OUTRO && vinculo == null) {
+            throw new IllegalArgumentException(MENSAGEM_VINCULO_OBRIGATORIO);
+        }
+        if (categoria == CategoriaParticipante.ALUNO && vinculo != null) {
+            throw new IllegalArgumentException(MENSAGEM_VINCULO_SOMENTE_OUTRO);
+        }
         participante.setCategoria(categoria);
+        participante.setVinculo(vinculo);
     }
 
     private String normalizarCampo(String valor, int tamanhoMaximo, String mensagem) {

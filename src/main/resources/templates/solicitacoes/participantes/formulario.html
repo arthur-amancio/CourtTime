@@ -80,11 +80,21 @@
                        th:errors="*{categoria}">Selecione a categoria.</p>
                 </div>
 
+                <div class="campo">
+                    <label for="vinculo">Vínculo com a ETEC (somente na categoria Outro)</label>
+                    <select id="vinculo" th:field="*{vinculo}" aria-describedby="vinculo-ajuda">
+                        <option value="">Não se aplica (Aluno)</option>
+                        <option th:each="opcao : ${vinculos}" th:value="${opcao.name()}"
+                                th:text="${opcao.descricao}">Ex-aluno da ETEC</option>
+                    </select>
+                    <p id="vinculo-ajuda" class="campo__ajuda">Na categoria Outro só entram ex-alunos da ETEC, pai ou mãe e irmãos de alunos, e professores da ETEC. Amigos e convidados sem esse vínculo não podem participar.</p>
+                </div>
+
                 <div class="alerta alerta--info campo--espacado">
                     <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
                     <div>
                         <p><strong>Antes de salvar</strong></p>
-                        <p>Confira os dados. A regra definitiva sobre categorias adicionais aguarda homologação institucional.</p>
+                        <p>Confira os dados. Todos os participantes apresentam documento com foto na entrada.</p>
                     </div>
                 </div>
             </div>

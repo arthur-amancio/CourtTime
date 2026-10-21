@@ -119,7 +119,10 @@
                                 <tr th:each="participante : ${detalhe.participantes}">
                                     <th scope="row" data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</th>
                                     <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
-                                    <td data-label="Categoria" th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</td>
+                                    <td data-label="Categoria">
+                                        <span th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</span>
+                                        <span class="campo__ajuda" th:if="${participante.descricaoVinculo != null}" th:text="|(${participante.descricaoVinculo})|">(Ex-aluno da ETEC)</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

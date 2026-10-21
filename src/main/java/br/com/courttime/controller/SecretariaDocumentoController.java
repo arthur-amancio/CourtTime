@@ -64,6 +64,9 @@ public class SecretariaDocumentoController {
             model.addAttribute(
                     "prazoReenvioEncerrado",
                     DocumentoReservaService.prazoDeEnvioEncerrado(documento.getReserva()));
+            model.addAttribute(
+                    "outrosSemVinculo",
+                    conferenciaService.contarOutrosSemVinculo(documento, secretaria));
             return "secretaria/documentos/detalhe";
         } catch (IllegalArgumentException exception) {
             throw paginaNaoEncontrada();

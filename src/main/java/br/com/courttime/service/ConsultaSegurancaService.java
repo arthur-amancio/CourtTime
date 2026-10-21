@@ -71,9 +71,10 @@ public class ConsultaSegurancaService {
     }
 
     private ParticipanteConferencia identificacao(ParticipanteReserva participante) {
+        // R09.3: a portaria vê o vínculo de quem entra na categoria Outro.
         String categoria = participante.getCategoria() == CategoriaParticipante.ALUNO
                 ? "Aluno"
-                : "Outro";
+                : "Outro (" + participante.getDescricaoVinculo() + ")";
         return new ParticipanteConferencia(
                 participante.getNomeCompleto(),
                 participante.getRmOuRg(),

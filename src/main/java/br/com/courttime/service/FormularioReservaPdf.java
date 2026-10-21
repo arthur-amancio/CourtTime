@@ -54,6 +54,9 @@ public final class FormularioReservaPdf {
     private static final float LARGURA_RM_OU_RG = 69f;
     private static final float CENTRO_MARCA_ALUNO = 353.5f;
     private static final float CENTRO_MARCA_OUTRO = 409.2f;
+    // Traço depois de "Outro:", de 454,3 a 580,4 pt.
+    private static final float X_VINCULO = 455f;
+    private static final float LARGURA_VINCULO = 124f;
     private static final float LINHA_AVISO_CONTINUACAO = 712f;
 
     private FormularioReservaPdf() {
@@ -147,6 +150,9 @@ public final class FormularioReservaPdf {
                 // Um "X" dentro de "( ) Aluno" ou de "( ) Outro".
                 float centro = participante.aluno() ? CENTRO_MARCA_ALUNO : CENTRO_MARCA_OUTRO;
                 escreverCentralizado(fluxo, fonte, "X", centro - 4f, centro + 4f, y, 10f);
+                if (!participante.aluno() && participante.vinculo() != null) {
+                    escreverAjustado(fluxo, fonte, participante.vinculo(), X_VINCULO, y, 9f, LARGURA_VINCULO);
+                }
             }
         }
     }

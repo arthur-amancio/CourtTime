@@ -96,7 +96,10 @@ public class FormularioOficialService {
                         .map(participante -> new DadosFormularioReserva.Participante(
                                 participante.getNomeCompleto(),
                                 participante.getRmOuRg(),
-                                participante.getCategoria() == CategoriaParticipante.ALUNO))
+                                participante.getCategoria() == CategoriaParticipante.ALUNO,
+                                participante.getVinculo() == null
+                                        ? null
+                                        : participante.getVinculo().getTextoFormulario()))
                         .toList());
         try {
             return FormularioReservaPdf.gerar(carregarModelo(), dados);

@@ -242,6 +242,10 @@ async function semRolagemHorizontal(page, rotulo, url) {
     await alunoC.locator('#rmOuRg').fill(`RM-F${ids.r1}-001`);
     await alunoC.locator('#categoria').selectOption('OUTRO');
     await alunoC.getByRole('button', { name: 'Salvar participante' }).click();
+    check((await alunoC.locator('body').innerText()).includes('escolha o vínculo'), 'R09: Outro sem vínculo é recusado');
+    check(await alunoC.locator('#vinculo option').count() === 5, 'R09: só os quatro vínculos da ETEC (mais "não se aplica")');
+    await alunoC.locator('#vinculo').selectOption('PAI_OU_MAE');
+    await alunoC.getByRole('button', { name: 'Salvar participante' }).click();
     check((await alunoC.locator('body').innerText()).includes('Já existe um participante com este RM ou RG'), 'RM ou RG repetido é recusado com mensagem');
     await alunoC.locator('#rmOuRg').fill('RG 00.000.000-0');
     await Promise.all([
@@ -250,6 +254,7 @@ async function semRolagemHorizontal(page, rotulo, url) {
     ]);
     let corpo = await alunoC.locator('body').innerText();
     check(corpo.includes('11\nTotal'), 'participante da categoria Outro incluído', '10 alunos + 1 outro');
+    check(corpo.includes('(Pai ou mãe de aluno)'), 'R09: vínculo aparece na lista de participantes');
     await alunoC.getByRole('link', { name: 'Editar Aluno Auditoria 01' }).click();
     await alunoC.locator('#nomeCompleto').fill('Aluna Auditoria Editada');
     await Promise.all([

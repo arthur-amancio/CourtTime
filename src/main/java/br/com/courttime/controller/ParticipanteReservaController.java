@@ -4,6 +4,7 @@ import br.com.courttime.controller.form.ParticipanteReservaForm;
 import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ParticipanteReservaService;
 import br.com.courttime.service.ReservaService;
@@ -99,7 +100,8 @@ public class ParticipanteReservaController {
                     usuario,
                     form.getNomeCompleto(),
                     form.getRmOuRg(),
-                    form.getCategoria());
+                    form.getCategoria(),
+                    form.getVinculo());
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso", "Participante adicionado à solicitação.");
             return redirecionarLista(reservaId);
@@ -133,6 +135,7 @@ public class ParticipanteReservaController {
             form.setNomeCompleto(participante.getNomeCompleto());
             form.setRmOuRg(participante.getRmOuRg());
             form.setCategoria(participante.getCategoria());
+            form.setVinculo(participante.getVinculo());
             prepararFormulario(model, reserva, form, participanteId, "Editar participante");
             return "solicitacoes/participantes/formulario";
         } catch (AccessDeniedException exception) {
@@ -165,7 +168,8 @@ public class ParticipanteReservaController {
                     usuario,
                     form.getNomeCompleto(),
                     form.getRmOuRg(),
-                    form.getCategoria());
+                    form.getCategoria(),
+                    form.getVinculo());
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso", "Participante atualizado.");
             return redirecionarLista(reservaId);
@@ -205,6 +209,7 @@ public class ParticipanteReservaController {
             ParticipanteReservaForm form,
             Long participanteId,
             String titulo) {
+        model.addAttribute("vinculos", VinculoParticipante.values());
         model.addAttribute("solicitacao", reserva);
         model.addAttribute("form", form);
         model.addAttribute("participanteId", participanteId);
