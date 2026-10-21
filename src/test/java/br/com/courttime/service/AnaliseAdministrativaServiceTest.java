@@ -106,7 +106,7 @@ class AnaliseAdministrativaServiceTest {
         ParticipanteReserva outro = participante(CategoriaParticipante.OUTRO);
         when(reservaRepository.obterParaConsultaAdministrativa(20L))
                 .thenReturn(Optional.of(reserva));
-        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
+        when(participanteRepository.listarComPresenca(reserva))
                 .thenReturn(List.of(aluno, outro));
 
         DetalheAnaliseAdministrativa detalhe = service.detalhar(20L, administrador);

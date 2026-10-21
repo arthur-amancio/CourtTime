@@ -21,6 +21,15 @@
             <span aria-current="page">Conferência</span>
         </nav>
 
+        <div class="alerta alerta--sucesso bloco" role="status" th:if="${mensagemSucesso}">
+            <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
+            <p th:text="${mensagemSucesso}">Presença registrada.</p>
+        </div>
+        <div class="alerta alerta--perigo bloco" role="alert" th:if="${mensagemErro}">
+            <svg th:replace="~{fragments/icones :: icone('x-circulo')}"></svg>
+            <p th:text="${mensagemErro}">Não foi possível registrar.</p>
+        </div>
+
         <header class="cabecalho-pagina">
             <div class="cabecalho-pagina__texto">
                 <h1>Conferir reserva</h1>
@@ -48,14 +57,17 @@
             <section class="painel" aria-labelledby="participantes-title">
                 <div class="painel__cabecalho">
                     <h2 id="participantes-title">Identificação dos participantes</h2>
-                    <p class="campo__ajuda">Confira o nome e o RM ou RG de quem entrar na quadra.</p>
+                    <p class="campo__ajuda" th:if="${detalhe.presencaPermitida}">Confira o nome e o RM ou RG de quem entrar e marque presente ou ausente.</p>
+                    <p class="campo__ajuda" th:unless="${detalhe.presencaPermitida}">Confira o nome e o RM ou RG de quem entrar na quadra. A presença só pode ser marcada no dia da reserva.</p>
                 </div>
                 <div class="vazio" th:if="${#lists.isEmpty(detalhe.participantes)}">
                     <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg></span>
                     <strong>Sem participantes</strong>
                     <p>Não há participantes vinculados a esta reserva.</p>
                 </div>
-                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(detalhe.participantes)}">
+                <form method="post" th:unless="${#lists.isEmpty(detalhe.participantes)}"
+                      th:action="@{/seguranca/reservas/{id}/presencas(id=${detalhe.reserva.id})}">
+                <div class="tabela-wrapper">
                     <table class="tabela tabela--cartoes">
                         <caption class="visually-hidden">Participantes autorizados para conferência de identificação</caption>
                         <thead>
@@ -63,6 +75,7 @@
                                 <th scope="col">Nome completo</th>
                                 <th scope="col">Categoria</th>
                                 <th scope="col">RM ou RG</th>
+                                <th scope="col">Presença</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,10 +83,31 @@
                                 <th scope="row" data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</th>
                                 <td data-label="Categoria" th:text="${participante.categoria}">Aluno</td>
                                 <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
+                                <td data-label="Presença">
+                                    <fieldset class="presenca" th:if="${detalhe.presencaPermitida}">
+                                        <legend class="visually-hidden" th:text="|Presença de ${participante.nomeCompleto}|">Presença</legend>
+                                        <label class="opcao-marcavel">
+                                            <input type="radio" th:name="|presenca-${participante.id}|" value="PRESENTE"
+                                                   th:checked="${participante.presenca != null and participante.presenca.name() == 'PRESENTE'}">
+                                            <span>Presente</span>
+                                        </label>
+                                        <label class="opcao-marcavel">
+                                            <input type="radio" th:name="|presenca-${participante.id}|" value="AUSENTE"
+                                                   th:checked="${participante.presenca != null and participante.presenca.name() == 'AUSENTE'}">
+                                            <span>Ausente</span>
+                                        </label>
+                                    </fieldset>
+                                    <span th:unless="${detalhe.presencaPermitida}"
+                                          th:text="${participante.presenca == null ? 'Não marcada' : participante.presenca.descricao}">Não marcada</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <div class="grupo-botoes bloco-espaco" th:if="${detalhe.presencaPermitida}">
+                    <button class="botao" type="submit">Registrar presença</button>
+                </div>
+                </form>
             </section>
 
             <div>
