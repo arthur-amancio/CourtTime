@@ -36,7 +36,8 @@ public class AjusteContribuicaoApm {
     private ContribuicaoApm contribuicao;
 
     @NotNull
-    @DecimalMin(value = "0.00", inclusive = false)
+    // Pode ser zero quando o crédito da remarcação cobriu todo o valor (R04.3).
+    @DecimalMin(value = "0.00")
     @Digits(integer = 10, fraction = 2)
     @Column(name = "valor_anterior", nullable = false, precision = 12, scale = 2,
             updatable = false)

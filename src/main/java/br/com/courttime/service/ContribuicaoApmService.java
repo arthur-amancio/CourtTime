@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ContribuicaoApmService {
@@ -60,9 +61,30 @@ public class ContribuicaoApmService {
                         StatusReserva.PENDENTE_DOCUMENTACAO,
                         ResultadoConferenciaDocumento.VALIDADO)
                 .stream()
-                .map(reserva -> new ContribuicaoPendente(
-                        reserva, participanteService.contarParticipantes(reserva)))
+                .map(this::pendente)
                 .toList();
+    }
+
+    private ContribuicaoPendente pendente(Reserva reserva) {
+        long participantes = participanteService.contarParticipantes(reserva);
+        return contribuicaoDaReservaCancelada(reserva)
+                .map(origem -> new ContribuicaoPendente(
+                        reserva, participantes,
+                        origem.getReserva().getId(), origem.getValorEfetivamentePago()))
+                .orElseGet(() -> new ContribuicaoPendente(reserva, participantes));
+    }
+
+    /**
+     * R04.1: na remarcação, o pagamento da reserva cancelada vira crédito.
+     * Cada cancelada só pode ser remarcada uma vez, então o crédito é usado uma
+     * única vez (R04.4).
+     */
+    private Optional<ContribuicaoApm> contribuicaoDaReservaCancelada(Reserva reserva) {
+        Reserva origem = reserva.getRemarcacaoDe();
+        if (origem == null) {
+            return Optional.empty();
+        }
+        return contribuicaoRepository.obterPorReservaId(origem.getId());
     }
 
     /** R03.1: valor devido = R$ 2,00 × total de participantes. */
@@ -120,23 +142,29 @@ public class ContribuicaoApmService {
 
         // A lista está travada desde o envio, então a contagem atual é a do
         // documento conferido (R03.1). A secretaria não digita o valor (R03.2).
-        BigDecimal valorDevido = calcularValorDevido(
-                participanteService.contarParticipantes(reserva));
-        if (valorDevido.signum() <= 0) {
+        ContribuicaoPendente calculo = pendente(reserva);
+        if (calculo.valorDevido().signum() <= 0) {
             throw new IllegalStateException("A solicitação não possui participantes cadastrados");
         }
 
         ContribuicaoApm contribuicao = new ContribuicaoApm();
         contribuicao.setReserva(reserva);
         contribuicao.setConferenciaDocumento(conferencia);
-        contribuicao.setValorDevido(valorDevido);
-        contribuicao.setValor(valorDevido);
+        contribuicao.setValorDevido(calculo.valorDevido());
+        // R04.2 e R04.3: com crédito, registra só a diferença; se o crédito cobre
+        // tudo, o valor recebido é zero e fica registrado apenas o uso do crédito.
+        contribuicao.setValor(calculo.valorACobrar());
+        if (calculo.temCredito()) {
+            contribuicao.setCreditoAplicado(calculo.creditoAplicado());
+            contribuicao.setContribuicaoOrigem(
+                    contribuicaoDaReservaCancelada(reserva).orElseThrow());
+        }
         contribuicao.setObservacoes(observacoesNormalizadas);
         contribuicao.setRegistradaPor(operadora);
         contribuicao = contribuicaoRepository.saveAndFlush(contribuicao);
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
         reservaRepository.save(reserva);
-        return new DetalheContribuicaoApm(contribuicao, List.of());
+        return detalhar(contribuicao);
     }
 
     @Transactional
@@ -181,9 +209,16 @@ public class ContribuicaoApmService {
     }
 
     private DetalheContribuicaoApm detalhar(ContribuicaoApm contribuicao) {
+        List<AjusteContribuicaoApm> ajustes = ajusteRepository.listarHistorico(contribuicao);
+        ContribuicaoApm origem = contribuicao.getContribuicaoOrigem();
+        if (origem == null) {
+            return new DetalheContribuicaoApm(contribuicao, ajustes);
+        }
+        // D2: o excedente só é mostrado, sem destino, até a decisão da ETEC.
+        BigDecimal excedente = origem.getValorEfetivamentePago()
+                .subtract(contribuicao.getCreditoAplicado());
         return new DetalheContribuicaoApm(
-                contribuicao,
-                ajusteRepository.listarHistorico(contribuicao));
+                contribuicao, ajustes, origem.getReserva().getId(), excedente.max(BigDecimal.ZERO));
     }
 
     private Usuario obterSecretariaAtual(Usuario secretaria) {

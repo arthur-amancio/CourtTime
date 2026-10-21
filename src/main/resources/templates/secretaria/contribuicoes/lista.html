@@ -60,6 +60,11 @@
                             <div><dt>Solicitante</dt><dd th:text="${reserva.solicitante.nome}">Ana Souza</dd></div>
                             <div><dt>Uso da quadra</dt><dd th:text="|${#temporals.format(reserva.dataUtilizacao, 'dd/MM/yyyy')} das ${#temporals.format(reserva.horarioInicio, 'HH:mm')} às ${#temporals.format(reserva.horarioFim, 'HH:mm')}|">20/10/2026 das 08:00 às 09:00</dd></div>
                             <div><dt>Valor devido</dt><dd><strong th:text="|${pendente.participantes} participantes × R$ 2,00 = R$ ${#numbers.formatDecimal(pendente.valorDevido, 1, 'POINT', 2, 'COMMA')}|">11 participantes × R$ 2,00 = R$ 22,00</strong></dd></div>
+                            <th:block th:if="${pendente.temCredito()}">
+                                <div><dt>Crédito da remarcação</dt><dd th:text="|R$ ${#numbers.formatDecimal(pendente.creditoAplicado(), 1, 'POINT', 2, 'COMMA')}, da reserva cancelada nº ${pendente.reservaOrigemId}|">R$ 22,00, da reserva cancelada nº 3</dd></div>
+                                <div><dt>A cobrar</dt><dd><strong th:text="|R$ ${#numbers.formatDecimal(pendente.valorACobrar(), 1, 'POINT', 2, 'COMMA')}|">R$ 8,00</strong></dd></div>
+                                <div th:if="${pendente.saldoExcedente().signum() > 0}"><dt>Saldo excedente</dt><dd th:text="|R$ ${#numbers.formatDecimal(pendente.saldoExcedente(), 1, 'POINT', 2, 'COMMA')} — pendente de decisão da ETEC|">R$ 4,00 — pendente de decisão da ETEC</dd></div>
+                            </th:block>
                         </dl>
                         <form class="operacao__form" method="post"
                               th:action="@{/secretaria/contribuicoes/solicitacoes/{id}(id=${reserva.id})}">
@@ -70,7 +75,7 @@
                             </div>
                             <div>
                                 <button class="botao" type="submit">
-                                    <svg th:replace="~{fragments/icones :: icone('recibo')}"></svg><span th:text="|Registrar recebimento de R$ ${#numbers.formatDecimal(pendente.valorDevido, 1, 'POINT', 2, 'COMMA')}|">Registrar recebimento de R$ 22,00</span>
+                                    <svg th:replace="~{fragments/icones :: icone('recibo')}"></svg><span th:text="${pendente.valorACobrar().signum() == 0} ? 'Aplicar crédito' : |Registrar recebimento de R$ ${#numbers.formatDecimal(pendente.valorACobrar(), 1, 'POINT', 2, 'COMMA')}|">Registrar recebimento de R$ 22,00</span>
                                 </button>
                             </div>
                         </form>

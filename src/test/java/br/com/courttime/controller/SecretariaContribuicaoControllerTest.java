@@ -138,6 +138,22 @@ class SecretariaContribuicaoControllerTest {
     }
 
     @Test
+    void r04FilaMostraCreditoDiferencaEExcedente() throws Exception {
+        prepararSecretaria();
+        when(contribuicaoService.listarPendentes(secretaria)).thenReturn(List.of(
+                new ContribuicaoPendente(reserva, 10L, 3L, new BigDecimal("22.00"))));
+        when(contribuicaoService.listarRegistradas(secretaria)).thenReturn(List.of());
+
+        mockMvc.perform(get("/secretaria/contribuicoes")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("da reserva cancelada nº 3")))
+                .andExpect(content().string(containsString("R$ 0,00")))
+                .andExpect(content().string(containsString("Aplicar crédito")))
+                .andExpect(content().string(containsString("R$ 2,00 — pendente de decisão da ETEC")));
+    }
+
+    @Test
     void registroUsaSecretariaDaSessaoEExigeCsrf() throws Exception {
         mockMvc.perform(post("/secretaria/contribuicoes/solicitacoes/20")
                         .with(user(secretaria.getEmail()).roles("SECRETARIA"))

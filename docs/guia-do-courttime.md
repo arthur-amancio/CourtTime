@@ -85,8 +85,9 @@ Para não prometer na banca o que o código não faz:
 - O sistema **não avisa** o aluno de um cancelamento: o administrador avisa
   pelo WhatsApp, e a tela lembra disso (R05).
 - A **remarcação** após cancelamento cria uma solicitação nova, do início: não
-  reaproveita aprovação, PDF nem contribuição (só os participantes, se o aluno
-  pedir).
+  reaproveita aprovação nem PDF. Os participantes são copiados se o aluno
+  pedir, e o valor pago à APM vira crédito (R04): a secretaria cobra só a
+  diferença. O saldo que sobrar fica pendente de decisão da ETEC (D2).
 - **Não há registro** de contato com o aluno.
 - **Não há registro de ocorrências** pela segurança. A portaria só marca a
   presença dos participantes, no dia da reserva (R08). Pessoas que aparecem a

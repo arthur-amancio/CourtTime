@@ -174,9 +174,10 @@ No detalhe de uma reserva cancelada, o aluno encontra **Solicitar outro horário
 
 - começa em `PENDENTE_DOCUMENTACAO` e fica vinculada à cancelada (`reservas.remarcacao_de_id`, coluna única);
 - pode copiar os participantes da cancelada (opção marcada por padrão), que continuam editáveis antes do envio do PDF;
-- **não** reaproveita aprovação, PDF nem contribuição — esses dependem de regra institucional ainda não definida.
+- **não** reaproveita aprovação nem PDF;
+- aproveita o valor pago à APM como crédito (R04): no registro da nova contribuição, a secretaria cobra só a diferença, e, se o crédito cobrir tudo, só registra o uso do crédito.
 
-Cada reserva cancelada pode ser remarcada uma vez; a cancelada não é alterada e continua no histórico. A reserva de origem fica travada durante a operação, então dois envios simultâneos não criam duas remarcações. Registro de contato com o aluno, reaproveitamento da contribuição e dispensa de nova assinatura continuam pendentes das regras formais da ETEC.
+Cada reserva cancelada pode ser remarcada uma vez; a cancelada não é alterada e continua no histórico. A reserva de origem fica travada durante a operação, então dois envios simultâneos não criam duas remarcações. O destino do crédito excedente, quando a remarcação tem menos participantes, ainda depende da ETEC (D2): o sistema só mostra o saldo.
 
 ## Testes e build
 

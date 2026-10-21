@@ -81,7 +81,10 @@
                                 </div>
                                 <div th:if="${detalhe.contribuicao != null}">
                                     <dt>Contribuição presencial</dt>
-                                    <dd th:text="|R$ ${#numbers.formatDecimal(detalhe.contribuicao.valor, 1, 'POINT', 2, 'COMMA')} — vinculada à versão ${detalhe.contribuicao.conferenciaDocumento.documento.versao}|">R$ 20,00 — vinculada à versão 2</dd>
+                                    <dd>
+                                        <span th:text="|R$ ${#numbers.formatDecimal(detalhe.contribuicao.valor, 1, 'POINT', 2, 'COMMA')} — vinculada à versão ${detalhe.contribuicao.conferenciaDocumento.documento.versao}|">R$ 20,00 — vinculada à versão 2</span>
+                                        <span class="campo__ajuda" th:if="${detalhe.contribuicao.creditoAplicado != null}" th:text="|mais R$ ${#numbers.formatDecimal(detalhe.contribuicao.creditoAplicado, 1, 'POINT', 2, 'COMMA')} de crédito da reserva cancelada|">mais R$ 22,00 de crédito</span>
+                                    </dd>
                                 </div>
                                 <div th:if="${detalhe.contribuicao != null}">
                                     <dt>Registro da contribuição</dt>
