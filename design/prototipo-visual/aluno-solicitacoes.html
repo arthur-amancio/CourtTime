@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minhas solicitações | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="aluno" data-pagina="solicitacoes">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=aluno">Início</a></li><li><span aria-current="page">Solicitações</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Minhas solicitações</h1>
+            <p>Acompanhe somente as solicitações registradas por você.</p>
+        </div>
+        <div class="cabecalho-pagina__acoes">
+            <a class="botao" href="aluno-nova-solicitacao.html"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nova solicitação</a>
+        </div>
+    </header>
+
+    <section class="secao" aria-labelledby="andamento">
+        <div class="secao__titulo"><h2 id="andamento">Em andamento</h2><p>2 solicitações</p></div>
+        <ul class="lista-solicitacoes">
+            <li class="cartao-solicitacao">
+                <span class="data-bloco"><small>out</small><strong>26</strong></span>
+                <div>
+                    <span class="badge badge--documentacao" data-icone="documento">Pendente de documentação</span>
+                    <h3>Campeonato de handebol entre turmas do 2º ano</h3>
+                    <p class="cartao-solicitacao__meta"><span class="tabular">Seg., 26/10/2026 · 14:00 – 15:00</span><span>Próxima etapa: enviar o PDF assinado</span></p>
+                </div>
+                <div><a class="botao botao--secundario botao--sm" href="aluno-solicitacao.html?estado=documentacao">Detalhes</a></div>
+            </li>
+            <li class="cartao-solicitacao">
+                <span class="data-bloco"><small>out</small><strong>30</strong></span>
+                <div>
+                    <span class="badge badge--analise" data-icone="ampulheta">Pendente de análise</span>
+                    <h3>Treino de vôlei para os jogos interclasse</h3>
+                    <p class="cartao-solicitacao__meta"><span class="tabular">Sex., 30/10/2026 · 15:00 – 16:00</span><span>Aguardando a decisão da administração</span></p>
+                </div>
+                <div><a class="botao botao--secundario botao--sm" href="aluno-solicitacao.html?estado=analise">Detalhes</a></div>
+            </li>
+        </ul>
+    </section>
+
+    <section class="secao" aria-labelledby="encerradas">
+        <div class="secao__titulo"><h2 id="encerradas">Decididas</h2><p>3 solicitações</p></div>
+        <div class="tabela-wrapper">
+            <table class="tabela tabela--cartoes">
+                <caption class="visually-hidden">Solicitações com decisão registrada</caption>
+                <thead><tr><th scope="col">Data e horário</th><th scope="col">Finalidade</th><th scope="col">Situação</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+                <tbody>
+                    <tr>
+                        <th scope="row" data-label="Data" class="tabular">22/10/2026<span class="tabela__secundario">16:00 – 17:00</span></th>
+                        <td data-label="Finalidade">Futsal — treino da turma do 3º DS</td>
+                        <td data-label="Situação"><span class="badge badge--aprovada" data-icone="check-circulo">Aprovada</span></td>
+                        <td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="aluno-solicitacao.html?estado=aprovada">Detalhes</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" data-label="Data" class="tabular">15/10/2026<span class="tabela__secundario">10:00 – 11:00</span></th>
+                        <td data-label="Finalidade">Ensaio de apresentação da Semana Cultural</td>
+                        <td data-label="Situação"><span class="badge badge--rejeitada" data-icone="x-circulo">Rejeitada</span></td>
+                        <td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="aluno-solicitacao.html?estado=rejeitada">Detalhes</a></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" data-label="Data" class="tabular">09/10/2026<span class="tabela__secundario">14:00 – 15:00</span></th>
+                        <td data-label="Finalidade">Basquete — treino livre da turma</td>
+                        <td data-label="Situação"><span class="badge badge--cancelada" data-icone="proibido">Cancelada</span></td>
+                        <td class="tabela__acoes"><a class="botao botao--secundario botao--sm" href="aluno-solicitacao.html?estado=cancelada">Detalhes</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

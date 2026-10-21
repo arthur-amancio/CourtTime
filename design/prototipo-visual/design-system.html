@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Design system | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-pagina="design-system">
+    <header class="topo-publico">
+        <div class="container topo-publico__inner">
+            <a class="marca" href="telas.html"><span class="marca__simbolo" data-icone="quadra"></span><span class="marca__texto"><span class="marca__nome">CourtTime</span><span class="marca__escola">Design system do protótipo</span></span></a>
+            <nav class="topo-publico__nav" aria-label="Documentação do protótipo"><a href="telas.html">Telas</a><a href="direcoes.html">Direções visuais</a><a class="botao botao--sm" href="index.html">Abrir protótipo</a></nav>
+        </div>
+    </header>
+    <main id="conteudo" class="container" style="padding-block: 2.5rem 4rem">
+        <header class="cabecalho-pagina">
+            <div class="cabecalho-pagina__texto">
+                <p class="sobretitulo">Referência visual</p>
+                <h1>Design system do CourtTime</h1>
+                <p>Tokens e componentes do protótipo. Todos os valores estão em <code class="mono">assets/css/courttime.css</code> como variáveis CSS.</p>
+            </div>
+        </header>
+
+        <section class="secao" aria-labelledby="cores">
+            <div class="secao__titulo"><h2 id="cores">Cores</h2><p>Verde institucional preservado (#17633F e #114B31)</p></div>
+            <div class="ds-amostras">
+                <div class="ds-cor"><div style="background:#17633f"></div><p><strong>Primária</strong><br><code>--verde-600 #17633F</code></p></div>
+                <div class="ds-cor"><div style="background:#114b31"></div><p><strong>Primária escura</strong><br><code>--verde-700 #114B31</code></p></div>
+                <div class="ds-cor"><div style="background:#082a1b"></div><p><strong>Barra lateral</strong><br><code>--verde-900 #082A1B</code></p></div>
+                <div class="ds-cor"><div style="background:#eef6f1"></div><p><strong>Primária suave</strong><br><code>--verde-50 #EEF6F1</code></p></div>
+                <div class="ds-cor"><div style="background:#875c00"></div><p><strong>Foco / secundária</strong><br><code>--ouro-700 #875C00</code></p></div>
+                <div class="ds-cor"><div style="background:#f4f6f4"></div><p><strong>Fundo</strong><br><code>--cinza-50 #F4F6F4</code></p></div>
+                <div class="ds-cor"><div style="background:#1d2d25"></div><p><strong>Texto</strong><br><code>--cinza-900 #1D2D25</code></p></div>
+                <div class="ds-cor"><div style="background:#526158"></div><p><strong>Texto suave</strong><br><code>--cinza-600 #526158</code></p></div>
+                <div class="ds-cor"><div style="background:#d9e1dc"></div><p><strong>Borda</strong><br><code>--cinza-200 #D9E1DC</code></p></div>
+            </div>
+        </section>
+
+        <section class="secao" aria-labelledby="status">
+            <div class="secao__titulo"><h2 id="status">Situações da solicitação</h2><p>Cor, ícone e texto juntos — nunca só a cor</p></div>
+            <div class="painel painel__corpo ds-linha">
+                <span class="badge badge--documentacao" data-icone="documento">Pendente de documentação</span>
+                <span class="badge badge--analise" data-icone="ampulheta">Pendente de análise</span>
+                <span class="badge badge--aprovada" data-icone="check-circulo">Aprovada</span>
+                <span class="badge badge--rejeitada" data-icone="x-circulo">Rejeitada</span>
+                <span class="badge badge--cancelada" data-icone="proibido">Cancelada</span>
+                <span class="badge badge--neutro">Neutro</span>
+            </div>
+        </section>
+
+        <section class="secao" aria-labelledby="tipo">
+            <div class="secao__titulo"><h2 id="tipo">Tipografia</h2><p>Fonte do sistema (mesma da aplicação atual) · base 16 px</p></div>
+            <div class="painel painel__corpo ds-tipo">
+                <p style="font-size: 2.25rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1">Título de apresentação · 32–42 px / 800</p>
+                <h1>Título da página · 30 px / 800</h1>
+                <h2>Título de seção · 20 px / 750</h2>
+                <h3>Título de grupo · 18 px / 700</h3>
+                <p>Texto de leitura · 16 px / 400 · altura de linha 1,55. Os textos usam a terminologia real do CourtTime.</p>
+                <p class="campo__ajuda">Texto de apoio · 14 px · cor suave</p>
+                <p class="sobretitulo">Sobretítulo · 12 px / maiúsculas</p>
+                <p class="tabular" style="font-size: 1.125rem; font-weight: 800">08:00 – 09:00 · números tabulares para horários</p>
+            </div>
+        </section>
+
+        <section class="secao" aria-labelledby="esp">
+            <div class="secao__titulo"><h2 id="esp">Espaçamento, raios e larguras</h2></div>
+            <div class="painel painel__corpo">
+                <dl class="dados">
+                    <div><dt>Escala</dt><dd>4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64 px</dd></div>
+                    <div><dt>Raios</dt><dd>6 (controles) · 10 (cartões internos) · 14 (painéis)</dd></div>
+                    <div><dt>Conteúdo</dt><dd>1200 px público · 1180 px app · 46 rem texto</dd></div>
+                    <div><dt>Alvos de toque</dt><dd>mínimo 44 px (36 px no tamanho pequeno)</dd></div>
+                </dl>
+            </div>
+        </section>
+
+        <section class="secao" aria-labelledby="botoes">
+            <div class="secao__titulo"><h2 id="botoes">Botões e estados</h2><p>Passe o mouse e use Tab para ver hover e foco</p></div>
+            <div class="painel painel__corpo pilha" style="gap: 1rem">
+                <div class="ds-linha">
+                    <button class="botao" type="button">Primário</button>
+                    <button class="botao botao--secundario" type="button">Secundário</button>
+                    <button class="botao botao--fantasma" type="button">Fantasma</button>
+                    <button class="botao botao--perigo" type="button">Perigo</button>
+                    <button class="botao botao--perigo-contorno" type="button">Perigo contorno</button>
+                </div>
+                <div class="ds-linha">
+                    <button class="botao botao--sm" type="button">Pequeno</button>
+                    <button class="botao botao--lg" type="button">Grande</button>
+                    <button class="botao" type="button" disabled>Desativado</button>
+                    <button class="botao" type="button" data-demo-carregando>Clique para ver o carregamento</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="secao grade-2--igual grade-2" aria-labelledby="forms">
+            <div>
+                <div class="secao__titulo"><h2 id="forms">Formulários</h2></div>
+                <div class="painel painel__corpo">
+                    <div class="campo"><label for="ds-1">Campo de texto</label><input id="ds-1" aria-describedby="ds-1-a"><p id="ds-1-a" class="campo__ajuda">Texto de ajuda associado ao campo.</p></div>
+                    <div class="campo campo--erro"><label for="ds-2">Campo com erro</label><input id="ds-2" aria-invalid="true" aria-describedby="ds-2-e" value="valor inválido"><p id="ds-2-e" class="campo__erro">Mensagem de erro específica.</p></div>
+                    <div class="campo"><label for="ds-3">Seleção</label><select id="ds-3"><option>Aluno</option><option>Secretaria</option></select></div>
+                    <div class="campo"><label for="ds-4">Área de texto</label><textarea id="ds-4" rows="3"></textarea></div>
+                    <div class="campo"><label for="ds-5">Desativado</label><input id="ds-5" disabled value="Somente leitura"></div>
+                </div>
+            </div>
+            <div>
+                <div class="secao__titulo"><h2>Alertas</h2></div>
+                <div>
+                    <div class="alerta alerta--sucesso"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg><div><strong class="alerta__titulo">Sucesso</strong><p>Operação concluída.</p></div></div>
+                    <div class="alerta alerta--info"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg><div><strong class="alerta__titulo">Informação</strong><p>O envio não autoriza o uso imediato.</p></div></div>
+                    <div class="alerta alerta--aviso"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2 2.8 19.5h18.4z"/><path d="M12 10v4.2M12 17h.01"/></svg><div><strong class="alerta__titulo">Atenção</strong><p>Referência institucional pendente.</p></div></div>
+                    <div class="alerta alerta--perigo"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/></svg><div><strong class="alerta__titulo">Erro</strong><p>Não foi possível concluir.</p></div></div>
+                </div>
+                <div class="secao__titulo" style="margin-top: 2rem"><h2>Estado vazio</h2></div>
+                <div class="painel vazio"><span class="vazio__icone" data-icone="calendario" data-icone-classe="icone--lg"></span><strong>Nenhuma solicitação</strong><p>Quando você registrar uma solicitação, ela aparecerá aqui.</p><a class="botao botao--sm" href="aluno-nova-solicitacao.html">Nova solicitação</a></div>
+            </div>
+        </section>
+
+        <section class="secao" aria-labelledby="horarios">
+            <div class="secao__titulo"><h2 id="horarios">Períodos de horário</h2></div>
+            <div class="painel painel__corpo">
+                <ul class="slots">
+                    <li><button type="button" class="slot slot--disponivel" aria-pressed="false"><span class="slot__hora">08:00 – 09:00</span><span class="slot__estado" data-icone="check">Disponível</span></button></li>
+                    <li><button type="button" class="slot slot--disponivel" aria-pressed="true"><span class="slot__hora">09:00 – 10:00</span><span class="slot__estado" data-icone="check-circulo">Selecionado</span></button></li>
+                    <li><button type="button" class="slot slot--reservado" aria-disabled="true"><span class="slot__hora">10:00 – 11:00</span><span class="slot__estado" data-icone="cadeado">Reservado</span></button></li>
+                    <li><button type="button" class="slot slot--indisponivel" aria-disabled="true"><span class="slot__hora">11:00 – 12:00</span><span class="slot__estado" data-icone="proibido">Indisponível</span></button></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="secao" aria-labelledby="etapas-ds">
+            <div class="secao__titulo"><h2 id="etapas-ds">Etapas</h2></div>
+            <div class="painel painel__corpo">
+                <ol class="etapas">
+                    <li class="etapa etapa--concluida"><span class="etapa__marcador" data-icone="check" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Concluída</span></li>
+                    <li class="etapa etapa--atual"><span class="etapa__marcador">2</span><span class="etapa__rotulo">Atual</span></li>
+                    <li class="etapa"><span class="etapa__marcador">3</span><span class="etapa__rotulo">Futura</span></li>
+                    <li class="etapa etapa--interrompida"><span class="etapa__marcador" data-icone="x" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Rejeitada</span></li>
+                    <li class="etapa etapa--neutra"><span class="etapa__marcador" data-icone="proibido" data-icone-classe="icone--sm"></span><span class="etapa__rotulo">Cancelada</span></li>
+                </ol>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

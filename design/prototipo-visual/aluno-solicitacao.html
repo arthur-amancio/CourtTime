@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalhes da solicitação | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="aluno" data-pagina="solicitacoes">
+<main id="conteudo" class="conteudo__main" data-moldura data-solicitacao>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=aluno">Início</a></li><li><a href="aluno-solicitacoes.html">Solicitações</a></li><li><span aria-current="page">Detalhes</span></li></ol></nav>
+
+    <div class="alerta alerta--sucesso" role="status" data-aviso-nova hidden style="margin-bottom: 1.5rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+        <div><strong class="alerta__titulo">Solicitação registrada.</strong><p>Ela ainda não autoriza o uso da quadra. Cadastre os participantes e envie o PDF assinado para continuar.</p></div>
+    </div>
+
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <p class="sobretitulo">Solicitação #16 · Quadra Poliesportiva</p>
+            <h1>Campeonato de handebol entre turmas do 2º ano</h1>
+            <p>Segunda-feira, 26/10/2026 · 14:00 – 15:00</p>
+        </div>
+        <div data-render="badge"></div>
+    </header>
+
+    <section class="painel" aria-labelledby="etapas-titulo" style="margin-bottom: 1.5rem">
+        <div class="painel__cabecalho">
+            <div><h2 id="etapas-titulo">Etapas do processo</h2><p>O caminho até a decisão. A situação da solicitação é a indicada no selo acima.</p></div>
+        </div>
+        <div class="painel__corpo"><ol class="etapas" data-render="etapas"></ol></div>
+    </section>
+
+    <div data-render="mensagem" style="margin-bottom: 1.5rem"></div>
+
+    <div class="grade-2">
+        <div class="pilha">
+            <section class="painel" aria-labelledby="dados-titulo">
+                <div class="painel__cabecalho"><h2 id="dados-titulo">Dados da solicitação</h2></div>
+                <div class="painel__corpo">
+                    <dl class="dados">
+                        <div><dt>Data</dt><dd class="tabular">26/10/2026</dd></div>
+                        <div><dt>Horário</dt><dd class="tabular">14:00 – 15:00</dd></div>
+                        <div><dt>Quadra</dt><dd>Quadra Poliesportiva</dd></div>
+                        <div class="dados__largo"><dt>Finalidade</dt><dd class="dados__texto">Campeonato de handebol entre turmas do 2º ano, organizado pelos representantes de sala.</dd></div>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="part-titulo">
+                <div class="painel__cabecalho">
+                    <div><h2 id="part-titulo">Participantes</h2><p>12 cadastrados: 11 alunos e 1 demais participante.</p></div>
+                    <span class="badge badge--aprovada" data-icone="check">Mínimo de 10 alunos atendido</span>
+                </div>
+                <div class="painel__corpo">
+                    <div class="progresso">
+                        <div class="progresso__texto"><span>Alunos cadastrados</span><strong class="tabular">11 de no mínimo 10</strong></div>
+                        <div class="progresso__barra" aria-hidden="true"><span style="width: 100%"></span></div>
+                    </div>
+                </div>
+                <div class="painel__rodape grupo-botoes" data-render="participantes-acao"></div>
+            </section>
+
+            <section class="painel" aria-labelledby="doc-titulo">
+                <div class="painel__cabecalho"><div><h2 id="doc-titulo">Documento assinado (PDF)</h2><p>O CourtTime guarda cada versão original e não valida assinaturas.</p></div></div>
+                <div class="painel__corpo pilha" style="gap: 1.25rem">
+                    <div data-render="documentos"></div>
+
+                    <!-- Envio: visível somente quando o backend libera um novo envio -->
+                    <form class="pilha" style="gap: 1rem" data-upload-form data-envio novalidate>
+                        <div class="alerta alerta--neutro">
+                            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+                            <div><strong class="alerta__titulo" style="color: var(--cor-texto)">Antes de enviar</strong>
+                                <ul><li>Prepare e assine o documento fora do sistema.</li><li>Confira se a lista do PDF corresponde ao cadastro e tem ao menos dez alunos.</li><li>Depois do envio, a lista fica bloqueada até a conferência da secretaria.</li></ul></div>
+                        </div>
+
+                        <div class="upload" data-upload>
+                            <p class="campo__rotulo" id="arquivo-rotulo">Arquivo PDF assinado</p>
+                            <input class="upload__input" id="arquivo" name="arquivo" type="file" accept="application/pdf,.pdf"
+                                   aria-labelledby="arquivo-rotulo arquivo-botao" aria-describedby="arquivo-regras arquivo-estado arquivo-erro">
+                            <div class="upload__caixa" data-upload-caixa>
+                                <span class="upload__icone" data-icone="upload" data-icone-classe="icone--lg"></span>
+                                <div class="upload__texto">
+                                    <p class="upload__estado" id="arquivo-estado" aria-live="polite" data-upload-estado>Nenhum arquivo selecionado.</p>
+                                    <p class="campo__ajuda" id="arquivo-regras">Somente arquivos .pdf, com até 10 MB. O original é guardado sem alterações.</p>
+                                </div>
+                                <div class="upload__acoes">
+                                    <label class="botao botao--secundario botao--sm" for="arquivo" id="arquivo-botao" data-upload-rotulo>Selecionar PDF</label>
+                                    <button class="botao botao--fantasma botao--sm" type="button" data-upload-remover hidden>Remover</button>
+                                </div>
+                            </div>
+                            <p class="campo__erro" id="arquivo-erro" role="alert" data-upload-erro hidden></p>
+                        </div>
+
+                        <div class="grupo-botoes"><button class="botao" type="submit">Enviar nova versão</button></div>
+                        <div class="alerta alerta--sucesso" role="status" data-upload-ok tabindex="-1" hidden>
+                            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+                            <div><strong class="alerta__titulo">Envio simulado.</strong><p>No protótipo nenhum arquivo é enviado nem guardado. Na aplicação, a versão passa a aguardar a conferência da secretaria.</p></div>
+                        </div>
+                    </form>
+                    <p class="alerta alerta--neutro" data-sem-envio hidden></p>
+                </div>
+            </section>
+        </div>
+
+        <aside class="pilha">
+            <section class="painel" aria-labelledby="hist-titulo">
+                <div class="painel__cabecalho">
+                    <div><h2 id="hist-titulo">Histórico</h2><p>Proposta: usa datas já gravadas que hoje não aparecem para o aluno.</p></div>
+                    <span class="badge badge--neutro">Depende de adaptação</span>
+                </div>
+                <div class="painel__corpo"><ol class="historico" data-render="historico"></ol></div>
+            </section>
+            <a class="botao botao--fantasma" href="aluno-solicitacoes.html"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Voltar às solicitações</a>
+        </aside>
+    </div>
+
+    <div class="alerta alerta--neutro" style="margin-top: 2rem">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+        <div>
+            <strong class="alerta__titulo">Controles do protótipo — ver a tela em cada situação</strong>
+            <p>As quatro primeiras situações têm o mesmo status gravado (<code class="mono">PENDENTE_DOCUMENTACAO</code>); o texto muda conforme o documento e a contribuição, como no <code class="mono">SituacaoSolicitacaoService</code>.</p>
+            <div class="abas abas--quebra" role="group" aria-label="Situação demonstrada" data-seletor-estado style="margin-top: .75rem">
+                <button type="button" value="documentacao">Sem PDF</button>
+                <button type="button" value="conferencia">PDF em conferência</button>
+                <button type="button" value="devolvida">PDF devolvido</button>
+                <button type="button" value="contribuicao">Contribuição pendente</button>
+                <button type="button" value="analise">Pendente de análise</button>
+                <button type="button" value="aprovada">Aprovada</button>
+                <button type="button" value="rejeitada">Rejeitada</button>
+                <button type="button" value="cancelada">Cancelada</button>
+            </div>
+            <p class="campo__ajuda" style="margin-top: .5rem">Status gravado nesta variação: <strong class="mono" data-render="status-gravado">PENDENTE_DOCUMENTACAO</strong></p>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-pagina="login">
+    <div class="login">
+        <header class="login__institucional">
+            <a class="marca marca--clara" href="index.html" aria-label="CourtTime, página inicial">
+                <span class="marca__simbolo" data-icone="quadra"></span>
+                <span class="marca__texto"><span class="marca__nome">CourtTime</span><span class="marca__escola">ETEC Prof. Armando José Farinazzo</span></span>
+            </a>
+            <div class="login__frase">
+                <p class="login__slogan">Pedido, documento e autorização no mesmo lugar.</p>
+                <p>Cada etapa da solicitação fica registrada para que a quadra seja usada com organização e segurança.</p>
+            </div>
+            <small class="login__local">ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</small>
+            <svg class="login__arte" viewBox="0 0 400 240" aria-hidden="true" focusable="false">
+                <g fill="none" stroke="#2a7d52" stroke-width="3">
+                    <rect x="4" y="4" width="392" height="232" rx="6"/>
+                    <path d="M200 4v232"/><circle cx="200" cy="120" r="40"/>
+                    <path d="M4 52h48a68 68 0 0 1 0 136H4M396 52h-48a68 68 0 0 0 0 136h48"/>
+                </g>
+            </svg>
+        </header>
+
+        <main id="conteudo" class="login__formulario">
+            <div class="login__caixa">
+                <h1 class="login__titulo">Entrar</h1>
+                <p class="login__subtitulo">Use o e-mail e a senha da sua conta do CourtTime.</p>
+
+                <div class="alerta alerta--perigo" role="alert" id="erro-login" hidden>
+                    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/></svg>
+                    <div><strong class="alerta__titulo">Email ou senha inválidos.</strong><p>Exemplo da mensagem exibida pela aplicação. Este protótipo não verifica credenciais.</p></div>
+                </div>
+
+                <form class="login__form" data-demo="erro-login" novalidate>
+                    <div class="campo">
+                        <label for="email">E-mail</label>
+                        <input id="email" name="username" type="email" autocomplete="username" inputmode="email" required>
+                        <p class="campo__erro" hidden>Informe o e-mail.</p>
+                    </div>
+                    <div class="campo">
+                        <label for="senha">Senha</label>
+                        <input id="senha" name="password" type="password" autocomplete="current-password" required>
+                        <p class="campo__erro" hidden>Informe a senha.</p>
+                    </div>
+                    <button class="botao botao--lg botao--bloco login__entrar" type="submit">Entrar</button>
+                </form>
+                <p class="campo__ajuda login__ajuda">Esqueceu a senha? Procure a administração da escola. Não há cadastro público.</p>
+
+                <section class="login__demo" aria-labelledby="demo-titulo">
+                    <h2 class="separador" id="demo-titulo">Somente no protótipo</h2>
+                    <p class="campo__ajuda">Navegação fictícia por perfil. <strong>Não é autenticação</strong> e não existirá na aplicação real.</p>
+                    <ul class="perfis-demo">
+                        <li><a href="inicio.html?perfil=aluno"><strong data-icone="usuario" data-icone-classe="icone--sm">Aluno</strong><span>Solicitar e acompanhar</span></a></li>
+                        <li><a href="inicio.html?perfil=secretaria"><strong data-icone="documento-check" data-icone-classe="icone--sm">Secretaria</strong><span>Conferir e registrar</span></a></li>
+                        <li><a href="inicio.html?perfil=administrador"><strong data-icone="grade" data-icone-classe="icone--sm">Administrador</strong><span>Analisar e gerenciar</span></a></li>
+                        <li><a href="inicio.html?perfil=seguranca"><strong data-icone="escudo" data-icone-classe="icone--sm">Segurança</strong><span>Conferir na entrada</span></a></li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conferir reserva | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="seguranca" data-pagina="reservas">
+<main id="conteudo" class="conteudo__main conteudo__main--estreito" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=seguranca">Início</a></li><li><a href="seguranca-reservas.html">Reservas autorizadas</a></li><li><span aria-current="page">Conferência</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <h1>Conferir reserva</h1>
+            <p>Use os dados abaixo somente para a conferência presencial.</p>
+        </div>
+        <span class="badge badge--aprovada" data-icone="escudo">Autorizada</span>
+    </header>
+
+    <section class="painel secao" aria-labelledby="res-titulo" style="border-left: 4px solid var(--cor-primaria)">
+        <div class="painel__corpo">
+            <h2 id="res-titulo" class="visually-hidden">Reserva</h2>
+            <dl class="dados">
+                <div><dt>Data</dt><dd class="tabular" style="font-size: 1.25rem">20/10/2026</dd></div>
+                <div><dt>Horário</dt><dd class="tabular" style="font-size: 1.25rem">16:00 – 17:00</dd></div>
+                <div><dt>Quadra</dt><dd>Quadra Poliesportiva</dd></div>
+                <div><dt>Solicitante</dt><dd>Gabriel Souza</dd></div>
+                <div><dt>Participantes</dt><dd>12</dd></div>
+            </dl>
+        </div>
+    </section>
+
+    <section class="secao" aria-labelledby="part-titulo">
+        <div class="secao__titulo"><h2 id="part-titulo">Identificação dos participantes</h2><p>Confira com documento com foto</p></div>
+        <div class="tabela-wrapper">
+            <table class="tabela tabela--cartoes">
+                <caption class="visually-hidden">Participantes autorizados para conferência de identificação (dados fictícios)</caption>
+                <thead><tr><th scope="col">Nome completo</th><th scope="col">Categoria</th><th scope="col">RM ou RG</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row" data-label="Nome">Gabriel Souza</th><td data-label="Categoria">Aluno</td><td data-label="RM ou RG" class="mono">RM 21007</td></tr>
+                    <tr><th scope="row" data-label="Nome">Henrique Batista</th><td data-label="Categoria">Aluno</td><td data-label="RM ou RG" class="mono">RM 21011</td></tr>
+                    <tr><th scope="row" data-label="Nome">Isabela Nunes</th><td data-label="Categoria">Aluno</td><td data-label="RM ou RG" class="mono">RM 21014</td></tr>
+                    <tr><th scope="row" data-label="Nome">Kauã Moreira</th><td data-label="Categoria">Aluno</td><td data-label="RM ou RG" class="mono">RM 21019</td></tr>
+                    <tr><th scope="row" data-label="Nome">Marcos Vieira</th><td data-label="Categoria">Outro</td><td data-label="RM ou RG" class="mono">RG 00.000.000-1</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="campo__ajuda" style="margin-top: .75rem">Mostrando 5 de 12 participantes fictícios. O registro de ocorrências não está disponível.</p>
+    </section>
+
+    <a class="botao botao--secundario secao" href="seguranca-reservas.html"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Voltar às reservas</a>
+</main>
+</body>
+</html>

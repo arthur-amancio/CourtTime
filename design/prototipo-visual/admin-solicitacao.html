@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Análise da solicitação #15 | CourtTime</title>
+    <link rel="stylesheet" href="assets/css/courttime.css">
+    <script src="assets/js/prototipo.js" defer></script>
+</head>
+<body data-perfil="administrador" data-pagina="analise">
+<main id="conteudo" class="conteudo__main" data-moldura>
+    <nav class="breadcrumb" aria-label="Navegação estrutural"><ol><li><a href="inicio.html?perfil=administrador">Início</a></li><li><a href="admin-painel.html">Administração</a></li><li><a href="admin-solicitacoes.html">Solicitações</a></li><li><span aria-current="page">Análise</span></li></ol></nav>
+    <header class="cabecalho-pagina">
+        <div class="cabecalho-pagina__texto">
+            <p class="sobretitulo">Solicitação #15</p>
+            <h1>Treino de vôlei feminino</h1>
+            <p>Revise as informações antes de registrar uma decisão.</p>
+        </div>
+        <span class="badge badge--analise" data-icone="ampulheta">Pendente de análise</span>
+    </header>
+
+    <div class="grade-2">
+        <div class="pilha">
+            <section class="painel" aria-labelledby="sol-titulo">
+                <div class="painel__cabecalho"><h2 id="sol-titulo">Solicitação</h2></div>
+                <div class="painel__corpo">
+                    <dl class="dados">
+                        <div><dt>Solicitante</dt><dd>Beatriz Lima</dd></div>
+                        <div><dt>Data</dt><dd class="tabular">22/10/2026</dd></div>
+                        <div><dt>Horário</dt><dd class="tabular">18:00 – 19:00</dd></div>
+                        <div style="grid-column: 1 / -1"><dt>Finalidade</dt><dd style="font-weight:500">Treino de vôlei feminino — preparação para os jogos interclasse.</dd></div>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="doc-titulo">
+                <div class="painel__cabecalho"><h2 id="doc-titulo">Documento e contribuição</h2></div>
+                <div class="painel__corpo pilha" style="gap: 1.25rem">
+                    <div class="arquivo-pdf">
+                        <span class="arquivo-pdf__icone">PDF</span>
+                        <div><strong>v1 — termo-volei.pdf</strong><span>Versão mais recente · 212 KB</span></div>
+                        <a class="botao botao--secundario botao--sm" href="#" aria-label="Baixar PDF original (desativado no protótipo)"><svg class="icone icone--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5v11M7.5 11l4.5 4.5 4.5-4.5"/><path d="M4.5 15.5v2.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2.5"/></svg>Baixar PDF original</a>
+                    </div>
+                    <dl class="dados">
+                        <div><dt>Conferência da secretaria</dt><dd><span class="badge badge--aprovada" data-icone="check">Validado</span></dd></div>
+                        <div><dt>Contribuição presencial</dt><dd class="tabular">R$ 22,00 — vinculada à versão 1</dd></div>
+                        <div><dt>Registro da contribuição</dt><dd>Mariana Costa, em 20/10/2026 10:14</dd></div>
+                    </dl>
+                    <p class="campo__ajuda">A conferência é manual. O CourtTime não valida criptograficamente a assinatura do PDF.</p>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="part-titulo">
+                <div class="painel__cabecalho"><div><h2 id="part-titulo">Participantes</h2><p>11 alunos e 0 demais participantes.</p></div><span class="badge badge--aprovada" data-icone="check">Mínimo atendido</span></div>
+                <div class="tabela-wrapper" style="border: 0">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
+                        <thead><tr><th scope="col">Nome completo</th><th scope="col">RM ou RG</th><th scope="col">Categoria</th></tr></thead>
+                        <tbody>
+                            <tr><th scope="row" data-label="Nome">Beatriz Lima</th><td data-label="RM ou RG" class="mono">RM 22011</td><td data-label="Categoria">Aluno</td></tr>
+                            <tr><th scope="row" data-label="Nome">Larissa Teixeira</th><td data-label="RM ou RG" class="mono">RM 22015</td><td data-label="Categoria">Aluno</td></tr>
+                            <tr><th scope="row" data-label="Nome">Sofia Martins</th><td data-label="RM ou RG" class="mono">RM 22020</td><td data-label="Categoria">Aluno</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="painel__rodape"><p class="campo__ajuda">Mostrando 3 de 11 participantes fictícios.</p></div>
+            </section>
+        </div>
+
+        <aside class="pilha resumo-selecao">
+            <section class="painel" aria-labelledby="dec-titulo">
+                <div class="painel__cabecalho"><h2 id="dec-titulo">Decisão administrativa</h2></div>
+                <div class="painel__corpo">
+                    <p class="campo__ajuda" style="margin-bottom: 1rem">Na aprovação, o sistema revalida documento, participantes, contribuição, horários, bloqueios e reservas já aprovadas.</p>
+                    <form data-demo="aprovada-ok" novalidate>
+                        <button class="botao botao--bloco" type="submit"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Aprovar e autorizar reserva</button>
+                    </form>
+                    <div class="alerta alerta--sucesso" role="status" id="aprovada-ok" hidden style="margin-top: 1rem">
+                        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.2"/></svg>
+                        <div><strong class="alerta__titulo">Reserva aprovada (simulação).</strong><p>Ela passa a aparecer para a segurança.</p></div>
+                    </div>
+
+                    <p class="separador" style="color: var(--cor-texto-suave); margin-top: 1.5rem">ou</p>
+
+                    <form data-demo="rejeitada-ok" novalidate>
+                        <div class="campo">
+                            <label for="motivo">Motivo da rejeição</label>
+                            <textarea id="motivo" rows="4" maxlength="500" required aria-describedby="motivo-ajuda motivo-contador" data-contador="motivo-contador"></textarea>
+                            <p id="motivo-ajuda" class="campo__ajuda">Obrigatório para orientar o aluno.</p>
+                            <p class="campo__erro" hidden>Informe o motivo da rejeição.</p>
+                            <p id="motivo-contador" class="campo__contador">0 de 500 caracteres</p>
+                        </div>
+                        <button class="botao botao--perigo-contorno botao--bloco" type="submit" style="margin-top: .75rem">Rejeitar solicitação</button>
+                    </form>
+                    <div class="alerta alerta--perigo" role="status" id="rejeitada-ok" hidden style="margin-top: 1rem">
+                        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/></svg>
+                        <div><strong class="alerta__titulo">Solicitação rejeitada (simulação).</strong><p>O motivo fica visível para o aluno.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="painel" aria-labelledby="canc-titulo">
+                <div class="painel__cabecalho"><h2 id="canc-titulo">Cancelamento institucional</h2></div>
+                <div class="painel__corpo">
+                    <p class="campo__ajuda">Disponível somente para reservas <strong>aprovadas</strong>. A reserva deixa de autorizar a entrada; PDF, participantes e contribuição permanecem preservados. Não há reagendamento automático.</p>
+                </div>
+            </section>
+        </aside>
+    </div>
+</main>
+</body>
+</html>
