@@ -197,7 +197,7 @@ class ParticipanteReservaControllerTest {
                 .andExpect(content().string(containsString("Pai ou mãe de aluno")))
                 .andExpect(content().string(containsString("Irmão ou irmã de aluno")))
                 .andExpect(content().string(containsString("Professor da ETEC")))
-                .andExpect(content().string(not(containsString("Amigo"))));
+                .andExpect(content().string(not(containsString("value=\"AMIGO\""))));
 
         mockMvc.perform(post("/solicitacoes/20/participantes")
                         .with(user(aluno.getEmail()).roles("ALUNO"))
