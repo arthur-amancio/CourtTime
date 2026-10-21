@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -174,6 +175,25 @@ class AdminQuadraControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Revise os dados informados")))
                 .andExpect(content().string(containsString("posterior ao horário inicial")));
+    }
+
+    @Test
+    void bloqueioComDataOuHorarioInvalidoMostraMensagemCompreensivel() throws Exception {
+        prepararAdministradorAutenticado();
+
+        mockMvc.perform(post("/admin/bloqueios")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .with(csrf())
+                        .param("data", "31/31/2026")
+                        .param("horarioInicio", "8h")
+                        .param("horarioFim", "09:00")
+                        .param("motivo", "Manutenção"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Informe uma data válida")))
+                .andExpect(content().string(containsString("Informe um horário válido")))
+                .andExpect(content().string(not(containsString("Failed to convert"))));
+
+        verifyNoInteractions(administracaoService);
     }
 
     @Test
