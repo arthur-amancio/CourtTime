@@ -102,7 +102,9 @@ async function entrar(page, email) {
 }
 
 (async () => {
-  const browser = await chromium.launch({ args: ['--lang=pt-BR'] });
+  // Chromium completo (não o headless shell) respeita o idioma pt-BR no
+  // campo de data, exibindo dd/mm/aaaa como no navegador do aluno.
+  const browser = await chromium.launch({ channel: 'chromium', args: ['--lang=pt-BR', '--accept-lang=pt-BR'] });
   try {
     // ================= PUBLICO =================
     const visitante = await novoContexto(browser);

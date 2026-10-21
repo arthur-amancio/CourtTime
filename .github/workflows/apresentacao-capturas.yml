@@ -105,8 +105,17 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
 
+      - name: Habilitar o idioma pt-BR no sistema
+        run: |
+          sudo locale-gen pt_BR.UTF-8
+          sudo update-locale
+
       - name: Capturar as telas
         working-directory: qa/playwright
+        env:
+          LANG: pt_BR.UTF-8
+          LANGUAGE: pt_BR:pt
+          LC_ALL: pt_BR.UTF-8
         run: node apresentacao-juridico.cjs
 
       - name: Resumo pela API
