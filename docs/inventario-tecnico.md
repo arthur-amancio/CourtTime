@@ -1,6 +1,7 @@
 # Inventário técnico do CourtTime
 
-Levantamento fiel à implementação, extraído do código em `main` (`436b262`).
+Levantamento fiel à implementação, extraído do código em `main` (`436b262`), com
+contagens de arquivos e o atributo `remarcacaoDe` atualizados em 21/10/2026 (`b709a55`).
 Serve de base verificável para os capítulos V, VI e VII da documentação
 acadêmica.
 
@@ -18,13 +19,13 @@ algo não existe, está dito que não existe.
 |---|---|---|---|
 | Entidades | `entity/` | 11 entidades + 6 enums | estado persistido, mapeado por JPA |
 | Repositórios | `repository/` | 11 | acesso a dados via Spring Data JPA |
-| Serviços | `service/` | 28 | regras de negócio e objetos de transporte |
-| Controladores | `controller/` | 14 | Spring MVC, recebem requisições e escolhem a tela |
+| Serviços | `service/` | 31 | regras de negócio, geração do formulário oficial e objetos de transporte |
+| Controladores | `controller/` | 17 | 14 controladores Spring MVC, 2 tratadores globais e 1 auxiliar do calendário |
 | Configuração | `config/` | 3 | segurança, carga inicial da quadra e bootstrap do administrador |
 | Segurança | `security/` | 2 | principal autenticado e revalidação de sessão |
 | Armazenamento | `storage/` | 2 | gravação dos PDFs fora da área pública |
 
-Os 28 arquivos de `service/` **não são 28 serviços**. Parte são `record`
+Os 31 arquivos de `service/` **não são 31 serviços**. Parte são `record`
 usados como objeto de transporte entre serviço e tela — por exemplo
 `SituacaoSolicitacao`, `ResumoParticipantes`, `DownloadDocumento`,
 `DetalheReservaAutorizada`. Essa distinção importa no diagrama de classes: eles
@@ -61,6 +62,7 @@ Reserva   1 ──── N  ParticipanteReserva
 Reserva   1 ──── N  DocumentoReserva           (versionado)
 DocumentoReserva 1 ──── 1 ConferenciaDocumento
 Reserva   1 ──── 1  ContribuicaoApm
+Reserva   1 ──── 0..1 Reserva                  (remarcacaoDe: a nova aponta para a cancelada)
 ContribuicaoApm  1 ──── N AjusteContribuicaoApm
 Usuario   1 ──── N  AuditoriaUsuario           (operador e alvo)
 ```
@@ -151,6 +153,7 @@ Gerado das anotações JPA. "Obrigatório" é `nullable = false`; "Único" é
 | `atualizadaEm` | `Instant` | — | sim | não | — |
 | `analisadaEm` | `Instant` | — | não | não | — |
 | `canceladaEm` | `Instant` | — | não | não | — |
+| `remarcacaoDe` | `Reserva` | 1:1 | não | sim (`remarcacao_de_id`) | — |
 
 ### `ParticipanteReserva` — tabela `participantes_reserva`
 

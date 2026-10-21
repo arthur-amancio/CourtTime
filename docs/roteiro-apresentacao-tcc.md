@@ -1,6 +1,7 @@
 # Roteiro de apresentação do CourtTime à banca
 
-Guia para demonstrar o sistema ao vivo. Versão validada: `main` em `83ef3e9`.
+Guia para demonstrar o sistema ao vivo. Use a `main` mais recente e anote o
+commit com `git log -1 --oneline` antes de começar.
 
 Leia junto com `docs/guia-do-courttime.md`, que explica o sistema e traz a
 instalação completa no Windows.
@@ -24,9 +25,14 @@ que impede a aplicação de iniciar quando já existe administrador.
 
 ### 1. Banco de demonstração isolado
 
-Nunca use um banco com dados existentes.
+O caminho mais simples é o do [desenvolvimento local rápido](desenvolvimento-local-rapido.md):
+banco `courttime_demo`, senha em `application-local.properties` e
+`scripts/popular-demo.sql` para criar as contas e os horários fictícios. Os
+dados continuam no banco de um dia para o outro; não é preciso recomeçar.
 
-**Use o script, que confere o banco antes de apagar qualquer coisa:**
+Nunca use um banco com dados de outra pessoa. **Só se quiser zerar o banco de
+demonstração de propósito**, use o script, que confere o banco antes de apagar
+qualquer coisa:
 
 ```powershell
 .\scripts\Reiniciar-Demonstracao.ps1
@@ -64,32 +70,32 @@ deste guia.
 
 ### 2. Subir a aplicação
 
-Siga `docs/guia-do-courttime.md`. Em resumo: variáveis de ambiente apontando
-para `courttime_demo`, primeira execução com o bootstrap do administrador,
-depois pare, remova as variáveis do bootstrap e suba de novo.
+Na raiz do projeto: `.\mvnw.cmd spring-boot:run` e abra `http://localhost:8080/`.
+Com o `application-local.properties` pronto, nenhuma variável de ambiente é
+necessária. (A alternativa só por variáveis, com o bootstrap do administrador,
+está em `docs/guia-do-courttime.md`.)
 
 ### 3. Contas fictícias
 
-Criadas em **Administração → Usuários**, exceto o administrador, que vem do
-bootstrap. Use sempre domínio de exemplo, nunca email real de ninguém.
+Criadas pelo `scripts/popular-demo.sql`, com a senha fictícia que você digitou
+no Query Tool do pgAdmin. Use sempre domínio de exemplo, nunca email real de
+ninguém.
 
-| Perfil | Email | Nome exibido |
-|---|---|---|
-| Administrador | `admin.demo@exemplo.local` | Administração Demo |
-| Aluno | `aluno.demo@exemplo.local` | Aluno Demonstração |
-| Secretaria | `secretaria.demo@exemplo.local` | Secretaria Demo |
-| Segurança | `seguranca.demo@exemplo.local` | Portaria Demo |
+| Perfil | Email |
+|---|---|
+| Administrador | `admin.demo@exemplo.invalid` |
+| Aluno | `aluno01.demo@exemplo.invalid` (há 12 contas de aluno) |
+| Secretaria | `secretaria1.demo@exemplo.invalid` |
+| Segurança | `seguranca1.demo@exemplo.invalid` |
 
-Senhas de 8 a 72 caracteres, digitadas na hora. **Não anote senhas no TCC nem
-em slides.**
+**Não anote senhas no TCC nem em slides.**
 
 ### 4. Grade de horários
 
-Em **Administração → Horários**, cadastre pelo menos um intervalo no dia da
-semana correspondente à data que você vai usar na demonstração. Sem grade, não
-aparece nenhum período disponível e a demonstração trava logo no início.
-
-Sugestão: segunda a sexta, das 08:00 às 12:00.
+O `popular-demo.sql` cria faixas fictícias de segunda a quinta. Escolha uma
+data num desses dias. Sem grade, não aparece nenhum período disponível e a
+demonstração trava logo no início; nesse caso cadastre um intervalo em
+**Administração → Horários**.
 
 ### 5. Dados fictícios da solicitação
 
@@ -145,6 +151,9 @@ sair e entrar o tempo todo.
    quadra na transação e **reconfere** grade, bloqueios e reservas já aprovadas.
 4. Volte ao formulário do aluno na mesma data: **o período aprovado não aparece
    mais** como disponível.
+5. Abra uma solicitação já decidida: o painel **Decisão registrada** mostra
+   resultado, responsável e data. Rejeitadas e canceladas ficam na lista
+   própria, no fim da página de análise.
 
 ### Ato 4 — Segurança (2 minutos)
 
@@ -176,7 +185,7 @@ sair e entrar o tempo todo.
 | Aplicação não sobe com erro de administrador | As variáveis do bootstrap ficaram definidas. Remova-as e suba de novo |
 | Não consegue validar o documento | A lista de participantes mudou depois do envio, ou há menos de dez alunos |
 | Banco em estado confuso | Rode `.\scripts\Reiniciar-Demonstracao.ps1` e recomece do zero |
-| **A demonstração ao vivo falhar** | Mostre a execução automatizada: o teste `JornadaCompletaE2ETest` percorre exatamente este roteiro no GitHub Actions, com PostgreSQL isolado. É a mesma jornada, executada pela máquina |
+| **A demonstração ao vivo falhar** | Mostre a execução automatizada: o teste `JornadaCompletaE2ETest` e o workflow **UI — navegador real** percorrem este roteiro no GitHub Actions, com PostgreSQL isolado. É a mesma jornada, executada pela máquina |
 
 Tenha a aba do GitHub Actions aberta antes de começar. É a sua rede de proteção.
 
@@ -195,7 +204,13 @@ real, token CSRF real e upload real:
 - aprovação administrativa com bloqueio transacional e reconferência;
 - consulta da segurança, restrita ao necessário;
 - cancelamento institucional com motivo, preservando todo o histórico;
+- formulário oficial da ETEC gerado preenchido, inclusive com mais de 30
+  participantes, sem gravar CPF e curso;
+- remarcação da reserva cancelada, uma única vez, pelo próprio aluno;
 - autorização por perfil, proteção CSRF e bloqueio de acesso a dados de outro aluno.
+
+Além do teste Java, o workflow **UI — navegador real** percorre a mesma
+jornada no Chromium, com centenas de verificações, inclusive no celular.
 
 ## Limitações reais — diga à banca antes que perguntem
 

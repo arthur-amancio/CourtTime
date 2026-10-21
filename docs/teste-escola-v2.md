@@ -2,7 +2,7 @@
 
 > Guia de teste **local e manual**, com dados fictícios. Não é instrução de
 > implantação em produção nem de disponibilização para a rede da escola.
-> Revisado em 20/10/2026 para a interface V2 integrada na `main`.
+> Revisado em 21/10/2026: inclui o formulário oficial preenchido e a remarcação.
 
 ## 1. Antes de começar
 
@@ -43,9 +43,8 @@ git log -1 --oneline
 
 Se já possui a pasta CourtTime, entre nela e execute `git status`, seguido de
 `git switch main` e `git pull --ff-only origin main` **somente se não
-houver mudanças locais incompatíveis**. A versão a ensaiar é a `main`
-**após a integração da correção de ordenação**; confira o PR relacionado
-antes do teste.
+houver mudanças locais incompatíveis**. Ensaie sempre a `main` mais recente;
+anote o commit exibido por `git log -1 --oneline`.
 
 ## 3. Isolar o PostgreSQL
 
@@ -121,7 +120,7 @@ o script **não** altera a senha dela.
 
 | Perfil | E-mail de demonstração | Verificação |
 | --- | --- | --- |
-| Administrador | `admin.demo@exemplo.invalid` | Entrar, abrir painel, conferir grade semanal de **segunda a domingo** e usuários |
+| Administrador | `admin.demo@exemplo.invalid` | Entrar, abrir painel, conferir grade semanal de **segunda a quinta** e usuários |
 | Aluno | `aluno01.demo@exemplo.invalid` | Consultar quadra, escolher data futura e período disponível, criar solicitação |
 | Secretaria | `secretaria1.demo@exemplo.invalid` | Abrir conferência de documentos e contribuições, sem aprovar reserva |
 | Segurança | `seguranca1.demo@exemplo.invalid` | Visualizar somente reservas autorizadas; nenhuma contribuição ou PDF |
@@ -130,16 +129,26 @@ Para percorrer uma reserva completa, use **data futura e horário livre**,
 registre **dez participantes da categoria Aluno** com identidades
 explicitamente fictícias, envie **PDF sintético** e siga a ordem:
 
-1. Aluno: solicitação → participantes → envio do PDF.
-2. Secretaria: validar a versão mais recente → registrar contribuição fictícia.
+1. Aluno: solicitação → participantes → **Documentos → Gerar formulário
+   preenchido** (CPF fictício válido, por exemplo `123.456.789-09`, e o curso)
+   → envio do PDF.
+2. Secretaria: devolver uma vez com justificativa (o aluno vê o motivo e envia
+   nova versão) → validar a versão mais recente → registrar contribuição
+   fictícia.
 3. Administrador: analisar e aprovar.
 4. Segurança: conferir reserva autorizada.
 5. Administrador: cancelar **com motivo**, e verificar que a segurança deixa
    de ter a autorização.
+6. Aluno: na reserva cancelada, **Solicitar outro horário** e conferir que a
+   nova solicitação começa em *Pendente de documentação*, vinculada à anterior.
+7. Administrador: em **Análise de solicitações**, conferir a lista
+   *Rejeitadas e canceladas* e, no painel, o indicador *Canceladas*.
 
-Documentos são apenas exemplos: o CourtTime **não gera nem verifica a
-assinatura do formulário oficial**, e não processa pagamentos. Não use CPF,
-RM ou PDF de pessoas reais para testar.
+O CourtTime **gera o formulário oficial preenchido**, mas **não assina nem
+verifica a assinatura** do PDF enviado, e não processa pagamentos. A primeira
+geração depois de iniciar a aplicação demora alguns segundos (o PDFBox monta o
+cache de fontes); faça uma antes de apresentar. Não use CPF, RM ou PDF de
+pessoas reais para testar.
 
 Para testar as telas, abra o DevTools do navegador (`F12`), ative o modo
 responsivo e examine 390 px e 1440 px. Confira o menu móvel, campos, foco
