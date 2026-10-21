@@ -104,13 +104,13 @@ Para não prometer na banca o que o código não faz:
 # Execução local no Windows
 
 **Caminho recomendado:** siga o [desenvolvimento local rápido](desenvolvimento-local-rapido.md).
-A senha fica uma única vez em `application-local.properties` (ignorado pelo
-Git), o `scripts/popular-demo.sql` cria contas e horários fictícios e, depois
+Banco, usuário e senha locais ficam em `src/main/resources/application.properties`,
+o `scripts/popular-demo.sql` cria contas e horários fictícios e, depois
 disso, basta `.\mvnw.cmd spring-boot:run` todos os dias. Os dados continuam no
 banco depois de reiniciar.
 
-Os passos abaixo são a **alternativa sem arquivo local**, só com variáveis de
-ambiente (é assim que a CI roda). Não é preciso fazer os dois.
+Os passos abaixo são a **alternativa só com variáveis de ambiente**, que
+substituem os valores do `application.properties` (é assim que a CI roda). Não é preciso fazer os dois.
 
 
 ## Pré-requisitos

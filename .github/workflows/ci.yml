@@ -70,7 +70,7 @@ jobs:
             exit 1
           }
 
-      - name: Testar leitura real do arquivo local no PowerShell
+      - name: Testar leitura real do application.properties no PowerShell
         shell: pwsh
         env:
           COURTTIME_DB_URL: ''
@@ -78,29 +78,16 @@ jobs:
           COURTTIME_POSTGRES_TEST: 'false'
           SPRING_JPA_HIBERNATE_DDL_AUTO: update
         run: |
-          $arquivo = 'application-local.properties'
-          if (Test-Path -LiteralPath $arquivo) { throw 'Arquivo de configuracao inesperado no checkout.' }
-          try {
-            @(
-              'spring.datasource.url=jdbc:postgresql://localhost:5432/courttime_demo'
-              'spring.datasource.username=courttime'
-              'spring.datasource.password=senha-ficticia-somente-na-ci'
-            ) | Set-Content -LiteralPath $arquivo -Encoding utf8
-            $saida = (& pwsh -NoProfile -File scripts/Verificar-Ambiente-CourtTime.ps1 2>&1 | Out-String)
-            if ($saida -notmatch '\[ok\]\s+Senha PostgreSQL configurada') {
-              throw 'O verificador nao leu a senha do arquivo local.'
-            }
-            if ($saida -notmatch '\[ok\]\s+Banco configurado e courttime_demo') {
-              throw 'O verificador nao leu o banco courttime_demo do arquivo local.'
-            }
-            if ($saida.Contains('senha-ficticia-somente-na-ci')) {
-              throw 'O verificador expôs o valor da senha.'
-            }
-            Write-Host 'Leitura real de URL e senha ficticia validada, sem exposicao da senha.'
+          $saida = (& pwsh -NoProfile -File scripts/Verificar-Ambiente-CourtTime.ps1 2>&1 | Out-String)
+          if ($saida -notmatch '\[ok\]\s+Banco configurado e courttime_demo') {
+            throw 'O verificador nao leu o banco courttime_demo do application.properties.'
           }
-          finally {
-            Remove-Item -LiteralPath $arquivo -Force -ErrorAction SilentlyContinue
+          $linha = Get-Content src/main/resources/application.properties |
+            Where-Object { $_ -match '^spring\.datasource\.password=\$\{[^:}]+:(.+)\}$' }
+          if ($linha -and $saida.Contains($Matches[1])) {
+            throw 'O verificador expôs o valor da senha.'
           }
+          Write-Host 'Leitura real do banco validada, sem exposicao da senha.'
 
       - name: Rejeitar marcadores de conflito em folhas CSS
         run: |

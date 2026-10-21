@@ -20,7 +20,7 @@ Java 17, Spring Boot 3.5.16, Maven Wrapper, Thymeleaf, Spring Security, PostgreS
 
 ## Ambiente local rapido (VS Code + pgAdmin)
 
-Para desenvolvimento diario com senha persistente em arquivo local ignorado pelo Git,
+Para desenvolvimento diario com a configuracao local em `application.properties`,
 contas ficticias, horarios e bloqueios de exemplo, siga
 [desenvolvimento local rapido](docs/desenvolvimento-local-rapido.md).
 Nao e necessario redefinir variaveis de ambiente em toda execucao.
@@ -41,18 +41,18 @@ Não é necessário instalar Maven globalmente.
 
 ## Banco de dados
 
-**No Windows, use o caminho do [desenvolvimento local rápido](docs/desenvolvimento-local-rapido.md):** banco `courttime_demo`, senha uma única vez em `application-local.properties` (ignorado pelo Git) e `.\mvnw.cmd spring-boot:run`, sem variáveis de ambiente. O restante desta seção descreve a configuração só por variáveis, usada pela CI e por quem preferir não ter o arquivo local.
+**No Windows, use o caminho do [desenvolvimento local rápido](docs/desenvolvimento-local-rapido.md):** banco `courttime_demo` e `.\mvnw.cmd spring-boot:run` (ou o botão de iniciar do VS Code), sem variáveis de ambiente. Por decisão do grupo, toda a configuração local fica em um único arquivo versionado, `src/main/resources/application.properties`, inclusive a senha do PostgreSQL local: o projeto roda só localmente e não usa API nem chave externa. Use nesse PostgreSQL uma senha que não seja usada em nenhum outro lugar. O restante desta seção descreve a configuração por variáveis, usada pela CI.
 
-Crie um banco chamado `courttime` no PostgreSQL, se ele ainda não existir. Você pode fazer isso no pgAdmin ou com `CREATE DATABASE courttime;` no `psql` conectado ao banco `postgres`. A aplicação usa estas variáveis de ambiente:
+As variáveis de ambiente abaixo substituem os valores padrão do `application.properties`:
 
 | Variável | Valor esperado |
 | --- | --- |
-| `COURTTIME_DB_URL` | URL JDBC; padrão: `jdbc:postgresql://localhost:5432/courttime` |
+| `COURTTIME_DB_URL` | URL JDBC; padrão: `jdbc:postgresql://localhost:5432/courttime_demo` |
 | `COURTTIME_DB_USERNAME` | Usuário do banco; padrão: `postgres` |
-| `COURTTIME_DB_PASSWORD` | Senha do usuário; obrigatória |
+| `COURTTIME_DB_PASSWORD` | Senha do usuário; padrão: a definida no `application.properties` |
 | `COURTTIME_DOCUMENT_STORAGE_PATH` | Diretório privado dos PDFs; padrão: `./data/documentos` |
 
-Defina a senha apenas no seu ambiente, nunca em arquivos versionados. No PowerShell, ajuste o caminho do JDK 17 e execute:
+Para usar outra senha sem alterar o arquivo, no PowerShell, ajuste o caminho do JDK 17 e execute:
 
 ```powershell
 $env:JAVA_HOME = 'C:\caminho\para\jdk-17'

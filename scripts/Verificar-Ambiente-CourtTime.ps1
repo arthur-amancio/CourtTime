@@ -55,20 +55,22 @@ $psql = Get-Command psql -ErrorAction SilentlyContinue
 Resultado ([bool]$psql) 'Cliente psql disponivel' `
     $(if (-not $psql) { 'Adicione a pasta bin do PostgreSQL ao PATH.' } else { $psql.Source })
 
-# 5. Credenciais: arquivo local ignorado ou variaveis de ambiente --------
-# application.properties importa opcionalmente o application-local.properties
-# localizado na raiz do projeto. Nao mostrar senhas em texto claro.
+# 5. Credenciais: application.properties ou variaveis de ambiente -------
+# Os valores padrao ficam em ${VARIAVEL:padrao} no application.properties.
+# Nao mostrar senhas em texto claro.
 $props = @{}
-$arquivoLocal = '.\application-local.properties'
-if (Test-Path -LiteralPath $arquivoLocal) {
-    foreach ($linha in (Get-Content -LiteralPath $arquivoLocal)) {
+$arquivoConfig = '.\src\main\resources\application.properties'
+if (Test-Path -LiteralPath $arquivoConfig) {
+    foreach ($linha in (Get-Content -LiteralPath $arquivoConfig)) {
         if ($linha -match '^\s*([^#!\s][^=]*)=(.*)$') {
-            $props[$Matches[1].Trim()] = $Matches[2].Trim()
+            $chave = $Matches[1].Trim()
+            $valor = $Matches[2].Trim()
+            if ($valor -match '^\$\{[^:}]+:(.*)\}$') { $valor = $Matches[1] }
+            $props[$chave] = $valor
         }
     }
-    Resultado $true 'Configuracao local encontrada' '(senha nao exibida)'
 } else {
-    Write-Host '  [-]    application-local.properties ausente; verificando variaveis de ambiente' -ForegroundColor DarkGray
+    Write-Host '  [-]    application.properties ausente; verificando variaveis de ambiente' -ForegroundColor DarkGray
 }
 
 $url = if ($env:COURTTIME_DB_URL) { $env:COURTTIME_DB_URL }
@@ -81,8 +83,8 @@ $senhaConfigurada = if ($env:COURTTIME_DB_PASSWORD) { $true }
                         $valor -notmatch '^TROQUE_'
                     } else { $false }
 
-Resultado $senhaConfigurada 'Senha PostgreSQL configurada (arquivo local ou ambiente)' `
-    $(if (-not $senhaConfigurada) { 'Copie application-local.properties.example e substitua o placeholder.' } else { '(valor nao exibido)' })
+Resultado $senhaConfigurada 'Senha PostgreSQL configurada (application.properties ou ambiente)' `
+    $(if (-not $senhaConfigurada) { 'Troque TROQUE_PELA_SENHA_LOCAL_DO_POSTGRES no application.properties.' } else { '(valor nao exibido)' })
 
 # 6. Banco configurado deve ser exatamente o banco isolado de demonstracao.
 $nomeBanco = ($url -split '/')[-1] -replace '\?.*$', ''

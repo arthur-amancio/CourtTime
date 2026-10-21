@@ -1,8 +1,0 @@
-# Copie para application-local.properties na RAIZ do projeto (arquivo ja ignorado pelo Git).
-# Use somente um banco LOCAL e descartavel de demonstracao.
-spring.datasource.url=jdbc:postgresql://localhost:5432/courttime_demo
-spring.datasource.username=postgres
-spring.datasource.password=TROQUE_PELA_SENHA_LOCAL_DO_POSTGRES
-# Nao habilite COURTTIME_POSTGRES_TEST aqui; ele libera testes que limpam tabelas.
-# Os documentos locais sao gravados fora da pasta publica.
-courttime.documentos.diretorio=./data/documentos

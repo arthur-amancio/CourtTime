@@ -53,17 +53,15 @@ vazio chamado `courttime_demo`. Não utilize `courttime`, `courttime_test`,
 `courttime_e2e` nem bancos da escola/produção. Não execute comandos
 `DROP DATABASE` para iniciar o ensaio.
 
-Na raiz do projeto:
+Na raiz do projeto, abra a configuração:
 
 ```powershell
-Copy-Item .\application-local.properties.example .\application-local.properties
-notepad .\application-local.properties
+notepad .\src\main\resources\application.properties
 ```
 
-Mantenha a URL do exemplo apontando para
+Mantenha a URL apontando para
 `jdbc:postgresql://localhost:5432/courttime_demo`. Ajuste somente usuário e
-senha **do PostgreSQL local**. O arquivo está ignorado pelo Git; jamais
-compartilhe sua senha ou adicione-o ao repositório.
+senha **do PostgreSQL local**, se forem diferentes nesta máquina.
 
 Certifique-se de que variáveis antigas não substituam essa configuração:
 
@@ -163,7 +161,7 @@ leitor de tela ou Safari/Firefox.
 | --- | --- |
 | `java` não encontrado/versão incorreta | JDK 17 instalado e `JAVA_HOME` apontando para ele; reabra o terminal |
 | Falha no Maven Wrapper | Internet/proxy permitindo acesso ao Maven Central na primeira compilação |
-| PostgreSQL recusa conexão | Serviço, porta 5432, banco `courttime_demo`, usuário e senha do arquivo local |
+| PostgreSQL recusa conexão | Serviço, porta 5432, banco `courttime_demo`, usuário e senha do `application.properties` |
 | `psql` não encontrado no verificador | Se o PostgreSQL funciona no pgAdmin, localize o diretório `bin` do PostgreSQL; não significa sozinho que o servidor caiu |
 | Nenhum horário disponível | Verifique os horários de demonstração e selecione data futura coberta pela grade |
 | Login inválido | Confirme o e-mail `@exemplo.invalid` e a senha digitada no Query Tool; script não redefine contas existentes |

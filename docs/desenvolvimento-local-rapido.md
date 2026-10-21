@@ -11,9 +11,11 @@ dados ficticios automaticamente.
 1. Instale o **JDK 17** e o **PostgreSQL 18** (o 16 tambem funciona; a CI testa
    os dois). No instalador do PostgreSQL, anote a senha do usuario `postgres`.
 2. No pgAdmin, crie o banco vazio **`courttime_demo`**.
-3. Na raiz do projeto, copie `application-local.properties.example` para
-   **`application-local.properties`** e troque a senha pela do seu PostgreSQL.
-   Esse arquivo e ignorado pelo Git: a senha nunca vai para o GitHub.
+3. Confira a senha do PostgreSQL em
+   **`src/main/resources/application.properties`** (linha
+   `spring.datasource.password`). Por decisao do grupo, a configuracao local
+   fica nesse unico arquivo e vai para o GitHub (banco local, sem API ou chave
+   externa).
 4. Rode `.\mvnw.cmd spring-boot:run` uma vez (cria as tabelas) e pare com Ctrl+C.
 5. No pgAdmin, execute `scripts/popular-demo.sql` no `courttime_demo` (secao 2).
 
@@ -39,18 +41,17 @@ As secoes abaixo detalham cada passo.
    interface grafica de administracao.
 2. No pgAdmin, crie um banco vazio chamado **courttime_demo**. Nao use o banco
    `courttime` que eventualmente contenha trabalho existente.
-3. Na **raiz do repositorio**, copie
-   `application-local.properties.example` para `application-local.properties`.
-4. Dentro de `application-local.properties`, configure sua senha local do
-   PostgreSQL em `spring.datasource.password`. Faca isso **uma vez**. O arquivo
-   esta no `.gitignore`; nunca o suba ao GitHub. Use senha exclusiva desse
-   ambiente quando possivel.
+3. Em `src/main/resources/application.properties`, confira a senha local do
+   PostgreSQL no valor padrao de `spring.datasource.password`
+   (`${COURTTIME_DB_PASSWORD:senha}`). Como esse arquivo vai para o GitHub, use
+   uma senha exclusiva desse PostgreSQL local, que nao seja usada em nenhum
+   outro lugar.
 
-O arquivo `src/main/resources/application.properties` importa
-`optional:file:./application-local.properties`. Portanto, **nenhuma variavel
-de ambiente e necessaria** ao rodar pela raiz do repositorio. O servidor aponta
-para `courttime_demo` e usa a senha digitada no arquivo local. As variaveis
-de ambiente continuam aceitas para testes e demais ambientes.
+O `application.properties` ja aponta para `courttime_demo` com o usuario
+`postgres`. Portanto, **nenhuma variavel de ambiente e necessaria**: basta
+iniciar pelo botao do VS Code ou por `.\mvnw.cmd spring-boot:run`. As variaveis
+`COURTTIME_DB_*` continuam aceitas e substituem esses valores (e assim que a CI
+roda).
 
 ## 2. Criar esquema e popular o banco
 
@@ -129,7 +130,7 @@ quando voce realmente quiser comecar de novo.
 ### Problemas frequentes
 
 - Erro de conexao: confira `courttime_demo`, o servico PostgreSQL, usuario e
-  senha em `application-local.properties`.
+  senha em `src/main/resources/application.properties`.
 - O bootstrap administrativo antigo reclama de contas existentes: remova
   `COURTTIME_BOOTSTRAP_ADMIN_ENABLED` do ambiente se ainda estiver definido.
 - Os usuarios nao aparecem: verifique se voce executou o SQL no banco

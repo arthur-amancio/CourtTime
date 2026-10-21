@@ -9,9 +9,8 @@ usado para executar a jornada destrutiva de Playwright contra
 - [ ] `java -version` informa Java 17.
 - [ ] PostgreSQL 18 (ou 16) está instalado e o serviço está em execução.
 - [ ] O banco local de demonstração existe e não contém dados pessoais reais.
-- [ ] `application-local.properties` foi criado a partir de
-  `application-local.properties.example` e permanece ignorado pelo Git.
-- [ ] URL, usuário e senha apontam para o PostgreSQL local esperado.
+- [ ] URL, usuário e senha em `src/main/resources/application.properties`
+  apontam para o PostgreSQL local esperado.
 - [ ] O diretório privado de documentos é local, gravável e não servido como
   conteúdo estático.
 - [ ] `COURTTIME_BOOTSTRAP_ADMIN_ENABLED` está ausente ou `false`, exceto na
@@ -22,13 +21,12 @@ usado para executar a jornada destrutiva de Playwright contra
 No PowerShell, na raiz do projeto:
 
 ```powershell
-Copy-Item application-local.properties.example application-local.properties
 .\scripts\Verificar-Ambiente-CourtTime.ps1
 .\mvnw.cmd spring-boot:run
 ```
 
-Não passe senhas na linha de comando nem publique o arquivo local. Quando for
-necessário definir uma senha por sessão, use `Read-Host -AsSecureString` e
+Não passe senhas na linha de comando. Quando for necessário usar outra senha
+por sessão, sem alterar o `application.properties`, use `Read-Host -AsSecureString` e
 converta-a apenas para a variável de ambiente do processo, conforme o README.
 
 ## Verificação funcional

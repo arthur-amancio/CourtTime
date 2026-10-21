@@ -26,7 +26,7 @@ que impede a aplicação de iniciar quando já existe administrador.
 ### 1. Banco de demonstração isolado
 
 O caminho mais simples é o do [desenvolvimento local rápido](desenvolvimento-local-rapido.md):
-banco `courttime_demo`, senha em `application-local.properties` e
+banco `courttime_demo`, senha em `src/main/resources/application.properties` e
 `scripts/popular-demo.sql` para criar as contas e os horários fictícios. Os
 dados continuam no banco de um dia para o outro; não é preciso recomeçar.
 
@@ -71,8 +71,8 @@ deste guia.
 ### 2. Subir a aplicação
 
 Na raiz do projeto: `.\mvnw.cmd spring-boot:run` e abra `http://localhost:8080/`.
-Com o `application-local.properties` pronto, nenhuma variável de ambiente é
-necessária. (A alternativa só por variáveis, com o bootstrap do administrador,
+Com a senha conferida no `application.properties`, nenhuma variável de
+ambiente é necessária. (A alternativa só por variáveis, com o bootstrap do administrador,
 está em `docs/guia-do-courttime.md`.)
 
 ### 3. Contas fictícias
