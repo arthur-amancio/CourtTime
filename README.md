@@ -150,7 +150,7 @@ O valor de R$ 2,00 por participante/hora é apenas uma referência institucional
 
 ## Análise administrativa
 
-O painel administrativo apresenta somente solicitações prontas para análise. O detalhe reúne solicitante, data, horário, finalidade, participantes, metadados do PDF e da conferência e a contribuição presencial. O administrador pode baixar o PDF original por uma rota privada, aprovar sem justificativa ou rejeitar com motivo obrigatório. A aprovação revalida todos os pré-requisitos dentro da transação e somente `APROVADA` representa autorização de uso.
+A fila de análise apresenta somente solicitações prontas para análise; as reservas autorizadas atuais e futuras aparecem logo abaixo, e as rejeitadas e canceladas ficam numa terceira lista, para consulta. O painel conta as solicitações por situação, inclusive as canceladas. O detalhe reúne solicitante, data, horário, finalidade, participantes, metadados do PDF e da conferência e a contribuição presencial. O administrador pode baixar o PDF original por uma rota privada, aprovar sem justificativa ou rejeitar com motivo obrigatório. A aprovação revalida todos os pré-requisitos dentro da transação e somente `APROVADA` representa autorização de uso. Depois da decisão, o detalhe mostra o resultado, o responsável, a data e, na rejeição, o motivo informado ao aluno.
 
 O modelo oficial do termo e o procedimento institucional para avaliar a assinatura continuam pendentes do arquivo solicitado ao Leandro e da validação da ETEC. O CourtTime não recria o termo, não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
 

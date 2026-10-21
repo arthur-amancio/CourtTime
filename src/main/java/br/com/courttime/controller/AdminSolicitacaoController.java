@@ -3,6 +3,7 @@ package br.com.courttime.controller;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.AnaliseAdministrativaService;
+import br.com.courttime.service.DetalheAnaliseAdministrativa;
 import br.com.courttime.service.DownloadDocumento;
 import br.com.courttime.service.ReservaService;
 import org.springframework.http.CacheControl;
@@ -50,6 +51,9 @@ public class AdminSolicitacaoController {
         model.addAttribute(
                 "reservasAutorizadas",
                 analiseService.listarAutorizadasAtuais(administrador));
+        model.addAttribute(
+                "solicitacoesEncerradas",
+                analiseService.listarEncerradas(administrador));
         return "admin/solicitacoes/lista";
     }
 
@@ -59,9 +63,13 @@ public class AdminSolicitacaoController {
             Authentication authentication,
             Model model) {
         try {
+            DetalheAnaliseAdministrativa detalhe =
+                    analiseService.detalhar(id, obterUsuarioAutenticado(authentication));
+            model.addAttribute("detalhe", detalhe);
+            // Se o aluno pediu outro horário depois do cancelamento, a administração vê o vínculo.
             model.addAttribute(
-                    "detalhe",
-                    analiseService.detalhar(id, obterUsuarioAutenticado(authentication)));
+                    "remarcacao",
+                    reservaService.obterRemarcacao(detalhe.solicitacao()).orElse(null));
             return "admin/solicitacoes/detalhe";
         } catch (IllegalArgumentException exception) {
             throw paginaNaoEncontrada();
