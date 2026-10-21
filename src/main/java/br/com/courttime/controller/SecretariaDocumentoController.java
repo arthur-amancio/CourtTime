@@ -4,6 +4,7 @@ import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ConferenciaDocumentoService;
+import br.com.courttime.service.DocumentoReservaService;
 import br.com.courttime.service.DownloadDocumento;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ContentDisposition;
@@ -60,6 +61,9 @@ public class SecretariaDocumentoController {
             model.addAttribute(
                     "conferenciaPermitida",
                     conferenciaService.podeConferir(documento, secretaria));
+            model.addAttribute(
+                    "prazoReenvioEncerrado",
+                    DocumentoReservaService.prazoDeEnvioEncerrado(documento.getReserva()));
             return "secretaria/documentos/detalhe";
         } catch (IllegalArgumentException exception) {
             throw paginaNaoEncontrada();

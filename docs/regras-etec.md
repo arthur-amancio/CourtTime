@@ -46,8 +46,8 @@ precisa estar pronta.
 - R01.4 — A aprovação continua permitida no próprio dia, até o horário de
   início.
 
-**Hoje.** O sistema já faz R01.1, R01.3 e R01.4. Falta R01.2: hoje o envio é
-aceito até no próprio dia.
+**Hoje.** O sistema faz R01.1 a R01.4. O envio é recusado a partir do dia da
+utilização, e a tela de documentos mostra a data-limite.
 
 **Em aberto.** O **horário-limite** no dia anterior. "Até o dia anterior" já
 garante que o envio no próprio dia é recusado. Um horário mais cedo, como 17h,
@@ -68,8 +68,7 @@ e o aviso vai aparecer na tela.
   participantes adicionais.
 
 **Hoje.** Já está assim. Foi conferido com 31 participantes: o PDF sai com 3
-páginas. Só falta remover os textos que dizem que o limite ainda depende de
-confirmação.
+páginas. Os textos sobre um limite "a confirmar" foram retirados.
 
 ## R03 — Contribuição à APM
 

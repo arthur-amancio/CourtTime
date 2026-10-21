@@ -57,6 +57,10 @@ autoriza o uso. Só a aprovação da administração autoriza.
 ## Regras que o sistema aplica hoje
 
 - A solicitação precisa ser feita com pelo menos **um dia de antecedência**.
+- O PDF assinado precisa ser enviado **até o dia anterior ao uso** (R01). No
+  dia da utilização, o envio é recusado, mesmo depois de uma devolução.
+- **Não há limite máximo** de participantes (R02). Acima de 30, o formulário
+  oficial ganha páginas adicionais.
 - O período é sempre de **uma hora**, alinhado à grade cadastrada.
 - São necessários no mínimo **dez alunos** participantes para validar o documento.
 - A aprovação é recusada se o horário de utilização **já começou ou já passou**.

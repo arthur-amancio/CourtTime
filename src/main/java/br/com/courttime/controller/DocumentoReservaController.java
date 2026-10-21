@@ -63,6 +63,9 @@ public class DocumentoReservaController {
             model.addAttribute(
                     "envioPermitido",
                     documentoService.podeEnviar(reservaId, usuario));
+            model.addAttribute("prazoEnvio", DocumentoReservaService.prazoFinalDeEnvio(reserva));
+            model.addAttribute(
+                    "prazoEncerrado", DocumentoReservaService.prazoDeEnvioEncerrado(reserva));
             return "solicitacoes/documentos/lista";
         } catch (AccessDeniedException exception) {
             throw paginaNaoEncontrada();

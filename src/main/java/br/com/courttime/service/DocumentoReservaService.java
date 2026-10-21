@@ -18,6 +18,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +29,10 @@ import java.util.UUID;
 public class DocumentoReservaService {
 
     public static final long TAMANHO_MAXIMO_BYTES = 10L * 1024L * 1024L;
+
+    /** R01.2: mensagem exibida quando o envio chega no dia da utilização ou depois. */
+    public static final String MENSAGEM_PRAZO_ENCERRADO =
+            "O documento assinado deve ser entregue até o dia anterior ao uso.";
 
     private static final byte[] ASSINATURA_PDF = "%PDF-".getBytes(StandardCharsets.US_ASCII);
     private static final Set<String> TIPOS_ACEITOS = Set.of(
@@ -81,6 +86,9 @@ public class DocumentoReservaService {
             throw new IllegalStateException(
                     "O documento só pode ser enviado enquanto a documentação está pendente");
         }
+        if (prazoDeEnvioEncerrado(reserva)) {
+            throw new IllegalStateException(MENSAGEM_PRAZO_ENCERRADO);
+        }
         if (!envioEstaPermitido(reserva)) {
             throw new IllegalStateException(
                     "Uma nova versão só pode ser enviada após a devolução do documento para correção");
@@ -102,8 +110,28 @@ public class DocumentoReservaService {
         return documentoRepository.saveAndFlush(documento);
     }
 
+    /**
+     * R01: último dia para entregar o PDF assinado, o dia anterior ao uso.
+     *
+     * D1: a ETEC ainda não definiu um horário-limite nesse dia. Até lá, o envio
+     * vale durante todo o dia anterior e é recusado a partir do dia do uso.
+     */
+    public static LocalDate prazoFinalDeEnvio(Reserva reserva) {
+        return reserva == null || reserva.getDataUtilizacao() == null
+                ? null
+                : reserva.getDataUtilizacao().minusDays(1);
+    }
+
+    /** Verdadeiro a partir do dia da utilização, no fuso da escola. */
+    public static boolean prazoDeEnvioEncerrado(Reserva reserva) {
+        LocalDate prazo = prazoFinalDeEnvio(reserva);
+        return prazo != null
+                && LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO).isAfter(prazo);
+    }
+
     private boolean envioEstaPermitido(Reserva reserva) {
-        if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
+        if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO
+                || prazoDeEnvioEncerrado(reserva)) {
             return false;
         }
         DocumentoReserva documentoMaisRecente = documentoRepository

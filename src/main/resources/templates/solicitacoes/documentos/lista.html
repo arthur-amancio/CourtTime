@@ -74,6 +74,11 @@
                     <h2 id="envio-title">Enviar PDF</h2>
                 </div>
                 <div class="painel__corpo pilha pilha--compacta">
+                    <div class="alerta alerta--aviso" th:if="${prazoEnvio != null}">
+                        <svg th:replace="~{fragments/icones :: icone('calendario')}"></svg>
+                        <p><strong th:text="|Envie o PDF assinado até ${#temporals.format(prazoEnvio, 'dd/MM/yyyy')}.|">Envie o PDF assinado até 27/10/2026.</strong>
+                            A partir do dia do uso, o envio não é mais aceito, nem depois de uma devolução para correção.</p>
+                    </div>
                     <div class="alerta alerta--neutro">
                         <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
                         <div>
@@ -110,8 +115,15 @@
                 </div>
             </section>
 
+            <div class="alerta alerta--perigo"
+                 th:if="${prazoEncerrado and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
+                <svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg>
+                <p><strong>Prazo de envio encerrado.</strong>
+                    <span th:text="|O documento assinado deve ser entregue até o dia anterior ao uso (${#temporals.format(prazoEnvio, 'dd/MM/yyyy')}).|">O documento assinado deve ser entregue até o dia anterior ao uso.</span>
+                    Procure a secretaria da escola.</p>
+            </div>
             <div class="alerta alerta--neutro"
-                 th:if="${!envioPermitido and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
+                 th:if="${!envioPermitido and !prazoEncerrado and solicitacao.status.name() == 'PENDENTE_DOCUMENTACAO'}">
                 <svg th:replace="~{fragments/icones :: icone('cadeado')}"></svg>
                 <p>Um novo envio só será liberado se a secretaria devolver a versão mais recente para correção.</p>
             </div>

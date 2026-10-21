@@ -134,7 +134,7 @@ As operações relevantes são registradas em `auditorias_usuario`, sem senha, h
 
 ## Participantes e PDFs enviados
 
-Antes do primeiro envio, ou depois de uma devolução documental para correção, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. Um mesmo RM ou RG não pode ser repetido na solicitação. A conferência e a aprovação exigem no mínimo dez participantes na categoria `ALUNO`; o limite máximo ainda depende da confirmação da ETEC e do documento oficial.
+Antes do primeiro envio, ou depois de uma devolução documental para correção, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. Um mesmo RM ou RG não pode ser repetido na solicitação. A conferência e a aprovação exigem no mínimo dez participantes na categoria `ALUNO`. Não há limite máximo (R02): acima de 30 participantes, o formulário oficial ganha páginas adicionais. O PDF assinado deve ser enviado até o dia anterior ao uso (R01).
 
 O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho, SHA-256 e a revisão da lista de participantes; versões anteriores não são substituídas. Enquanto a versão aguarda conferência, a lista e um novo upload permanecem bloqueados. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
 

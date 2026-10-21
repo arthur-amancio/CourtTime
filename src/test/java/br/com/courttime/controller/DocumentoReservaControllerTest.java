@@ -309,6 +309,52 @@ class DocumentoReservaControllerTest {
                 .andExpect(content().string(not(containsString("Enviar nova versão"))));
     }
 
+    @Test
+    void r01TelaDeEnvioMostraOPrazoDoDiaAnterior() throws Exception {
+        prepararAlunoEReserva();
+        when(documentoService.listar(20L, aluno)).thenReturn(List.of());
+
+        mockMvc.perform(get("/solicitacoes/20/documentos")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Envie o PDF assinado até 20/10/2030.")))
+                .andExpect(content().string(containsString("Enviar nova versão")));
+    }
+
+    @Test
+    void r01NoDiaDaUtilizacaoMostraPrazoEncerradoSemFormulario() throws Exception {
+        reserva.setDataUtilizacao(LocalDate.now(
+                br.com.courttime.service.CalendarioDisponibilidadeService.FUSO_HORARIO));
+        prepararAluno();
+        when(reservaService.obterSolicitacaoDoUsuario(20L, aluno)).thenReturn(reserva);
+        when(documentoService.podeEnviar(20L, aluno)).thenReturn(false);
+        when(documentoService.listar(20L, aluno)).thenReturn(List.of());
+
+        mockMvc.perform(get("/solicitacoes/20/documentos")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Prazo de envio encerrado.")))
+                .andExpect(content().string(containsString(
+                        "O documento assinado deve ser entregue até o dia anterior ao uso")))
+                .andExpect(content().string(not(containsString("só será liberado se a secretaria devolver"))))
+                .andExpect(content().string(not(containsString("Enviar nova versão"))));
+    }
+
+    @Test
+    void r01EnvioRecusadoNoDiaMostraOMotivo() throws Exception {
+        prepararAluno();
+        when(documentoService.enviar(20L, aluno, "termo.pdf", "application/pdf", pdf))
+                .thenThrow(new IllegalStateException(DocumentoReservaService.MENSAGEM_PRAZO_ENCERRADO));
+
+        mockMvc.perform(multipart("/solicitacoes/20/documentos")
+                        .file(new MockMultipartFile("arquivo", "termo.pdf", "application/pdf", pdf))
+                        .with(user(aluno.getEmail()).roles("ALUNO"))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("mensagemErro",
+                        "O documento assinado deve ser entregue até o dia anterior ao uso."));
+    }
+
     private DocumentoReserva documento(Long id, int versao, String nome) {
         DocumentoReserva documento = new DocumentoReserva();
         documento.setId(id);

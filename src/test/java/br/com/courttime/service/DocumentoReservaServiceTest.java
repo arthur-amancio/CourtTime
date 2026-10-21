@@ -21,10 +21,12 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -164,6 +166,50 @@ class DocumentoReservaServiceTest {
                 20L, aluno, "termo.pdf", "application/pdf", pdf));
 
         verifyNoInteractions(documentoRepository, documentoStorage);
+    }
+
+    @Test
+    void r01RecusaEnvioNoDiaDaUtilizacaoEDepoisDela() {
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
+                .thenReturn(Optional.of(reserva));
+        LocalDate hoje = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
+
+        for (LocalDate data : List.of(hoje, hoje.minusDays(1))) {
+            reserva.setDataUtilizacao(data);
+            IllegalStateException erro = assertThrows(IllegalStateException.class,
+                    () -> service.enviar(20L, aluno, "termo.pdf", "application/pdf", pdf));
+            assertEquals(DocumentoReservaService.MENSAGEM_PRAZO_ENCERRADO, erro.getMessage());
+            assertTrue(DocumentoReservaService.prazoDeEnvioEncerrado(reserva));
+        }
+        verifyNoInteractions(documentoRepository, documentoStorage);
+    }
+
+    @Test
+    void r01AceitaEnvioNoDiaAnteriorAoUso() {
+        LocalDate amanha = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO).plusDays(1);
+        reserva.setDataUtilizacao(amanha);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
+                .thenReturn(Optional.of(reserva));
+        when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(0);
+        when(documentoRepository.saveAndFlush(any(DocumentoReserva.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        DocumentoReserva documento = service.enviar(
+                20L, aluno, "termo.pdf", "application/pdf", pdf);
+
+        assertEquals(1, documento.getVersao());
+        assertEquals(amanha.minusDays(1), DocumentoReservaService.prazoFinalDeEnvio(reserva));
+        assertFalse(DocumentoReservaService.prazoDeEnvioEncerrado(reserva));
+    }
+
+    @Test
+    void r01PodeEnviarFicaFalsoNoDiaDaUtilizacaoMesmoSemDocumento() {
+        reserva.setDataUtilizacao(LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
+        when(reservaRepository.findByIdAndSolicitante(20L, aluno))
+                .thenReturn(Optional.of(reserva));
+
+        assertFalse(service.podeEnviar(20L, aluno));
+        verifyNoInteractions(documentoRepository);
     }
 
     @Test
