@@ -29,6 +29,14 @@ BEGIN
        OR to_regclass('public.participantes_reserva') IS NULL THEN
         RAISE EXCEPTION 'Tabelas CourtTime ausentes: execute a aplicacao uma vez antes do SQL.';
     END IF;
+    -- Colunas das regras da ETEC (R09): exigem o CourtTime atualizado.
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'public' AND table_name = 'participantes_reserva'
+          AND column_name = 'vinculo'
+    ) THEN
+        RAISE EXCEPTION 'Coluna participantes_reserva.vinculo ausente: atualize o CourtTime e abra a aplicacao uma vez.';
+    END IF;
     IF (SELECT count(*) FROM public.quadras) <> 1 THEN
         RAISE EXCEPTION 'O demo exige uma unica quadra cadastrada. Confira o banco antes.';
     END IF;
@@ -221,7 +229,38 @@ WHERE NOT EXISTS (
     WHERE atual.reserva_id = p.reserva_id AND atual.rm_ou_rg = p.rm
 );
 
--- Mantem o contador consistente para as reservas inteiramente geradas.
+-- R09: nas tres primeiras, dois participantes da categoria Outro com vinculo.
+-- Assim a secretaria ve "12 participantes x R$ 2,00 = R$ 24,00" (R03).
+WITH alvos AS (
+    SELECT id FROM reservas
+    WHERE finalidade LIKE '[DEMO]%'
+      AND status = 'PENDENTE_DOCUMENTACAO'
+      AND data_utilizacao >= current_date + 1
+    ORDER BY data_utilizacao, id
+    LIMIT 3
+),
+outros(ordem, nome, vinculo) AS (
+    VALUES (1, 'Responsável Fictício', 'PAI_OU_MAE'),
+           (2, 'Ex-aluno Fictício', 'EX_ALUNO')
+),
+novos AS (
+    SELECT a.id AS reserva_id, o.nome, o.vinculo,
+           ('RG-DEMO-' || a.id || '-' || o.ordem) AS rg
+    FROM alvos a CROSS JOIN outros o
+)
+INSERT INTO participantes_reserva
+    (reserva_id, nome_completo, rm_ou_rg, categoria, vinculo)
+SELECT n.reserva_id, n.nome, n.rg, 'OUTRO', n.vinculo
+FROM novos n
+WHERE NOT EXISTS (
+    SELECT 1 FROM participantes_reserva atual
+    WHERE atual.reserva_id = n.reserva_id AND atual.rm_ou_rg = n.rg
+)
+AND NOT EXISTS (
+    SELECT 1 FROM documentos_reserva d WHERE d.reserva_id = n.reserva_id
+);
+
+-- Mantem o contador consistente nas reservas geradas que ainda nao tem PDF.
 UPDATE reservas r
 SET revisao_participantes = (
         SELECT count(*)::integer FROM participantes_reserva p WHERE p.reserva_id = r.id
@@ -229,7 +268,9 @@ SET revisao_participantes = (
     atualizada_em = now()
 WHERE r.finalidade LIKE '[DEMO]%'
   AND r.status = 'PENDENTE_DOCUMENTACAO'
-  AND r.revisao_participantes = 0
+  AND NOT EXISTS (SELECT 1 FROM documentos_reserva d WHERE d.reserva_id = r.id)
+  AND r.revisao_participantes <> (
+        SELECT count(*)::integer FROM participantes_reserva p WHERE p.reserva_id = r.id)
   AND (SELECT count(*) FROM participantes_reserva p WHERE p.reserva_id = r.id) >= 10;
 
 -- Resumo conferivel; todos os registros so existem em courttime_demo.
@@ -250,6 +291,10 @@ SELECT 'Solicitacoes DEMO', count(*)
 UNION ALL
 SELECT 'Participantes de solicitacoes DEMO', count(*)
   FROM participantes_reserva p JOIN reservas r ON r.id=p.reserva_id
-  WHERE r.finalidade LIKE '[DEMO]%';
+  WHERE r.finalidade LIKE '[DEMO]%'
+UNION ALL
+SELECT 'Participantes Outro com vinculo (R09)', count(*)
+  FROM participantes_reserva p JOIN reservas r ON r.id=p.reserva_id
+  WHERE r.finalidade LIKE '[DEMO]%' AND p.categoria = 'OUTRO' AND p.vinculo IS NOT NULL;
 
 COMMIT;

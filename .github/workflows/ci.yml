@@ -206,7 +206,12 @@ jobs:
           test "$horarios" -eq 8
           test "$bloqueios" -eq 24
           test "$reservas" -ge 20
-          test "$participantes" -eq 180
+          test "$participantes" -eq 186
+          # R09: seis participantes Outro, todos com vinculo.
+          outros=$(psql -d courttime_demo -At -c "
+            SELECT count(*) FROM participantes_reserva
+            WHERE categoria = 'OUTRO' AND vinculo IS NOT NULL;")
+          test "$outros" -eq 6
 
           # Reexecucao nao pode duplicar nem alterar registros.
           psql -d courttime_demo -v ON_ERROR_STOP=1 -f /tmp/courttime-seed-ci.sql >/dev/null
