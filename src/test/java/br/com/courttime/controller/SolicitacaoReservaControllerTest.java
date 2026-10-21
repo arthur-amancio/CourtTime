@@ -192,7 +192,9 @@ class SolicitacaoReservaControllerTest {
                         .param("horarioInicio", INICIO.toString())
                         .param("finalidade", "Treino"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Revise os dados informados")));
+                .andExpect(content().string(containsString("Revise os dados informados")))
+                .andExpect(content().string(containsString("Informe uma data válida")))
+                .andExpect(content().string(not(containsString("Failed to convert"))));
     }
 
     @Test
@@ -206,7 +208,9 @@ class SolicitacaoReservaControllerTest {
                         .param("horarioInicio", "horario-invalido")
                         .param("finalidade", "Treino"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Revise os dados informados")));
+                .andExpect(content().string(containsString("Revise os dados informados")))
+                .andExpect(content().string(containsString("Informe um horário válido")))
+                .andExpect(content().string(not(containsString("Failed to convert"))));
     }
 
     @Test
