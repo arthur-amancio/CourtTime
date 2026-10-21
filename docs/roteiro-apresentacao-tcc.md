@@ -103,8 +103,18 @@ demonstração trava logo no início; nesse caso cadastre um intervalo em
 - **Horário:** um período de uma hora dentro da grade.
 - **Finalidade:** "Treino da turma do 3º INFONET".
 - **Participantes:** dez, categoria Aluno, com nomes claramente fictícios
-  (`Participante Fictício 1` a `10`) e RM fictício (`RM-1001` em diante).
+  (`Participante Fictício 1` a `10`) e RM fictício (`RM-1001` em diante). Para
+  mostrar a regra do "Outro", acrescente um 11º, categoria **Outro**, vínculo
+  **Pai ou mãe de aluno**.
 - **PDF:** um arquivo sintético qualquer. **Não apresente como termo assinado.**
+
+### 6. Reserva para a portaria (na véspera)
+
+A presença só pode ser marcada **no dia da reserva**, e uma solicitação só pode
+ser feita para o dia seguinte. Para mostrar a portaria na banca, faça **na
+véspera** o fluxo completo de uma reserva para o dia da apresentação:
+solicitação, participantes, PDF (aceito até o dia anterior), validação,
+contribuição e aprovação. No dia, ela aparece pronta em **Reservas autorizadas**.
 
 ## Roteiro, na ordem
 
@@ -120,25 +130,34 @@ sair e entrar o tempo todo.
    isso vem do termo da ETEC.
 4. Preencha e envie. Mostre que a situação nasce **Pendente de documentação** e
    que **nada foi autorizado ainda**.
-5. **Participantes** → cadastre os dez. Mostre o contador de alunos.
+5. **Participantes** → cadastre os dez alunos e o participante **Outro**.
+   Mostre que o vínculo é obrigatório (ex-aluno, pai ou mãe, irmão ou irmã, ou
+   professor da ETEC) e que não existe opção "amigo".
 6. **Documentos** → **Gerar formulário preenchido** com um CPF fictício válido
    (ex.: `123.456.789-09`) e o curso. Abra o PDF: é o formulário original da ETEC
    com data, horário e participantes; assinaturas e campos da direção em branco.
    Diga que CPF e curso **não ficam gravados**.
-7. Ainda em **Documentos**, envie um PDF sintético. Diga, com estas palavras:
-   *"o termo é assinado fora do sistema; o CourtTime guarda a versão enviada"*.
+   O vínculo do "Outro" aparece escrito no espaço "( ) Outro: ____".
+7. Ainda em **Documentos**, mostre o aviso **"Envie o PDF assinado até
+   dd/mm/aaaa"**: o termo precisa chegar até o dia anterior ao uso. Envie um PDF
+   sintético e diga, com estas palavras: *"o termo é assinado pelo gov.br; o
+   CourtTime guarda a versão enviada e a secretaria confere a assinatura"*.
 8. Volte ao **Início**: agora o cartão mostra **Documento aguardando
    conferência** e o próximo passo.
 
 ### Ato 2 — Secretaria (2 a 3 minutos)
 
 1. **Login** → **Conferir documentos**.
-2. Abra o documento pendente, **baixe o PDF** e diga que a conferência é
-   **manual**: o sistema não valida assinatura criptograficamente.
-3. **Validar documento**.
+2. Abra o documento pendente e **baixe o PDF**. Mostre as três instruções do
+   verificador oficial do ITI (`validar.iti.gov.br`): a secretaria confere a
+   assinatura gov.br lá, e o CourtTime só registra essa conferência.
+3. Tente **Validar documento** sem marcar a caixa: o navegador pede a
+   marcação, e o servidor também recusaria. Marque
+   **"Conferi a assinatura gov.br no verificador oficial do ITI"** e valide.
 4. **Contribuições presenciais** → mostre a conta, por exemplo
-   "10 participantes × R$ 2,00 = R$ 20,00", e clique em **Registrar
-   recebimento**. A secretaria não digita o valor; o pagamento é presencial.
+   "11 participantes × R$ 2,00 = R$ 22,00". Os participantes Outro também
+   contam. Clique em **Registrar recebimento**: a secretaria não digita o
+   valor, e o pagamento é presencial.
 5. Aponte que a solicitação passou para **Pronta para análise administrativa**,
    e que **a secretaria não aprova reservas**.
 
@@ -158,23 +177,33 @@ sair e entrar o tempo todo.
 ### Ato 4 — Segurança (2 minutos)
 
 1. **Login** → **Reservas autorizadas**.
-2. Abra a reserva. Mostre nome, RM/RG e categoria dos participantes — o que a
-   portaria precisa para conferir a entrada.
-3. Destaque o que **não** aparece: nenhum valor financeiro, nenhum PDF, nenhum
-   email. É minimização de dados, não esquecimento.
-4. Mostre no celular: as tabelas viram cartões e nada sai da tela.
+2. Abra a reserva preparada na véspera (seção 6). Mostre nome, RM/RG,
+   categoria e o vínculo de quem é "Outro" — o que a portaria precisa para
+   conferir a entrada.
+3. Marque cada participante como **Presente** ou **Ausente** e clique em
+   **Registrar presença**. Na Administração, o detalhe da solicitação mostra a
+   presença, quem marcou e quando.
+4. Destaque o que **não** aparece: nenhum valor financeiro, nenhum PDF, nenhum
+   email. A segurança só altera a presença. É minimização de dados, não
+   esquecimento.
+5. Mostre no celular: as tabelas viram cartões e nada sai da tela.
 
 ### Ato 5 — Cancelamento institucional (2 minutos)
 
-1. Volte à **Administração** → **Cancelar autorização**, com motivo obrigatório.
+1. Volte à **Administração** → **Cancelar autorização**, com motivo
+   obrigatório. Mostre o lembrete: *"Depois de registrar, avise o aluno pelo
+   WhatsApp."* O CourtTime não envia mensagens.
 2. Na **Segurança**: a reserva **não é mais encontrada**.
 3. No **Aluno**: aparece o motivo do cancelamento.
 4. Diga que documento, contribuição, participantes e o registro de quem aprovou
    **continuam preservados** — cancelar não apaga histórico.
 5. Ainda no **Aluno**: **Solicitar outro horário**. Mostre o aviso da reserva de
-   origem, escolha o período liberado e envie. Diga que a nova solicitação
-   recomeça do zero (novo PDF, conferência, contribuição e aprovação) e que só os
-   participantes podem ser copiados.
+   origem, escolha o período liberado e envie, copiando os participantes. A nova
+   solicitação precisa de novo PDF, conferência e aprovação.
+6. Na **Secretaria**, depois de validar o novo PDF, a contribuição mostra o
+   **crédito da reserva cancelada**: com os mesmos participantes, o botão vira
+   **Aplicar crédito** e nada é cobrado de novo. Com mais participantes, só a
+   diferença é cobrada.
 
 ## Se algo der errado — plano de contingência
 
@@ -182,6 +211,9 @@ sair e entrar o tempo todo.
 |---|---|
 | Nenhum período aparece | Falta grade de horários. Cadastre em Administração → Horários, no dia da semana certo |
 | "A solicitação deve ser feita com pelo menos um dia de antecedência" | Você escolheu hoje. Use amanhã |
+| "O documento assinado deve ser entregue até o dia anterior ao uso" | A solicitação é para hoje. Use uma reserva de amanhã em diante |
+| Não aparece a marcação de presença | A reserva não é de hoje. Use a reserva preparada na véspera (seção 6) |
+| "Na categoria Outro, escolha o vínculo" | Escolha o vínculo no campo logo abaixo da categoria |
 | Aplicação não sobe com erro de administrador | As variáveis do bootstrap ficaram definidas. Remova-as e suba de novo |
 | Não consegue validar o documento | A lista de participantes mudou depois do envio, ou há menos de dez alunos |
 | Banco em estado confuso | Rode `.\scripts\Reiniciar-Demonstracao.ps1` e recomece do zero |
@@ -196,17 +228,24 @@ real, token CSRF real e upload real:
 
 - login e sessão por perfil, com encerramento da sessão quando a conta é desativada;
 - consulta de disponibilidade com grade semanal e bloqueios;
-- solicitação com antecedência mínima de um dia;
-- cadastro de participantes e exigência de dez alunos na conferência;
+- solicitação com antecedência mínima de um dia, e PDF assinado até o dia
+  anterior ao uso (R01);
+- cadastro de participantes, exigência de dez alunos, sem limite máximo (R02),
+  e vínculo obrigatório na categoria Outro (R09);
 - envio versionado de PDF, guardado fora da área pública;
-- conferência documental da secretaria, com validação ou devolução justificada;
-- registro de contribuição presencial, vinculado à conferência exata;
+- conferência documental da secretaria, com confirmação da assinatura gov.br
+  (R07), validação ou devolução justificada;
+- contribuição calculada em R$ 2,00 por participante (R03), registrada pela
+  secretaria e vinculada à conferência exata;
 - aprovação administrativa com bloqueio transacional e reconferência;
-- consulta da segurança, restrita ao necessário;
-- cancelamento institucional com motivo, preservando todo o histórico;
+- consulta da segurança, restrita ao necessário, e presença marcada no dia da
+  reserva (R08);
+- cancelamento institucional com motivo e lembrete do aviso pelo WhatsApp
+  (R05), preservando todo o histórico;
 - formulário oficial da ETEC gerado preenchido, inclusive com mais de 30
   participantes, sem gravar CPF e curso;
-- remarcação da reserva cancelada, uma única vez, pelo próprio aluno;
+- remarcação da reserva cancelada, uma única vez, pelo próprio aluno, com o
+  valor pago virando crédito (R04);
 - autorização por perfil, proteção CSRF e bloqueio de acesso a dados de outro aluno.
 
 Além do teste Java, o workflow **UI — navegador real** percorre a mesma
@@ -216,14 +255,19 @@ jornada no Chromium, com centenas de verificações, inclusive no celular.
 
 - O sistema **gera o formulário oficial preenchido**, mas **não assina**: as
   assinaturas e os campos da direção e do vigilante são preenchidos à mão.
-- O sistema **não verifica criptograficamente** a assinatura do PDF. A
-  conferência da secretaria é **manual e humana**.
-- A remarcação após cancelamento **não reaproveita** aprovação nem PDF, mas o valor pago à APM vira crédito (R04).
-- **Não há registro** de contato com o aluno.
-- **Não há registro de ocorrências** pela segurança.
-- **Não há** regra de retenção dos documentos enviados.
-- Decisões ainda pendentes da ETEC: limite de participantes, prazo para a
-  decisão administrativa, coleta de CPF e curso, e o vínculo da categoria "Outro".
+- O sistema **não verifica sozinho** a assinatura do PDF. A secretaria confere
+  a assinatura gov.br no verificador oficial do ITI, e o CourtTime registra
+  essa conferência humana.
+- A remarcação após cancelamento **não reaproveita** aprovação nem PDF, mas o
+  valor pago à APM vira crédito (R04).
+- O aviso de cancelamento ao aluno é feito pelo WhatsApp, fora do sistema (R05).
+- A portaria marca presença, mas **ainda não registra pessoas a mais**: falta a
+  ETEC decidir quem autoriza (D3).
+- **Não há** regra de retenção dos documentos enviados: tudo fica guardado,
+  com acesso restrito, até a ETEC definir a política (LGPD).
+- Decisões ainda pendentes da ETEC: horário-limite do envio no dia anterior
+  (D1), destino do crédito que sobra numa remarcação menor (D2) e quem autoriza
+  pessoas extras na portaria (D3). As regras estão em `docs/regras-etec.md`.
 
 Apresentar essas lacunas como decisões conscientes é mais forte do que ser
 pego por elas numa pergunta.
