@@ -81,23 +81,17 @@ Para não prometer na banca o que o código não faz:
 - **Não há** regra de retenção dos documentos enviados.
 - O sistema **não calcula** o valor da contribuição.
 
-## Decisões que dependem da ETEC
+## Decisões da ETEC
 
-1. O limite de 30 participantes é obrigatório ou é só a capacidade do formulário?
-2. Existe prazo para a **decisão administrativa**? O termo não diz.
-3. O envio do PDF no sistema equivale à "entrega na Secretaria" do termo? Disso
-   depende se o sistema deve ter prazo para o envio do documento.
-4. CPF e curso podem ser coletados e guardados? Onde?
-5. Como descrever o vínculo quando o participante é "Outro"?
-6. A contribuição é por participante incluindo os "Outro"? O termo diz
-   "por participante", o que sugere que sim.
-7. Numa remarcação, a contribuição já paga pela reserva cancelada vale para a
-   nova? Hoje o sistema não reaproveita: a secretaria registra de novo.
-8. Por quanto tempo os PDFs e registros devem ser guardados, e como descartá-los?
-9. A conferência visual da assinatura basta, ou será preciso verificar a
-   assinatura digital (gov.br) tecnicamente?
-10. A portaria deve registrar ocorrências? A escola quer registrar o contato
-    feito com o aluno depois de um cancelamento? Se sim, quais dados e quem lê?
+Em 21/10/2026, o procedimento da quadra foi explicado pelo Leandro. As nove
+regras (R01 a R09) e os requisitos que saem delas estão em
+[regras-etec.md](regras-etec.md). O plano de implementação está em
+[plano-regras-etec.md](plano-regras-etec.md). Enquanto os PRs de cada regra não
+forem integrados, vale o comportamento descrito neste guia.
+
+Continuam em aberto o horário-limite do envio no dia anterior, o destino do
+crédito excedente na remarcação, a autorização de pessoas extras na portaria e
+a política de retenção dos documentos.
 
 ---
 
