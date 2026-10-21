@@ -22,13 +22,9 @@
                 <p>Cada etapa da solicitação fica registrada para que a quadra seja usada com organização e segurança.</p>
             </div>
             <p class="login__local">ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
-            <svg class="login__arte" viewBox="0 0 400 240" aria-hidden="true" focusable="false">
-                <g fill="none" stroke="#2a7d52" stroke-width="3">
-                    <rect x="4" y="4" width="392" height="232" rx="6"/>
-                    <path d="M200 4v232"/><circle cx="200" cy="120" r="40"/>
-                    <path d="M4 52h48a68 68 0 0 1 0 136H4M396 52h-48a68 68 0 0 0 0 136h48"/>
-                </g>
-            </svg>
+            <img class="login__foto" th:src="@{/img/etec-fachada-1200.jpg}" src="/img/etec-fachada-1200.jpg"
+                 th:srcset="@{/img/etec-fachada-720.jpg} + ' 720w, ' + @{/img/etec-fachada-1200.jpg} + ' 1200w'"
+                 sizes="(max-width: 860px) 100vw, 50vw" width="1200" height="674" alt="">
         </header>
 
         <main id="conteudo" class="login__formulario">

@@ -1399,6 +1399,7 @@ body.app-autenticado {
     grid-area: rodape;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
     gap: var(--esp-2) var(--esp-6);
     padding: var(--esp-5) clamp(1rem, 3vw, 2.5rem);
@@ -1535,8 +1536,21 @@ body.app-autenticado {
     font-weight: 750;
 }
 .selo-escola .icone { width: 1rem; height: 1rem; }
-.ilustracao-quadra { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--raio-lg); background: var(--verde-700); }
-.ilustracao-quadra__arte { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* Foto da escola na pagina inicial. A legenda fica sobre um degrade escuro. */
+.foto-escola { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--raio-lg); background: var(--verde-700); }
+.foto-escola img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.foto-escola figcaption {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: var(--esp-8) var(--esp-5) var(--esp-4);
+    background: linear-gradient(to top, rgba(10, 40, 26, .85), rgba(10, 40, 26, 0));
+    color: #fff;
+    font-size: var(--texto-sm);
+    font-weight: 700;
+}
+/* Faixa oficial ETEC, Centro Paula Souza e Governo de SP. Fundo branco proprio. */
+.logos-institucionais { display: block; width: min(100%, 280px); height: auto; }
+.logos-institucionais--sm { width: min(100%, 210px); }
 .faixa-info {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1580,7 +1594,7 @@ body.app-autenticado {
 .regras__lista .icone { color: var(--cor-primaria); }
 .regras__lista strong { display: block; font-size: var(--texto-md); }
 .rodape-publico { margin-top: auto; border-top: 1px solid var(--cor-borda); background: var(--cor-superficie); color: var(--cor-texto-suave); font-size: var(--texto-sm); }
-.rodape-publico__inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--esp-3) var(--esp-6); padding-block: var(--esp-6); }
+.rodape-publico__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--esp-3) var(--esp-6); padding-block: var(--esp-6); }
 .rodape-publico p { margin: 0; }
 .rodape-publico strong { color: var(--cor-texto); }
 
@@ -1597,8 +1611,10 @@ body.app-autenticado {
     background: var(--verde-800);
     color: #fff;
 }
-.login__arte { position: absolute; right: -10%; bottom: -8%; width: 90%; opacity: .5; pointer-events: none; }
-.login__frase, .login__local, .login__institucional .marca { position: relative; }
+/* Fachada da escola ao fundo, coberta de verde para manter o contraste do texto. */
+.login__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.login__institucional::after { content: ""; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(17, 75, 49, .93) 0%, rgba(17, 75, 49, .78) 55%, rgba(17, 75, 49, .6) 100%); }
+.login__frase, .login__local, .login__institucional .marca { position: relative; z-index: 1; }
 .login__slogan { margin: 0; max-width: 22rem; color: #fff; font-size: clamp(1.75rem, 3.4vw, 2.5rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
 .login__frase p + p { max-width: 26rem; margin: var(--esp-3) 0 0; color: #c8e2d2; }
 .login__local { margin: 0; color: #a9cbb7; font-size: var(--texto-sm); }
@@ -1615,7 +1631,7 @@ body.app-autenticado {
 
 @media (max-width: 1024px) {
     .apresentacao { grid-template-columns: 1fr; }
-    .ilustracao-quadra { aspect-ratio: 16 / 9; }
+    .foto-escola { aspect-ratio: 16 / 9; }
     .faixa-info { grid-template-columns: 1fr 1fr; }
     .faixa-info > div:nth-child(3) { border-left: 0; }
     .faixa-info > div:nth-child(n+3) { border-top: 1px solid var(--cor-borda); }
@@ -1628,7 +1644,6 @@ body.app-autenticado {
     .login__institucional { flex-direction: row; align-items: center; gap: var(--esp-3); min-height: 64px; padding: var(--esp-3) var(--esp-4); }
     .login__institucional .marca__simbolo { width: 34px; height: 34px; }
     .login__frase, .login__local { display: none; }
-    .login__arte { top: -40%; right: -14%; bottom: auto; width: 46%; opacity: .35; }
     .login__formulario { align-items: flex-start; padding: var(--esp-6) var(--esp-4) var(--esp-8); }
     .login__titulo { font-size: var(--texto-xl); }
     .login__subtitulo { margin-bottom: var(--esp-4); font-size: var(--texto-sm); }
