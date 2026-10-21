@@ -55,14 +55,24 @@ class HomeControllerTest {
                 .andExpect(content().string(containsString("CourtTime")))
                 .andExpect(content().string(containsString(
                         "Consulta e solicitação de uso da quadra")))
-                .andExpect(content().string(containsString("/css/style.css")));
+                .andExpect(content().string(containsString("/css/style.css")))
+                .andExpect(content().string(containsString("/img/etec-vista-aerea-960.jpg")))
+                .andExpect(content().string(containsString("/img/logos-etec-cps-governo-sp.png")));
+    }
+
+    @Test
+    void schoolImagesArePublic() throws Exception {
+        mockMvc.perform(get("/img/etec-vista-aerea-960.jpg")).andExpect(status().isOk());
+        mockMvc.perform(get("/img/etec-fachada-1200.jpg")).andExpect(status().isOk());
+        mockMvc.perform(get("/img/logos-etec-cps-governo-sp.png")).andExpect(status().isOk());
     }
 
     @Test
     void loginPageIsPublic() throws Exception {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Entrar")));
+                .andExpect(content().string(containsString("Entrar")))
+                .andExpect(content().string(containsString("/img/etec-fachada-1200.jpg")));
     }
 
     @Test
