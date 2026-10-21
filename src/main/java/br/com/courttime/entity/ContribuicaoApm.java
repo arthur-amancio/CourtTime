@@ -51,7 +51,8 @@ public class ContribuicaoApm {
     private ConferenciaDocumento conferenciaDocumento;
 
     @NotNull
-    @DecimalMin(value = "0.00", inclusive = false)
+    // Zero quando o crédito de uma reserva cancelada cobre todo o valor (R04.3).
+    @DecimalMin(value = "0.00")
     @Digits(integer = 10, fraction = 2)
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal valor;
@@ -63,6 +64,16 @@ public class ContribuicaoApm {
     @Digits(integer = 10, fraction = 2)
     @Column(name = "valor_devido", precision = 12, scale = 2)
     private BigDecimal valorDevido;
+
+    /** R04: crédito da reserva cancelada usado nesta remarcação. Nulo sem crédito. */
+    @Digits(integer = 10, fraction = 2)
+    @Column(name = "credito_aplicado", precision = 12, scale = 2, updatable = false)
+    private BigDecimal creditoAplicado;
+
+    /** R04: contribuição da reserva cancelada de onde veio o crédito. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contribuicao_origem_id", updatable = false)
+    private ContribuicaoApm contribuicaoOrigem;
 
     @Size(max = 500)
     @Column(length = 500)
@@ -141,5 +152,30 @@ public class ContribuicaoApm {
 
     public Instant getRegistradaEm() {
         return registradaEm;
+    }
+
+    public BigDecimal getCreditoAplicado() {
+        return creditoAplicado;
+    }
+
+    public void setCreditoAplicado(BigDecimal creditoAplicado) {
+        this.creditoAplicado = creditoAplicado;
+    }
+
+    public ContribuicaoApm getContribuicaoOrigem() {
+        return contribuicaoOrigem;
+    }
+
+    public void setContribuicaoOrigem(ContribuicaoApm contribuicaoOrigem) {
+        this.contribuicaoOrigem = contribuicaoOrigem;
+    }
+
+    /**
+     * R04.1: quanto foi efetivamente pago por esta reserva, para virar crédito se
+     * ela for cancelada: o valor recebido (depois dos ajustes) mais o crédito
+     * que ela mesma já tinha aproveitado.
+     */
+    public BigDecimal getValorEfetivamentePago() {
+        return creditoAplicado == null ? valor : valor.add(creditoAplicado);
     }
 }

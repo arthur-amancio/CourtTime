@@ -56,6 +56,10 @@
                                 <dd th:if="${detalhe.participantesCobrados() != null}" th:text="|${detalhe.participantesCobrados()} participantes × R$ 2,00 = R$ ${#numbers.formatDecimal(contribuicao.valorDevido, 1, 'POINT', 2, 'COMMA')}|">11 participantes × R$ 2,00 = R$ 22,00</dd>
                                 <dd th:unless="${detalhe.participantesCobrados() != null}">Não calculado (registro anterior à regra de R$ 2,00 por participante)</dd>
                             </div>
+                            <th:block th:if="${contribuicao.creditoAplicado != null}">
+                                <div><dt>Crédito da remarcação</dt><dd th:text="|R$ ${#numbers.formatDecimal(contribuicao.creditoAplicado, 1, 'POINT', 2, 'COMMA')}, da reserva cancelada nº ${detalhe.reservaOrigemId}|">R$ 22,00, da reserva cancelada nº 3</dd></div>
+                                <div th:if="${detalhe.saldoExcedente != null and detalhe.saldoExcedente.signum() > 0}"><dt>Saldo excedente</dt><dd th:text="|R$ ${#numbers.formatDecimal(detalhe.saldoExcedente, 1, 'POINT', 2, 'COMMA')} — pendente de decisão da ETEC|">R$ 4,00 — pendente de decisão da ETEC</dd></div>
+                            </th:block>
                             <div><dt>Valor recebido</dt><dd th:text="|R$ ${#numbers.formatDecimal(contribuicao.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 22,00</dd></div>
                             <div><dt>Documento conferido</dt><dd th:text="|Versão ${contribuicao.conferenciaDocumento.documento.versao}|">Versão 1</dd></div>
                             <div><dt>Responsável pelo registro</dt><dd th:text="${contribuicao.registradaPor.nome}">Secretaria</dd></div>

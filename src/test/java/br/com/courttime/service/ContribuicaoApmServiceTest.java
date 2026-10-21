@@ -17,6 +17,8 @@ import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -201,6 +203,50 @@ class ContribuicaoApmServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> service.registrar(20L, secretaria, "x".repeat(501)));
         verifyNoInteractions(reservaRepository, documentoRepository);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            // participantes, crédito, valor cobrado, crédito aplicado
+            "15, 22.00, 8.00, 22.00",   // crédito menor: paga a diferença
+            "11, 22.00, 0.00, 22.00",   // crédito igual: nenhuma cobrança nova
+            "10, 22.00, 0.00, 20.00"    // crédito maior: sobra R$ 2,00 (D2)
+    })
+    void r04RemarcacaoUsaOCreditoDaCanceladaSemFicarNegativo(
+            long participantes, String credito, String cobrado, String aplicado) {
+        Reserva cancelada = new Reserva();
+        cancelada.setId(5L);
+        cancelada.setStatus(StatusReserva.CANCELADA);
+        reserva.setRemarcacaoDe(cancelada);
+        ContribuicaoApm origem = new ContribuicaoApm();
+        origem.setId(41L);
+        origem.setReserva(cancelada);
+        origem.setValor(new BigDecimal(credito));
+        prepararRegistro();
+        when(participanteService.contarParticipantes(reserva)).thenReturn(participantes);
+        when(contribuicaoRepository.obterPorReservaId(5L)).thenReturn(Optional.of(origem));
+        when(contribuicaoRepository.saveAndFlush(any(ContribuicaoApm.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        DetalheContribuicaoApm detalhe = service.registrar(20L, secretaria, null);
+
+        ContribuicaoApm nova = detalhe.contribuicao();
+        assertEquals(ContribuicaoApmService.calcularValorDevido(participantes), nova.getValorDevido());
+        assertEquals(new BigDecimal(cobrado), nova.getValor());
+        assertEquals(new BigDecimal(aplicado), nova.getCreditoAplicado());
+        assertSame(origem, nova.getContribuicaoOrigem());
+        assertEquals(5L, detalhe.reservaOrigemId());
+        assertEquals(new BigDecimal(credito).subtract(new BigDecimal(aplicado)), detalhe.saldoExcedente());
+        assertEquals(StatusReserva.PENDENTE_ANALISE, reserva.getStatus(), "R04.5: o crédito não aprova");
+    }
+
+    @Test
+    void r04CreditoContaOQueACanceladaJaTinhaAproveitado() {
+        ContribuicaoApm origem = new ContribuicaoApm();
+        origem.setValor(new BigDecimal("8.00"));
+        origem.setCreditoAplicado(new BigDecimal("22.00"));
+
+        assertEquals(new BigDecimal("30.00"), origem.getValorEfetivamentePago());
     }
 
     @Test

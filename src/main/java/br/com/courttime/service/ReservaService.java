@@ -115,9 +115,10 @@ public class ReservaService {
      * Cria uma solicitação comum, passando por todas as regras de
      * criarSolicitacao (antecedência, grade, bloqueios e disponibilidade), e
      * registra de qual reserva cancelada ela veio. A cancelada não é alterada.
-     * Aprovação, PDF e contribuição nunca são reaproveitados: a nova começa em
+     * Aprovação e PDF nunca são reaproveitados: a nova começa em
      * PENDENTE_DOCUMENTACAO. Os participantes só são copiados se o aluno pedir,
-     * e continuam editáveis antes do envio do documento.
+     * e continuam editáveis antes do envio do documento. O valor pago na
+     * cancelada vira crédito só no registro da nova contribuição (R04).
      */
     @Transactional
     public Reserva criarRemarcacao(

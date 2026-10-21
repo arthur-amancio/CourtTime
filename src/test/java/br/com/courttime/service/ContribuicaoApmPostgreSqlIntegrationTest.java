@@ -11,6 +11,7 @@ import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.AjusteContribuicaoApmRepository;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
 import br.com.courttime.repository.BloqueioQuadraRepository;
@@ -208,6 +209,55 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
     }
 
     @Test
+    void r04RemarcacaoCobraSoADiferencaEGuardaOCreditoEAOrigem() {
+        ContribuicaoApm original = pagarECancelarReservaAtual();
+        Reserva remarcada = novaRemarcacao(original.getReserva());
+        cadastrarDezAlunos();
+        for (int indice = 1; indice <= 5; indice++) {
+            cadastrarParticipanteOutro("RG-REM-" + indice);
+        }
+        DocumentoReserva documento = enviar("remarcacao.pdf", "remarcação com mais participantes");
+        conferenciaService.validar(documento.getId(), secretaria, true);
+
+        // 15 participantes × R$ 2,00 = R$ 30,00; crédito de R$ 20,00; cobra R$ 10,00.
+        contribuicaoService.registrar(remarcada.getId(), secretaria, "Diferença paga na escola.");
+
+        ContribuicaoApm nova = contribuicaoRepository.obterPorReservaId(remarcada.getId()).orElseThrow();
+        assertEquals(new BigDecimal("30.00"), nova.getValorDevido());
+        assertEquals(new BigDecimal("20.00"), nova.getCreditoAplicado());
+        assertEquals(new BigDecimal("10.00"), nova.getValor());
+        assertEquals(original.getId(), jdbcTemplate.queryForObject(
+                "select contribuicao_origem_id from contribuicoes_apm where id = ?",
+                Long.class, nova.getId()));
+        assertEquals(StatusReserva.PENDENTE_ANALISE,
+                reservaRepository.findById(remarcada.getId()).orElseThrow().getStatus());
+    }
+
+    @Test
+    void r04CreditoQueCobreTudoRegistraValorZeroEOExcedente() {
+        ContribuicaoApm original = pagarECancelarReservaAtual();
+        jdbcTemplate.update("update contribuicoes_apm set valor = 24.00 where id = ?", original.getId());
+        Reserva remarcada = novaRemarcacao(original.getReserva());
+        cadastrarDezAlunos();
+        DocumentoReserva documento = enviar("remarcacao.pdf", "remarcação com o mesmo grupo");
+        conferenciaService.validar(documento.getId(), secretaria, true);
+
+        ContribuicaoPendente pendente = contribuicaoService.listarPendentes(secretaria).get(0);
+        assertEquals(new BigDecimal("24.00"), pendente.creditoDisponivel());
+        assertEquals(new BigDecimal("0.00"), pendente.valorACobrar());
+        assertEquals(new BigDecimal("4.00"), pendente.saldoExcedente());
+
+        DetalheContribuicaoApm detalhe = contribuicaoService.registrar(
+                remarcada.getId(), secretaria, null);
+
+        ContribuicaoApm nova = contribuicaoRepository.obterPorReservaId(remarcada.getId()).orElseThrow();
+        assertEquals(new BigDecimal("0.00"), nova.getValor(), "R04.3: nenhuma cobrança nova");
+        assertEquals(new BigDecimal("20.00"), nova.getCreditoAplicado());
+        assertEquals(new BigDecimal("4.00"), detalhe.saldoExcedente(), "D2: excedente só registrado");
+        assertEquals(original.getReserva().getId(), detalhe.reservaOrigemId());
+    }
+
+    @Test
     void versaoCorrigidaExigeNovaConferenciaAntesDoRegistro() {
         DocumentoReserva versaoUm = enviar("v1.pdf", "versão devolvida");
         conferenciaService.devolver(
@@ -362,6 +412,37 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
             participanteRepository.save(participante);
         }
         participanteRepository.flush();
+    }
+
+    private ContribuicaoApm pagarECancelarReservaAtual() {
+        DocumentoReserva documento = enviar("original.pdf", "reserva original");
+        conferenciaService.validar(documento.getId(), secretaria, true);
+        ContribuicaoApm contribuicao = contribuicaoService.registrar(
+                reserva.getId(), secretaria, "Recebido antes do cancelamento.").contribuicao();
+        Reserva cancelada = reservaRepository.findById(reserva.getId()).orElseThrow();
+        cancelada.setStatus(StatusReserva.CANCELADA);
+        reservaRepository.saveAndFlush(cancelada);
+        return contribuicaoRepository.obterPorReservaId(cancelada.getId()).orElseThrow();
+    }
+
+    /** Remarcação gravada direto no banco; a regra da remarcação tem testes próprios. */
+    private Reserva novaRemarcacao(Reserva cancelada) {
+        Reserva nova = novaReserva();
+        nova.setHorarioInicio(LocalTime.of(10, 0));
+        nova.setHorarioFim(LocalTime.of(11, 0));
+        nova.setRemarcacaoDe(cancelada);
+        reserva = reservaRepository.saveAndFlush(nova);
+        return reserva;
+    }
+
+    private void cadastrarParticipanteOutro(String rg) {
+        ParticipanteReserva participante = new ParticipanteReserva();
+        participante.setReserva(reserva);
+        participante.setNomeCompleto("Familiar Exemplo " + rg);
+        participante.setRmOuRg(rg);
+        participante.setCategoria(CategoriaParticipante.OUTRO);
+        participante.setVinculo(VinculoParticipante.PAI_OU_MAE);
+        participanteRepository.saveAndFlush(participante);
     }
 
     private void cadastrarParticipanteOutro() {

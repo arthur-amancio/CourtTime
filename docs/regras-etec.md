@@ -120,7 +120,10 @@ crédito não autoriza nada sozinho.
 - R04.5 — O crédito não pula etapas: a remarcação continua precisando do PDF
   assinado, da conferência e da aprovação.
 
-**Hoje.** A remarcação existe, mas não aproveita a contribuição.
+**Hoje.** O sistema faz R04.1 a R04.5. A contribuição da remarcação grava o
+crédito usado (`contribuicoes_apm.credito_aplicado`) e a contribuição de
+origem (`contribuicao_origem_id`), em colunas que aceitam nulo. O valor
+recebido é o devido menos o crédito, e pode ser zero.
 
 **Em aberto.** O que fazer com o **saldo excedente**, quando a remarcação tem
 menos participantes que a original. Até a decisão D2, o sistema só registra o

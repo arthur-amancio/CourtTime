@@ -218,7 +218,7 @@ jornada no Chromium, com centenas de verificações, inclusive no celular.
   assinaturas e os campos da direção e do vigilante são preenchidos à mão.
 - O sistema **não verifica criptograficamente** a assinatura do PDF. A
   conferência da secretaria é **manual e humana**.
-- A remarcação após cancelamento recomeça do zero: **não reaproveita** aprovação, PDF nem contribuição.
+- A remarcação após cancelamento **não reaproveita** aprovação nem PDF, mas o valor pago à APM vira crédito (R04).
 - **Não há registro** de contato com o aluno.
 - **Não há registro de ocorrências** pela segurança.
 - **Não há** regra de retenção dos documentos enviados.
