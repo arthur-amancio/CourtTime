@@ -333,7 +333,7 @@ async function semRolagemHorizontal(page, rotulo, url) {
     // ------------------------------------------------ cancelamento e remarcação
     await admin.goto(`${BASE}/admin/solicitacoes/${ids.r1}`);
     corpo = await admin.locator('body').innerText();
-    check(/Aprovada por|Aprovação registrada|Responsável/.test(corpo), 'detalhe administrativo mostra quem aprovou');
+    check(/decisão registrada/i.test(corpo) && /responsável/i.test(corpo), 'detalhe administrativo mostra quem aprovou');
     await admin.locator('#motivoCancelamento').fill('Manutenção fictícia do piso (auditoria).');
     await Promise.all([
       admin.waitForURL(url => url.pathname === '/admin/solicitacoes'),
