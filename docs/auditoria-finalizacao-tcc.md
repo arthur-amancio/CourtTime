@@ -79,6 +79,8 @@ verificação nas sondas do navegador (PR #65).
 
 ## 4. Pendências exclusivamente institucionais
 
+> **Atualização de 21/10/2026:** a maior parte destas pendências foi respondida pela ETEC. Veja [regras-etec.md](regras-etec.md). A lista abaixo é o retrato do momento da auditoria.
+
 Nenhuma destas foi implementada por suposição. O comportamento atual fica
 preservado até a ETEC decidir.
 
