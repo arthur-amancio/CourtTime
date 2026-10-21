@@ -111,6 +111,7 @@
                                         <th:block th:unless="${conferencia.resultado.name() == 'VALIDADO'}"><svg th:replace="~{fragments/icones :: icone('alerta')}"></svg></th:block>
                                         <span th:text="${conferencia.resultado.descricao}">Validado</span>
                                     </span>
+                                    <span class="campo__ajuda" th:if="${conferencia.assinaturaGovBrConferida == true}">assinatura gov.br conferida pela secretaria</span>
                                 </td>
                                 <td data-label="Responsável" th:text="${conferencia.conferidoPor.nome}">Secretaria</td>
                                 <td data-label="Data" th:text="${#temporals.format(conferencia.conferidoEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 11:00</td>

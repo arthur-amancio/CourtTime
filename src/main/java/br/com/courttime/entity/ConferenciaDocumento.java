@@ -43,6 +43,14 @@ public class ConferenciaDocumento {
     @Column(length = 500, updatable = false)
     private String justificativa;
 
+    /**
+     * R07.3: a secretaria confirmou que conferiu a assinatura gov.br no
+     * verificador oficial do ITI. Nulo nas devoluções e nas conferências
+     * anteriores a esta regra. O CourtTime não verifica a assinatura sozinho.
+     */
+    @Column(name = "assinatura_gov_br_conferida", updatable = false)
+    private Boolean assinaturaGovBrConferida;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "conferido_por_id", nullable = false, updatable = false)
@@ -96,5 +104,13 @@ public class ConferenciaDocumento {
 
     public Instant getConferidoEm() {
         return conferidoEm;
+    }
+
+    public Boolean getAssinaturaGovBrConferida() {
+        return assinaturaGovBrConferida;
+    }
+
+    public void setAssinaturaGovBrConferida(Boolean assinaturaGovBrConferida) {
+        this.assinaturaGovBrConferida = assinaturaGovBrConferida;
     }
 }

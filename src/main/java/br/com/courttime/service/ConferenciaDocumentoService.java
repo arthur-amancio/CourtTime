@@ -81,8 +81,16 @@ public class ConferenciaDocumentoService {
                 documentoStorage.carregar(documento.getChaveArmazenamento()));
     }
 
+    /** R07.3: mensagem quando a secretaria tenta validar sem confirmar a assinatura. */
+    public static final String MENSAGEM_ASSINATURA_NAO_CONFERIDA =
+            "Confirme que conferiu a assinatura gov.br no verificador oficial do ITI antes de validar.";
+
     @Transactional
-    public ConferenciaDocumento validar(Long documentoId, Usuario secretaria) {
+    public ConferenciaDocumento validar(
+            Long documentoId, Usuario secretaria, boolean assinaturaGovBrConferida) {
+        if (!assinaturaGovBrConferida) {
+            throw new IllegalArgumentException(MENSAGEM_ASSINATURA_NAO_CONFERIDA);
+        }
         return registrar(
                 documentoId,
                 secretaria,
@@ -137,6 +145,9 @@ public class ConferenciaDocumentoService {
         conferencia.setDocumento(documento);
         conferencia.setResultado(resultado);
         conferencia.setJustificativa(justificativa);
+        if (resultado == ResultadoConferenciaDocumento.VALIDADO) {
+            conferencia.setAssinaturaGovBrConferida(Boolean.TRUE);
+        }
         conferencia.setConferidoPor(secretaria);
         return conferenciaRepository.saveAndFlush(conferencia);
     }

@@ -140,7 +140,8 @@ avisa o aluno manualmente pelo WhatsApp. Não há integração com o WhatsApp.
 - R05.3 — Nenhuma mensagem é enviada automaticamente, e nada é integrado ao
   WhatsApp.
 
-**Hoje.** O sistema já faz R05.1 e R05.3. Falta só o lembrete do R05.2.
+**Hoje.** O sistema faz R05.1 a R05.3. O painel de cancelamento lembra o aviso
+pelo WhatsApp.
 
 ## R06 — Armazenamento dos documentos
 
@@ -177,9 +178,10 @@ verifica a autenticidade sozinho.
 - R07.4 — Os textos dizem sempre "conferido pela secretaria", nunca "validado
   pelo sistema".
 
-**Hoje.** O sistema já registra quem conferiu e quando, e já avisa que não
-valida a assinatura. Faltam a orientação específica do gov.br e a confirmação
-obrigatória.
+**Hoje.** O sistema faz R07.1 a R07.4. Validar exige marcar "Conferi a
+assinatura gov.br no verificador oficial do ITI", e a confirmação fica gravada
+em `conferencias_documento.assinatura_gov_br_conferida` (coluna que aceita
+nulo nas conferências antigas e nas devoluções).
 
 ## R08 — Controle de presença na portaria
 

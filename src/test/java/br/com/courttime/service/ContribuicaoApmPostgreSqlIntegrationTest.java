@@ -183,7 +183,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
         cadastrarParticipanteOutro();
         DocumentoReserva documento = enviar("termo.pdf", "documento conferido");
         ConferenciaDocumento conferencia = conferenciaService.validar(
-                documento.getId(), secretaria);
+                documento.getId(), secretaria, true);
 
         List<ContribuicaoPendente> pendentes = contribuicaoService.listarPendentes(secretaria);
         assertEquals(List.of(reserva.getId()), pendentes.stream()
@@ -223,7 +223,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
     @Test
     void ajustePreservaHistoricoAntesEDepois() {
         DocumentoReserva documento = enviar("termo.pdf", "documento conferido");
-        conferenciaService.validar(documento.getId(), secretaria);
+        conferenciaService.validar(documento.getId(), secretaria, true);
         ContribuicaoApm contribuicao = contribuicaoService.registrar(
                 reserva.getId(), secretaria, "Valor inicial").contribuicao();
 
@@ -249,7 +249,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
     @Test
     void duasSecretariasConcorrentesNaoDuplicamRecebimento() throws Exception {
         DocumentoReserva documento = enviar("termo.pdf", "concorrência financeira");
-        conferenciaService.validar(documento.getId(), secretaria);
+        conferenciaService.validar(documento.getId(), secretaria, true);
         ExecutorService executor = Executors.newFixedThreadPool(2);
         CountDownLatch preparadas = new CountDownLatch(2);
         CountDownLatch iniciar = new CountDownLatch(1);
@@ -284,7 +284,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
     @Test
     void doisAjustesConcorrentesFormamHistoricoSerialSemPerderAlteracao() throws Exception {
         DocumentoReserva documento = enviar("termo.pdf", "ajustes concorrentes");
-        conferenciaService.validar(documento.getId(), secretaria);
+        conferenciaService.validar(documento.getId(), secretaria, true);
         ContribuicaoApm contribuicao = contribuicaoService.registrar(
                 reserva.getId(), secretaria, "Valor inicial").contribuicao();
         ExecutorService executor = Executors.newFixedThreadPool(2);
