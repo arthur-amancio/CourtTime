@@ -57,6 +57,9 @@ class AdminUsuarioControllerTest {
         administrador.setSenha("hash-nao-exibido");
         administrador.setPerfil(Perfil.ADMINISTRADOR);
         administrador.setAtivo(true);
+        // O @UsuarioAtual busca o usuário da sessão em toda requisição autenticada.
+        when(usuarioRepository.findByEmailIgnoreCase(administrador.getEmail()))
+                .thenReturn(Optional.of(administrador));
     }
 
     @Test

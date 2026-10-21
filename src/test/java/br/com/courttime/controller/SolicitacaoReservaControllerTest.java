@@ -98,6 +98,9 @@ class SolicitacaoReservaControllerTest {
                         "Pendente de documentação",
                         "Revise os participantes e envie o PDF.",
                         false));
+        // O @UsuarioAtual busca o usuário da sessão em toda requisição autenticada.
+        when(usuarioRepository.findByEmailIgnoreCase(aluno.getEmail()))
+                .thenReturn(Optional.of(aluno));
     }
 
     @Test

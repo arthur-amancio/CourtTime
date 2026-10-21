@@ -70,6 +70,9 @@ class AdminQuadraControllerTest {
         quadra.setNome("Quadra Poliesportiva");
         quadra.setDescricao("Quadra esportiva da ETEC.");
         quadra.setAtiva(true);
+        // O @UsuarioAtual busca o usuário da sessão em toda requisição autenticada.
+        when(usuarioRepository.findByEmailIgnoreCase(administrador.getEmail()))
+                .thenReturn(Optional.of(administrador));
     }
 
     @Test
