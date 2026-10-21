@@ -33,7 +33,9 @@ A secretaria **não aprova** reservas. A segurança **não edita** nada.
 1. O aluno consulta a quadra e escolhe um período de uma hora disponível.
 2. Registra a solicitação. Ela nasce como `PENDENTE_DOCUMENTACAO`.
 3. Cadastra os participantes, com nome e RM ou RG, marcando Aluno ou Outro.
-4. Gera o termo fora do sistema, assina pelo gov.br e envia o PDF.
+4. Gera no próprio sistema o **formulário oficial da ETEC preenchido** (CPF e
+   curso são digitados na hora e não ficam gravados), imprime, assina à mão ou
+   pelo gov.br e envia o PDF assinado.
 5. A secretaria confere a versão mais recente: valida ou devolve com justificativa.
 6. Se validada, a secretaria registra a contribuição presencial. A solicitação
    passa a `PENDENTE_ANALISE`.
@@ -44,6 +46,10 @@ A secretaria **não aprova** reservas. A segurança **não edita** nada.
 9. A administração pode cancelar institucionalmente uma reserva aprovada, com
    motivo obrigatório. A reserva sai da consulta da segurança e o aluno vê o
    motivo.
+10. O aluno pode pedir **outro horário** a partir da reserva cancelada. A nova
+    solicitação recomeça do zero (novo PDF, conferência, contribuição e
+    aprovação); só os participantes podem ser copiados, se o aluno quiser.
+    Rejeitadas e canceladas continuam consultáveis pela administração.
 
 Enviar o documento **não** autoriza o uso. Registrar a contribuição **não**
 autoriza o uso. Só a aprovação da administração autoriza.
@@ -85,15 +91,26 @@ Para não prometer na banca o que o código não faz:
 5. Como descrever o vínculo quando o participante é "Outro"?
 6. A contribuição é por participante incluindo os "Outro"? O termo diz
    "por participante", o que sugere que sim.
+7. Numa remarcação, a contribuição já paga pela reserva cancelada vale para a
+   nova? Hoje o sistema não reaproveita: a secretaria registra de novo.
+8. Por quanto tempo os PDFs e registros devem ser guardados, e como descartá-los?
+9. A conferência visual da assinatura basta, ou será preciso verificar a
+   assinatura digital (gov.br) tecnicamente?
+10. A portaria deve registrar ocorrências? A escola quer registrar o contato
+    feito com o aluno depois de um cancelamento? Se sim, quais dados e quem lê?
 
 ---
 
 # Execução local no Windows
 
-**Alternativa mais simples:** a configuracao local persistente, sem digitar variaveis
-em cada execucao, e o povoamento opcional do banco estao documentados em
-[desenvolvimento local rapido](desenvolvimento-local-rapido.md). Os passos
-abaixo continuam validos para configuracao inteiramente por ambiente.
+**Caminho recomendado:** siga o [desenvolvimento local rápido](desenvolvimento-local-rapido.md).
+A senha fica uma única vez em `application-local.properties` (ignorado pelo
+Git), o `scripts/popular-demo.sql` cria contas e horários fictícios e, depois
+disso, basta `.\mvnw.cmd spring-boot:run` todos os dias. Os dados continuam no
+banco depois de reiniciar.
+
+Os passos abaixo são a **alternativa sem arquivo local**, só com variáveis de
+ambiente (é assim que a CI roda). Não é preciso fazer os dois.
 
 
 ## Pré-requisitos

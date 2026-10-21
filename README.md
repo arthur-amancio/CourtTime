@@ -41,6 +41,8 @@ Não é necessário instalar Maven globalmente.
 
 ## Banco de dados
 
+**No Windows, use o caminho do [desenvolvimento local rápido](docs/desenvolvimento-local-rapido.md):** banco `courttime_demo`, senha uma única vez em `application-local.properties` (ignorado pelo Git) e `.\mvnw.cmd spring-boot:run`, sem variáveis de ambiente. O restante desta seção descreve a configuração só por variáveis, usada pela CI e por quem preferir não ter o arquivo local.
+
 Crie um banco chamado `courttime` no PostgreSQL, se ele ainda não existir. Você pode fazer isso no pgAdmin ou com `CREATE DATABASE courttime;` no `psql` conectado ao banco `postgres`. A aplicação usa estas variáveis de ambiente:
 
 | Variável | Valor esperado |
@@ -152,7 +154,7 @@ O valor de R$ 2,00 por participante/hora é apenas uma referência institucional
 
 A fila de análise apresenta somente solicitações prontas para análise; as reservas autorizadas atuais e futuras aparecem logo abaixo, e as rejeitadas e canceladas ficam numa terceira lista, para consulta. O painel conta as solicitações por situação, inclusive as canceladas. O detalhe reúne solicitante, data, horário, finalidade, participantes, metadados do PDF e da conferência e a contribuição presencial. O administrador pode baixar o PDF original por uma rota privada, aprovar sem justificativa ou rejeitar com motivo obrigatório. A aprovação revalida todos os pré-requisitos dentro da transação e somente `APROVADA` representa autorização de uso. Depois da decisão, o detalhe mostra o resultado, o responsável, a data e, na rejeição, o motivo informado ao aluno.
 
-O modelo oficial do termo e o procedimento institucional para avaliar a assinatura continuam pendentes do arquivo solicitado ao Leandro e da validação da ETEC. O CourtTime não recria o termo, não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
+O modelo oficial do termo já está no projeto e é usado para gerar o formulário preenchido. O procedimento institucional para avaliar a assinatura continua pendente da ETEC: o CourtTime não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
 
 ## Consulta da segurança
 
@@ -182,6 +184,10 @@ Cada reserva cancelada pode ser remarcada uma vez; a cancelada não é alterada 
 .\mvnw.cmd clean test
 .\mvnw.cmd clean verify
 ```
+
+Sem `COURTTIME_POSTGRES_TEST=true`, os testes que usam PostgreSQL ficam desligados e nenhum banco é tocado. Com ela, só rodam num banco cujo nome contém `test` (por exemplo `courttime_test`); `courttime_demo` é recusado antes de qualquer limpeza.
+
+O workflow **UI — navegador real** (acionado manualmente em GitHub Actions) sobe a aplicação num PostgreSQL descartável `courttime_e2e` e percorre no Chromium a jornada dos quatro perfis, as sondas da finalização (`qa/playwright/auditoria-finalizacao.cjs`: participantes, PDF oficial, remarcação, acessos negados, mensagens e celular), a acessibilidade com axe-core e as capturas de layout. Ele também confere o número de páginas dos PDFs gerados e que nenhum CPF foi gravado no banco. O resultado da última auditoria, com os defeitos corrigidos e as pendências da ETEC, está em [auditoria da finalização](docs/auditoria-finalizacao-tcc.md).
 
 ## Integração contínua
 
