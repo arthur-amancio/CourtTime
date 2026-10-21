@@ -117,8 +117,28 @@ jobs:
           PY
 
       - name: Compilar e executar os testes
-        run: ./mvnw clean verify
+        run: |
+          set -o pipefail
+          ./mvnw clean verify 2>&1 | tee "$RUNNER_TEMP/maven.log"
 
+      # O log completo do job nem sempre pode ser baixado. Este passo mostra
+      # os erros de compilacao e os testes que falharam como anotacoes.
+      - name: Resumir falhas da suite
+        if: failure()
+        run: |
+          grep -E '^\[ERROR\] .*\.java' "$RUNNER_TEMP/maven.log" | head -20 | sed 's/^/::error title=Compilacao::/' || true
+          python3 - <<'PY'
+          import glob
+          import xml.etree.ElementTree as ET
+          for arquivo in glob.glob('target/surefire-reports/TEST-*.xml') + glob.glob('target/failsafe-reports/TEST-*.xml'):
+              for caso in ET.parse(arquivo).getroot().iter('testcase'):
+                  for tipo in ('failure', 'error'):
+                      falha = caso.find(tipo)
+                      if falha is not None:
+                          mensagem = (falha.get('message') or falha.text or '').replace('\n', ' ')[:500]
+                          classe = caso.get('classname', '').rsplit('.', 1)[-1]
+                          print(f"::error title={classe}.{caso.get('name')}::{mensagem}")
+          PY
 
       - name: Validar dados ficticios no PostgreSQL descartavel
         env:
