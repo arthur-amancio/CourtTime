@@ -57,6 +57,17 @@ public class AnaliseAdministrativaService {
                 StatusReserva.APROVADA, dataAtual);
     }
 
+    /**
+     * Rejeitadas e canceladas, para a administração consultar decisões já
+     * registradas. Saem da fila e das reservas autorizadas, mas o histórico fica.
+     */
+    @Transactional(readOnly = true)
+    public List<Reserva> listarEncerradas(Usuario administrador) {
+        validarAdministrador(administrador);
+        return reservaRepository.listarEncerradasParaAdministracao(
+                List.of(StatusReserva.REJEITADA, StatusReserva.CANCELADA));
+    }
+
     @Transactional(readOnly = true)
     public DetalheAnaliseAdministrativa detalhar(
             Long reservaId, Usuario administrador) {
