@@ -52,6 +52,11 @@
                     <div class="painel__corpo">
                         <dl class="dados">
                             <div><dt>Solicitante</dt><dd th:text="${contribuicao.reserva.solicitante.nome}">Ana Souza</dd></div>
+                            <div><dt>Valor devido</dt>
+                                <dd th:if="${detalhe.participantesCobrados() != null}" th:text="|${detalhe.participantesCobrados()} participantes × R$ 2,00 = R$ ${#numbers.formatDecimal(contribuicao.valorDevido, 1, 'POINT', 2, 'COMMA')}|">11 participantes × R$ 2,00 = R$ 22,00</dd>
+                                <dd th:unless="${detalhe.participantesCobrados() != null}">Não calculado (registro anterior à regra de R$ 2,00 por participante)</dd>
+                            </div>
+                            <div><dt>Valor recebido</dt><dd th:text="|R$ ${#numbers.formatDecimal(contribuicao.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 22,00</dd></div>
                             <div><dt>Documento conferido</dt><dd th:text="|Versão ${contribuicao.conferenciaDocumento.documento.versao}|">Versão 1</dd></div>
                             <div><dt>Responsável pelo registro</dt><dd th:text="${contribuicao.registradaPor.nome}">Secretaria</dd></div>
                             <div><dt>Registrado em</dt><dd th:text="${#temporals.format(contribuicao.registradaEm, 'dd/MM/yyyy HH:mm')}">18/10/2026 10:00</dd></div>
@@ -101,11 +106,11 @@
                 <section class="painel" aria-labelledby="ajuste-title">
                     <div class="painel__cabecalho"><h2 id="ajuste-title">Registrar ajuste</h2></div>
                     <div class="painel__corpo">
-                        <p class="campo__ajuda bloco-espaco">Use esta ação somente para corrigir o valor ou as observações. O registro original permanece no histórico.</p>
+                        <p class="campo__ajuda bloco-espaco">Use esta ação somente para corrigir o valor recebido ou as observações. O valor devido e o registro original permanecem no histórico.</p>
                         <form class="decisao" method="post"
                               th:action="@{/secretaria/contribuicoes/{id}/ajustes(id=${contribuicao.id})}">
                             <div class="campo">
-                                <label for="novoValor">Novo valor (R$)</label>
+                                <label for="novoValor">Valor recebido corrigido (R$)</label>
                                 <input id="novoValor" name="novoValor" type="number"
                                        min="0.01" max="9999999999.99" step="0.01" inputmode="decimal"
                                        th:value="${contribuicao.valor}" required>

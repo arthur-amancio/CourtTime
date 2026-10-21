@@ -171,7 +171,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
                 """, Long.class);
 
         assertTrue(colunas.containsAll(List.of(
-                "reserva_id", "conferencia_documento_id", "valor", "observacoes",
+                "reserva_id", "conferencia_documento_id", "valor", "valor_devido", "observacoes",
                 "registrada_por_id", "registrada_em")));
         assertEquals(12, precisao);
         assertEquals(2, escala);
@@ -180,18 +180,24 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
 
     @Test
     void registraSomenteAposValidacaoEVinculaConferenciaExataAvancandoStatus() {
+        cadastrarParticipanteOutro();
         DocumentoReserva documento = enviar("termo.pdf", "documento conferido");
         ConferenciaDocumento conferencia = conferenciaService.validar(
                 documento.getId(), secretaria);
 
-        assertEquals(List.of(reserva.getId()), contribuicaoService.listarPendentes(secretaria)
-                .stream().map(Reserva::getId).toList());
+        List<ContribuicaoPendente> pendentes = contribuicaoService.listarPendentes(secretaria);
+        assertEquals(List.of(reserva.getId()), pendentes.stream()
+                .map(pendente -> pendente.reserva().getId()).toList());
+        assertEquals(11L, pendentes.get(0).participantes());
 
         DetalheContribuicaoApm detalhe = contribuicaoService.registrar(
-                reserva.getId(), secretaria, "24,50", "Recebimento presencial.");
+                reserva.getId(), secretaria, "Recebimento presencial.");
 
-        ContribuicaoApm contribuicao = detalhe.contribuicao();
-        assertEquals(new BigDecimal("24.50"), contribuicao.getValor());
+        // R03: 10 alunos e 1 Outro, R$ 2,00 cada, gravados como devido e recebido.
+        ContribuicaoApm contribuicao = contribuicaoRepository
+                .findById(detalhe.contribuicao().getId()).orElseThrow();
+        assertEquals(new BigDecimal("22.00"), contribuicao.getValorDevido());
+        assertEquals(new BigDecimal("22.00"), contribuicao.getValor());
         assertEquals(conferencia.getId(), contribuicao.getConferenciaDocumento().getId());
         assertEquals(secretaria.getId(), contribuicao.getRegistradaPor().getId());
         assertNotNull(contribuicao.getRegistradaEm());
@@ -210,7 +216,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
 
         assertTrue(contribuicaoService.listarPendentes(secretaria).isEmpty());
         assertThrows(IllegalStateException.class, () -> contribuicaoService.registrar(
-                reserva.getId(), secretaria, "20.00", null));
+                reserva.getId(), secretaria, null));
         assertEquals(0, contribuicaoRepository.count());
     }
 
@@ -219,7 +225,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
         DocumentoReserva documento = enviar("termo.pdf", "documento conferido");
         conferenciaService.validar(documento.getId(), secretaria);
         ContribuicaoApm contribuicao = contribuicaoService.registrar(
-                reserva.getId(), secretaria, "20.00", "Valor inicial").contribuicao();
+                reserva.getId(), secretaria, "Valor inicial").contribuicao();
 
         DetalheContribuicaoApm detalhe = contribuicaoService.ajustar(
                 contribuicao.getId(),
@@ -249,9 +255,9 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
         CountDownLatch iniciar = new CountDownLatch(1);
         try {
             Future<DetalheContribuicaoApm> primeira = executor.submit(() -> registrarAposSinal(
-                    secretaria, "20.00", preparadas, iniciar));
+                    secretaria, preparadas, iniciar));
             Future<DetalheContribuicaoApm> segunda = executor.submit(() -> registrarAposSinal(
-                    outraSecretaria, "22.00", preparadas, iniciar));
+                    outraSecretaria, preparadas, iniciar));
             preparadas.await();
             iniciar.countDown();
 
@@ -280,7 +286,7 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
         DocumentoReserva documento = enviar("termo.pdf", "ajustes concorrentes");
         conferenciaService.validar(documento.getId(), secretaria);
         ContribuicaoApm contribuicao = contribuicaoService.registrar(
-                reserva.getId(), secretaria, "20.00", "Valor inicial").contribuicao();
+                reserva.getId(), secretaria, "Valor inicial").contribuicao();
         ExecutorService executor = Executors.newFixedThreadPool(2);
         CountDownLatch preparadas = new CountDownLatch(2);
         CountDownLatch iniciar = new CountDownLatch(1);
@@ -313,13 +319,12 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
 
     private DetalheContribuicaoApm registrarAposSinal(
             Usuario operadora,
-            String valor,
             CountDownLatch preparadas,
             CountDownLatch iniciar) throws Exception {
         preparadas.countDown();
         iniciar.await();
         return contribuicaoService.registrar(
-                reserva.getId(), operadora, valor, "Recebimento concorrente");
+                reserva.getId(), operadora, "Recebimento concorrente");
     }
 
     private DetalheContribuicaoApm ajustarAposSinal(
@@ -357,6 +362,15 @@ class ContribuicaoApmPostgreSqlIntegrationTest {
             participanteRepository.save(participante);
         }
         participanteRepository.flush();
+    }
+
+    private void cadastrarParticipanteOutro() {
+        ParticipanteReserva participante = new ParticipanteReserva();
+        participante.setReserva(reserva);
+        participante.setNomeCompleto("Responsável Exemplo");
+        participante.setRmOuRg("RG-APM-OUTRO");
+        participante.setCategoria(CategoriaParticipante.OUTRO);
+        participanteRepository.saveAndFlush(participante);
     }
 
     private void limparArquivos() throws IOException {

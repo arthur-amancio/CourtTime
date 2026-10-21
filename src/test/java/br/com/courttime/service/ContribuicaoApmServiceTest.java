@@ -96,8 +96,11 @@ class ContribuicaoApmServiceTest {
         when(contribuicaoRepository.obterPorReservaId(20L))
                 .thenReturn(Optional.of(contribuicao));
         when(ajusteRepository.listarHistorico(contribuicao)).thenReturn(List.of(ajuste));
+        when(participanteService.contarParticipantes(reserva)).thenReturn(11L);
 
-        assertEquals(List.of(reserva), service.listarPendentes(secretaria));
+        List<ContribuicaoPendente> pendentes = service.listarPendentes(secretaria);
+        assertEquals(List.of(new ContribuicaoPendente(reserva, 11L)), pendentes);
+        assertEquals(new BigDecimal("22.00"), pendentes.get(0).valorDevido());
         assertEquals(List.of(contribuicao), service.listarRegistradas(secretaria));
         DetalheContribuicaoApm detalhe = service.obterPorReserva(20L, secretaria);
         assertSame(contribuicao, detalhe.contribuicao());
@@ -119,19 +122,23 @@ class ContribuicaoApmServiceTest {
     }
 
     @Test
-    void registraValorRealVinculadoAConferenciaExataEAvancaParaAnalise() {
+    void r03RegistraValorCalculadoVinculadoAConferenciaExataEAvancaParaAnalise() {
         prepararRegistro();
+        // 10 alunos e 1 participante Outro: 11 × R$ 2,00.
+        when(participanteService.contarParticipantes(reserva)).thenReturn(11L);
         when(contribuicaoRepository.saveAndFlush(any(ContribuicaoApm.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         DetalheContribuicaoApm detalhe = service.registrar(
-                20L, secretaria, " 20,50 ", "  Recebido em espécie.  ");
+                20L, secretaria, "  Recebido em espécie.  ");
 
         ContribuicaoApm contribuicao = detalhe.contribuicao();
         assertSame(reserva, contribuicao.getReserva());
         assertSame(conferencia, contribuicao.getConferenciaDocumento());
         assertSame(secretaria, contribuicao.getRegistradaPor());
-        assertEquals(new BigDecimal("20.50"), contribuicao.getValor());
+        assertEquals(new BigDecimal("22.00"), contribuicao.getValorDevido());
+        assertEquals(new BigDecimal("22.00"), contribuicao.getValor());
+        assertEquals(11L, detalhe.participantesCobrados());
         assertEquals("Recebido em espécie.", contribuicao.getObservacoes());
         assertEquals(StatusReserva.PENDENTE_ANALISE, reserva.getStatus());
         assertEquals(List.of(), detalhe.ajustes());
@@ -146,17 +153,17 @@ class ContribuicaoApmServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(IllegalStateException.class,
-                () -> service.registrar(20L, secretaria, "20.00", null));
+                () -> service.registrar(20L, secretaria, null));
 
         conferencia.setResultado(ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO);
         when(documentoRepository.obterVersaoMaisRecenteComConferencia(reserva))
                 .thenReturn(Optional.of(documento));
         assertThrows(IllegalStateException.class,
-                () -> service.registrar(20L, secretaria, "20.00", null));
+                () -> service.registrar(20L, secretaria, null));
 
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
         assertThrows(IllegalStateException.class,
-                () -> service.registrar(20L, secretaria, "20.00", null));
+                () -> service.registrar(20L, secretaria, null));
         verify(contribuicaoRepository, never()).saveAndFlush(any());
     }
 
@@ -166,7 +173,7 @@ class ContribuicaoApmServiceTest {
         when(contribuicaoRepository.existsByReserva(reserva)).thenReturn(true);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> service.registrar(20L, secretaria, "20.00", null));
+                () -> service.registrar(20L, secretaria, null));
 
         assertEquals("Esta solicitação já possui uma contribuição registrada",
                 exception.getMessage());
@@ -183,21 +190,24 @@ class ContribuicaoApmServiceTest {
                 .when(participanteService).validarDocumentoAtual(reserva, documento);
 
         assertThrows(IllegalStateException.class,
-                () -> service.registrar(20L, secretaria, "20.00", null));
+                () -> service.registrar(20L, secretaria, null));
         verify(contribuicaoRepository, never()).saveAndFlush(any());
     }
 
     @Test
-    void validaValorEObservacoesAntesDeBloquearReserva() {
+    void validaObservacoesAntesDeBloquearReserva() {
         when(usuarioRepository.findById(10L)).thenReturn(Optional.of(secretaria));
 
-        for (String valor : List.of("", "0", "-1", "2.001", "abc", "1.2.3")) {
-            assertThrows(IllegalArgumentException.class,
-                    () -> service.registrar(20L, secretaria, valor, null));
-        }
         assertThrows(IllegalArgumentException.class,
-                () -> service.registrar(20L, secretaria, "20.00", "x".repeat(501)));
+                () -> service.registrar(20L, secretaria, "x".repeat(501)));
         verifyNoInteractions(reservaRepository, documentoRepository);
+    }
+
+    @Test
+    void r03CalculaDoisReaisPorParticipante() {
+        assertEquals(new BigDecimal("20.00"), ContribuicaoApmService.calcularValorDevido(10));
+        assertEquals(new BigDecimal("22.00"), ContribuicaoApmService.calcularValorDevido(11));
+        assertEquals(new BigDecimal("62.00"), ContribuicaoApmService.calcularValorDevido(31));
     }
 
     @Test

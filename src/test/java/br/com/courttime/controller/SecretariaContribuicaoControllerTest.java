@@ -11,6 +11,7 @@ import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ContribuicaoApmService;
+import br.com.courttime.service.ContribuicaoPendente;
 import br.com.courttime.service.DetalheContribuicaoApm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -113,9 +115,10 @@ class SecretariaContribuicaoControllerTest {
     }
 
     @Test
-    void secretariaVisualizaPendenciasEHistoricoSemCalculoAutomatico() throws Exception {
+    void r03SecretariaVeValorCalculadoSemCampoDeValorLivre() throws Exception {
         prepararSecretaria();
-        when(contribuicaoService.listarPendentes(secretaria)).thenReturn(List.of(reserva));
+        when(contribuicaoService.listarPendentes(secretaria))
+                .thenReturn(List.of(new ContribuicaoPendente(reserva, 11L)));
         when(contribuicaoService.listarRegistradas(secretaria))
                 .thenReturn(List.of(contribuicao));
 
@@ -128,7 +131,10 @@ class SecretariaContribuicaoControllerTest {
                 .andExpect(content().string(containsString(
                         "Histórico de contribuições presenciais")))
                 .andExpect(content().string(containsString(
-                        "não calcula nem confirma valores automaticamente")));
+                        "11 participantes × R$ 2,00 = R$ 22,00")))
+                .andExpect(content().string(containsString("Registrar recebimento de R$ 22,00")))
+                .andExpect(content().string(not(containsString("name=\"valor\""))))
+                .andExpect(content().string(not(containsString("Referência institucional pendente"))));
     }
 
     @Test
@@ -141,7 +147,7 @@ class SecretariaContribuicaoControllerTest {
 
         prepararSecretaria();
         when(contribuicaoService.registrar(
-                20L, secretaria, "20.00", "Recebido presencialmente."))
+                20L, secretaria, "Recebido presencialmente."))
                 .thenReturn(detalhe);
         mockMvc.perform(post("/secretaria/contribuicoes/solicitacoes/20")
                         .with(user(secretaria.getEmail()).roles("SECRETARIA"))
@@ -155,14 +161,15 @@ class SecretariaContribuicaoControllerTest {
                 .andExpect(flash().attribute(
                         "mensagemSucesso", "Contribuição presencial registrada."));
 
+        // Um valor enviado à mão é ignorado: o serviço calcula o devido (R03.2).
         verify(contribuicaoService).registrar(
-                20L, secretaria, "20.00", "Recebido presencialmente.");
+                20L, secretaria, "Recebido presencialmente.");
     }
 
     @Test
     void erroDeElegibilidadeNaoAlegaRecebimento() throws Exception {
         prepararSecretaria();
-        when(contribuicaoService.registrar(20L, secretaria, "20.00", ""))
+        when(contribuicaoService.registrar(20L, secretaria, ""))
                 .thenThrow(new IllegalStateException(
                         "A versão mais recente do documento ainda não foi validada"));
 
@@ -203,7 +210,24 @@ class SecretariaContribuicaoControllerTest {
                 .andExpect(content().string(containsString(
                         "Histórico de ajustes da contribuição")))
                 .andExpect(content().string(containsString(
-                        "não aprova a reserva")));
+                        "não aprova a reserva")))
+                .andExpect(content().string(containsString("Não calculado")));
+    }
+
+    @Test
+    void r03DetalheMostraContaDoValorDevido() throws Exception {
+        prepararSecretaria();
+        contribuicao.setValorDevido(new BigDecimal("22.00"));
+        contribuicao.setValor(new BigDecimal("22.00"));
+        when(contribuicaoService.obterPorReserva(20L, secretaria))
+                .thenReturn(new DetalheContribuicaoApm(contribuicao, List.of()));
+
+        mockMvc.perform(get("/secretaria/contribuicoes/solicitacoes/20")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "11 participantes × R$ 2,00 = R$ 22,00")))
+                .andExpect(content().string(not(containsString("Não calculado"))));
     }
 
     @Test

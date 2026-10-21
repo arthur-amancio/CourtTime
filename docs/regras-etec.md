@@ -89,8 +89,9 @@ pela secretaria, sem integração bancária nem pagamento on-line.
   corrigir um registro.
 - R03.5 — Não há Pix, cartão, boleto nem pagamento pela internet.
 
-**Hoje.** A secretaria digita o valor e a tela avisa que a referência de R$ 2,00
-depende de confirmação. O termo oficial fala em R$ 2,00 "por participante a
+**Hoje.** O sistema calcula o valor devido e grava devido e recebido
+(`contribuicoes_apm.valor_devido`, coluna que aceita nulo nos registros
+antigos). A secretaria só confirma o recebimento. O termo oficial fala em R$ 2,00 "por participante a
 cada hora". Como todo período do CourtTime tem uma hora, as duas formas dão o
 mesmo valor.
 

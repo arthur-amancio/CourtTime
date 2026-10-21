@@ -56,6 +56,14 @@ public class ContribuicaoApm {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal valor;
 
+    /**
+     * R03: valor calculado no registro (R$ 2,00 por participante). Nulo nos
+     * registros feitos antes desta regra.
+     */
+    @Digits(integer = 10, fraction = 2)
+    @Column(name = "valor_devido", precision = 12, scale = 2)
+    private BigDecimal valorDevido;
+
     @Size(max = 500)
     @Column(length = 500)
     private String observacoes;
@@ -105,6 +113,14 @@ public class ContribuicaoApm {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public BigDecimal getValorDevido() {
+        return valorDevido;
+    }
+
+    public void setValorDevido(BigDecimal valorDevido) {
+        this.valorDevido = valorDevido;
     }
 
     public String getObservacoes() {

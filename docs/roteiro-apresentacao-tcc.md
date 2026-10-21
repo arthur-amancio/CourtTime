@@ -136,9 +136,9 @@ sair e entrar o tempo todo.
 2. Abra o documento pendente, **baixe o PDF** e diga que a conferência é
    **manual**: o sistema não valida assinatura criptograficamente.
 3. **Validar documento**.
-4. **Contribuições presenciais** → registre o valor fictício. Mostre o aviso de
-   que a referência de R$ 2,00 **depende de confirmação da ETEC** e que o
-   sistema **não calcula** o valor.
+4. **Contribuições presenciais** → mostre a conta, por exemplo
+   "10 participantes × R$ 2,00 = R$ 20,00", e clique em **Registrar
+   recebimento**. A secretaria não digita o valor; o pagamento é presencial.
 5. Aponte que a solicitação passou para **Pronta para análise administrativa**,
    e que **a secretaria não aprova reservas**.
 
@@ -222,7 +222,6 @@ jornada no Chromium, com centenas de verificações, inclusive no celular.
 - **Não há registro** de contato com o aluno.
 - **Não há registro de ocorrências** pela segurança.
 - **Não há** regra de retenção dos documentos enviados.
-- O sistema **não calcula** o valor da contribuição.
 - Decisões ainda pendentes da ETEC: limite de participantes, prazo para a
   decisão administrativa, coleta de CPF e curso, e o vínculo da categoria "Outro".
 

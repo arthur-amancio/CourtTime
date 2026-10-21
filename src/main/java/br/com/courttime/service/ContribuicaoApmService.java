@@ -25,6 +25,9 @@ import java.util.Objects;
 @Service
 public class ContribuicaoApmService {
 
+    /** R03: R$ 2,00 por participante, de qualquer categoria (Aluno ou Outro). */
+    public static final BigDecimal VALOR_POR_PARTICIPANTE = new BigDecimal("2.00");
+
     private static final BigDecimal VALOR_MAXIMO = new BigDecimal("9999999999.99");
     private static final int TAMANHO_MAXIMO_TEXTO = 500;
 
@@ -51,11 +54,20 @@ public class ContribuicaoApmService {
     }
 
     @Transactional(readOnly = true)
-    public List<Reserva> listarPendentes(Usuario secretaria) {
+    public List<ContribuicaoPendente> listarPendentes(Usuario secretaria) {
         obterSecretariaAtual(secretaria);
         return contribuicaoRepository.listarPendentes(
-                StatusReserva.PENDENTE_DOCUMENTACAO,
-                ResultadoConferenciaDocumento.VALIDADO);
+                        StatusReserva.PENDENTE_DOCUMENTACAO,
+                        ResultadoConferenciaDocumento.VALIDADO)
+                .stream()
+                .map(reserva -> new ContribuicaoPendente(
+                        reserva, participanteService.contarParticipantes(reserva)))
+                .toList();
+    }
+
+    /** R03.1: valor devido = R$ 2,00 × total de participantes. */
+    public static BigDecimal calcularValorDevido(long participantes) {
+        return VALOR_POR_PARTICIPANTE.multiply(BigDecimal.valueOf(participantes));
     }
 
     @Transactional(readOnly = true)
@@ -78,11 +90,9 @@ public class ContribuicaoApmService {
     public DetalheContribuicaoApm registrar(
             Long reservaId,
             Usuario secretaria,
-            String valor,
             String observacoes) {
         Usuario operadora = obterSecretariaAtual(secretaria);
         validarId(reservaId, "A solicitação é obrigatória");
-        BigDecimal valorValidado = validarValor(valor);
         String observacoesNormalizadas = normalizarTextoOpcional(
                 observacoes, "As observações devem possuir no máximo 500 caracteres");
 
@@ -108,10 +118,19 @@ public class ContribuicaoApmService {
                     "Esta solicitação já possui uma contribuição registrada");
         }
 
+        // A lista está travada desde o envio, então a contagem atual é a do
+        // documento conferido (R03.1). A secretaria não digita o valor (R03.2).
+        BigDecimal valorDevido = calcularValorDevido(
+                participanteService.contarParticipantes(reserva));
+        if (valorDevido.signum() <= 0) {
+            throw new IllegalStateException("A solicitação não possui participantes cadastrados");
+        }
+
         ContribuicaoApm contribuicao = new ContribuicaoApm();
         contribuicao.setReserva(reserva);
         contribuicao.setConferenciaDocumento(conferencia);
-        contribuicao.setValor(valorValidado);
+        contribuicao.setValorDevido(valorDevido);
+        contribuicao.setValor(valorDevido);
         contribuicao.setObservacoes(observacoesNormalizadas);
         contribuicao.setRegistradaPor(operadora);
         contribuicao = contribuicaoRepository.saveAndFlush(contribuicao);
