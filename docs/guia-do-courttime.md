@@ -99,8 +99,9 @@ Para não prometer na banca o que o código não faz:
 Em 21/10/2026, o procedimento da quadra foi explicado pelo Leandro. As nove
 regras (R01 a R09) e os requisitos que saem delas estão em
 [regras-etec.md](regras-etec.md). O plano de implementação está em
-[plano-regras-etec.md](plano-regras-etec.md). Enquanto os PRs de cada regra não
-forem integrados, vale o comportamento descrito neste guia.
+[plano-regras-etec.md](plano-regras-etec.md). Todas foram integradas na `main`
+em 21/10/2026 (PRs #70 a #75), menos o registro de pessoas a mais na portaria
+(R08.2), que depende da decisão D3.
 
 Continuam em aberto o horário-limite do envio no dia anterior, o destino do
 crédito excedente na remarcação, a autorização de pessoas extras na portaria e

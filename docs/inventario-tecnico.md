@@ -1,7 +1,8 @@
 # Inventário técnico do CourtTime
 
-Levantamento fiel à implementação, extraído do código em `main` (`436b262`), com
-contagens de arquivos e o atributo `remarcacaoDe` atualizados em 21/10/2026 (`b709a55`).
+Levantamento fiel à implementação, extraído do código em `main` (`436b262`) e
+atualizado em 21/10/2026 com as regras da ETEC (R01 a R09) e a simplificação
+dos controllers.
 Serve de base verificável para os capítulos V, VI e VII da documentação
 acadêmica.
 
@@ -17,12 +18,12 @@ algo não existe, está dito que não existe.
 
 | Camada | Pasta | Arquivos | Papel |
 |---|---|---|---|
-| Entidades | `entity/` | 11 entidades + 6 enums | estado persistido, mapeado por JPA |
+| Entidades | `entity/` | 11 entidades + 8 enums | estado persistido, mapeado por JPA |
 | Repositórios | `repository/` | 11 | acesso a dados via Spring Data JPA |
-| Serviços | `service/` | 31 | regras de negócio, geração do formulário oficial e objetos de transporte |
-| Controladores | `controller/` | 17 | 14 controladores Spring MVC, 2 tratadores globais e 1 auxiliar do calendário |
+| Serviços | `service/` | 32 | regras de negócio, geração do formulário oficial e objetos de transporte |
+| Controladores | `controller/` | 15 (+5 formulários) | 12 controladores Spring MVC, 2 tratadores globais e 1 auxiliar do calendário |
 | Configuração | `config/` | 3 | segurança, carga inicial da quadra e bootstrap do administrador |
-| Segurança | `security/` | 2 | principal autenticado e revalidação de sessão |
+| Segurança | `security/` | 4 | principal autenticado, revalidação de sessão e `@UsuarioAtual` (usuário da sessão entregue ao controller) |
 | Armazenamento | `storage/` | 2 | gravação dos PDFs fora da área pública |
 
 Os 31 arquivos de `service/` **não são 31 serviços**. Parte são `record`
@@ -84,6 +85,8 @@ Três observações que o diagrama precisa refletir:
 | `Perfil` | `ALUNO`, `ADMINISTRADOR`, `SECRETARIA`, `SEGURANCA` | autorização e navegação |
 | `StatusReserva` | `PENDENTE_DOCUMENTACAO`, `PENDENTE_ANALISE`, `APROVADA`, `REJEITADA`, `CANCELADA` | ciclo de vida da reserva |
 | `CategoriaParticipante` | `ALUNO`, `OUTRO` | contagem do mínimo de dez alunos |
+| `VinculoParticipante` | `EX_ALUNO`, `PAI_OU_MAE`, `IRMAO_OU_IRMA`, `PROFESSOR` | vínculo obrigatório na categoria Outro (R09) |
+| `PresencaParticipante` | `PRESENTE`, `AUSENTE` | marcação da portaria (R08) |
 | `ResultadoConferenciaDocumento` | `VALIDADO`, `DEVOLVIDO_CORRECAO` | decisão da secretaria |
 | `DiaSemana` | `SEGUNDA` a `DOMINGO` | grade semanal |
 | `OperacaoAuditoriaUsuario` | `CADASTRO`, `EDICAO`, `ATIVACAO`, `DESATIVACAO` | auditoria de contas |
@@ -164,6 +167,10 @@ Gerado das anotações JPA. "Obrigatório" é `nullable = false`; "Único" é
 | `nomeCompleto` | `String` | — | sim | não | 150 |
 | `rmOuRg` | `String` | — | sim | não | 30 |
 | `categoria` | `CategoriaParticipante` | — | sim | não | 10 |
+| `vinculo` | `VinculoParticipante` | — | não (obrigatório no serviço para Outro) | não | 20 |
+| `presenca` | `PresencaParticipante` | — | não | não | 10 |
+| `presencaRegistradaPor` | `Usuario` | N:1 | não | não | — |
+| `presencaRegistradaEm` | `Instant` | — | não | não | — |
 
 ### `DocumentoReserva` — tabela `documentos_reserva`
 
@@ -189,6 +196,7 @@ Gerado das anotações JPA. "Obrigatório" é `nullable = false`; "Único" é
 | `documento` | `DocumentoReserva` | 1:1 | sim | sim | — |
 | `resultado` | `ResultadoConferenciaDocumento` | — | sim | não | 30 |
 | `justificativa` | `String` | — | não | não | 500 |
+| `assinaturaGovBrConferida` | `Boolean` | — | não (exigido ao validar) | não | — |
 | `conferidoPor` | `Usuario` | N:1 | sim | não | — |
 | `conferidoEm` | `Instant` | — | sim | não | — |
 
@@ -199,7 +207,10 @@ Gerado das anotações JPA. "Obrigatório" é `nullable = false`; "Único" é
 | `id` | `Long` | — | não | não | — |
 | `reserva` | `Reserva` | 1:1 | sim | não | — |
 | `conferenciaDocumento` | `ConferenciaDocumento` | 1:1 | sim | não | — |
-| `valor` | `BigDecimal` | — | sim | não | — |
+| `valorDevido` | `BigDecimal` | — | não (nulo em registros anteriores à R03) | não | — |
+| `valor` | `BigDecimal` | — | sim (valor recebido; zero quando o crédito cobre tudo) | não | — |
+| `creditoAplicado` | `BigDecimal` | — | não | não | — |
+| `contribuicaoOrigem` | `ContribuicaoApm` | N:1 | não | não | — |
 | `observacoes` | `String` | — | não | não | 500 |
 | `registradaPor` | `Usuario` | N:1 | sim | não | — |
 | `registradaEm` | `Instant` | — | sim | não | — |
@@ -246,20 +257,26 @@ Restrições efetivamente declaradas no modelo:
 - `length` limitando colunas de texto;
 - índices em `reservas` para consulta por quadra, data e status, e por solicitante;
 - bloqueio pessimista (`SELECT ... FOR UPDATE`) em quadra, reserva e usuário
-  durante a aprovação, para impedir autorizações simultâneas do mesmo período.
+  durante a aprovação, para impedir autorizações simultâneas do mesmo período;
+- o mesmo bloqueio da reserva serializa a marcação de presença pela portaria.
+
+As colunas das regras da ETEC (`vinculo`, `presenca*`,
+`assinatura_gov_br_conferida`, `valor_devido`, `credito_aplicado`,
+`contribuicao_origem_id`) foram criadas aceitando nulo, para que um banco
+existente receba as colunas sem perder dados.
 
 ---
 
 # Capítulo VI — Telas
 
-28 templates Thymeleaf. Nenhum framework de frontend; HTML, CSS e Thymeleaf.
+32 templates Thymeleaf (inclusive fragmentos). Nenhum framework de frontend; HTML, CSS, Thymeleaf e três scripts pequenos de apoio.
 A matriz abaixo registra o contrato que um redesign precisa preservar. “Teste”
 indica a cobertura automatizada existente; a jornada Playwright complementa as
 verificações de navegador, responsividade e integração entre perfis.
 
 | Tela (template) | Rota | Perfil autorizado | Ações reais | Dados apresentados ou enviados | Restrições que a interface deve preservar | Testes atuais |
 |---|---|---|---|---|---|---|
-| Página pública (`index.html`) | `GET /` | Público | Ir ao login | Identidade e finalidade do sistema | Não prometer aprovação, assinatura ou pagamento eletrônico | `PaginasPublicasTest` |
+| Página pública (`index.html`) | `GET /` | Público | Ir ao login | Identidade e finalidade do sistema, foto da escola e logotipos ETEC, CPS e Governo de SP | Não prometer aprovação, assinatura ou pagamento eletrônico | `PaginasPublicasTest` |
 | Login (`login.html`) | `GET /login`, `POST /login` | Público | Autenticar | Email, senha e mensagens da sessão | Senha nunca volta no HTML; falha não revela existência da conta | `PaginasPublicasTest`; jornada Playwright |
 | Início (`inicio.html`) | `GET /inicio` | Autenticado | Navegar para ações do perfil | Usuário, perfil e, para aluno, situação mais recente | Atalhos variam por perfil; situação não pode alegar autorização indevida | `InicioControllerTest`, `PaginasPublicasTest` |
 | Erro (`error.html`) | despacho de erro | Conforme requisição | Voltar ao início | Código e mensagem pública | Sem stack trace, SQL, chave de arquivo ou detalhe interno | `PaginaDeErroTest`, `PaginaDeErroServidorTest` |
@@ -268,11 +285,11 @@ verificações de navegador, responsividade e integração entre perfis.
 | Minhas solicitações (`solicitacoes/lista.html`) | `GET /solicitacoes` | Aluno | Abrir detalhe; iniciar nova | Somente solicitações do usuário e situação derivada | Ownership obrigatório; uma situação principal por solicitação | `SolicitacaoReservaControllerTest`, `SituacaoSolicitacaoServiceTest` |
 | Detalhe do aluno (`solicitacoes/detalhe.html`) | `GET /solicitacoes/{id}` | Aluno proprietário | Abrir participantes/documentos conforme etapa | Período, finalidade, situação e motivos aplicáveis | ID alheio retorna 404; pendente não aparece como aprovado | `SolicitacaoReservaControllerTest`; jornada Playwright |
 | Participantes (`solicitacoes/participantes/lista.html`) | `GET /solicitacoes/{id}/participantes`; `POST .../{participanteId}/remover` | Aluno proprietário | Adicionar, editar, remover | Contagens separadas, nome, RM/RG e categoria | Mínimo é dez alunos; lista fica somente leitura após envio; CSRF e ownership | `ParticipanteReservaControllerTest`, `ParticipanteReservaServiceTest`; jornada Playwright |
-| Formulário de participante (`solicitacoes/participantes/formulario.html`) | `GET/POST /solicitacoes/{id}/participantes/...` | Aluno proprietário | Incluir ou atualizar | `nomeCompleto`, `rmOuRg`, `categoria` | Campos obrigatórios; 150/30 caracteres; participante precisa pertencer à reserva | `ParticipanteReservaControllerTest`; jornada Playwright |
-| Documentos do aluno (`solicitacoes/documentos/lista.html`) | `GET/POST /solicitacoes/{id}/documentos`; `GET .../{documentoId}/baixar` | Aluno proprietário | Enviar nova versão; baixar original | PDF, versões, tamanho, envio e conferência | PDF válido até 10 MB; bytes imutáveis; armazenamento privado; upload só na etapa permitida | `DocumentoReservaControllerTest`, `DocumentoReservaServiceTest`, `DocumentoStorageLocalTest`; jornada Playwright |
+| Formulário de participante (`solicitacoes/participantes/formulario.html`) | `GET/POST /solicitacoes/{id}/participantes/...` | Aluno proprietário | Incluir ou atualizar | `nomeCompleto`, `rmOuRg`, `categoria`, `vinculo` | Campos obrigatórios; 150/30 caracteres; vínculo obrigatório na categoria Outro e recusado para Aluno (R09); participante precisa pertencer à reserva | `ParticipanteReservaControllerTest`; jornada Playwright |
+| Documentos do aluno (`solicitacoes/documentos/lista.html`) | `GET/POST /solicitacoes/{id}/documentos`; `GET .../{documentoId}/baixar` | Aluno proprietário | Enviar nova versão; baixar original | PDF, versões, tamanho, envio e conferência | PDF válido até 10 MB; bytes imutáveis; armazenamento privado; upload só na etapa permitida e até o dia anterior ao uso (R01) | `DocumentoReservaControllerTest`, `DocumentoReservaServiceTest`, `DocumentoStorageLocalTest`; jornada Playwright |
 | Painel administrativo (`admin/painel.html`) | `GET /admin` | Administrador | Navegar para solicitações, usuários, grade e bloqueios | Métricas reais da quadra e solicitações | Nenhuma ação fictícia; não expor funções a outros perfis | `AdminQuadraControllerTest` |
 | Fila administrativa (`admin/solicitacoes/lista.html`) | `GET /admin/solicitacoes` | Administrador | Abrir análise ou reserva autorizada | Pendências e aprovadas em listas separadas | Pendentes nunca aparecem como autorização | `AdminSolicitacaoControllerTest`; jornada Playwright |
-| Análise administrativa (`admin/solicitacoes/detalhe.html`) | `GET /admin/solicitacoes/{id}`; `POST .../aprovar`, `/rejeitar`, `/cancelar`; `GET .../documentos/{documentoId}/baixar` | Administrador | Baixar PDF; aprovar; rejeitar; cancelar | Pedido, dez alunos, documento, contribuição e histórico de decisão | Aprovação sem motivo; rejeição/cancelamento com motivo; transação revalida horário e elegibilidade | `AdminSolicitacaoControllerTest`, `AnaliseAdministrativaServiceTest`; jornada Playwright |
+| Análise administrativa (`admin/solicitacoes/detalhe.html`) | `GET /admin/solicitacoes/{id}`; `POST .../aprovar`, `/rejeitar`, `/cancelar`; `GET .../documentos/{documentoId}/baixar` | Administrador | Baixar PDF; aprovar; rejeitar; cancelar | Pedido, dez alunos, vínculo do Outro, presença, documento, assinatura gov.br conferida, contribuição com crédito e histórico de decisão | Aprovação sem motivo; rejeição/cancelamento com motivo e lembrete do WhatsApp (R05); transação revalida horário e elegibilidade | `AdminSolicitacaoControllerTest`, `AnaliseAdministrativaServiceTest`; jornada Playwright |
 | Usuários (`admin/usuarios/lista.html`) | `GET /admin/usuarios`; `POST .../{id}/alternar` | Administrador | Filtrar; cadastrar; editar; ativar/desativar; redefinir senha | Nome, email, perfil, situação e paginação | Não expor hash; não desativar último admin; CSRF; sessão revogada após bloqueio | `AdminUsuarioControllerTest`, `AdministracaoUsuarioServiceTest`; jornada Playwright |
 | Cadastro de usuário (`admin/usuarios/cadastro.html`) | `GET/POST /admin/usuarios/novo` | Administrador | Criar conta | Nome, email, perfil, senha e confirmação | 8–72 caracteres; confirmação; não permite criar outro administrador por esse fluxo | `AdminUsuarioControllerTest` |
 | Edição de usuário (`admin/usuarios/edicao.html`) | `GET/POST /admin/usuarios/{id}/editar` | Administrador | Atualizar identidade e perfil permitido | Nome, email e perfil | Administrador não tem seu perfil rebaixado pelo formulário comum | `AdminUsuarioControllerTest` |
@@ -282,11 +299,11 @@ verificações de navegador, responsividade e integração entre perfis.
 | Bloqueios (`admin/bloqueios/lista.html`) | `GET /admin/bloqueios`; `POST .../{id}/desativar` | Administrador | Incluir; desativar | Data, período, motivo e estado | Desativação explícita; sem exclusão de histórico; CSRF | `AdminQuadraControllerTest` |
 | Formulário de bloqueio (`admin/bloqueios/formulario.html`) | `GET/POST /admin/bloqueios/novo` | Administrador | Cadastrar bloqueio | `data`, início, fim e motivo | Não pode sobrepor reserva aprovada; motivo obrigatório; fim posterior | `AdminQuadraControllerTest`, `AdministracaoQuadraServiceTest`; jornada Playwright |
 | Fila documental (`secretaria/documentos/lista.html`) | `GET /secretaria/documentos` | Secretaria | Abrir conferência ou histórico | Pendentes e conferidos | Não oferece aprovação de reserva; versões substituídas não voltam à fila | `SecretariaDocumentoControllerTest` |
-| Conferência documental (`secretaria/documentos/detalhe.html`) | `GET /secretaria/documentos/{documentoId}`; `GET .../baixar`; `POST .../validar`, `/devolver` | Secretaria | Baixar original; validar; devolver | Metadados do PDF e histórico; justificativa de devolução | Devolução exige justificativa; só a versão mais recente; PDF privado e imutável | `SecretariaDocumentoControllerTest`, `ConferenciaDocumentoServiceTest`; jornada Playwright |
-| Contribuições (`secretaria/contribuicoes/lista.html`) | `GET /secretaria/contribuicoes`; `POST .../solicitacoes/{reservaId}` | Secretaria | Registrar recebimento presencial | Pedido, situação, valor e observações | Somente após documento validado; valor calculado (R$ 2,00 por participante), não digitado; sem duplicidade | `SecretariaContribuicaoControllerTest`, `ContribuicaoApmServiceTest`; jornada Playwright |
+| Conferência documental (`secretaria/documentos/detalhe.html`) | `GET /secretaria/documentos/{documentoId}`; `GET .../baixar`; `POST .../validar`, `/devolver` | Secretaria | Baixar original; validar; devolver | Metadados do PDF e histórico; justificativa de devolução | Validar exige marcar a conferência da assinatura gov.br no verificador do ITI (R07); devolução exige justificativa; só a versão mais recente; PDF privado e imutável | `SecretariaDocumentoControllerTest`, `ConferenciaDocumentoServiceTest`; jornada Playwright |
+| Contribuições (`secretaria/contribuicoes/lista.html`) | `GET /secretaria/contribuicoes`; `POST .../solicitacoes/{reservaId}` | Secretaria | Registrar recebimento presencial | Pedido, situação, valor devido, crédito da remarcação, valor a cobrar e observações | Somente após documento validado; valor calculado (R$ 2,00 por participante, R03), não digitado; crédito da cancelada abatido, nunca negativo (R04); sem duplicidade | `SecretariaContribuicaoControllerTest`, `ContribuicaoApmServiceTest`; jornada Playwright |
 | Histórico da contribuição (`secretaria/contribuicoes/detalhe.html`) | `GET /secretaria/contribuicoes/solicitacoes/{id}`; `POST /secretaria/contribuicoes/{id}/ajustes` | Secretaria | Consultar; adicionar ajuste | Registro original e ajustes append-only | Ajuste exige motivo; histórico original não é sobrescrito | `SecretariaContribuicaoControllerTest`, `ContribuicaoApmServiceTest` |
 | Reservas autorizadas (`seguranca/reservas/lista.html`) | `GET /seguranca/reservas` | Segurança | Abrir conferência | Somente reservas atualmente aprovadas | Consulta somente leitura; canceladas, rejeitadas e pendentes ausentes | `SegurancaReservaControllerTest`, `ConsultaSegurancaServiceTest`; jornada Playwright |
-| Conferência de entrada (`seguranca/reservas/detalhe.html`) | `GET /seguranca/reservas/{id}` | Segurança | Voltar à lista | Período, finalidade, nomes, RM/RG e categoria | Só reserva aprovada; sem documento, contribuição, email ou controles de escrita | `SegurancaReservaControllerTest`; jornada Playwright |
+| Conferência de entrada (`seguranca/reservas/detalhe.html`) | `GET /seguranca/reservas/{id}`; `POST .../presencas` | Segurança | Marcar presente ou ausente no dia; voltar à lista | Período, finalidade, nomes, RM/RG, categoria, vínculo e presença | Só reserva aprovada; presença só no dia da reserva (R08); sem documento, contribuição ou email; a única escrita é a presença | `SegurancaReservaControllerTest`; jornada Playwright |
 
 ## Status das evidências visuais
 
@@ -318,10 +335,11 @@ Versões efetivamente usadas, conferidas em `pom.xml` e no workflow do CI.
 | Spring Security | do Spring Boot 3.5.16 | autenticação por sessão, autorização por perfil, CSRF |
 | Spring Data JPA | do Spring Boot 3.5.16 | repositórios |
 | Hibernate | do Spring Boot 3.5.16 | implementação JPA; gera o esquema |
-| PostgreSQL | **16** no CI | banco de dados; driver `org.postgresql:postgresql` |
+| PostgreSQL | **16 e 18** no CI | banco de dados; driver `org.postgresql:postgresql` |
 | Maven Wrapper | **3.9.16** | build sem instalar Maven |
-| HTML e CSS | — | 27 templates e uma folha de estilo |
-| JavaScript | **nenhum** | não há arquivo `.js` no projeto |
+| HTML e CSS | — | 32 templates e uma folha de estilo |
+| JavaScript | puro, sem framework | três scripts pequenos: menu no celular, envio de PDF e escolha do horário |
+| Apache PDFBox | **3.0.5** | preenche o formulário oficial da ETEC |
 | JUnit 5, Mockito, Spring Test | do `spring-boot-starter-test` | testes |
 | Spring Security Test | do Spring Boot 3.5.16 | testes de autorização e CSRF |
 | GitHub Actions | — | CI com PostgreSQL 16 e 18 temporários |
