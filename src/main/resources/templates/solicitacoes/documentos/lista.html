@@ -48,7 +48,7 @@
                 </div>
                 <form class="painel__corpo pilha pilha--compacta" method="post"
                       th:action="@{/solicitacoes/{id}/formulario-oficial(id=${solicitacao.id})}">
-                    <p>O CourtTime preenche o formulário original da ETEC com a data, o horário e os participantes cadastrados. Imprima, assine e envie o PDF assinado logo abaixo.</p>
+                    <p>O CourtTime preenche o formulário original da ETEC com a data, o horário e os participantes cadastrados. Baixe, assine pelo gov.br e envie o PDF assinado logo abaixo.</p>
                     <div class="campos-linha">
                         <div class="campo">
                             <label for="cpf">CPF do solicitante</label>
@@ -82,7 +82,7 @@
                     <div class="alerta alerta--neutro">
                         <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
                         <div>
-                            <p><strong>Assinatura externa</strong></p>
+                            <p><strong>Assinatura pelo gov.br</strong></p>
                             <p>Assine o PDF pelo gov.br (assinatura eletrônica gratuita da conta gov.br). A secretaria confere a assinatura no verificador oficial. O envio ao CourtTime não comprova nem valida a assinatura.</p>
                             <ul>
                                 <li>Antes do envio, confira se a lista do documento corresponde ao cadastro e contém no mínimo dez alunos.</li>

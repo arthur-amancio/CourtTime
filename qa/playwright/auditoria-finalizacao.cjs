@@ -277,7 +277,7 @@ async function semRolagemHorizontal(page, rotulo, url) {
     // ---------------------------------------------------- formulário oficial
     await alunoC.goto(`${BASE}/solicitacoes/${ids.r1}/documentos`);
     corpo = await alunoC.locator('body').innerText();
-    check(corpo.includes('Imprima, assine e envie') && corpo.includes('não ficam gravados'), 'tela explica como gerar, assinar e enviar');
+    check(corpo.includes('assine pelo gov.br e envie') && corpo.includes('não ficam gravados'), 'tela explica como gerar, assinar e enviar');
     const cpf = '123.456.789-09';
     let pdf = await gerarFormulario(alunoC, ids.r1, { cpf, curso: 'Técnico em Informática para Internet' });
     const bytes = Buffer.from(pdf.base64, 'base64');

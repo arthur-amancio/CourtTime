@@ -59,7 +59,7 @@ class InicioControllerTest {
         when(reservaService.listarSolicitacoesDoUsuario(aluno)).thenReturn(List.of(reserva));
         when(situacaoSolicitacaoService.descrever(reserva)).thenReturn(new SituacaoSolicitacao(
                 "Pendente de documentação",
-                "Revise os participantes e envie o PDF preparado e assinado fora do sistema.",
+                "Revise os participantes e envie o PDF assinado pelo gov.br até o dia anterior ao uso.",
                 false));
 
         mockMvc.perform(get("/inicio").with(user(aluno.getEmail()).roles("ALUNO")))
