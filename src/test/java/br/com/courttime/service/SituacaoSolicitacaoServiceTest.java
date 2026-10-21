@@ -115,6 +115,8 @@ class SituacaoSolicitacaoServiceTest {
         SituacaoSolicitacao cancelada = service.descrever(reserva);
         assertEquals("Cancelada pela administração", cancelada.titulo());
         assertFalse(cancelada.autorizada());
+        // O texto também aparece na lista e no início, onde o motivo não fica "abaixo".
+        assertFalse(cancelada.explicacao().contains("abaixo"));
     }
 
     private DocumentoReserva documento(ConferenciaDocumento conferencia) {

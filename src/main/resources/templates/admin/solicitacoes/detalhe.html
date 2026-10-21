@@ -147,6 +147,20 @@
                     </div>
                 </section>
 
+                <!-- Decisão já registrada: resultado, responsável, data e motivo, quando houver. -->
+                <section class="painel" aria-labelledby="decisao-registrada-title"
+                         th:if="${detalhe.solicitacao.analisadaPor != null}">
+                    <div class="painel__cabecalho"><h2 id="decisao-registrada-title">Decisão registrada</h2></div>
+                    <div class="painel__corpo">
+                        <dl class="dados dados--coluna">
+                            <div><dt>Resultado</dt><dd th:text="${status == 'REJEITADA'} ? 'Rejeitada' : 'Aprovada'">Aprovada</dd></div>
+                            <div><dt>Responsável</dt><dd th:text="${detalhe.solicitacao.analisadaPor.nome}">Administrador</dd></div>
+                            <div th:if="${detalhe.solicitacao.analisadaEm != null}"><dt>Data do registro</dt><dd th:text="${#temporals.format(detalhe.solicitacao.analisadaEm, 'dd/MM/yyyy HH:mm')}">19/10/2026 10:00</dd></div>
+                            <div th:if="${status == 'REJEITADA'}"><dt>Motivo informado ao aluno</dt><dd class="dados__texto" th:text="${detalhe.solicitacao.motivoRejeicao}">Motivo da rejeição.</dd></div>
+                        </dl>
+                    </div>
+                </section>
+
                 <section class="painel" aria-labelledby="cancelamento-title" th:if="${status == 'APROVADA'}">
                     <div class="painel__cabecalho"><h2 id="cancelamento-title">Cancelamento institucional</h2></div>
                     <div class="painel__corpo">
@@ -174,7 +188,12 @@
                             <div><dt>Responsável</dt><dd th:text="${detalhe.solicitacao.canceladaPor.nome}">Administrador</dd></div>
                             <div><dt>Data do registro</dt><dd th:text="${#temporals.format(detalhe.solicitacao.canceladaEm, 'dd/MM/yyyy HH:mm')}">19/10/2026 10:00</dd></div>
                         </dl>
-                        <p class="campo__ajuda bloco-texto">Nenhum contato com o aluno ou reagendamento é presumido por este registro.</p>
+                        <p class="campo__ajuda bloco-texto" th:if="${remarcacao == null}">O registro não avisa o aluno por outro meio. Se ele pedir outro horário, a nova solicitação passa por todas as etapas.</p>
+                        <p class="bloco-texto" th:if="${remarcacao != null}">
+                            O aluno pediu outro horário:
+                            <a th:href="@{/admin/solicitacoes/{id}(id=${remarcacao.id})}"
+                               th:text="|solicitação #${remarcacao.id}, de ${#temporals.format(remarcacao.dataUtilizacao, 'dd/MM/yyyy')}|">solicitação #2</a>.
+                        </p>
                     </div>
                 </section>
 

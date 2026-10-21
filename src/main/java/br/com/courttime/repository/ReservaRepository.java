@@ -62,10 +62,22 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             select r from Reserva r
             join fetch r.quadra
             join fetch r.solicitante
+            left join fetch r.analisadaPor
             left join fetch r.canceladaPor
             where r.id = :id
             """)
     Optional<Reserva> obterParaConsultaAdministrativa(@Param("id") Long id);
+
+    /** Solicitações já encerradas (rejeitadas ou canceladas), das mais recentes às mais antigas. */
+    @Query("""
+            select r from Reserva r
+            join fetch r.quadra
+            join fetch r.solicitante
+            where r.status in :situacoes
+            order by r.dataUtilizacao desc, r.horarioInicio desc, r.id desc
+            """)
+    List<Reserva> listarEncerradasParaAdministracao(
+            @Param("situacoes") List<StatusReserva> situacoes);
 
     @Query("""
             select r from Reserva r

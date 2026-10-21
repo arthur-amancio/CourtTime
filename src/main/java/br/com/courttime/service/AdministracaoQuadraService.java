@@ -67,7 +67,8 @@ public class AdministracaoQuadraService {
                 reservaRepository.countByStatus(StatusReserva.PENDENTE_DOCUMENTACAO),
                 reservaRepository.countByStatus(StatusReserva.PENDENTE_ANALISE),
                 reservaRepository.countByStatus(StatusReserva.APROVADA),
-                reservaRepository.countByStatus(StatusReserva.REJEITADA));
+                reservaRepository.countByStatus(StatusReserva.REJEITADA),
+                reservaRepository.countByStatus(StatusReserva.CANCELADA));
     }
 
     @Transactional(readOnly = true)
