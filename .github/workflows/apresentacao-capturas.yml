@@ -1,0 +1,131 @@
+name: Capturas da apresentação (banco descartável)
+
+# Gera as capturas reais da apresentação ao curso de Serviços Jurídicos.
+# Roda somente no push desta branch, contra um PostgreSQL temporário
+# (courttime_e2e) destruído ao final. Nunca usa courttime_demo.
+
+on:
+  push:
+    branches:
+      - 'apresentacao/capturas-juridico'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apresentacao-capturas
+  cancel-in-progress: true
+
+jobs:
+  capturas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: courttime_e2e
+          POSTGRES_USER: courttime_e2e
+          POSTGRES_PASSWORD: e2e_descartavel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U courttime_e2e -d courttime_e2e"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      COURTTIME_E2E_ACK_ISOLATED_DB: 'YES'
+      COURTTIME_E2E_DATABASE_NAME: courttime_e2e
+      COURTTIME_E2E_BASE_URL: http://127.0.0.1:18081
+      COURTTIME_E2E_TARGET_SHA: ${{ github.sha }}
+      COURTTIME_E2E_ADMIN_EMAIL: administracao@exemplo.invalid
+      COURTTIME_APRESENTACAO_DIR: ${{ github.workspace }}/apresentacao
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: qa/playwright/package-lock.json
+
+      - name: Gerar senha sintética desta execução
+        run: |
+          senha="Demo$(openssl rand -hex 12)"
+          echo "::add-mask::$senha"
+          echo "COURTTIME_E2E_PASSWORD=$senha" >> "$GITHUB_ENV"
+
+      - name: Empacotar a aplicação
+        run: ./mvnw -B -q -DskipTests package
+
+      - name: Iniciar a aplicação no banco descartável
+        env:
+          COURTTIME_DB_URL: jdbc:postgresql://localhost:5432/courttime_e2e
+          COURTTIME_DB_USERNAME: courttime_e2e
+          COURTTIME_DB_PASSWORD: e2e_descartavel
+          COURTTIME_DOCUMENT_STORAGE_PATH: ${{ runner.temp }}/documentos
+          SERVER_PORT: '18081'
+          TZ: America/Sao_Paulo
+          COURTTIME_BOOTSTRAP_ADMIN_ENABLED: 'true'
+          COURTTIME_DEV_USER_NAME: Administração (demonstração)
+          COURTTIME_DEV_USER_EMAIL: ${{ env.COURTTIME_E2E_ADMIN_EMAIL }}
+          COURTTIME_DEV_USER_PROFILE: ADMINISTRADOR
+        run: |
+          COURTTIME_DEV_USER_PASSWORD="$COURTTIME_E2E_PASSWORD" \
+            nohup java -Duser.language=pt -Duser.country=BR -jar target/courttime-0.0.1-SNAPSHOT.jar > "$RUNNER_TEMP/app.log" 2>&1 &
+          for i in $(seq 1 90); do
+            if curl --silent --fail http://127.0.0.1:18081/login >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          tail -100 "$RUNNER_TEMP/app.log"
+          exit 1
+
+      - name: Confirmar o banco descartável e vazio
+        env:
+          PGPASSWORD: e2e_descartavel
+        run: |
+          banco=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT current_database();")
+          total=$(psql -h localhost -U courttime_e2e -d courttime_e2e -At -c "SELECT count(*) FROM usuarios;")
+          test "$banco" = "courttime_e2e"
+          test "$total" -eq 1
+
+      - name: Instalar Chromium e fontes
+        working-directory: qa/playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Capturar as telas
+        working-directory: qa/playwright
+        run: node apresentacao-juridico.cjs
+
+      - name: Resumo pela API
+        if: always()
+        run: |
+          if [ -f apresentacao/erro.txt ]; then
+            echo "::error title=Roteiro::$(head -c 1500 apresentacao/erro.txt | tr '\n' ' ')"
+          fi
+          echo "::notice title=Capturas::$(ls apresentacao/*.png 2>/dev/null | wc -l) imagens"
+
+      - name: Publicar na branch evidencias/apresentacao-juridico
+        if: always()
+        run: |
+          set -e
+          cd apresentacao
+          git init -q
+          git config user.name "Arthur Amancio Francisco"
+          git config user.email "arthurfrancisco2510@gmail.com"
+          git checkout -q --orphan evidencias/apresentacao-juridico
+          git add -A
+          git commit -q -m "evidencias: capturas da apresentacao (commit ${GITHUB_SHA::7})"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:evidencias/apresentacao-juridico
