@@ -237,6 +237,27 @@ class ReservaPostgreSqlIntegrationTest {
     }
 
     @Test
+    void closedRequestsQueryListsRejectedAndCancelledWithDecisionAuthor() {
+        Reserva aprovada = reservaService.aprovar(
+                reservaPendente(aluno, INICIO, FIM).getId(), administrador);
+        reservaService.cancelarInstitucionalmente(
+                aprovada.getId(), administrador, "Interdição institucional");
+        Reserva rejeitada = reservaService.rejeitar(
+                reservaPendente(aluno, LocalTime.of(9, 0), LocalTime.of(10, 0)).getId(),
+                administrador, "Período reservado");
+        reservaPendente(aluno, LocalTime.of(8, 0), LocalTime.of(9, 0));
+
+        List<Long> encerradas = reservaRepository.listarEncerradasParaAdministracao(
+                        List.of(StatusReserva.REJEITADA, StatusReserva.CANCELADA))
+                .stream().map(Reserva::getId).toList();
+
+        assertEquals(List.of(rejeitada.getId(), aprovada.getId()), encerradas);
+        Reserva consultada = reservaRepository
+                .obterParaConsultaAdministrativa(rejeitada.getId()).orElseThrow();
+        assertEquals("administrador@teste.local", consultada.getAnalisadaPor().getEmail());
+    }
+
+    @Test
     void pessimisticReservationLockAllowsOnlyOneInstitutionalCancellation() throws Exception {
         Reserva pendente = reservaPendente(aluno, INICIO, FIM);
         Reserva aprovada = reservaService.aprovar(pendente.getId(), administrador);

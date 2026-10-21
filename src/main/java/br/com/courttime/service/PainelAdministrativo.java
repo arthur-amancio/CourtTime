@@ -14,5 +14,6 @@ public record PainelAdministrativo(
         long pendentesDocumentacao,
         long pendentesAnalise,
         long aprovadas,
-        long rejeitadas) {
+        long rejeitadas,
+        long canceladas) {
 }
