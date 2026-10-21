@@ -90,6 +90,28 @@ class FormularioReservaPdfTest {
         }
     }
 
+    @Test
+    void r09VinculoDoOutroApareceNoEspacoDoFormulario() throws IOException {
+        DadosFormularioReserva base = dados(10, "Ana Exemplo");
+        List<DadosFormularioReserva.Participante> participantes = new ArrayList<>(base.participantes());
+        participantes.set(0, new DadosFormularioReserva.Participante(
+                "Carlos Pai Exemplo", "RG-1", false, "Pai/mãe de aluno"));
+        DadosFormularioReserva dados = new DadosFormularioReserva(
+                base.nomeSolicitante(), base.curso(), base.cpf(), base.dataUtilizacao(),
+                base.horarioInicio(), base.horarioFim(), base.dataPreenchimento(), participantes);
+
+        byte[] pdf = FormularioReservaPdf.gerar(modelo(), dados);
+
+        try (PDDocument documento = Loader.loadPDF(pdf)) {
+            PDFTextStripperByArea area = new PDFTextStripperByArea();
+            // Primeira linha da tabela, depois de "( ) Outro:".
+            area.addRegion("vinculo", new Rectangle2D.Float(450, 172, 135, 20));
+            area.extractRegions(documento.getPage(1));
+            assertTrue(area.getTextForRegion("vinculo").contains("Pai/mãe de aluno"),
+                    "o vínculo fica no traço de \"Outro:\"");
+        }
+    }
+
     private static String textoDasRegioes(byte[] pdf) throws IOException {
         try (PDDocument documento = Loader.loadPDF(pdf)) {
             PDFTextStripperByArea primeira = new PDFTextStripperByArea();

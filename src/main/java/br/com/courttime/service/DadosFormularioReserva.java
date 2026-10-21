@@ -18,6 +18,11 @@ public record DadosFormularioReserva(
         LocalDate dataPreenchimento,
         List<Participante> participantes) {
 
-    public record Participante(String nomeCompleto, String rmOuRg, boolean aluno) {
+    /** vinculo: texto escrito em "( ) Outro: ____"; nulo para Aluno ou sem vínculo. */
+    public record Participante(String nomeCompleto, String rmOuRg, boolean aluno, String vinculo) {
+
+        public Participante(String nomeCompleto, String rmOuRg, boolean aluno) {
+            this(nomeCompleto, rmOuRg, aluno, null);
+        }
     }
 }

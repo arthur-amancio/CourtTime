@@ -60,6 +60,13 @@ public class ConferenciaDocumentoService {
                 .orElseThrow(() -> new IllegalArgumentException("Documento não encontrado"));
     }
 
+    /** R09.4: aviso para a secretaria antes de validar uma lista antiga. */
+    @Transactional(readOnly = true)
+    public long contarOutrosSemVinculo(DocumentoReserva documento, Usuario secretaria) {
+        validarSecretaria(secretaria);
+        return documento == null ? 0 : participanteService.contarOutrosSemVinculo(documento.getReserva());
+    }
+
     @Transactional(readOnly = true)
     public boolean podeConferir(DocumentoReserva documento, Usuario secretaria) {
         validarSecretaria(secretaria);

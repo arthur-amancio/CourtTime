@@ -46,6 +46,11 @@ public class ParticipanteReserva {
     @Column(nullable = false, length = 10)
     private CategoriaParticipante categoria;
 
+    /** R09: obrigatório na categoria Outro; nulo para Aluno e nos registros antigos. */
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private VinculoParticipante vinculo;
+
     public Long getId() {
         return id;
     }
@@ -84,5 +89,21 @@ public class ParticipanteReserva {
 
     public void setCategoria(CategoriaParticipante categoria) {
         this.categoria = categoria;
+    }
+
+    public VinculoParticipante getVinculo() {
+        return vinculo;
+    }
+
+    public void setVinculo(VinculoParticipante vinculo) {
+        this.vinculo = vinculo;
+    }
+
+    /** Texto do vínculo nas telas; registros antigos aparecem como não informado. */
+    public String getDescricaoVinculo() {
+        if (categoria != CategoriaParticipante.OUTRO) {
+            return null;
+        }
+        return vinculo == null ? "Vínculo não informado" : vinculo.getDescricao();
     }
 }

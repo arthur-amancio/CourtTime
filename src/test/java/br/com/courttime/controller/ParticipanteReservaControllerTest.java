@@ -8,6 +8,7 @@ import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ParticipanteReservaService;
 import br.com.courttime.service.ReservaService;
@@ -157,7 +158,7 @@ class ParticipanteReservaControllerTest {
                 .andExpect(flash().attribute("mensagemSucesso", "Participante adicionado à solicitação."));
 
         verify(participanteService).adicionar(
-                20L, aluno, "Beatriz Almeida", "RM-1234", CategoriaParticipante.ALUNO);
+                20L, aluno, "Beatriz Almeida", "RM-1234", CategoriaParticipante.ALUNO, null);
     }
 
     @Test
@@ -178,7 +179,34 @@ class ParticipanteReservaControllerTest {
                 .andExpect(content().string(containsString("id=\"categoria-erro\"")));
 
         verify(participanteService, never()).adicionar(
-                20L, aluno, "", "", null);
+                20L, aluno, "", "", null, null);
+    }
+
+    @Test
+    void r09FormularioOfereceOsQuatroVinculosEMostraARecusaDoServico() throws Exception {
+        prepararAlunoEReserva();
+        when(participanteService.adicionar(
+                20L, aluno, "Carlos Exemplo", "RG-77", CategoriaParticipante.OUTRO, null))
+                .thenThrow(new IllegalArgumentException(
+                        ParticipanteReservaService.MENSAGEM_VINCULO_OBRIGATORIO));
+
+        mockMvc.perform(get("/solicitacoes/20/participantes/novo")
+                        .with(user(aluno.getEmail()).roles("ALUNO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Ex-aluno da ETEC")))
+                .andExpect(content().string(containsString("Pai ou mãe de aluno")))
+                .andExpect(content().string(containsString("Irmão ou irmã de aluno")))
+                .andExpect(content().string(containsString("Professor da ETEC")))
+                .andExpect(content().string(not(containsString("Amigo"))));
+
+        mockMvc.perform(post("/solicitacoes/20/participantes")
+                        .with(user(aluno.getEmail()).roles("ALUNO"))
+                        .with(csrf())
+                        .param("nomeCompleto", "Carlos Exemplo")
+                        .param("rmOuRg", "RG-77")
+                        .param("categoria", "OUTRO"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("escolha o vínculo")));
     }
 
     @Test
@@ -209,12 +237,14 @@ class ParticipanteReservaControllerTest {
                         .with(csrf())
                         .param("nomeCompleto", "Beatriz Souza")
                         .param("rmOuRg", "RG-5678")
-                        .param("categoria", "OUTRO"))
+                        .param("categoria", "OUTRO")
+                        .param("vinculo", "EX_ALUNO"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/solicitacoes/20/participantes"));
 
         verify(participanteService).editar(
-                20L, 30L, aluno, "Beatriz Souza", "RG-5678", CategoriaParticipante.OUTRO);
+                20L, 30L, aluno, "Beatriz Souza", "RG-5678", CategoriaParticipante.OUTRO,
+                VinculoParticipante.EX_ALUNO);
     }
 
     @Test
@@ -289,7 +319,7 @@ class ParticipanteReservaControllerTest {
     void mutacaoRecusadaPeloServicoMostraErroSemAlegarSucesso() throws Exception {
         prepararAlunoEReserva();
         when(participanteService.adicionar(
-                20L, aluno, "Beatriz Almeida", "RM-1234", CategoriaParticipante.ALUNO))
+                20L, aluno, "Beatriz Almeida", "RM-1234", CategoriaParticipante.ALUNO, null))
                 .thenThrow(new IllegalStateException(
                         "Os participantes só podem ser alterados enquanto a documentação está pendente"));
 

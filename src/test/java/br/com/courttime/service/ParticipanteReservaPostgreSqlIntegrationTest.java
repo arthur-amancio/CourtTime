@@ -7,6 +7,7 @@ import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
 import br.com.courttime.repository.AjusteContribuicaoApmRepository;
 import br.com.courttime.repository.BloqueioQuadraRepository;
@@ -126,7 +127,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "  Beatriz   Almeida  ",
                 "  123.456-X  ",
-                CategoriaParticipante.OUTRO);
+                CategoriaParticipante.OUTRO, VinculoParticipante.EX_ALUNO);
 
         ParticipanteReserva recuperado = participanteRepository
                 .findById(criado.getId())
@@ -143,7 +144,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "Beatriz Souza",
                 "RM-9988",
-                CategoriaParticipante.ALUNO);
+                CategoriaParticipante.ALUNO, null);
         ParticipanteReserva editado = participanteRepository.findById(criado.getId()).orElseThrow();
         assertEquals("Beatriz Souza", editado.getNomeCompleto());
         assertEquals("RM-9988", editado.getRmOuRg());
@@ -160,7 +161,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "Ana Souza",
                 "RM-123",
-                CategoriaParticipante.ALUNO);
+                CategoriaParticipante.ALUNO, null);
 
         assertThrows(AccessDeniedException.class,
                 () -> participanteService.listar(reserva.getId(), outroAluno));
@@ -174,7 +175,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                         outroAluno,
                         "Nome adulterado",
                         "RG-999",
-                        CategoriaParticipante.OUTRO));
+                        CategoriaParticipante.OUTRO, VinculoParticipante.EX_ALUNO));
         assertThrows(AccessDeniedException.class,
                 () -> participanteService.remover(
                         reserva.getId(), participante.getId(), outroAluno));
@@ -194,7 +195,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "Carlos Pereira",
                 "RG-777",
-                CategoriaParticipante.OUTRO);
+                CategoriaParticipante.OUTRO, VinculoParticipante.EX_ALUNO);
 
         assertThrows(AccessDeniedException.class, () -> participanteService.editar(
                 reserva.getId(),
@@ -202,7 +203,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "Nome adulterado",
                 "RG-000",
-                CategoriaParticipante.ALUNO));
+                CategoriaParticipante.ALUNO, null));
         assertThrows(AccessDeniedException.class, () -> participanteService.remover(
                 reserva.getId(), participanteDaOutraReserva.getId(), aluno));
 
@@ -216,7 +217,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "Ana Souza",
                 "RM-123",
-                CategoriaParticipante.ALUNO);
+                CategoriaParticipante.ALUNO, null);
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
         reservaRepository.saveAndFlush(reserva);
 
@@ -225,14 +226,14 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "Novo participante",
                 "RG-789",
-                CategoriaParticipante.OUTRO));
+                CategoriaParticipante.OUTRO, VinculoParticipante.EX_ALUNO));
         assertThrows(IllegalStateException.class, () -> participanteService.editar(
                 reserva.getId(),
                 participante.getId(),
                 aluno,
                 "Nome adulterado",
                 "RG-000",
-                CategoriaParticipante.OUTRO));
+                CategoriaParticipante.OUTRO, VinculoParticipante.EX_ALUNO));
         assertThrows(IllegalStateException.class, () -> participanteService.remover(
                 reserva.getId(), participante.getId(), aluno));
 
@@ -271,7 +272,8 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
                 aluno,
                 "Participante " + indice,
                 "ID-" + indice,
-                categoria);
+                categoria,
+                categoria == CategoriaParticipante.OUTRO ? VinculoParticipante.PAI_OU_MAE : null);
     }
 
     private void limparBanco() {

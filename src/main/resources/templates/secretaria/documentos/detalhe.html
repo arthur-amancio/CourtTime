@@ -95,6 +95,10 @@
                             <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
                             <p><strong>Importante:</strong> validar a documentação não aprova a utilização da quadra.</p>
                         </div>
+                        <div class="alerta alerta--aviso bloco-espaco" th:if="${outrosSemVinculo != null and outrosSemVinculo > 0}">
+                            <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
+                            <p th:text="|${outrosSemVinculo} participante(s) da categoria Outro sem vínculo informado (cadastro anterior à regra). Confira o vínculo no documento antes de validar.|">1 participante da categoria Outro sem vínculo informado.</p>
+                        </div>
                         <form class="decisao" method="post"
                               th:action="@{/secretaria/documentos/{id}/validar(id=${documento.id})}">
                             <div class="alerta alerta--neutro">

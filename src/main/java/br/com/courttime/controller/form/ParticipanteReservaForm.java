@@ -1,6 +1,7 @@
 package br.com.courttime.controller.form;
 
 import br.com.courttime.entity.CategoriaParticipante;
+import br.com.courttime.entity.VinculoParticipante;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,6 +18,8 @@ public class ParticipanteReservaForm {
 
     @NotNull(message = "Selecione a categoria do participante")
     private CategoriaParticipante categoria;
+
+    private VinculoParticipante vinculo;
 
     public String getNomeCompleto() {
         return nomeCompleto;
@@ -40,5 +43,13 @@ public class ParticipanteReservaForm {
 
     public void setCategoria(CategoriaParticipante categoria) {
         this.categoria = categoria;
+    }
+
+    public VinculoParticipante getVinculo() {
+        return vinculo;
+    }
+
+    public void setVinculo(VinculoParticipante vinculo) {
+        this.vinculo = vinculo;
     }
 }

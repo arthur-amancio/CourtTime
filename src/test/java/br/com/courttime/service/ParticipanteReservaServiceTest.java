@@ -7,6 +7,7 @@ import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -66,7 +67,7 @@ class ParticipanteReservaServiceTest {
                 aluno,
                 "  Ana   Souza  ",
                 "  12.345.678-X  ",
-                CategoriaParticipante.ALUNO);
+                CategoriaParticipante.ALUNO, null);
 
         assertSame(reserva, participante.getReserva());
         assertEquals("Ana Souza", participante.getNomeCompleto());
@@ -78,13 +79,49 @@ class ParticipanteReservaServiceTest {
     }
 
     @Test
+    void r09OutroExigeVinculoEAlunoNaoAceitaVinculo() {
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
+                .thenReturn(Optional.of(reserva));
+
+        IllegalArgumentException semVinculo = assertThrows(IllegalArgumentException.class,
+                () -> service.adicionar(20L, aluno, "Carlos Pai", "RG-1", CategoriaParticipante.OUTRO, null));
+        assertEquals(ParticipanteReservaService.MENSAGEM_VINCULO_OBRIGATORIO, semVinculo.getMessage());
+
+        IllegalArgumentException alunoComVinculo = assertThrows(IllegalArgumentException.class,
+                () -> service.adicionar(20L, aluno, "Ana Souza", "RM-1",
+                        CategoriaParticipante.ALUNO, VinculoParticipante.PROFESSOR));
+        assertEquals(ParticipanteReservaService.MENSAGEM_VINCULO_SOMENTE_OUTRO, alunoComVinculo.getMessage());
+
+        verify(participanteRepository, never()).save(any());
+    }
+
+    @Test
+    void r09OutroComVinculoGuardaOVinculoEAPalavraDaTela() {
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
+                .thenReturn(Optional.of(reserva));
+        when(participanteRepository.save(any(ParticipanteReserva.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        ParticipanteReserva participante = service.adicionar(
+                20L, aluno, "Carla Irmã", "RG-9", CategoriaParticipante.OUTRO,
+                VinculoParticipante.IRMAO_OU_IRMA);
+
+        assertEquals(VinculoParticipante.IRMAO_OU_IRMA, participante.getVinculo());
+        assertEquals("Irmão ou irmã de aluno", participante.getDescricaoVinculo());
+
+        participante.setVinculo(null);
+        assertEquals("Vínculo não informado", participante.getDescricaoVinculo(),
+                "R09.4: cadastro antigo sem vínculo");
+    }
+
+    @Test
     void recusaMutacaoQuandoDocumentacaoNaoEstaPendente() {
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
 
         assertThrows(IllegalStateException.class, () -> service.adicionar(
-                20L, aluno, "Ana Souza", "12345", CategoriaParticipante.ALUNO));
+                20L, aluno, "Ana Souza", "12345", CategoriaParticipante.ALUNO, null));
 
         verify(participanteRepository, never()).save(any());
     }
@@ -112,7 +149,7 @@ class ParticipanteReservaServiceTest {
                 aluno,
                 "Ana Souza",
                 "12345",
-                CategoriaParticipante.ALUNO));
+                CategoriaParticipante.ALUNO, null));
 
         verify(participanteRepository, never()).save(any());
     }
@@ -133,7 +170,7 @@ class ParticipanteReservaServiceTest {
                 aluno,
                 "Ana Souza",
                 "222",
-                CategoriaParticipante.ALUNO);
+                CategoriaParticipante.ALUNO, null);
         service.remover(20L, 30L, aluno);
 
         assertEquals("Ana Souza", editado.getNomeCompleto());
@@ -153,7 +190,7 @@ class ParticipanteReservaServiceTest {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.adicionar(
-                        20L, aluno, "Ana Souza", "  RM   123 ", CategoriaParticipante.ALUNO));
+                        20L, aluno, "Ana Souza", "  RM   123 ", CategoriaParticipante.ALUNO, null));
 
         assertEquals("Já existe um participante com este RM ou RG na solicitação",
                 exception.getMessage());
@@ -228,11 +265,11 @@ class ParticipanteReservaServiceTest {
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
         assertThrows(IllegalArgumentException.class, () -> service.adicionar(
-                20L, aluno, " ", "123", CategoriaParticipante.ALUNO));
+                20L, aluno, " ", "123", CategoriaParticipante.ALUNO, null));
         assertThrows(IllegalArgumentException.class, () -> service.adicionar(
-                20L, aluno, "Ana Souza", " ", CategoriaParticipante.ALUNO));
+                20L, aluno, "Ana Souza", " ", CategoriaParticipante.ALUNO, null));
         assertThrows(IllegalArgumentException.class, () -> service.adicionar(
-                20L, aluno, "Ana Souza", "123", null));
+                20L, aluno, "Ana Souza", "123", null, null));
         verify(participanteRepository, never()).save(any());
     }
 
@@ -263,6 +300,7 @@ class ParticipanteReservaServiceTest {
         Reserva cancelada = reserva(5L, aluno, StatusReserva.CANCELADA);
         ParticipanteReserva ana = participante(1L, cancelada, "Ana Souza", "RM-1", CategoriaParticipante.ALUNO);
         ParticipanteReserva joao = participante(2L, cancelada, "João Lima", "RG-2", CategoriaParticipante.OUTRO);
+        joao.setVinculo(VinculoParticipante.PAI_OU_MAE);
         when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(cancelada))
                 .thenReturn(List.of(ana, joao));
         List<ParticipanteReserva> copias = new ArrayList<>();
@@ -282,6 +320,8 @@ class ParticipanteReservaServiceTest {
         assertEquals("Ana Souza", copias.get(0).getNomeCompleto());
         assertEquals("RG-2", copias.get(1).getRmOuRg());
         assertEquals(CategoriaParticipante.OUTRO, copias.get(1).getCategoria());
+        assertEquals(VinculoParticipante.PAI_OU_MAE, copias.get(1).getVinculo(), "R09: o vínculo é copiado");
+        assertEquals(null, copias.get(0).getVinculo());
         assertSame(cancelada, ana.getReserva(), "os participantes originais continuam na cancelada");
         assertEquals(1, reserva.getRevisaoParticipantes());
     }

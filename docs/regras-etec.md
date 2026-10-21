@@ -227,7 +227,9 @@ precisa ficar claro.
   aparecem como "vínculo não informado". A secretaria vê o aviso antes de
   validar.
 
-**Hoje.** A categoria Outro existe, mas não guarda o vínculo.
+**Hoje.** O sistema faz R09.1 a R09.4. O vínculo fica em
+`participantes_reserva.vinculo` (coluna que aceita nulo para Aluno e para os
+cadastros antigos), é copiado na remarcação e escrito no formulário oficial.
 
 **A confirmar.** O relato e o termo oficial não coincidem. O termo admite
 pais, filhos e cônjuges de alunos, egressos, professores e seus filhos e
