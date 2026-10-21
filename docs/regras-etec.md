@@ -200,7 +200,12 @@ A segurança não altera pagamentos, documentos, horários nem decisões.
   decisões. O que ela altera é só a presença.
 - R08.4 — A administração consulta a presença registrada.
 
-**Hoje.** A segurança só consulta.
+**Hoje.** O sistema faz R08.1, R08.3 e R08.4. No dia da reserva, a segurança
+marca cada participante como presente ou ausente
+(`POST /seguranca/reservas/{id}/presencas`, só para o perfil Segurança e com
+CSRF). Quem marcou e quando ficam em `participantes_reserva`, em três colunas
+que aceitam nulo. A administração vê a presença no detalhe da solicitação.
+Falta R08.2 (pessoas adicionais), que depende da decisão D3.
 
 **Em aberto.** Quem autoriza a entrada de uma pessoa extra e como essa
 autorização é registrada (decisão D3). Também falta confirmar em que período a

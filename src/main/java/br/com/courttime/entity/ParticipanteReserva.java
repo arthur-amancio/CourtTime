@@ -16,6 +16,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "participantes_reserva", indexes = {
         @Index(name = "idx_participantes_reserva", columnList = "reserva_id")
@@ -50,6 +52,18 @@ public class ParticipanteReserva {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private VinculoParticipante vinculo;
+
+    /** R08.1: presença marcada pela portaria. Nulo enquanto ninguém marcou. */
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private PresencaParticipante presenca;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "presenca_registrada_por_id")
+    private Usuario presencaRegistradaPor;
+
+    @Column(name = "presenca_registrada_em")
+    private Instant presencaRegistradaEm;
 
     public Long getId() {
         return id;
@@ -105,5 +119,24 @@ public class ParticipanteReserva {
             return null;
         }
         return vinculo == null ? "Vínculo não informado" : vinculo.getDescricao();
+    }
+
+    public PresencaParticipante getPresenca() {
+        return presenca;
+    }
+
+    public Usuario getPresencaRegistradaPor() {
+        return presencaRegistradaPor;
+    }
+
+    public Instant getPresencaRegistradaEm() {
+        return presencaRegistradaEm;
+    }
+
+    /** Registra a marcação da portaria com quem marcou e quando. */
+    public void registrarPresenca(PresencaParticipante presenca, Usuario seguranca, Instant instante) {
+        this.presenca = presenca;
+        this.presencaRegistradaPor = seguranca;
+        this.presencaRegistradaEm = instante;
     }
 }

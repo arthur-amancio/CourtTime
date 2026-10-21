@@ -74,7 +74,7 @@ public class AnaliseAdministrativaService {
         validarAdministrador(administrador);
         Reserva reserva = obterReserva(reservaId);
         List<ParticipanteReserva> participantes =
-                participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva);
+                participanteRepository.listarComPresenca(reserva);
         long alunos = participantes.stream()
                 .filter(participante -> participante.getCategoria() == CategoriaParticipante.ALUNO)
                 .count();

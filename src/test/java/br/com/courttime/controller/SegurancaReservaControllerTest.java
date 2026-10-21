@@ -2,6 +2,7 @@ package br.com.courttime.controller;
 
 import br.com.courttime.config.SecurityConfig;
 import br.com.courttime.entity.Perfil;
+import br.com.courttime.entity.PresencaParticipante;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ConsultaSegurancaService;
@@ -21,15 +22,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -122,6 +130,72 @@ class SegurancaReservaControllerTest {
         mockMvc.perform(get("/seguranca/reservas/99")
                         .with(user(seguranca.getEmail()).roles("SEGURANCA")))
                 .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ALUNO", "SECRETARIA", "ADMINISTRADOR"})
+    void r08SomenteASegurancaMarcaPresenca(String perfil) throws Exception {
+        mockMvc.perform(post("/seguranca/reservas/20/presencas")
+                        .with(user("usuario@escola.test").roles(perfil))
+                        .with(csrf())
+                        .param("presenca-31", "PRESENTE"))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(consultaSegurancaService);
+    }
+
+    @Test
+    void r08MarcacaoExigeCsrfEUsaASegurancaDaSessao() throws Exception {
+        mockMvc.perform(post("/seguranca/reservas/20/presencas")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .param("presenca-31", "PRESENTE"))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(consultaSegurancaService);
+
+        prepararSeguranca();
+        when(consultaSegurancaService.registrarPresencas(20L, seguranca, Map.of(
+                31L, PresencaParticipante.PRESENTE, 32L, PresencaParticipante.AUSENTE)))
+                .thenReturn(2);
+        mockMvc.perform(post("/seguranca/reservas/20/presencas")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .with(csrf())
+                        .param("presenca-31", "PRESENTE")
+                        .param("presenca-32", "AUSENTE")
+                        .param("status", "CANCELADA"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/seguranca/reservas/20"))
+                .andExpect(flash().attribute("mensagemSucesso", "Presença registrada."));
+        verify(consultaSegurancaService).registrarPresencas(20L, seguranca, Map.of(
+                31L, PresencaParticipante.PRESENTE, 32L, PresencaParticipante.AUSENTE));
+    }
+
+    @Test
+    void r08ValorInvalidoDePresencaERecusado() throws Exception {
+        prepararSeguranca();
+        mockMvc.perform(post("/seguranca/reservas/20/presencas")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .with(csrf())
+                        .param("presenca-31", "APROVADA"))
+                .andExpect(status().isBadRequest());
+        verifyNoInteractions(consultaSegurancaService);
+    }
+
+    @Test
+    void r08NoDiaDaReservaATelaMostraAMarcacao() throws Exception {
+        prepararSeguranca();
+        when(consultaSegurancaService.detalhar(20L, seguranca))
+                .thenReturn(new DetalheReservaAutorizada(
+                        resumo,
+                        List.of(new ParticipanteConferencia(
+                                31L, "Carlos Participante", "RM-123", "Aluno",
+                                PresencaParticipante.PRESENTE)),
+                        true));
+
+        mockMvc.perform(get("/seguranca/reservas/20")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("name=\"presenca-31\"")))
+                .andExpect(content().string(containsString("Registrar presença")))
+                .andExpect(content().string(containsString("checked")));
     }
 
     private void prepararSeguranca() {

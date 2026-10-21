@@ -3,6 +3,7 @@ package br.com.courttime.service;
 import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Perfil;
+import br.com.courttime.entity.PresencaParticipante;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
@@ -19,10 +20,15 @@ import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -98,6 +104,65 @@ class ConsultaSegurancaServiceTest {
         verify(reservaRepository).obterAutorizadaParaSeguranca(
                 99L, StatusReserva.APROVADA, hoje);
         verifyNoInteractions(participanteRepository);
+    }
+
+    @Test
+    void r08PortariaMarcaPresenteEAusenteNoDiaDaReserva() {
+        reserva.setDataUtilizacao(LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
+        ParticipanteReserva ana = participante("Ana", "RM-1", CategoriaParticipante.ALUNO);
+        ana.setId(31L);
+        ParticipanteReserva bruno = participante("Bruno", "RM-2", CategoriaParticipante.ALUNO);
+        bruno.setId(32L);
+        when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
+                .thenReturn(List.of(ana, bruno));
+
+        int alteradas = service.registrarPresencas(20L, seguranca, Map.of(
+                31L, PresencaParticipante.PRESENTE,
+                32L, PresencaParticipante.AUSENTE));
+
+        assertEquals(2, alteradas);
+        assertEquals(PresencaParticipante.PRESENTE, ana.getPresenca());
+        assertEquals(PresencaParticipante.AUSENTE, bruno.getPresenca());
+        assertSame(seguranca, ana.getPresencaRegistradaPor());
+        assertNotNull(ana.getPresencaRegistradaEm());
+        verify(participanteRepository).save(ana);
+        verify(participanteRepository).save(bruno);
+    }
+
+    @Test
+    void r08PresencaForaDoDiaParticipanteAlheioOuReservaNaoAprovadaSaoRecusados() {
+        ParticipanteReserva ana = participante("Ana", "RM-1", CategoriaParticipante.ALUNO);
+        ana.setId(31L);
+        when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
+
+        // A reserva do setUp é de 2030: fora do dia.
+        IllegalStateException foraDoDia = assertThrows(IllegalStateException.class,
+                () -> service.registrarPresencas(20L, seguranca, Map.of(31L, PresencaParticipante.PRESENTE)));
+        assertEquals(ConsultaSegurancaService.MENSAGEM_FORA_DO_DIA, foraDoDia.getMessage());
+
+        reserva.setDataUtilizacao(LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
+                .thenReturn(List.of(ana));
+        assertThrows(IllegalArgumentException.class,
+                () -> service.registrarPresencas(20L, seguranca, Map.of(99L, PresencaParticipante.PRESENTE)));
+
+        reserva.setStatus(StatusReserva.CANCELADA);
+        assertThrows(IllegalArgumentException.class,
+                () -> service.registrarPresencas(20L, seguranca, Map.of(31L, PresencaParticipante.PRESENTE)));
+
+        assertEquals(null, ana.getPresenca());
+        verify(participanteRepository, never()).save(any());
+    }
+
+    @Test
+    void r08OutrosPerfisNaoMarcamPresenca() {
+        for (Perfil perfil : List.of(Perfil.ADMINISTRADOR, Perfil.SECRETARIA, Perfil.ALUNO)) {
+            assertThrows(AccessDeniedException.class, () -> service.registrarPresencas(
+                    20L, usuario(5L, "Outro perfil", perfil, true),
+                    Map.of(31L, PresencaParticipante.PRESENTE)));
+        }
+        verifyNoInteractions(reservaRepository, participanteRepository);
     }
 
     @Test

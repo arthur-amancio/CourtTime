@@ -114,7 +114,7 @@
                     <div class="tabela-wrapper" th:unless="${#lists.isEmpty(detalhe.participantes)}">
                         <table class="tabela tabela--cartoes">
                             <caption class="visually-hidden">Participantes vinculados à solicitação</caption>
-                            <thead><tr><th scope="col">Nome completo</th><th scope="col">RM ou RG</th><th scope="col">Categoria</th></tr></thead>
+                            <thead><tr><th scope="col">Nome completo</th><th scope="col">RM ou RG</th><th scope="col">Categoria</th><th scope="col">Presença</th></tr></thead>
                             <tbody>
                                 <tr th:each="participante : ${detalhe.participantes}">
                                     <th scope="row" data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</th>
@@ -122,6 +122,13 @@
                                     <td data-label="Categoria">
                                         <span th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</span>
                                         <span class="campo__ajuda" th:if="${participante.descricaoVinculo != null}" th:text="|(${participante.descricaoVinculo})|">(Ex-aluno da ETEC)</span>
+                                    </td>
+                                    <td data-label="Presença">
+                                        <span th:if="${participante.presenca == null}">Não marcada</span>
+                                        <th:block th:if="${participante.presenca != null}">
+                                            <span th:text="${participante.presenca.descricao}">Presente</span>
+                                            <span class="campo__ajuda" th:text="|(${participante.presencaRegistradaPor.nome}, ${#temporals.format(participante.presencaRegistradaEm, 'dd/MM/yyyy HH:mm')})|">(Portaria, 21/10/2026 18:00)</span>
+                                        </th:block>
                                     </td>
                                 </tr>
                             </tbody>

@@ -2016,4 +2016,5 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
 /* Caixa de seleção com o texto ao lado (remarcação: copiar participantes).
    O estilo global de input dá largura total; aqui a caixa volta ao tamanho natural. */
 .opcao-marcavel { display: flex; align-items: flex-start; gap: var(--esp-3); cursor: pointer; }
-.opcao-marcavel input[type="checkbox"] { flex: none; width: 1.25rem; height: 1.25rem; min-height: 0; margin: .15rem 0 0; padding: 0; accent-color: var(--cor-primaria); }
+.presenca { display: flex; flex-wrap: wrap; gap: var(--esp-2) var(--esp-4); margin: 0; padding: 0; border: 0; }
+.opcao-marcavel input[type="checkbox"], .opcao-marcavel input[type="radio"] { flex: none; width: 1.25rem; height: 1.25rem; min-height: 0; margin: .15rem 0 0; padding: 0; accent-color: var(--cor-primaria); }

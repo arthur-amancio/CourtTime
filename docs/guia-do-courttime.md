@@ -88,7 +88,9 @@ Para não prometer na banca o que o código não faz:
   reaproveita aprovação, PDF nem contribuição (só os participantes, se o aluno
   pedir).
 - **Não há registro** de contato com o aluno.
-- **Não há registro de ocorrências** pela segurança.
+- **Não há registro de ocorrências** pela segurança. A portaria só marca a
+  presença dos participantes, no dia da reserva (R08). Pessoas que aparecem a
+  mais ainda não são registradas, porque falta decidir quem autoriza (D3).
 - **Não há** regra de retenção dos documentos enviados.
 
 ## Decisões da ETEC

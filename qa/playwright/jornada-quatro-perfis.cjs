@@ -483,6 +483,9 @@ async function responsiveAudit(page, label, url) {
     securityBody = await seguranca.locator('body').innerText();
     assert(securityBody.includes('Identificação dos participantes') && securityBody.includes('RM-'), 'segurança consulta identificação dos participantes');
     assert(!securityBody.includes('Contribuição') && !securityBody.includes('Documento') && !securityBody.includes('@e2e.invalid'), 'segurança não recebe dados internos desnecessários');
+    assert(securityBody.includes('A presença só pode ser marcada no dia da reserva.') && await seguranca.locator('input[type="radio"][name^="presenca-"]').count() === 0, 'R08: presença só no dia da reserva');
+    const presencaForaDoDia = await csrfFetch(seguranca, `/seguranca/reservas/${approvedId}/presencas`, { 'presenca-1': 'PRESENTE' });
+    assert(presencaForaDoDia.text.includes('A presença só pode ser registrada no dia da reserva.'), 'R08: marcação fora do dia é recusada no servidor');
     response = await seguranca.goto(`${BASE}/secretaria/contribuicoes`);
     assert(response.status() === 403, 'segurança não acessa dados financeiros', `HTTP ${response.status()}`);
     response = await seguranca.goto(`${BASE}/secretaria/documentos`);
