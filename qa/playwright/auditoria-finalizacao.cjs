@@ -171,8 +171,13 @@ async function semRolagemHorizontal(page, rotulo, url) {
       const raiz = document.documentElement;
       const fora = [...document.querySelectorAll('main *')].filter(el => {
         const r = el.getBoundingClientRect();
-        return r.width > 0 && r.right > raiz.clientWidth + 1 && getComputedStyle(el).position !== 'fixed'
-          && !el.closest('.tabela-wrapper, [data-rolagem]');
+        // Faixas com rolagem própria (como a dos dias no celular) são intencionais.
+        let pai = el.parentElement;
+        while (pai && pai !== document.body) {
+          if (['auto', 'scroll', 'hidden', 'clip'].includes(getComputedStyle(pai).overflowX)) return false;
+          pai = pai.parentElement;
+        }
+        return r.width > 0 && r.right > raiz.clientWidth + 1 && getComputedStyle(el).position !== 'fixed';
       }).slice(0, 3).map(el => `${el.tagName.toLowerCase()}.${[...el.classList].join('.')}`);
       return { rolagem: raiz.scrollWidth > raiz.clientWidth + 1, fora };
     });
