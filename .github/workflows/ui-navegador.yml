@@ -141,6 +141,52 @@ jobs:
         working-directory: qa/playwright
         run: npm run test:telas
 
+      - name: Sondas da finalização (participantes, PDF, remarcação, acessos)
+        if: always()
+        working-directory: qa/playwright
+        run: npm run test:finalizacao
+
+      - name: Conferir os PDFs gerados e a ausência do CPF no banco
+        if: always()
+        env:
+          PGPASSWORD: e2e_descartavel
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet --disable-pip-version-check pypdf==5.1.0
+          python3 - <<'PY'
+          import os, sys
+          from pypdf import PdfReader
+          pasta = os.environ['COURTTIME_E2E_EVIDENCE_DIR']
+          esperado = {'final-formulario-11.pdf': 2, 'final-formulario-31.pdf': 3}
+          erros = []
+          for nome, paginas in esperado.items():
+              caminho = os.path.join(pasta, nome)
+              if not os.path.exists(caminho):
+                  erros.append(f'{nome} não foi gerado'); continue
+              leitor = PdfReader(caminho)
+              texto = ' '.join(p.extract_text() or '' for p in leitor.pages)
+              print(f'{nome}: {len(leitor.pages)} páginas')
+              if len(leitor.pages) != paginas:
+                  erros.append(f'{nome}: {len(leitor.pages)} páginas, esperado {paginas}')
+              if 'TERMO DE RESPONSABILIDADE' not in texto:
+                  erros.append(f'{nome}: modelo oficial não encontrado')
+          texto31 = ' '.join(p.extract_text() or '' for p in PdfReader(os.path.join(pasta, 'final-formulario-31.pdf')).pages)
+          for trecho in ('Vasconcelos', 'Participante Grande 30'):
+              if trecho not in texto31:
+                  erros.append(f'participante ausente no PDF de 31: {trecho}')
+          for e in erros:
+              print(f'::error title=PDF oficial::{e}')
+          sys.exit(1 if erros else 0)
+          PY
+          dump=$(pg_dump -h localhost -U courttime_e2e -d courttime_e2e --data-only)
+          for cpf in '123.456.789-09' '12345678909' '529.982.247-25' '52998224725'; do
+            if grep -qF "$cpf" <<<"$dump"; then
+              echo "::error title=CPF::CPF encontrado no banco ($cpf)"
+              exit 1
+            fi
+          done
+          echo "::notice title=CPF::Nenhum CPF gravado no banco"
+
       - name: Resumo legível pela API (anotações)
         if: always()
         run: |
@@ -155,6 +201,13 @@ jobs:
             console.log(`::notice title=Jornada::${r.length - falhas.length} aprovadas | ${falhas.length} reprovadas${jornada.error ? ' | interrompida' : ''}`);
             falhas.slice(0, 20).forEach(f => console.log(`::error title=Jornada::${f.name} ${f.detail || ''}`.slice(0, 900)));
             if (jornada.error) console.log(`::error title=Jornada interrompida::${String(jornada.error).split('\n')[0].slice(0, 900)}`);
+          }
+          const finalizacao = ler('resultados-finalizacao.json');
+          if (finalizacao) {
+            const r = finalizacao.results || [];
+            const falhas = r.filter(x => x.status === 'FAIL');
+            console.log(`::notice title=Finalização::${r.length - falhas.length} aprovadas | ${falhas.length} reprovadas`);
+            falhas.slice(0, 20).forEach(f => console.log(`::error title=Finalização::${f.name} ${f.detail || ''}`.slice(0, 900)));
           }
           const axe = ler('resultados-axe.json');
           if (axe) {

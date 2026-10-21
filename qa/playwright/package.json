@@ -10,7 +10,8 @@
     "test:a11y": "node auditoria-acessibilidade.cjs",
     "test:telas": "node capturas-telas.cjs",
     "test:guard": "node --test seguranca-ambiente.test.cjs",
-    "test:qa": "npm run test:guard && npm run test:jornada && npm run test:navegacao && npm run test:redesign && npm run test:a11y && npm run test:telas"
+    "test:qa": "npm run test:guard && npm run test:jornada && npm run test:navegacao && npm run test:redesign && npm run test:a11y && npm run test:telas && npm run test:finalizacao",
+    "test:finalizacao": "node auditoria-finalizacao.cjs"
   },
   "dependencies": {
     "axe-core": "4.10.3",
