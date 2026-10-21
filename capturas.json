@@ -1,0 +1,292 @@
+{
+  "sha": "79a2c7a06596a87879fa83ca95c7b36ddbc0f335",
+  "geradoEm": "2026-10-21T03:04:51.487Z",
+  "datas": {
+    "reserva": "2026-10-26",
+    "bloqueio": "2026-10-27",
+    "remarcacao": "2026-10-28"
+  },
+  "ids": {
+    "reservaId": 1,
+    "reservaBruno": 2,
+    "remarcadaId": 3
+  },
+  "capturas": [
+    {
+      "arquivo": "01-publico-pagina-inicial.png",
+      "legenda": "Página pública",
+      "url": "/",
+      "largura": 1440
+    },
+    {
+      "arquivo": "02-publico-login.png",
+      "legenda": "Acesso ao sistema",
+      "url": "/login",
+      "largura": 1440
+    },
+    {
+      "arquivo": "03-admin-novo-usuario.png",
+      "legenda": "Cadastro de conta pela administração",
+      "url": "/admin/usuarios/novo",
+      "largura": 1440
+    },
+    {
+      "arquivo": "04-aluna-inicio.png",
+      "legenda": "Início da aluna, antes do primeiro pedido",
+      "url": "/inicio",
+      "largura": 1440
+    },
+    {
+      "arquivo": "05-aluna-consulta-com-bloqueio.png",
+      "legenda": "Consulta de horários com um bloqueio",
+      "url": "/quadra?data=2026-10-27",
+      "largura": 1440
+    },
+    {
+      "arquivo": "06-aluna-nova-solicitacao-preenchida.png",
+      "legenda": "Nova solicitação preenchida",
+      "url": "/solicitacoes/nova?data=2026-10-26",
+      "largura": 1440
+    },
+    {
+      "arquivo": "07-aluna-solicitacao-registrada.png",
+      "legenda": "Solicitação registrada",
+      "url": "/solicitacoes/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "08-aluna-participante-formulario.png",
+      "legenda": "Cadastro de participante",
+      "url": "/solicitacoes/1/participantes/novo",
+      "largura": 1440
+    },
+    {
+      "arquivo": "09-aluna-participantes.png",
+      "legenda": "Lista de participantes",
+      "url": "/solicitacoes/1/participantes",
+      "largura": 1440
+    },
+    {
+      "arquivo": "10-aluna-documentos-formulario-oficial.png",
+      "legenda": "Geração do formulário oficial",
+      "url": "/solicitacoes/1/documentos",
+      "largura": 1440
+    },
+    {
+      "arquivo": "11-aluna-envio-pdf.png",
+      "legenda": "Envio do PDF",
+      "url": "/solicitacoes/1/documentos",
+      "largura": 1440
+    },
+    {
+      "arquivo": "12-aluna-documento-aguardando.png",
+      "legenda": "Documento aguardando conferência",
+      "url": "/solicitacoes/1/documentos",
+      "largura": 1440
+    },
+    {
+      "arquivo": "13-secretaria-fila-conferencia.png",
+      "legenda": "Fila de conferência",
+      "url": "/secretaria/documentos",
+      "largura": 1440
+    },
+    {
+      "arquivo": "14-secretaria-devolucao-justificada.png",
+      "legenda": "Devolução com justificativa",
+      "url": "/secretaria/documentos/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "15-secretaria-devolucao-registrada.png",
+      "legenda": "Devolução registrada",
+      "url": "/secretaria/documentos",
+      "largura": 1440
+    },
+    {
+      "arquivo": "16-aluna-ve-devolucao.png",
+      "legenda": "A aluna vê a devolução",
+      "url": "/solicitacoes/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "17-aluna-historico-versoes.png",
+      "legenda": "Histórico de versões",
+      "url": "/solicitacoes/1/documentos",
+      "largura": 1440
+    },
+    {
+      "arquivo": "18-secretaria-conferir-v2.png",
+      "legenda": "Conferência da nova versão",
+      "url": "/secretaria/documentos/2",
+      "largura": 1440
+    },
+    {
+      "arquivo": "19-secretaria-documento-validado.png",
+      "legenda": "Documento validado",
+      "url": "/secretaria/documentos",
+      "largura": 1440
+    },
+    {
+      "arquivo": "20-secretaria-contribuicao-preenchida.png",
+      "legenda": "Registro da contribuição",
+      "url": "/secretaria/contribuicoes",
+      "largura": 1440
+    },
+    {
+      "arquivo": "21-secretaria-contribuicao-registrada.png",
+      "legenda": "Contribuição registrada",
+      "url": "/secretaria/contribuicoes/solicitacoes/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "22-admin-fila-analise.png",
+      "legenda": "Fila de análise",
+      "url": "/admin/solicitacoes",
+      "largura": 1440
+    },
+    {
+      "arquivo": "23-admin-analise-detalhe.png",
+      "legenda": "Análise da solicitação",
+      "url": "/admin/solicitacoes/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "24-admin-aprovacao-registrada.png",
+      "legenda": "Aprovação registrada",
+      "url": "/admin/solicitacoes",
+      "largura": 1440
+    },
+    {
+      "arquivo": "25-admin-rejeicao-com-motivo.png",
+      "legenda": "Rejeição com motivo",
+      "url": "/admin/solicitacoes/2",
+      "largura": 1440
+    },
+    {
+      "arquivo": "26-aluno-ve-rejeicao.png",
+      "legenda": "O aluno vê o motivo da rejeição",
+      "url": "/solicitacoes/2",
+      "largura": 1440
+    },
+    {
+      "arquivo": "27-aluna-solicitacao-aprovada.png",
+      "legenda": "Solicitação aprovada",
+      "url": "/solicitacoes/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "28-portaria-reservas-autorizadas.png",
+      "legenda": "Reservas autorizadas",
+      "url": "/seguranca/reservas",
+      "largura": 1440
+    },
+    {
+      "arquivo": "29-portaria-conferencia.png",
+      "legenda": "Conferência na entrada",
+      "url": "/seguranca/reservas/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "30-admin-cancelamento-com-motivo.png",
+      "legenda": "Cancelamento com motivo",
+      "url": "/admin/solicitacoes/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "31-admin-cancelamento-registrado.png",
+      "legenda": "Cancelamento registrado",
+      "url": "/admin/solicitacoes",
+      "largura": 1440
+    },
+    {
+      "arquivo": "32-portaria-apos-cancelamento.png",
+      "legenda": "Portaria depois do cancelamento",
+      "url": "/seguranca/reservas",
+      "largura": 1440
+    },
+    {
+      "arquivo": "33-aluna-reserva-cancelada.png",
+      "legenda": "Reserva cancelada",
+      "url": "/solicitacoes/1",
+      "largura": 1440
+    },
+    {
+      "arquivo": "34-aluna-remarcacao-formulario.png",
+      "legenda": "Remarcação",
+      "url": "/solicitacoes/nova?origem=1&data=2026-10-28",
+      "largura": 1440
+    },
+    {
+      "arquivo": "35-aluna-remarcacao-registrada.png",
+      "legenda": "Nova solicitação vinculada",
+      "url": "/solicitacoes/3",
+      "largura": 1440
+    },
+    {
+      "arquivo": "36-aluna-remarcacao-participantes.png",
+      "legenda": "Participantes copiados",
+      "url": "/solicitacoes/3/participantes",
+      "largura": 1440
+    },
+    {
+      "arquivo": "37-aluna-minhas-solicitacoes.png",
+      "legenda": "Minhas solicitações",
+      "url": "/solicitacoes",
+      "largura": 1440
+    },
+    {
+      "arquivo": "38-admin-painel.png",
+      "legenda": "Painel administrativo",
+      "url": "/admin",
+      "largura": 1440
+    },
+    {
+      "arquivo": "39-admin-horarios.png",
+      "legenda": "Horários semanais",
+      "url": "/admin/horarios",
+      "largura": 1440
+    },
+    {
+      "arquivo": "40-admin-bloqueios.png",
+      "legenda": "Bloqueios",
+      "url": "/admin/bloqueios",
+      "largura": 1440
+    },
+    {
+      "arquivo": "41-admin-usuarios.png",
+      "legenda": "Usuários",
+      "url": "/admin/usuarios",
+      "largura": 1440
+    },
+    {
+      "arquivo": "42-celular-pagina-inicial.png",
+      "legenda": "Celular: página inicial",
+      "url": "/",
+      "largura": 390
+    },
+    {
+      "arquivo": "43-celular-aluna-inicio.png",
+      "legenda": "Celular: início da aluna",
+      "url": "/inicio",
+      "largura": 390
+    },
+    {
+      "arquivo": "44-celular-menu-aberto.png",
+      "legenda": "Celular: menu aberto",
+      "url": "/inicio",
+      "largura": 390
+    },
+    {
+      "arquivo": "45-celular-detalhe-remarcacao.png",
+      "legenda": "Celular: detalhe da remarcação",
+      "url": "/solicitacoes/3",
+      "largura": 390
+    },
+    {
+      "arquivo": "46-celular-portaria.png",
+      "legenda": "Celular: portaria",
+      "url": "/seguranca/reservas",
+      "largura": 390
+    }
+  ]
+}
