@@ -107,6 +107,10 @@
                                     Explique de forma objetiva o que o aluno precisa corrigir. Máximo de 500 caracteres.
                                 </p>
                             </div>
+                            <div class="alerta alerta--aviso" th:if="${prazoReenvioEncerrado}">
+                                <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
+                                <p>Hoje já é o dia do uso: se devolver, o aluno não consegue mais enviar uma nova versão.</p>
+                            </div>
                             <button class="botao botao--secundario botao--bloco botao--espacado" type="submit">Devolver para correção</button>
                         </form>
                     </div>
