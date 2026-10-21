@@ -240,7 +240,69 @@ class AdminSolicitacaoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Interdição da quadra")))
                 .andExpect(content().string(containsString(
-                        "Nenhum contato com o aluno ou reagendamento é presumido")));
+                        "O registro não avisa o aluno por outro meio")));
+    }
+
+    @Test
+    void filaMostraRejeitadasECanceladasParaConsulta() throws Exception {
+        prepararAdministrador();
+        Reserva rejeitada = novaReservaAutorizada();
+        rejeitada.setId(22L);
+        rejeitada.setStatus(StatusReserva.REJEITADA);
+        Reserva cancelada = novaReservaAutorizada();
+        cancelada.setId(23L);
+        cancelada.setStatus(StatusReserva.CANCELADA);
+        when(analiseService.listarEncerradas(administrador))
+                .thenReturn(List.of(rejeitada, cancelada));
+
+        mockMvc.perform(get("/admin/solicitacoes")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Rejeitadas e canceladas")))
+                .andExpect(content().string(containsString("href=\"/admin/solicitacoes/22\"")))
+                .andExpect(content().string(containsString("href=\"/admin/solicitacoes/23\"")));
+    }
+
+    @Test
+    void detalheDeRejeitadaMostraMotivoResponsavelESemAcoes() throws Exception {
+        prepararAdministrador();
+        reserva.setStatus(StatusReserva.REJEITADA);
+        reserva.setMotivoRejeicao("Período reservado para evento da escola");
+        reserva.setAnalisadaPor(administrador);
+        reserva.setAnalisadaEm(Instant.parse("2026-10-19T13:00:00Z"));
+        when(analiseService.detalhar(20L, administrador)).thenReturn(detalhe());
+
+        mockMvc.perform(get("/admin/solicitacoes/20")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Decisão registrada")))
+                .andExpect(content().string(containsString("Período reservado para evento da escola")))
+                .andExpect(content().string(containsString("Administrador")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        containsString("Aprovar e autorizar reserva"))));
+    }
+
+    @Test
+    void detalheDeCanceladaApontaParaARemarcacaoDoAluno() throws Exception {
+        prepararAdministrador();
+        reserva.setStatus(StatusReserva.CANCELADA);
+        reserva.setMotivoCancelamentoInstitucional("Interdição da quadra");
+        reserva.setCanceladaPor(administrador);
+        reserva.setCanceladaEm(Instant.parse("2026-10-19T10:00:00Z"));
+        reserva.setAnalisadaPor(administrador);
+        reserva.setAnalisadaEm(Instant.parse("2026-10-18T10:00:00Z"));
+        Reserva remarcacao = novaReservaAutorizada();
+        remarcacao.setId(40L);
+        remarcacao.setStatus(StatusReserva.PENDENTE_DOCUMENTACAO);
+        when(analiseService.detalhar(20L, administrador)).thenReturn(detalhe());
+        when(reservaService.obterRemarcacao(reserva)).thenReturn(Optional.of(remarcacao));
+
+        mockMvc.perform(get("/admin/solicitacoes/20")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Decisão registrada")))
+                .andExpect(content().string(containsString("O aluno pediu outro horário")))
+                .andExpect(content().string(containsString("href=\"/admin/solicitacoes/40\"")));
     }
 
     private DetalheAnaliseAdministrativa detalhe() {

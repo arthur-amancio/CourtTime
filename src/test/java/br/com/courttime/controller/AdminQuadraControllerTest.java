@@ -99,7 +99,7 @@ class AdminQuadraControllerTest {
     void administradorVisualizaDadosReaisDoPainel() throws Exception {
         prepararAdministradorAutenticado();
         PainelAdministrativo painel = new PainelAdministrativo(
-                quadra, List.of(), List.of(), 7, 2, 1, 3, 1);
+                quadra, List.of(), List.of(), 8, 2, 1, 3, 1, 1);
         when(administracaoService.carregarPainel(administrador)).thenReturn(painel);
 
         mockMvc.perform(get("/admin")
@@ -107,7 +107,8 @@ class AdminQuadraControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Painel administrativo")))
                 .andExpect(content().string(containsString("Quadra Poliesportiva")))
-                .andExpect(content().string(containsString("Aguardando documentação")));
+                .andExpect(content().string(containsString("Aguardando documentação")))
+                .andExpect(content().string(containsString("Canceladas")));
     }
 
     @Test
