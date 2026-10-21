@@ -127,3 +127,58 @@ decididos e estão no sistema:
 Restam só itens institucionais (retenção, regra da APM, assinatura).
 **Proposta: encerrar a #18 e acompanhar a seção 4 numa issue própria de
 decisões da ETEC.**
+
+---
+
+## 6. Fechamento: regras da ETEC e versão da banca — 21/10/2026, noite
+
+Depois da auditoria acima, as nove regras explicadas pelo Leandro
+([regras-etec.md](regras-etec.md)) foram implementadas em PRs pequenos. Cada PR
+passou pela CI com PostgreSQL 16 e 18 e pelo navegador real antes de ser
+integrado.
+
+| PR | Conteúdo |
+|---|---|
+| #69 | Foto aérea e fachada da escola, faixa de logotipos ETEC · CPS · Governo de SP |
+| #70 | PDF assinado só até o dia anterior ao uso (R01); sem limite máximo (R02) |
+| #71 | Contribuição calculada em R$ 2,00 por participante (R03) |
+| #72 | Conferência da assinatura gov.br (R07) e lembrete do WhatsApp (R05) |
+| #73 | Vínculo obrigatório do participante Outro, também no formulário oficial (R09) |
+| #74 | Presença marcada pela portaria no dia da reserva (R08.1, R08.3, R08.4) |
+| #75 | Pagamento da reserva cancelada vira crédito na remarcação (R04) |
+| #76 | Simplificação: `@UsuarioAtual`, 12 controllers em vez de 14, CSS da V1 removido |
+| #77 | Dados de demonstração com participantes Outro e vínculo |
+| #78 | Actions da CI atualizadas (sem aviso de Node 20) |
+| #79 | Teste de integração da presença no PostgreSQL |
+| #80 | README, roteiro da banca e inventário técnico na versão final |
+| #81 | Textos do aluno orientam a assinatura pelo gov.br |
+
+### Verificação da versão final (`main` em `8756428`)
+
+| Execução | Resultado |
+|---|---|
+| [CI 39680043729](https://github.com/arthur-amancio/CourtTime/actions/runs/39680043729) | `clean verify` aprovado no PostgreSQL 16 e 18: 46 classes e 410 métodos de teste, 8 delas de integração no PostgreSQL; dados de demonstração conferidos e repetíveis |
+| [UI 39680422803](https://github.com/arthur-amancio/CourtTime/actions/runs/39680422803) | jornada 348/348, sondas 86/86, layout 330/330, axe 44 varreduras sem violação, nenhum CPF gravado |
+| Capturas da versão final | 49 telas reais e o formulário oficial gerado, na branch `evidencias/capturas-final` |
+
+### O que continua dependendo da ETEC
+
+- **D1:** horário-limite do envio no dia anterior. Até a decisão, o envio é
+  aceito durante o dia anterior inteiro.
+- **D2:** destino do crédito que sobra quando a remarcação tem menos
+  participantes. Até a decisão, o saldo só é mostrado.
+- **D3:** quem autoriza pessoas a mais na portaria (R08.2). Até a decisão,
+  elas não são registradas.
+- **R09:** confirmar se irmãos podem participar e se funcionários continuam
+  permitidos. O termo oficial e o relato não coincidem.
+- **R06:** política de retenção e descarte dos documentos (LGPD). Até a
+  decisão, nada é apagado.
+- Data da banca.
+
+### Não verificado nesta sessão
+
+A execução no Windows do Arthur, com `.\mvnw.cmd spring-boot:run` sobre o
+`courttime_demo` existente, não foi repetida porque o computador não estava
+ligado à sessão. As colunas novas aceitam nulo, então o `ddl-auto=update` deve
+acrescentá-las sem perder dados. Vale conferir antes da banca e rodar o
+`popular-demo.sql` atualizado.
