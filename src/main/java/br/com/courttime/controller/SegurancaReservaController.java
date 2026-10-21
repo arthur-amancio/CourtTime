@@ -2,13 +2,11 @@ package br.com.courttime.controller;
 
 import br.com.courttime.entity.PresencaParticipante;
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ConsultaSegurancaService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,32 +27,29 @@ public class SegurancaReservaController {
     private static final String PREFIXO_PRESENCA = "presenca-";
 
     private final ConsultaSegurancaService consultaSegurancaService;
-    private final UsuarioRepository usuarioRepository;
 
     public SegurancaReservaController(
-            ConsultaSegurancaService consultaSegurancaService,
-            UsuarioRepository usuarioRepository) {
+            ConsultaSegurancaService consultaSegurancaService) {
         this.consultaSegurancaService = consultaSegurancaService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
     public String listar(
-            Authentication authentication,
+            @UsuarioAtual Usuario seguranca,
             Model model,
             HttpServletResponse response) {
         impedirCache(response);
         model.addAttribute(
                 "reservas",
                 consultaSegurancaService.listarAutorizadas(
-                        obterUsuarioAutenticado(authentication)));
+                        seguranca));
         return "seguranca/reservas/lista";
     }
 
     @GetMapping("/{id}")
     public String detalhar(
             @PathVariable Long id,
-            Authentication authentication,
+            @UsuarioAtual Usuario seguranca,
             Model model,
             HttpServletResponse response) {
         impedirCache(response);
@@ -62,7 +57,7 @@ public class SegurancaReservaController {
             model.addAttribute(
                     "detalhe",
                     consultaSegurancaService.detalhar(
-                            id, obterUsuarioAutenticado(authentication)));
+                            id, seguranca));
             return "seguranca/reservas/detalhe";
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -74,7 +69,7 @@ public class SegurancaReservaController {
     public String registrarPresencas(
             @PathVariable Long id,
             @RequestParam Map<String, String> parametros,
-            Authentication authentication,
+            @UsuarioAtual Usuario seguranca,
             RedirectAttributes redirectAttributes) {
         Map<Long, PresencaParticipante> marcacoes = new HashMap<>();
         try {
@@ -90,7 +85,7 @@ public class SegurancaReservaController {
         }
         try {
             int alteradas = consultaSegurancaService.registrarPresencas(
-                    id, obterUsuarioAutenticado(authentication), marcacoes);
+                    id, seguranca, marcacoes);
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso",
                     alteradas == 0 ? "Nenhuma marcação mudou." : "Presença registrada.");
@@ -106,11 +101,6 @@ public class SegurancaReservaController {
         return "redirect:/seguranca/reservas/" + id;
     }
 
-    private Usuario obterUsuarioAutenticado(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 
     private void impedirCache(HttpServletResponse response) {
         response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");

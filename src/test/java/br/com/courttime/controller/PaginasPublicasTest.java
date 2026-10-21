@@ -29,9 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest({HomeController.class, LoginController.class, InicioController.class})
+@WebMvcTest(InicioController.class)
 @Import({SecurityConfig.class, UsuarioDetailsService.class})
-class HomeControllerTest {
+class PaginasPublicasTest {
 
     @Autowired
     private MockMvc mockMvc;

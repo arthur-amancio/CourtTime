@@ -2,7 +2,7 @@ package br.com.courttime.controller;
 
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.DocumentoReservaService;
 import br.com.courttime.service.DownloadDocumento;
 import br.com.courttime.service.ReservaService;
@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,23 +33,19 @@ public class DocumentoReservaController {
 
     private final DocumentoReservaService documentoService;
     private final ReservaService reservaService;
-    private final UsuarioRepository usuarioRepository;
 
     public DocumentoReservaController(
             DocumentoReservaService documentoService,
-            ReservaService reservaService,
-            UsuarioRepository usuarioRepository) {
+            ReservaService reservaService) {
         this.documentoService = documentoService;
         this.reservaService = reservaService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
     public String listar(
             @PathVariable Long reservaId,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         try {
             Reserva reserva = reservaService.obterSolicitacaoDoUsuario(reservaId, usuario);
             model.addAttribute("solicitacao", reserva);
@@ -76,9 +70,8 @@ public class DocumentoReservaController {
     public String enviar(
             @PathVariable Long reservaId,
             @RequestParam("arquivo") MultipartFile arquivo,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             RedirectAttributes redirectAttributes) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         try {
             documentoService.enviar(
                     reservaId,
@@ -104,8 +97,7 @@ public class DocumentoReservaController {
     public ResponseEntity<org.springframework.core.io.Resource> baixar(
             @PathVariable Long reservaId,
             @PathVariable Long documentoId,
-            Authentication authentication) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
+            @UsuarioAtual Usuario usuario) {
         try {
             DownloadDocumento download = documentoService.baixar(
                     reservaId, documentoId, usuario);
@@ -124,11 +116,6 @@ public class DocumentoReservaController {
         }
     }
 
-    private Usuario obterUsuarioAutenticado(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 
     private String redirecionarLista(Long reservaId) {
         return "redirect:/solicitacoes/" + reservaId + "/documentos";

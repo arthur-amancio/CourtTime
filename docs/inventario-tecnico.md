@@ -259,9 +259,9 @@ verificações de navegador, responsividade e integração entre perfis.
 
 | Tela (template) | Rota | Perfil autorizado | Ações reais | Dados apresentados ou enviados | Restrições que a interface deve preservar | Testes atuais |
 |---|---|---|---|---|---|---|
-| Página pública (`index.html`) | `GET /` | Público | Ir ao login | Identidade e finalidade do sistema | Não prometer aprovação, assinatura ou pagamento eletrônico | `HomeControllerTest` |
-| Login (`login.html`) | `GET /login`, `POST /login` | Público | Autenticar | Email, senha e mensagens da sessão | Senha nunca volta no HTML; falha não revela existência da conta | `HomeControllerTest`; jornada Playwright |
-| Início (`inicio.html`) | `GET /inicio` | Autenticado | Navegar para ações do perfil | Usuário, perfil e, para aluno, situação mais recente | Atalhos variam por perfil; situação não pode alegar autorização indevida | `InicioControllerTest`, `HomeControllerTest` |
+| Página pública (`index.html`) | `GET /` | Público | Ir ao login | Identidade e finalidade do sistema | Não prometer aprovação, assinatura ou pagamento eletrônico | `PaginasPublicasTest` |
+| Login (`login.html`) | `GET /login`, `POST /login` | Público | Autenticar | Email, senha e mensagens da sessão | Senha nunca volta no HTML; falha não revela existência da conta | `PaginasPublicasTest`; jornada Playwright |
+| Início (`inicio.html`) | `GET /inicio` | Autenticado | Navegar para ações do perfil | Usuário, perfil e, para aluno, situação mais recente | Atalhos variam por perfil; situação não pode alegar autorização indevida | `InicioControllerTest`, `PaginasPublicasTest` |
 | Erro (`error.html`) | despacho de erro | Conforme requisição | Voltar ao início | Código e mensagem pública | Sem stack trace, SQL, chave de arquivo ou detalhe interno | `PaginaDeErroTest`, `PaginaDeErroServidorTest` |
 | Consulta da quadra (`quadra.html`) | `GET /quadra?data=` | Autenticado | Mudar data; iniciar solicitação quando disponível | Quadra, estado operacional, data e períodos | Períodos vêm do backend; indisponível não oferece ação de solicitar | `QuadraControllerTest`; jornada Playwright |
 | Nova solicitação (`solicitacoes/formulario.html`) | `GET /solicitacoes/nova`, `POST /solicitacoes` | Aluno | Consultar data; registrar | `data`, `horarioInicio`, `finalidade` | Um dia de antecedência, uma hora, grade/bloqueio/conflito; servidor revalida | `SolicitacaoReservaControllerTest`, `ReservaServiceTest`; jornada Playwright |

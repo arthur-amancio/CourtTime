@@ -1,12 +1,10 @@
 package br.com.courttime.controller;
 
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ContribuicaoApmService;
 import br.com.courttime.service.DetalheContribuicaoApm;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,18 +20,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SecretariaContribuicaoController {
 
     private final ContribuicaoApmService contribuicaoService;
-    private final UsuarioRepository usuarioRepository;
 
     public SecretariaContribuicaoController(
-            ContribuicaoApmService contribuicaoService,
-            UsuarioRepository usuarioRepository) {
+            ContribuicaoApmService contribuicaoService) {
         this.contribuicaoService = contribuicaoService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
-    public String listar(Authentication authentication, Model model) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
+    public String listar(@UsuarioAtual Usuario secretaria, Model model) {
         model.addAttribute("pendentes", contribuicaoService.listarPendentes(secretaria));
         model.addAttribute("registradas", contribuicaoService.listarRegistradas(secretaria));
         return "secretaria/contribuicoes/lista";
@@ -42,9 +36,8 @@ public class SecretariaContribuicaoController {
     @GetMapping("/solicitacoes/{reservaId}")
     public String detalhar(
             @PathVariable Long reservaId,
-            Authentication authentication,
+            @UsuarioAtual Usuario secretaria,
             Model model) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
             model.addAttribute(
                     "detalhe",
@@ -59,9 +52,8 @@ public class SecretariaContribuicaoController {
     public String registrar(
             @PathVariable Long reservaId,
             @RequestParam(required = false) String observacoes,
-            Authentication authentication,
+            @UsuarioAtual Usuario secretaria,
             RedirectAttributes redirectAttributes) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
             DetalheContribuicaoApm detalhe = contribuicaoService.registrar(
                     reservaId, secretaria, observacoes);
@@ -80,9 +72,8 @@ public class SecretariaContribuicaoController {
             @RequestParam(required = false) String novoValor,
             @RequestParam(required = false) String novasObservacoes,
             @RequestParam(required = false) String motivo,
-            Authentication authentication,
+            @UsuarioAtual Usuario secretaria,
             RedirectAttributes redirectAttributes) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
             DetalheContribuicaoApm detalhe = contribuicaoService.ajustar(
                     contribuicaoId,
@@ -104,11 +95,6 @@ public class SecretariaContribuicaoController {
                 + detalhe.contribuicao().getReserva().getId();
     }
 
-    private Usuario obterUsuarioAutenticado(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 
     private ResponseStatusException paginaNaoEncontrada() {
         return new ResponseStatusException(HttpStatus.NOT_FOUND);

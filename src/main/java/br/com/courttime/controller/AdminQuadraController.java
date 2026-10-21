@@ -5,12 +5,10 @@ import br.com.courttime.controller.form.HorarioSemanalForm;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.AdministracaoQuadraService;
 import br.com.courttime.service.CalendarioDisponibilidadeService;
 import jakarta.validation.Valid;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,28 +25,25 @@ public class AdminQuadraController {
 
     private final AdministracaoQuadraService administracaoService;
     private final CalendarioDisponibilidadeService calendarioService;
-    private final UsuarioRepository usuarioRepository;
 
     public AdminQuadraController(
             AdministracaoQuadraService administracaoService,
-            CalendarioDisponibilidadeService calendarioService,
-            UsuarioRepository usuarioRepository) {
+            CalendarioDisponibilidadeService calendarioService) {
         this.administracaoService = administracaoService;
         this.calendarioService = calendarioService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
-    public String painel(Authentication authentication, Model model) {
+    public String painel(@UsuarioAtual Usuario administrador, Model model) {
         model.addAttribute(
-                "painel", administracaoService.carregarPainel(obterUsuario(authentication)));
+                "painel", administracaoService.carregarPainel(administrador));
         return "admin/painel";
     }
 
     @GetMapping("/horarios")
-    public String listarHorarios(Authentication authentication, Model model) {
+    public String listarHorarios(@UsuarioAtual Usuario administrador, Model model) {
         model.addAttribute(
-                "horarios", administracaoService.listarHorarios(obterUsuario(authentication)));
+                "horarios", administracaoService.listarHorarios(administrador));
         return "admin/horarios/lista";
     }
 
@@ -63,7 +58,7 @@ public class AdminQuadraController {
     public String cadastrarHorario(
             @Valid @ModelAttribute("form") HorarioSemanalForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -72,7 +67,7 @@ public class AdminQuadraController {
         }
         try {
             administracaoService.cadastrarHorario(
-                    obterUsuario(authentication),
+                    administrador,
                     form.getDiaSemana(),
                     form.getHorarioInicio(),
                     form.getHorarioFim());
@@ -88,9 +83,9 @@ public class AdminQuadraController {
 
     @GetMapping("/horarios/{id}/editar")
     public String editarHorario(
-            @PathVariable Long id, Authentication authentication, Model model) {
+            @PathVariable Long id, @UsuarioAtual Usuario administrador, Model model) {
         DisponibilidadeQuadra horario = administracaoService.obterHorario(
-                id, obterUsuario(authentication));
+                id, administrador);
         HorarioSemanalForm form = new HorarioSemanalForm();
         form.setDiaSemana(horario.getDiaSemana());
         form.setHorarioInicio(horario.getHorarioInicio());
@@ -105,7 +100,7 @@ public class AdminQuadraController {
             @PathVariable Long id,
             @Valid @ModelAttribute("form") HorarioSemanalForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -115,7 +110,7 @@ public class AdminQuadraController {
         try {
             administracaoService.editarHorario(
                     id,
-                    obterUsuario(authentication),
+                    administrador,
                     form.getDiaSemana(),
                     form.getHorarioInicio(),
                     form.getHorarioFim());
@@ -132,11 +127,11 @@ public class AdminQuadraController {
     @PostMapping("/horarios/{id}/alternar")
     public String alternarHorario(
             @PathVariable Long id,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             RedirectAttributes redirectAttributes) {
         try {
             DisponibilidadeQuadra horario = administracaoService.alternarHorario(
-                    id, obterUsuario(authentication));
+                    id, administrador);
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso",
                     horario.isAtiva() ? "Horário ativado com sucesso." : "Horário desativado.");
@@ -147,10 +142,10 @@ public class AdminQuadraController {
     }
 
     @GetMapping("/bloqueios")
-    public String listarBloqueios(Authentication authentication, Model model) {
+    public String listarBloqueios(@UsuarioAtual Usuario administrador, Model model) {
         model.addAttribute(
                 "bloqueios",
-                administracaoService.listarBloqueiosFuturos(obterUsuario(authentication)));
+                administracaoService.listarBloqueiosFuturos(administrador));
         return "admin/bloqueios/lista";
     }
 
@@ -167,7 +162,7 @@ public class AdminQuadraController {
     public String cadastrarBloqueio(
             @Valid @ModelAttribute("form") BloqueioQuadraForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -176,7 +171,7 @@ public class AdminQuadraController {
         }
         try {
             administracaoService.cadastrarBloqueio(
-                    obterUsuario(authentication),
+                    administrador,
                     form.getData(),
                     form.getHorarioInicio(),
                     form.getHorarioFim(),
@@ -194,10 +189,10 @@ public class AdminQuadraController {
     @PostMapping("/bloqueios/{id}/desativar")
     public String desativarBloqueio(
             @PathVariable Long id,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             RedirectAttributes redirectAttributes) {
         try {
-            administracaoService.desativarBloqueio(id, obterUsuario(authentication));
+            administracaoService.desativarBloqueio(id, administrador);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Bloqueio desativado.");
         } catch (IllegalArgumentException | IllegalStateException exception) {
             redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
@@ -205,11 +200,6 @@ public class AdminQuadraController {
         return "redirect:/admin/bloqueios";
     }
 
-    private Usuario obterUsuario(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 
     private void prepararFormularioHorario(Model model, Long horarioId) {
         model.addAttribute("diasSemana", DiaSemana.values());
