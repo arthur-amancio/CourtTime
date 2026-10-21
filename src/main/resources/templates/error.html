@@ -12,34 +12,43 @@
     <title>CourtTime | Página indisponível</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
-<body>
-    <header class="site-header">
-        <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-        <div class="container site-header__inner">
-            <a class="brand" th:href="@{/inicio}">CourtTime</a>
+<body class="pagina-publica">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="topo-publico">
+        <div class="container topo-publico__inner">
+            <a class="marca" th:href="@{/inicio}" aria-label="CourtTime, início">
+                <span class="marca__texto">
+                    <span class="marca__nome">CourtTime</span>
+                    <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
+                </span>
+            </a>
         </div>
     </header>
 
-    <main id="conteudo" class="container auth-main">
-        <section class="auth-panel" aria-labelledby="page-title">
-            <th:block th:if="${status == 403}">
-                <h1 id="page-title">Acesso não permitido</h1>
-                <p class="auth-panel__intro">O seu perfil não tem permissão para abrir esta página.</p>
-            </th:block>
-            <th:block th:if="${status == 404}">
-                <h1 id="page-title">Não encontrado</h1>
-                <p class="auth-panel__intro">
-                    A página ou o registro não existe ou não está mais disponível para o seu perfil.
-                    Uma reserva cancelada, por exemplo, deixa de aparecer para a segurança.
-                </p>
-            </th:block>
-            <th:block th:unless="${status == 403 or status == 404}">
-                <h1 id="page-title">Não foi possível concluir</h1>
-                <p class="auth-panel__intro">
-                    Ocorreu um erro inesperado. Tente novamente e, se continuar, avise a administração.
-                </p>
-            </th:block>
-            <p><a class="button" th:href="@{/inicio}">Voltar ao início</a></p>
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <section class="painel" aria-labelledby="page-title">
+            <div class="painel__corpo pilha pilha--compacta">
+                <th:block th:if="${status == 403}">
+                    <h1 id="page-title">Acesso não permitido</h1>
+                    <p>O seu perfil não tem permissão para abrir esta página.</p>
+                </th:block>
+                <th:block th:if="${status == 404}">
+                    <h1 id="page-title">Não encontrado</h1>
+                    <p>
+                        A página ou o registro não existe ou não está mais disponível para o seu perfil.
+                        Uma reserva cancelada, por exemplo, deixa de aparecer para a segurança.
+                    </p>
+                </th:block>
+                <th:block th:unless="${status == 403 or status == 404}">
+                    <h1 id="page-title">Não foi possível concluir</h1>
+                    <p>
+                        Ocorreu um erro inesperado. Tente novamente e, se continuar, avise a administração.
+                    </p>
+                </th:block>
+                <div class="grupo-botoes">
+                    <a class="botao" th:href="@{/inicio}">Voltar ao início</a>
+                </div>
+            </div>
         </section>
     </main>
 </body>

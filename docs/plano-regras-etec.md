@@ -142,14 +142,18 @@ quando, descrita como **registro**, não como autorização.
 
 ### 9. Simplificação pontual
 
-Com uma lista curta, cada item em PR próprio e sem mudar o comportamento:
+Feito no PR `refactor/simplificacao-pontual`, sem mudar comportamento:
 
-- `ReservaService`: separar a remarcação, que hoje é a parte mais longa;
-- mensagens repetidas nos controllers (`obterUsuarioAutenticado` está copiado
-  em vários deles);
-- CSS da V1 que ainda sobra (página de erro).
+- `obterUsuarioAutenticado`, copiado em 11 controllers, virou um único
+  `UsuarioAtualResolver`. O controller recebe `@UsuarioAtual Usuario`;
+- `HomeController` e `LoginController` (uma rota cada) entraram no
+  `InicioController`;
+- a página de erro passou para o visual V2, e o CSS da V1 que nenhuma tela usa
+  saiu do `style.css` (de 2.020 para cerca de 1.150 linhas).
 
-Se faltar tempo antes da banca, esta é a primeira etapa a ser cortada.
+Ficaram de fora, de propósito: separar a remarcação do `ReservaService` e
+dividir o `AdminQuadraController`. As duas mudanças mexeriam em muitos testes
+perto da banca, e ganhariam pouco em clareza.
 
 ### 10. Homologação
 
