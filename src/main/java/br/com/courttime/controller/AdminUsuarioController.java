@@ -5,13 +5,11 @@ import br.com.courttime.controller.form.EdicaoUsuarioForm;
 import br.com.courttime.controller.form.RedefinicaoSenhaForm;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.AdministracaoUsuarioService;
 import br.com.courttime.service.UsuarioEdicao;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,13 +29,10 @@ import java.util.List;
 public class AdminUsuarioController {
 
     private final AdministracaoUsuarioService administracaoUsuarioService;
-    private final UsuarioRepository usuarioRepository;
 
     public AdminUsuarioController(
-            AdministracaoUsuarioService administracaoUsuarioService,
-            UsuarioRepository usuarioRepository) {
+            AdministracaoUsuarioService administracaoUsuarioService) {
         this.administracaoUsuarioService = administracaoUsuarioService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
@@ -46,9 +41,8 @@ public class AdminUsuarioController {
             @RequestParam(required = false) Perfil perfil,
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(defaultValue = "0") int pagina,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             Model model) {
-        Usuario administrador = obterUsuario(authentication);
         Page<?> usuarios = administracaoUsuarioService.listar(
                 administrador, busca, perfil, ativo, pagina);
         model.addAttribute("usuarios", usuarios);
@@ -71,7 +65,7 @@ public class AdminUsuarioController {
     public String cadastrar(
             @Valid @ModelAttribute("form") CadastroUsuarioForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -80,7 +74,7 @@ public class AdminUsuarioController {
         }
         try {
             administracaoUsuarioService.cadastrar(
-                    obterUsuario(authentication),
+                    administrador,
                     form.getNome(),
                     form.getEmail(),
                     form.getPerfil(),
@@ -97,9 +91,9 @@ public class AdminUsuarioController {
 
     @GetMapping("/{id}/editar")
     public String editar(
-            @PathVariable Long id, Authentication authentication, Model model) {
+            @PathVariable Long id, @UsuarioAtual Usuario administrador, Model model) {
         UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(
-                id, obterUsuario(authentication));
+                id, administrador);
         EdicaoUsuarioForm form = new EdicaoUsuarioForm();
         form.setNome(usuario.nome());
         form.setEmail(usuario.email());
@@ -114,10 +108,9 @@ public class AdminUsuarioController {
             @PathVariable Long id,
             @Valid @ModelAttribute("form") EdicaoUsuarioForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
-        Usuario administrador = obterUsuario(authentication);
         UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(id, administrador);
         if (bindingResult.hasErrors()) {
             prepararEdicao(model, usuario);
@@ -143,11 +136,11 @@ public class AdminUsuarioController {
     @PostMapping("/{id}/alternar")
     public String alternar(
             @PathVariable Long id,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             RedirectAttributes redirectAttributes) {
         try {
             var usuario = administracaoUsuarioService.alternarEstado(
-                    id, obterUsuario(authentication));
+                    id, administrador);
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso",
                     usuario.ativo() ? "Conta ativada com sucesso." : "Conta desativada.");
@@ -159,9 +152,9 @@ public class AdminUsuarioController {
 
     @GetMapping("/{id}/senha")
     public String senha(
-            @PathVariable Long id, Authentication authentication, Model model) {
+            @PathVariable Long id, @UsuarioAtual Usuario administrador, Model model) {
         UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(
-                id, obterUsuario(authentication));
+                id, administrador);
         model.addAttribute("usuario", usuario);
         model.addAttribute("form", new RedefinicaoSenhaForm());
         return "admin/usuarios/senha";
@@ -172,10 +165,9 @@ public class AdminUsuarioController {
             @PathVariable Long id,
             @Valid @ModelAttribute("form") RedefinicaoSenhaForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
-        Usuario administrador = obterUsuario(authentication);
         UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(id, administrador);
         if (bindingResult.hasErrors()) {
             model.addAttribute("usuario", usuario);
@@ -194,11 +186,6 @@ public class AdminUsuarioController {
         }
     }
 
-    private Usuario obterUsuario(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 
     private void prepararCadastro(Model model) {
         model.addAttribute("perfis", administracaoUsuarioService.perfisCadastraveis());

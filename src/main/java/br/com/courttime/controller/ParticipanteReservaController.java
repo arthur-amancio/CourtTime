@@ -5,14 +5,12 @@ import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.entity.VinculoParticipante;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ParticipanteReservaService;
 import br.com.courttime.service.ReservaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,23 +28,19 @@ public class ParticipanteReservaController {
 
     private final ParticipanteReservaService participanteService;
     private final ReservaService reservaService;
-    private final UsuarioRepository usuarioRepository;
 
     public ParticipanteReservaController(
             ParticipanteReservaService participanteService,
-            ReservaService reservaService,
-            UsuarioRepository usuarioRepository) {
+            ReservaService reservaService) {
         this.participanteService = participanteService;
         this.reservaService = reservaService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
     public String listar(
             @PathVariable Long reservaId,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         try {
             Reserva reserva = reservaService.obterSolicitacaoDoUsuario(reservaId, usuario);
             model.addAttribute("solicitacao", reserva);
@@ -64,10 +58,9 @@ public class ParticipanteReservaController {
     @GetMapping("/novo")
     public String exibirCadastro(
             @PathVariable Long reservaId,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model,
             RedirectAttributes redirectAttributes) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
         if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
@@ -82,10 +75,9 @@ public class ParticipanteReservaController {
             @PathVariable Long reservaId,
             @Valid @ModelAttribute("form") ParticipanteReservaForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model,
             RedirectAttributes redirectAttributes) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
         if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
@@ -120,10 +112,9 @@ public class ParticipanteReservaController {
     public String exibirEdicao(
             @PathVariable Long reservaId,
             @PathVariable Long participanteId,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model,
             RedirectAttributes redirectAttributes) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
         if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
@@ -149,10 +140,9 @@ public class ParticipanteReservaController {
             @PathVariable Long participanteId,
             @Valid @ModelAttribute("form") ParticipanteReservaForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model,
             RedirectAttributes redirectAttributes) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         Reserva reserva = obterSolicitacao(reservaId, usuario);
         if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
@@ -188,9 +178,8 @@ public class ParticipanteReservaController {
     public String remover(
             @PathVariable Long reservaId,
             @PathVariable Long participanteId,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             RedirectAttributes redirectAttributes) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         try {
             participanteService.remover(reservaId, participanteId, usuario);
             redirectAttributes.addFlashAttribute(
@@ -227,11 +216,6 @@ public class ParticipanteReservaController {
         }
     }
 
-    private Usuario obterUsuarioAutenticado(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 
     private String redirecionarEdicaoBloqueada(
             Long reservaId, RedirectAttributes redirectAttributes) {

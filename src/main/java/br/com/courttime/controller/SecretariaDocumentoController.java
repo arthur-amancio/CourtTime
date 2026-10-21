@@ -2,7 +2,7 @@ package br.com.courttime.controller;
 
 import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ConferenciaDocumentoService;
 import br.com.courttime.service.DocumentoReservaService;
 import br.com.courttime.service.DownloadDocumento;
@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,18 +30,14 @@ import java.nio.charset.StandardCharsets;
 public class SecretariaDocumentoController {
 
     private final ConferenciaDocumentoService conferenciaService;
-    private final UsuarioRepository usuarioRepository;
 
     public SecretariaDocumentoController(
-            ConferenciaDocumentoService conferenciaService,
-            UsuarioRepository usuarioRepository) {
+            ConferenciaDocumentoService conferenciaService) {
         this.conferenciaService = conferenciaService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
-    public String listar(Authentication authentication, Model model) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
+    public String listar(@UsuarioAtual Usuario secretaria, Model model) {
         model.addAttribute("pendentes", conferenciaService.listarPendentes(secretaria));
         model.addAttribute("historico", conferenciaService.listarHistorico(secretaria));
         return "secretaria/documentos/lista";
@@ -52,9 +46,8 @@ public class SecretariaDocumentoController {
     @GetMapping("/{documentoId}")
     public String detalhar(
             @PathVariable Long documentoId,
-            Authentication authentication,
+            @UsuarioAtual Usuario secretaria,
             Model model) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
             DocumentoReserva documento = conferenciaService.obter(documentoId, secretaria);
             model.addAttribute("documento", documento);
@@ -76,8 +69,7 @@ public class SecretariaDocumentoController {
     @GetMapping("/{documentoId}/baixar")
     public ResponseEntity<org.springframework.core.io.Resource> baixar(
             @PathVariable Long documentoId,
-            Authentication authentication) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
+            @UsuarioAtual Usuario secretaria) {
         try {
             DownloadDocumento download = conferenciaService.baixar(documentoId, secretaria);
             ContentDisposition disposicao = ContentDisposition.attachment()
@@ -99,9 +91,8 @@ public class SecretariaDocumentoController {
     public String validar(
             @PathVariable Long documentoId,
             @RequestParam(defaultValue = "false") boolean assinaturaGovBrConferida,
-            Authentication authentication,
+            @UsuarioAtual Usuario secretaria,
             RedirectAttributes redirectAttributes) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
             conferenciaService.validar(documentoId, secretaria, assinaturaGovBrConferida);
             redirectAttributes.addFlashAttribute(
@@ -116,9 +107,8 @@ public class SecretariaDocumentoController {
     public String devolver(
             @PathVariable Long documentoId,
             @RequestParam(required = false) String justificativa,
-            Authentication authentication,
+            @UsuarioAtual Usuario secretaria,
             RedirectAttributes redirectAttributes) {
-        Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
             conferenciaService.devolver(documentoId, secretaria, justificativa);
             redirectAttributes.addFlashAttribute(
@@ -130,11 +120,6 @@ public class SecretariaDocumentoController {
         return "redirect:/secretaria/documentos";
     }
 
-    private Usuario obterUsuarioAutenticado(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 
     private ResponseStatusException paginaNaoEncontrada() {
         return new ResponseStatusException(HttpStatus.NOT_FOUND);

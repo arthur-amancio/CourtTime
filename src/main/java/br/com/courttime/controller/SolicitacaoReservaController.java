@@ -4,7 +4,7 @@ import br.com.courttime.controller.form.SolicitacaoReservaForm;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.CalendarioDisponibilidadeService;
 import br.com.courttime.service.ConsultaDisponibilidade;
 import br.com.courttime.service.HorarioDisponibilidade;
@@ -15,8 +15,6 @@ import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,24 +39,20 @@ public class SolicitacaoReservaController {
     private final QuadraService quadraService;
     private final CalendarioDisponibilidadeService calendarioDisponibilidadeService;
     private final SituacaoSolicitacaoService situacaoService;
-    private final UsuarioRepository usuarioRepository;
 
     public SolicitacaoReservaController(
             ReservaService reservaService,
             QuadraService quadraService,
             CalendarioDisponibilidadeService calendarioDisponibilidadeService,
-            SituacaoSolicitacaoService situacaoService,
-            UsuarioRepository usuarioRepository) {
+            SituacaoSolicitacaoService situacaoService) {
         this.reservaService = reservaService;
         this.quadraService = quadraService;
         this.calendarioDisponibilidadeService = calendarioDisponibilidadeService;
         this.situacaoService = situacaoService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
-    public String listar(Authentication authentication, Model model) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
+    public String listar(@UsuarioAtual Usuario usuario, Model model) {
         model.addAttribute(
                 "solicitacoes",
                 situacaoService.descrever(
@@ -71,7 +65,7 @@ public class SolicitacaoReservaController {
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
             @RequestParam(required = false) Long origem,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model,
             RedirectAttributes redirectAttributes) {
         LocalDate dataSelecionada = ajustarParaDataSolicitavel(data);
@@ -81,7 +75,6 @@ public class SolicitacaoReservaController {
         Reserva reservaCancelada = null;
         if (origem != null) {
             // Remarcação: só a partir de uma reserva cancelada do próprio aluno.
-            Usuario usuario = obterUsuarioAutenticado(authentication);
             try {
                 reservaCancelada = reservaService.obterParaRemarcacao(origem, usuario);
             } catch (AccessDeniedException exception) {
@@ -104,18 +97,16 @@ public class SolicitacaoReservaController {
     public String criar(
             @Valid @ModelAttribute("form") SolicitacaoReservaForm form,
             BindingResult bindingResult,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             Model model,
             RedirectAttributes redirectAttributes) {
         LocalDate dataSelecionada = ajustarParaDataSolicitavel(form.getData());
-        Reserva reservaCancelada = obterReservaCanceladaDoFormulario(form, authentication);
+        Reserva reservaCancelada = obterReservaCanceladaDoFormulario(form, usuario);
 
         if (bindingResult.hasErrors()) {
             prepararFormulario(model, dataSelecionada, reservaCancelada);
             return "solicitacoes/formulario";
         }
-
-        Usuario usuario = obterUsuarioAutenticado(authentication);
         Quadra quadra = quadraService.obterQuadra();
         LocalTime horarioFim = form.getHorarioInicio().plusHours(1);
 
@@ -156,13 +147,13 @@ public class SolicitacaoReservaController {
 
     /** A reserva cancelada informada no formulário, conferindo que é do aluno. */
     private Reserva obterReservaCanceladaDoFormulario(
-            SolicitacaoReservaForm form, Authentication authentication) {
+            SolicitacaoReservaForm form, Usuario usuario) {
         if (form.getOrigemId() == null) {
             return null;
         }
         try {
             return reservaService.obterSolicitacaoDoUsuario(
-                    form.getOrigemId(), obterUsuarioAutenticado(authentication));
+                    form.getOrigemId(), usuario);
         } catch (AccessDeniedException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -170,8 +161,7 @@ public class SolicitacaoReservaController {
 
     @GetMapping("/{id}")
     public String detalhar(
-            @PathVariable Long id, Authentication authentication, Model model) {
-        Usuario usuario = obterUsuarioAutenticado(authentication);
+            @PathVariable Long id, @UsuarioAtual Usuario usuario, Model model) {
         try {
             Reserva solicitacao = reservaService.obterSolicitacaoDoUsuario(id, usuario);
             model.addAttribute("solicitacao", solicitacao);
@@ -224,9 +214,4 @@ public class SolicitacaoReservaController {
         return data;
     }
 
-    private Usuario obterUsuarioAutenticado(Authentication authentication) {
-        return usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuário autenticado não encontrado"));
-    }
 }

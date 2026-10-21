@@ -1,7 +1,7 @@
 package br.com.courttime.controller;
 
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.FormularioOficialService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,13 +31,10 @@ import java.net.URI;
 public class FormularioOficialController {
 
     private final FormularioOficialService formularioService;
-    private final UsuarioRepository usuarioRepository;
 
     public FormularioOficialController(
-            FormularioOficialService formularioService,
-            UsuarioRepository usuarioRepository) {
+            FormularioOficialService formularioService) {
         this.formularioService = formularioService;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @PostMapping
@@ -47,11 +42,9 @@ public class FormularioOficialController {
             @PathVariable Long reservaId,
             @RequestParam(required = false) String cpf,
             @RequestParam(required = false) String curso,
-            Authentication authentication,
+            @UsuarioAtual Usuario usuario,
             HttpServletRequest request,
             HttpServletResponse response) {
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário autenticado não encontrado"));
         try {
             byte[] pdf = formularioService.gerar(reservaId, usuario, cpf, curso);
             ContentDisposition disposicao = ContentDisposition.attachment()

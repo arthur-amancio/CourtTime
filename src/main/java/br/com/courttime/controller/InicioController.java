@@ -3,39 +3,45 @@ package br.com.courttime.controller;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.Usuario;
-import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ReservaService;
 import br.com.courttime.service.SituacaoSolicitacaoService;
 import br.com.courttime.service.SolicitacaoAluno;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+/**
+ * Páginas de entrada: a apresentação pública, o login e o início de cada perfil.
+ * As duas primeiras são públicas; /inicio exige login (SecurityConfig).
+ */
 @Controller
 public class InicioController {
 
-    private final UsuarioRepository usuarioRepository;
     private final ReservaService reservaService;
     private final SituacaoSolicitacaoService situacaoSolicitacaoService;
 
     public InicioController(
-            UsuarioRepository usuarioRepository,
             ReservaService reservaService,
             SituacaoSolicitacaoService situacaoSolicitacaoService) {
-        this.usuarioRepository = usuarioRepository;
         this.reservaService = reservaService;
         this.situacaoSolicitacaoService = situacaoSolicitacaoService;
     }
 
-    @GetMapping("/inicio")
-    public String inicio(Authentication authentication, Model model) {
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário autenticado não encontrado"));
+    @GetMapping("/")
+    public String paginaPublica() {
+        return "index";
+    }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/inicio")
+    public String inicio(@UsuarioAtual Usuario usuario, Model model) {
         model.addAttribute("nome", usuario.getNome());
         model.addAttribute("perfil", usuario.getPerfil());
         if (usuario.getPerfil() == Perfil.ALUNO) {
