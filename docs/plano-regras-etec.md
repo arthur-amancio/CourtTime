@@ -149,7 +149,7 @@ Feito no PR `refactor/simplificacao-pontual`, sem mudar comportamento:
 - `HomeController` e `LoginController` (uma rota cada) entraram no
   `InicioController`;
 - a página de erro passou para o visual V2, e o CSS da V1 que nenhuma tela usa
-  saiu do `style.css` (de 2.020 para cerca de 1.150 linhas).
+  saiu do `style.css` (de 2.020 para 1.182 linhas).
 
 Ficaram de fora, de propósito: separar a remarcação do `ReservaService` e
 dividir o `AdminQuadraController`. As duas mudanças mexeriam em muitos testes
