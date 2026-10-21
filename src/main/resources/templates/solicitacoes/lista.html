@@ -51,7 +51,7 @@
                     <p class="cartao-solicitacao__meta">
                         <span th:text="|${#temporals.format(solicitacao.dataUtilizacao, 'dd/MM/yyyy')} · ${#temporals.format(solicitacao.horarioInicio, 'HH:mm')} – ${#temporals.format(solicitacao.horarioFim, 'HH:mm')}|">19/10/2026 · 08:00 – 09:00</span>
                     </p>
-                    <p th:text="${item.situacao.explicacao}">Revise os participantes e envie o PDF preparado e assinado fora do sistema.</p>
+                    <p th:text="${item.situacao.explicacao}">Revise os participantes e envie o PDF assinado pelo gov.br até o dia anterior ao uso.</p>
                 </div>
                 <div>
                     <a class="botao botao--secundario botao--sm" th:href="@{/solicitacoes/{id}(id=${solicitacao.id})}">

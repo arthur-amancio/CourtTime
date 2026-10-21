@@ -66,7 +66,7 @@ public class SituacaoSolicitacaoService {
         if (documento == null) {
             return new SituacaoSolicitacao(
                     "Pendente de documentação",
-                    "Revise os participantes e envie o PDF preparado e assinado fora do sistema.",
+                    "Revise os participantes e envie o PDF assinado pelo gov.br até o dia anterior ao uso.",
                     false);
         }
         if (documento.getConferencia() == null) {
