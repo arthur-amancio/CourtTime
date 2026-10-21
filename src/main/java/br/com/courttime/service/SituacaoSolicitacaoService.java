@@ -49,7 +49,7 @@ public class SituacaoSolicitacaoService {
                     false);
             case CANCELADA -> new SituacaoSolicitacao(
                     "Cancelada pela administração",
-                    "A reserva deixou de autorizar a utilização da quadra. Consulte o motivo institucional abaixo.",
+                    "A reserva deixou de autorizar a utilização da quadra por um motivo institucional.",
                     false);
             case PENDENTE_ANALISE -> new SituacaoSolicitacao(
                     "Pronta para análise administrativa",

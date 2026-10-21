@@ -112,7 +112,8 @@
                                            th:href="@{/solicitacoes/{reservaId}/participantes/{participanteId}/editar(reservaId=${solicitacao.id}, participanteId=${participante.id})}"
                                            th:attr="aria-label=|Editar ${participante.nomeCompleto}|">Editar</a>
                                         <form th:action="@{/solicitacoes/{reservaId}/participantes/{participanteId}/remover(reservaId=${solicitacao.id}, participanteId=${participante.id})}"
-                                              method="post">
+                                              method="post" th:attr="data-confirmacao=|Remover ${participante.nomeCompleto} da lista?|"
+                                              onsubmit="return confirm(this.dataset.confirmacao)">
                                             <button class="botao botao--perigo-contorno botao--sm" type="submit"
                                                     th:attr="aria-label=|Remover ${participante.nomeCompleto}|">Remover</button>
                                         </form>
