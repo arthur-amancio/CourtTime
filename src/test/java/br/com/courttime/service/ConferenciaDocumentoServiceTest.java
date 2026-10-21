@@ -92,15 +92,25 @@ class ConferenciaDocumentoServiceTest {
         when(conferenciaRepository.saveAndFlush(any(ConferenciaDocumento.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        ConferenciaDocumento conferencia = service.validar(30L, secretaria);
+        ConferenciaDocumento conferencia = service.validar(30L, secretaria, true);
 
         assertSame(documento, conferencia.getDocumento());
         assertSame(secretaria, conferencia.getConferidoPor());
         assertEquals(ResultadoConferenciaDocumento.VALIDADO, conferencia.getResultado());
         assertNull(conferencia.getJustificativa());
+        assertEquals(Boolean.TRUE, conferencia.getAssinaturaGovBrConferida());
         assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, reserva.getStatus());
         verify(reservaRepository, never()).save(any());
         verifyNoInteractions(documentoStorage);
+    }
+
+    @Test
+    void r07ValidarExigeConfirmacaoDaAssinaturaGovBrAntesDoBanco() {
+        IllegalArgumentException erro = assertThrows(IllegalArgumentException.class,
+                () -> service.validar(30L, secretaria, false));
+
+        assertEquals(ConferenciaDocumentoService.MENSAGEM_ASSINATURA_NAO_CONFERIDA, erro.getMessage());
+        verifyNoInteractions(documentoRepository, reservaRepository, conferenciaRepository);
     }
 
     @Test
@@ -142,7 +152,7 @@ class ConferenciaDocumentoServiceTest {
                 .when(participanteService).validarDocumentoAtual(reserva, documento);
 
         assertThrows(IllegalStateException.class,
-                () -> service.validar(30L, secretaria));
+                () -> service.validar(30L, secretaria, true));
 
         when(conferenciaRepository.saveAndFlush(any(ConferenciaDocumento.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -158,14 +168,14 @@ class ConferenciaDocumentoServiceTest {
         when(documentoRepository.obterComSolicitacao(30L)).thenReturn(Optional.of(documento));
         when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(3);
-        assertThrows(IllegalStateException.class, () -> service.validar(30L, secretaria));
+        assertThrows(IllegalStateException.class, () -> service.validar(30L, secretaria, true));
 
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(2);
         when(conferenciaRepository.existsByDocumento(documento)).thenReturn(true);
-        assertThrows(IllegalStateException.class, () -> service.validar(30L, secretaria));
+        assertThrows(IllegalStateException.class, () -> service.validar(30L, secretaria, true));
 
         reserva.setStatus(StatusReserva.PENDENTE_ANALISE);
-        assertThrows(IllegalStateException.class, () -> service.validar(30L, secretaria));
+        assertThrows(IllegalStateException.class, () -> service.validar(30L, secretaria, true));
         verify(conferenciaRepository, never()).saveAndFlush(any());
     }
 

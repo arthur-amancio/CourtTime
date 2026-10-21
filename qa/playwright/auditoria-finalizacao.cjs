@@ -131,6 +131,7 @@ async function enviarPdf(page, reservaId, nome, conteudo) {
 
 async function validarEContribuir(secretaria, documentoId, reservaId) {
   await secretaria.goto(`${BASE}/secretaria/documentos/${documentoId}`);
+  await secretaria.getByLabel('Conferi a assinatura gov.br no verificador oficial do ITI').check();
   await Promise.all([
     secretaria.waitForURL(url => url.pathname === '/secretaria/documentos'),
     secretaria.getByRole('button', { name: 'Validar documento' }).click(),

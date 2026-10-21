@@ -132,7 +132,11 @@ class SecretariaDocumentoControllerTest {
                 .andExpect(content().string(containsString("não altera o PDF original")))
                 .andExpect(content().string(containsString(
                         "não aprova a utilização da quadra")))
-                .andExpect(content().string(containsString("Validar documento")));
+                .andExpect(content().string(containsString("Validar documento")))
+                .andExpect(content().string(containsString("https://validar.iti.gov.br")))
+                .andExpect(content().string(containsString(
+                        "Conferi a assinatura gov.br no verificador oficial do ITI")))
+                .andExpect(content().string(containsString("O CourtTime não verifica a assinatura")));
 
         mockMvc.perform(get("/secretaria/documentos/30/baixar")
                         .with(user(secretaria.getEmail()).roles("SECRETARIA")))
@@ -170,12 +174,28 @@ class SecretariaDocumentoControllerTest {
         mockMvc.perform(post("/secretaria/documentos/30/validar")
                         .with(user(secretaria.getEmail()).roles("SECRETARIA"))
                         .with(csrf())
+                        .param("assinaturaGovBrConferida", "true")
                         .param("secretariaId", "999"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/secretaria/documentos"))
                 .andExpect(flash().attribute("mensagemSucesso", "Documento conferido e validado."));
 
-        verify(conferenciaService).validar(30L, secretaria);
+        verify(conferenciaService).validar(30L, secretaria, true);
+    }
+
+    @Test
+    void r07ValidarSemMarcarAAssinaturaGovBrMostraOMotivo() throws Exception {
+        prepararSecretaria();
+        when(conferenciaService.validar(30L, secretaria, false))
+                .thenThrow(new IllegalArgumentException(
+                        ConferenciaDocumentoService.MENSAGEM_ASSINATURA_NAO_CONFERIDA));
+
+        mockMvc.perform(post("/secretaria/documentos/30/validar")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA"))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("mensagemErro",
+                        ConferenciaDocumentoService.MENSAGEM_ASSINATURA_NAO_CONFERIDA));
     }
 
     @Test

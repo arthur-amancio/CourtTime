@@ -240,7 +240,21 @@ class AdminSolicitacaoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Interdição da quadra")))
                 .andExpect(content().string(containsString(
-                        "O registro não avisa o aluno por outro meio")));
+                        "O CourtTime não avisa o aluno: o aviso é feito pelo WhatsApp")));
+    }
+
+    @Test
+    void r05PainelDeCancelamentoLembraOAvisoPeloWhatsApp() throws Exception {
+        prepararAdministrador();
+        reserva.setStatus(StatusReserva.APROVADA);
+        when(analiseService.detalhar(20L, administrador)).thenReturn(detalhe());
+
+        mockMvc.perform(get("/admin/solicitacoes/20")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Cancelar autorização")))
+                .andExpect(content().string(containsString(
+                        "Depois de registrar, avise o aluno pelo WhatsApp.")));
     }
 
     @Test

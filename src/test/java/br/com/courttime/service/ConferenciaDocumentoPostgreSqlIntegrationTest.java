@@ -178,7 +178,7 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
                 .conteudo().getInputStream().readAllBytes();
 
         ConferenciaDocumento conferencia = conferenciaService.validar(
-                documento.getId(), secretaria);
+                documento.getId(), secretaria, true);
 
         assertEquals(ResultadoConferenciaDocumento.VALIDADO, conferencia.getResultado());
         assertEquals(secretaria.getId(), conferencia.getConferidoPor().getId());
@@ -252,7 +252,7 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
         enviar("v2.pdf", "novo");
 
         assertThrows(IllegalStateException.class,
-                () -> conferenciaService.validar(versaoUm.getId(), secretaria));
+                () -> conferenciaService.validar(versaoUm.getId(), secretaria, true));
         assertEquals(1, conferenciaRepository.count());
     }
 
@@ -263,7 +263,7 @@ class ConferenciaDocumentoPostgreSqlIntegrationTest {
             CountDownLatch iniciar) throws Exception {
         preparados.countDown();
         iniciar.await();
-        return conferenciaService.validar(documentoId, operadora);
+        return conferenciaService.validar(documentoId, operadora, true);
     }
 
     private DocumentoReserva enviar(String nome, String conteudo) {

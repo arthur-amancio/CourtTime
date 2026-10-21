@@ -242,9 +242,11 @@ class JornadaCompletaE2ETest {
                         .getStatusCode().is2xxSuccessful(),
                 "a secretaria deve conseguir baixar o PDF");
 
+        MultiValueMap<String, String> validacao = new LinkedMultiValueMap<>();
+        validacao.add("assinaturaGovBrConferida", "true");
         assertEquals(HttpStatus.FOUND,
                 secretaria.post("/secretaria/documentos/" + documentoId + "/validar",
-                        new LinkedMultiValueMap<>()).getStatusCode());
+                        validacao).getStatusCode());
         assertEquals(1, conferenciaDocumentoRepository.count());
 
         MultiValueMap<String, String> contribuicao = new LinkedMultiValueMap<>();

@@ -75,6 +75,10 @@
                                     <dt>Conferência da secretaria</dt>
                                     <dd th:text="${detalhe.documento.conferencia == null ? 'Aguardando conferência' : detalhe.documento.conferencia.resultado.descricao}">Validado</dd>
                                 </div>
+                                <div th:if="${detalhe.documento.conferencia != null and detalhe.documento.conferencia.assinaturaGovBrConferida == true}">
+                                    <dt>Assinatura gov.br</dt>
+                                    <dd>Conferida pela secretaria</dd>
+                                </div>
                                 <div th:if="${detalhe.contribuicao != null}">
                                     <dt>Contribuição presencial</dt>
                                     <dd th:text="|R$ ${#numbers.formatDecimal(detalhe.contribuicao.valor, 1, 'POINT', 2, 'COMMA')} — vinculada à versão ${detalhe.contribuicao.conferenciaDocumento.documento.versao}|">R$ 20,00 — vinculada à versão 2</dd>
@@ -168,6 +172,10 @@
                             <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
                             <p>A reserva deixará de autorizar a entrada. O PDF, os participantes e a contribuição permanecerão preservados.</p>
                         </div>
+                        <div class="alerta alerta--neutro bloco-espaco">
+                            <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
+                            <p><strong>Depois de registrar, avise o aluno pelo WhatsApp.</strong> O CourtTime não envia mensagens.</p>
+                        </div>
                         <form method="post" th:action="@{/admin/solicitacoes/{id}/cancelar(id=${detalhe.solicitacao.id})}">
                             <div class="campo">
                                 <label for="motivoCancelamento">Motivo institucional</label>
@@ -188,7 +196,7 @@
                             <div><dt>Responsável</dt><dd th:text="${detalhe.solicitacao.canceladaPor.nome}">Administrador</dd></div>
                             <div><dt>Data do registro</dt><dd th:text="${#temporals.format(detalhe.solicitacao.canceladaEm, 'dd/MM/yyyy HH:mm')}">19/10/2026 10:00</dd></div>
                         </dl>
-                        <p class="campo__ajuda bloco-texto" th:if="${remarcacao == null}">O registro não avisa o aluno por outro meio. Se ele pedir outro horário, a nova solicitação passa por todas as etapas.</p>
+                        <p class="campo__ajuda bloco-texto" th:if="${remarcacao == null}">O CourtTime não avisa o aluno: o aviso é feito pelo WhatsApp. Se ele pedir outro horário, a nova solicitação passa por todas as etapas.</p>
                         <p class="bloco-texto" th:if="${remarcacao != null}">
                             O aluno pediu outro horário:
                             <a th:href="@{/admin/solicitacoes/{id}(id=${remarcacao.id})}"

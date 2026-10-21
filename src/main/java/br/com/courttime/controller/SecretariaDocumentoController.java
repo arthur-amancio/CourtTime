@@ -95,11 +95,12 @@ public class SecretariaDocumentoController {
     @PostMapping("/{documentoId}/validar")
     public String validar(
             @PathVariable Long documentoId,
+            @RequestParam(defaultValue = "false") boolean assinaturaGovBrConferida,
             Authentication authentication,
             RedirectAttributes redirectAttributes) {
         Usuario secretaria = obterUsuarioAutenticado(authentication);
         try {
-            conferenciaService.validar(documentoId, secretaria);
+            conferenciaService.validar(documentoId, secretaria, assinaturaGovBrConferida);
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso", "Documento conferido e validado.");
         } catch (IllegalArgumentException | IllegalStateException exception) {

@@ -69,6 +69,10 @@
                                 <dd th:if="${documento.conferencia == null}">Aguardando conferência</dd>
                                 <dd th:if="${documento.conferencia != null}" th:text="${documento.conferencia.resultado.descricao}">Validado</dd>
                             </div>
+                            <div th:if="${documento.conferencia != null and documento.conferencia.assinaturaGovBrConferida == true}">
+                                <dt>Assinatura gov.br</dt>
+                                <dd>Conferida pela secretaria no verificador do ITI</dd>
+                            </div>
                         </dl>
                         <div class="alerta alerta--aviso" th:if="${documento.conferencia != null and documento.conferencia.justificativa != null}">
                             <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
@@ -93,6 +97,22 @@
                         </div>
                         <form class="decisao" method="post"
                               th:action="@{/secretaria/documentos/{id}/validar(id=${documento.id})}">
+                            <div class="alerta alerta--neutro">
+                                <svg th:replace="~{fragments/icones :: icone('escudo')}"></svg>
+                                <div>
+                                    <p><strong>Confira a assinatura gov.br</strong></p>
+                                    <ol>
+                                        <li>Baixe o PDF original.</li>
+                                        <li>Abra o <a href="https://validar.iti.gov.br" target="_blank" rel="noopener noreferrer">verificador oficial do ITI (validar.iti.gov.br)</a> e envie o arquivo.</li>
+                                        <li>Confirme que a assinatura é válida e é do aluno solicitante.</li>
+                                    </ol>
+                                    <p class="campo__ajuda">O CourtTime não verifica a assinatura: ele só registra que a secretaria conferiu.</p>
+                                </div>
+                            </div>
+                            <label class="opcao-marcavel">
+                                <input type="checkbox" name="assinaturaGovBrConferida" value="true" required>
+                                <span>Conferi a assinatura gov.br no verificador oficial do ITI</span>
+                            </label>
                             <button class="botao botao--bloco" type="submit">
                                 <svg th:replace="~{fragments/icones :: icone('documento-check')}"></svg><span>Validar documento</span>
                             </button>

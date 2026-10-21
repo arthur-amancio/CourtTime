@@ -386,6 +386,11 @@ async function responsiveAudit(page, label, url) {
 
     for (const doc of [documentA2, documentB]) {
       await secretaria.goto(`${BASE}/secretaria/documentos/${doc}`);
+      const semConfirmacao = await csrfFetch(secretaria, `/secretaria/documentos/${doc}/validar`);
+      assert(semConfirmacao.text.includes('Confirme que conferiu a assinatura gov.br'), 'R07: validar sem confirmar a assinatura gov.br é recusado', `documento #${doc}`);
+      await secretaria.goto(`${BASE}/secretaria/documentos/${doc}`);
+      assert((await secretaria.locator('body').innerText()).includes('validar.iti.gov.br'), 'R07: orientação do verificador do ITI', `documento #${doc}`);
+      await secretaria.getByLabel('Conferi a assinatura gov.br no verificador oficial do ITI').check();
       await Promise.all([
         secretaria.waitForURL(url => url.pathname === '/secretaria/documentos'),
         secretaria.getByRole('button', { name: 'Validar documento' }).click(),
@@ -393,7 +398,7 @@ async function responsiveAudit(page, label, url) {
       assert((await secretaria.locator('body').innerText()).includes('Documento conferido e validado.'), 'conferência documental', `documento #${doc}`);
     }
     await secretaria.goto(`${BASE}/secretaria/documentos`);
-    const repeatedValidation = await csrfFetch(secretaria, `/secretaria/documentos/${documentB}/validar`);
+    const repeatedValidation = await csrfFetch(secretaria, `/secretaria/documentos/${documentB}/validar`, { assinaturaGovBrConferida: 'true' });
     assert(repeatedValidation.text.includes('já possui uma conferência') || repeatedValidation.text.includes('já foi conferido') || repeatedValidation.text.includes('não pode ser conferido'), 'conferência repetida é recusada');
 
     await secretaria.goto(`${BASE}/secretaria/contribuicoes`);

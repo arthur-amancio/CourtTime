@@ -77,8 +77,11 @@ Para não prometer na banca o que o código não faz:
 - O sistema **gera o formulário oficial preenchido** (data, horário,
   participantes, CPF e curso digitados na hora), mas **não assina** nada: as
   assinaturas e os campos da direção e do vigilante continuam à mão.
-- O sistema **não verifica** se o PDF enviado está realmente assinado. A
-  conferência da secretaria é manual.
+- O sistema **não verifica** a assinatura do PDF. A secretaria confere a
+  assinatura gov.br no verificador oficial do ITI (`validar.iti.gov.br`) e
+  marca essa conferência antes de validar (R07).
+- O sistema **não avisa** o aluno de um cancelamento: o administrador avisa
+  pelo WhatsApp, e a tela lembra disso (R05).
 - A **remarcação** após cancelamento cria uma solicitação nova, do início: não
   reaproveita aprovação, PDF nem contribuição (só os participantes, se o aluno
   pedir).
