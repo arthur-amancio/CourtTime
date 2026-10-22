@@ -270,9 +270,9 @@ class PortariaPostgreSqlIntegrationTest {
         documentoRepository.deleteAllInBatch();
         participanteRepository.deleteAllInBatch();
         reservaRepository.deleteAllInBatch();
-        usuarioRepository.deleteAllInBatch();
-        quadraRepository.deleteAllInBatch();
         jdbcTemplate.execute("delete from bloqueios_quadra");
         jdbcTemplate.execute("delete from disponibilidades_quadra");
+        usuarioRepository.deleteAllInBatch();
+        quadraRepository.deleteAllInBatch();
     }
 }
