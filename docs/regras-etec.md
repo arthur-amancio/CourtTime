@@ -208,11 +208,10 @@ marca cada participante como presente ou ausente
 (`POST /seguranca/reservas/{id}/presencas`, só para o perfil Segurança e com
 CSRF). Quem marcou e quando ficam em `participantes_reserva`, em três colunas
 que aceitam nulo. A administração vê a presença no detalhe da solicitação.
-Falta R08.2 (pessoas adicionais), que depende da decisão D3.
+R08.2 (pessoas adicionais) virou a regra R10, decidida em 22/10/2026.
 
-**Em aberto.** Quem autoriza a entrada de uma pessoa extra e como essa
-autorização é registrada (decisão D3). Também falta confirmar em que período a
-presença pode ser marcada. A proposta técnica é: só no dia da reserva.
+**Decidido em 22/10/2026.** A entrada de pessoa extra segue R10 e R11, e a
+presença só pode ser marcada no dia da reserva.
 
 ## R09 — Participantes da categoria "Outro"
 
@@ -246,6 +245,56 @@ e o relato não cita filhos, cônjuges nem funcionários. A lista do relato vale
 até alguém da ETEC dizer o contrário. Vale confirmar com o Leandro se irmãos
 podem mesmo participar e se funcionários continuam permitidos.
 
+## R10 — Pessoas a mais na portaria
+
+**Relato.** Decisão do grupo a partir da conversa com o Leandro, registrada
+em 22/10/2026. No dia da reserva, a segurança pode acrescentar quem chegou e
+não estava na lista. Trocar pessoas não cobra nada: se saíram duas e entraram
+duas, o total continua o mesmo. Se a lista tinha 10 e entraram mais 2, são
+R$ 4,00, pagos na secretaria.
+
+**Requisitos.**
+
+- R10.1 — No dia da reserva aprovada, a segurança acrescenta a pessoa com
+  nome completo, RM ou RG, categoria e vínculo (R09), as mesmas regras do
+  cadastro do aluno. A pessoa já entra como presente.
+- R10.2 — O acréscimo fica registrado com quem acrescentou e quando, e não
+  muda a lista do documento assinado.
+- R10.3 — "Tirar" alguém é marcar como ausente (R08). Ninguém é apagado.
+- R10.4 — Valor a pagar = R$ 2,00 × (presentes − pagos), nunca menor que
+  zero. "Pagos" são os participantes da lista do documento mais as pessoas a
+  mais já pagas. Não há devolução para quem faltou.
+
+## R11 — Liberação da quadra na portaria
+
+**Relato.** Mesma conversa. Sem 10 pessoas presentes na hora da conferência,
+a quadra não é liberada. Quem foi acrescentado só entra depois de pagar. Se a
+secretaria estiver fechada, a segurança e os alunos combinam: a segurança
+recebe o valor, avisa a secretaria e entrega o dinheiro a ela.
+
+**Requisitos.**
+
+- R11.1 — A segurança libera a quadra só com pelo menos **10 pessoas
+  presentes, de qualquer categoria**, e sem valor a pagar. Se faltar algo, o
+  sistema diz o motivo e não libera.
+- R11.2 — A liberação fica registrada com quem liberou e quando, e a
+  administração vê esse registro no detalhe da solicitação.
+- R11.3 — O valor a mais é calculado pelo sistema. Ninguém digita o valor.
+- R11.4 — A secretaria registra o pagamento feito na secretaria.
+- R11.5 — Com a secretaria fechada, a segurança registra "recebi o valor na
+  portaria". A secretaria vê esses valores e confirma o repasse quando
+  receber o dinheiro.
+- R11.6 — A segurança vê o valor a pagar só quando há pessoas a mais. Ela
+  continua sem acesso ao histórico financeiro e aos documentos.
+- R11.7 — Presença, acréscimo, pagamento na portaria e liberação só podem
+  ser feitos no dia da reserva.
+
+**A confirmar.** O formulário oficial diz "no mínimo 10 (dez) alunos" para
+reservar. O grupo informou que, na portaria, valem 10 pessoas de qualquer
+categoria. Até o Leandro confirmar se a regra da solicitação também muda,
+a solicitação continua exigindo 10 alunos e a portaria exige 10 presentes de
+qualquer categoria.
+
 ---
 
 ## Decisões ainda abertas
@@ -254,7 +303,7 @@ podem mesmo participar e se funcionários continuam permitidos.
 |---|---|---|
 | D1 | Qual é o horário-limite do envio no dia anterior? | recusa o envio a partir do dia da utilização |
 | D2 | O que fazer com o crédito excedente quando a remarcação tem menos participantes? | registra o excedente, sem destino |
-| D3 | Quem autoriza uma pessoa extra na portaria, e como isso é registrado? | registra o comparecimento, sem autorizar |
+| D3 | ~~Quem autoriza uma pessoa extra na portaria?~~ Decidido em 22/10/2026: a segurança acrescenta e a pessoa só entra depois de pagar (R10 e R11). | — |
 | — | Qual é a política de retenção, acesso e descarte dos documentos (LGPD)? | guarda tudo, com acesso restrito |
 | — | Em que período a portaria pode marcar presença? | proposta: só no dia da reserva |
 | — | Qual é a data da banca? | define a prioridade das etapas |

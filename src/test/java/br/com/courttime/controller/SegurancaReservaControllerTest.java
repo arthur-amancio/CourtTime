@@ -1,14 +1,18 @@
 package br.com.courttime.controller;
 
 import br.com.courttime.config.SecurityConfig;
+import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.PresencaParticipante;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ConsultaSegurancaService;
 import br.com.courttime.service.DetalheReservaAutorizada;
 import br.com.courttime.service.ParticipanteConferencia;
+import br.com.courttime.service.PortariaService;
 import br.com.courttime.service.ReservaAutorizadaResumo;
+import br.com.courttime.service.ResumoPortaria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +23,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -27,6 +32,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -52,6 +58,8 @@ class SegurancaReservaControllerTest {
     private ConsultaSegurancaService consultaSegurancaService;
     @MockitoBean
     private UsuarioRepository usuarioRepository;
+    @MockitoBean
+    private PortariaService portariaService;
 
     private Usuario seguranca;
     private ReservaAutorizadaResumo resumo;
@@ -196,6 +204,119 @@ class SegurancaReservaControllerTest {
                 .andExpect(content().string(containsString("name=\"presenca-31\"")))
                 .andExpect(content().string(containsString("Registrar presença")))
                 .andExpect(content().string(containsString("checked")));
+    }
+
+
+    @Test
+    void r10AcrescentarPessoaExigeCsrfEUsaASegurancaDaSessao() throws Exception {
+        mockMvc.perform(post("/seguranca/reservas/20/pessoas")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .param("nomeCompleto", "Visitante"))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(portariaService);
+
+        prepararSeguranca();
+        mockMvc.perform(post("/seguranca/reservas/20/pessoas")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .with(csrf())
+                        .param("nomeCompleto", "Pai de aluno")
+                        .param("rmOuRg", "RG-77")
+                        .param("categoria", "OUTRO")
+                        .param("vinculo", "PAI_OU_MAE"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/seguranca/reservas/20"))
+                .andExpect(flash().attribute("mensagemSucesso",
+                        "Pessoa acrescentada e marcada como presente."));
+        verify(portariaService).acrescentarPessoa(20L, seguranca, "Pai de aluno", "RG-77",
+                CategoriaParticipante.OUTRO, VinculoParticipante.PAI_OU_MAE);
+    }
+
+    @Test
+    void r11QuadraSemMinimoVoltaComOMotivo() throws Exception {
+        prepararSeguranca();
+        doThrow(new IllegalStateException("Quadra não liberada: 8 pessoas presentes."))
+                .when(portariaService).liberarQuadra(20L, seguranca);
+
+        mockMvc.perform(post("/seguranca/reservas/20/liberar")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/seguranca/reservas/20"))
+                .andExpect(flash().attribute("mensagemErro",
+                        "Quadra não liberada: 8 pessoas presentes."));
+    }
+
+    @Test
+    void r11PagamentoNaPortariaELiberacaoDelegamAoServico() throws Exception {
+        prepararSeguranca();
+        mockMvc.perform(post("/seguranca/reservas/20/pagamento")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("mensagemSucesso",
+                        "Valor recebido na portaria. Entregue o dinheiro à secretaria."));
+        verify(portariaService).registrarPagamentoNaPortaria(20L, seguranca);
+
+        mockMvc.perform(post("/seguranca/reservas/20/liberar")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA"))
+                        .with(csrf()))
+                .andExpect(flash().attribute("mensagemSucesso", "Quadra liberada."));
+        verify(portariaService).liberarQuadra(20L, seguranca);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ALUNO", "SECRETARIA", "ADMINISTRADOR"})
+    void r11SomenteASegurancaUsaAsAcoesDaPortaria(String perfil) throws Exception {
+        for (String acao : new String[] {"pessoas", "pagamento", "liberar"}) {
+            mockMvc.perform(post("/seguranca/reservas/20/" + acao)
+                            .with(user("usuario@escola.test").roles(perfil))
+                            .with(csrf()))
+                    .andExpect(status().isForbidden());
+        }
+        verifyNoInteractions(portariaService);
+    }
+
+    @Test
+    void r11NoDiaATelaMostraLiberacaoEValorSomenteQuandoHaAPagar() throws Exception {
+        prepararSeguranca();
+        when(consultaSegurancaService.detalhar(20L, seguranca))
+                .thenReturn(new DetalheReservaAutorizada(
+                        resumo,
+                        List.of(new ParticipanteConferencia(
+                                31L, "Visitante", "RG-1", "Aluno",
+                                PresencaParticipante.PRESENTE, true)),
+                        true,
+                        new ResumoPortaria(12, 10, 2, new BigDecimal("4.00"),
+                                BigDecimal.ZERO, null)));
+
+        mockMvc.perform(get("/seguranca/reservas/20")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Liberar quadra")))
+                .andExpect(content().string(containsString("Falta pagar R$ 4,00.")))
+                .andExpect(content().string(containsString("Acrescentado na portaria")))
+                .andExpect(content().string(containsString("Acrescentar pessoa")))
+                .andExpect(content().string(not(containsString("Contribuição"))));
+    }
+
+    @Test
+    void r11SemPessoasAMaisATelaNaoMostraValores() throws Exception {
+        prepararSeguranca();
+        when(consultaSegurancaService.detalhar(20L, seguranca))
+                .thenReturn(new DetalheReservaAutorizada(
+                        resumo,
+                        List.of(new ParticipanteConferencia(
+                                31L, "Carlos Participante", "RM-123", "Aluno",
+                                PresencaParticipante.PRESENTE)),
+                        true,
+                        new ResumoPortaria(10, 10, 0, new BigDecimal("0.00"),
+                                BigDecimal.ZERO, null)));
+
+        mockMvc.perform(get("/seguranca/reservas/20")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Liberar quadra")))
+                .andExpect(content().string(not(containsString("R$"))));
     }
 
     private void prepararSeguranca() {

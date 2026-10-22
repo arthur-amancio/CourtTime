@@ -103,7 +103,10 @@
                         </thead>
                         <tbody>
                             <tr th:each="participante : ${participantes}">
-                                <th scope="row" data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</th>
+                                <th scope="row" data-label="Nome completo">
+                                    <span th:text="${participante.nomeCompleto}">Ana Souza</span>
+                                    <span class="badge badge--analise" th:if="${participante.adicionadoNaPortaria}">Acrescentado na portaria</span>
+                                </th>
                                 <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
                                 <td data-label="Categoria">
                                     <span th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</span>

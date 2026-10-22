@@ -8,9 +8,16 @@ public record ParticipanteConferencia(
         String nomeCompleto,
         String rmOuRg,
         String categoria,
-        PresencaParticipante presenca) {
+        PresencaParticipante presenca,
+        boolean acrescentado) {
+
+    public ParticipanteConferencia(
+            Long id, String nomeCompleto, String rmOuRg, String categoria,
+            PresencaParticipante presenca) {
+        this(id, nomeCompleto, rmOuRg, categoria, presenca, false);
+    }
 
     public ParticipanteConferencia(String nomeCompleto, String rmOuRg, String categoria) {
-        this(null, nomeCompleto, rmOuRg, categoria, null);
+        this(null, nomeCompleto, rmOuRg, categoria, null, false);
     }
 }

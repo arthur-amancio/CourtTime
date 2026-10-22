@@ -3,6 +3,7 @@ package br.com.courttime.controller;
 import br.com.courttime.config.SecurityConfig;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ConsultaSegurancaService;
+import br.com.courttime.service.PortariaService;
 import jakarta.servlet.RequestDispatcher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ class PaginaDeErroTest {
     private ConsultaSegurancaService consultaSegurancaService;
     @MockitoBean
     private UsuarioRepository usuarioRepository;
+    @MockitoBean
+    private PortariaService portariaService;
 
     @Test
     void registroNaoEncontradoMostraPaginaEmPortugues() throws Exception {

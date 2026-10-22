@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -129,6 +130,28 @@ public class ParticipanteReservaService {
         return participante;
     }
 
+    /**
+     * R10: pessoa acrescentada pela segurança no dia da reserva. Segue as mesmas
+     * regras do cadastro do aluno (nome, RM ou RG, categoria e vínculo R09), mas
+     * não altera a revisão da lista: o documento assinado continua o mesmo.
+     * Chamado pelo PortariaService, que já conferiu o perfil, a reserva e o dia.
+     */
+    @Transactional
+    public ParticipanteReserva acrescentarNaPortaria(
+            Reserva reserva,
+            Usuario seguranca,
+            String nomeCompleto,
+            String rmOuRg,
+            CategoriaParticipante categoria,
+            VinculoParticipante vinculo) {
+        ParticipanteReserva participante = new ParticipanteReserva();
+        participante.setReserva(reserva);
+        preencher(participante, nomeCompleto, rmOuRg, categoria, vinculo);
+        impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), null);
+        participante.marcarAdicionadoNaPortaria(seguranca, Instant.now());
+        return participanteRepository.save(participante);
+    }
+
     @Transactional
     public ParticipanteReserva editar(
             Long reservaId,
@@ -220,6 +243,10 @@ public class ParticipanteReservaService {
         }
         List<ParticipanteReserva> originais =
                 participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(cancelada);
+        // Quem foi acrescentado na portaria não faz parte da lista do aluno.
+        originais = originais.stream()
+                .filter(original -> !original.isAdicionadoNaPortaria())
+                .toList();
         for (ParticipanteReserva original : originais) {
             ParticipanteReserva copia = new ParticipanteReserva();
             copia.setReserva(remarcacao);

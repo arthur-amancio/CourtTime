@@ -40,6 +40,8 @@ class ConsultaSegurancaServiceTest {
     private ReservaRepository reservaRepository;
     @Mock
     private ParticipanteReservaRepository participanteRepository;
+    @Mock
+    private PortariaService portariaService;
 
     private ConsultaSegurancaService service;
     private Usuario seguranca;
@@ -48,7 +50,7 @@ class ConsultaSegurancaServiceTest {
     @BeforeEach
     void setUp() {
         service = new ConsultaSegurancaService(
-                reservaRepository, participanteRepository);
+                reservaRepository, participanteRepository, portariaService);
         seguranca = usuario(1L, "Agente da segurança", Perfil.SEGURANCA, true);
         reserva = reservaAutorizada();
     }

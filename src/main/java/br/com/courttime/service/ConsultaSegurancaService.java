@@ -27,12 +27,15 @@ public class ConsultaSegurancaService {
 
     private final ReservaRepository reservaRepository;
     private final ParticipanteReservaRepository participanteRepository;
+    private final PortariaService portariaService;
 
     public ConsultaSegurancaService(
             ReservaRepository reservaRepository,
-            ParticipanteReservaRepository participanteRepository) {
+            ParticipanteReservaRepository participanteRepository,
+            PortariaService portariaService) {
         this.reservaRepository = reservaRepository;
         this.participanteRepository = participanteRepository;
+        this.portariaService = portariaService;
     }
 
     @Transactional(readOnly = true)
@@ -63,9 +66,11 @@ public class ConsultaSegurancaService {
                 .stream()
                 .map(this::identificacao)
                 .toList();
-        // Proposta técnica (ainda a confirmar com a ETEC): presença só no dia da reserva.
+        // Presença, pessoas a mais e liberação só no dia da reserva (R08, R10, R11).
+        boolean hoje = reserva.getDataUtilizacao().equals(dataAtual);
         return new DetalheReservaAutorizada(
-                resumir(reserva), participantes, reserva.getDataUtilizacao().equals(dataAtual));
+                resumir(reserva), participantes, hoje,
+                hoje ? portariaService.resumir(reserva) : null);
     }
 
     /**
@@ -131,6 +136,7 @@ public class ConsultaSegurancaService {
                 participante.getNomeCompleto(),
                 participante.getRmOuRg(),
                 categoria,
-                participante.getPresenca());
+                participante.getPresenca(),
+                participante.isAdicionadoNaPortaria());
     }
 }

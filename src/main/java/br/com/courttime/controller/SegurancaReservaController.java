@@ -1,9 +1,12 @@
 package br.com.courttime.controller;
 
+import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.PresencaParticipante;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ConsultaSegurancaService;
+import br.com.courttime.service.PortariaService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,10 +30,13 @@ public class SegurancaReservaController {
     private static final String PREFIXO_PRESENCA = "presenca-";
 
     private final ConsultaSegurancaService consultaSegurancaService;
+    private final PortariaService portariaService;
 
     public SegurancaReservaController(
-            ConsultaSegurancaService consultaSegurancaService) {
+            ConsultaSegurancaService consultaSegurancaService,
+            PortariaService portariaService) {
         this.consultaSegurancaService = consultaSegurancaService;
+        this.portariaService = portariaService;
     }
 
     @GetMapping
@@ -58,6 +64,7 @@ public class SegurancaReservaController {
                     "detalhe",
                     consultaSegurancaService.detalhar(
                             id, seguranca));
+            model.addAttribute("vinculos", VinculoParticipante.values());
             return "seguranca/reservas/detalhe";
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -101,6 +108,54 @@ public class SegurancaReservaController {
         return "redirect:/seguranca/reservas/" + id;
     }
 
+
+    /** R10: pessoa que chegou e não estava na lista. Mesmos campos do cadastro do aluno. */
+    @PostMapping("/{id}/pessoas")
+    public String acrescentarPessoa(
+            @PathVariable Long id,
+            @RequestParam(required = false) String nomeCompleto,
+            @RequestParam(required = false) String rmOuRg,
+            @RequestParam(required = false) CategoriaParticipante categoria,
+            @RequestParam(required = false) VinculoParticipante vinculo,
+            @UsuarioAtual Usuario seguranca,
+            RedirectAttributes redirectAttributes) {
+        return executar(id, redirectAttributes, "Pessoa acrescentada e marcada como presente.",
+                () -> portariaService.acrescentarPessoa(
+                        id, seguranca, nomeCompleto, rmOuRg, categoria, vinculo));
+    }
+
+    /** R11: secretaria fechada; o valor a mais foi entregue à segurança. */
+    @PostMapping("/{id}/pagamento")
+    public String registrarPagamento(
+            @PathVariable Long id,
+            @UsuarioAtual Usuario seguranca,
+            RedirectAttributes redirectAttributes) {
+        return executar(id, redirectAttributes,
+                "Valor recebido na portaria. Entregue o dinheiro à secretaria.",
+                () -> portariaService.registrarPagamentoNaPortaria(id, seguranca));
+    }
+
+    /** R11: libera a quadra com pelo menos 10 presentes e nada a pagar. */
+    @PostMapping("/{id}/liberar")
+    public String liberar(
+            @PathVariable Long id,
+            @UsuarioAtual Usuario seguranca,
+            RedirectAttributes redirectAttributes) {
+        return executar(id, redirectAttributes, "Quadra liberada.",
+                () -> portariaService.liberarQuadra(id, seguranca));
+    }
+
+    /** Executa a ação e volta para a conferência com a mensagem de sucesso ou de erro. */
+    private String executar(
+            Long id, RedirectAttributes redirectAttributes, String sucesso, Runnable acao) {
+        try {
+            acao.run();
+            redirectAttributes.addFlashAttribute("mensagemSucesso", sucesso);
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
+        }
+        return "redirect:/seguranca/reservas/" + id;
+    }
 
     private void impedirCache(HttpServletResponse response) {
         response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
