@@ -128,6 +128,11 @@ class PortariaPostgreSqlIntegrationTest {
         assertEquals(10, resumo.presentes());
         assertEquals(0, resumo.pessoasAPagar());
         assertEquals(new BigDecimal("0.00"), resumo.valorAPagar());
+        assertThrows(IllegalStateException.class,
+                () -> portariaService.registrarPagamentoNaPortaria(reserva.getId(), seguranca));
+        assertThrows(IllegalStateException.class,
+                () -> portariaService.registrarPagamentoNaSecretaria(reserva.getId(), secretaria));
+        assertTrue(pagamentoRepository.findByReservaOrderByRegistradoEmAscIdAsc(reserva).isEmpty());
     }
 
     @Test
@@ -153,6 +158,9 @@ class PortariaPostgreSqlIntegrationTest {
         assertEquals(1, pagamentos.size());
         assertEquals(new BigDecimal("4.00"), pagamentos.get(0).getValor());
         assertEquals(LocalPagamento.SECRETARIA, pagamentos.get(0).getLocal());
+        assertTrue(List.of(secretaria.getId(), segundaSecretaria.getId())
+                .contains(pagamentos.get(0).getRegistradoPor().getId()));
+        assertNotNull(pagamentos.get(0).getRegistradoEm());
         assertEquals(0, portariaService.resumir(reserva).pessoasAPagar());
     }
 
@@ -164,6 +172,7 @@ class PortariaPostgreSqlIntegrationTest {
 
         assertEquals(new BigDecimal("2.00"), pagamento.getValor());
         assertEquals(seguranca.getId(), pagamento.getRegistradoPor().getId());
+        assertNotNull(pagamento.getRegistradoEm());
         assertEquals(1, pagamentoRepository.listarAguardandoRepasse(LocalPagamento.PORTARIA).size());
 
         portariaService.confirmarRepasse(pagamento.getId(), secretaria);
