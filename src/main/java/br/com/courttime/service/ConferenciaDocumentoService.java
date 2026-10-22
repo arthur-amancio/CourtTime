@@ -10,8 +10,8 @@ import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.ConferenciaDocumentoRepository;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.security.Permissao;
 import br.com.courttime.storage.DocumentoStorage;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,20 +41,20 @@ public class ConferenciaDocumentoService {
 
     @Transactional(readOnly = true)
     public List<DocumentoReserva> listarPendentes(Usuario secretaria) {
-        validarSecretaria(secretaria);
+        Permissao.exigir(secretaria, Perfil.SECRETARIA);
         return documentoRepository.listarVersoesMaisRecentesPendentes(
                 StatusReserva.PENDENTE_DOCUMENTACAO);
     }
 
     @Transactional(readOnly = true)
     public List<ConferenciaDocumento> listarHistorico(Usuario secretaria) {
-        validarSecretaria(secretaria);
+        Permissao.exigir(secretaria, Perfil.SECRETARIA);
         return conferenciaRepository.listarHistorico();
     }
 
     @Transactional(readOnly = true)
     public DocumentoReserva obter(Long documentoId, Usuario secretaria) {
-        validarSecretaria(secretaria);
+        Permissao.exigir(secretaria, Perfil.SECRETARIA);
         validarDocumentoId(documentoId);
         return documentoRepository.obterComSolicitacao(documentoId)
                 .orElseThrow(() -> new IllegalArgumentException("Documento não encontrado"));
@@ -63,13 +63,13 @@ public class ConferenciaDocumentoService {
     /** R09.4: aviso para a secretaria antes de validar uma lista antiga. */
     @Transactional(readOnly = true)
     public long contarOutrosSemVinculo(DocumentoReserva documento, Usuario secretaria) {
-        validarSecretaria(secretaria);
+        Permissao.exigir(secretaria, Perfil.SECRETARIA);
         return documento == null ? 0 : participanteService.contarOutrosSemVinculo(documento.getReserva());
     }
 
     @Transactional(readOnly = true)
     public boolean podeConferir(DocumentoReserva documento, Usuario secretaria) {
-        validarSecretaria(secretaria);
+        Permissao.exigir(secretaria, Perfil.SECRETARIA);
         if (documento == null
                 || documento.getConferencia() != null
                 || documento.getReserva().getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
@@ -125,7 +125,7 @@ public class ConferenciaDocumentoService {
             Usuario secretaria,
             ResultadoConferenciaDocumento resultado,
             String justificativa) {
-        validarSecretaria(secretaria);
+        Permissao.exigir(secretaria, Perfil.SECRETARIA);
         validarDocumentoId(documentoId);
         Long reservaId = documentoRepository.obterReservaId(documentoId)
                 .orElseThrow(() -> new IllegalArgumentException("Documento não encontrado"));
@@ -157,15 +157,6 @@ public class ConferenciaDocumentoService {
         }
         conferencia.setConferidoPor(secretaria);
         return conferenciaRepository.saveAndFlush(conferencia);
-    }
-
-    private void validarSecretaria(Usuario secretaria) {
-        if (secretaria == null
-                || secretaria.getId() == null
-                || !secretaria.isAtivo()
-                || secretaria.getPerfil() != Perfil.SECRETARIA) {
-            throw new AccessDeniedException("Usuário sem permissão para conferir documentos");
-        }
     }
 
     private void validarDocumentoId(Long documentoId) {

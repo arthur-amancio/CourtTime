@@ -8,6 +8,7 @@ import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.security.Permissao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.AccessDeniedException;
@@ -61,9 +62,7 @@ public class FormularioOficialService {
 
     @Transactional(readOnly = true)
     public byte[] gerar(Long reservaId, Usuario solicitante, String cpf, String curso) {
-        if (solicitante == null || !solicitante.isAtivo() || solicitante.getPerfil() != Perfil.ALUNO) {
-            throw new AccessDeniedException("Usuário sem permissão para esta operação");
-        }
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         if (reservaId == null) {
             throw new IllegalArgumentException("A solicitação é obrigatória");
         }

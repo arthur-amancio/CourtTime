@@ -9,7 +9,7 @@ import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
-import org.springframework.security.access.AccessDeniedException;
+import br.com.courttime.security.Permissao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +37,7 @@ public class ConsultaSegurancaService {
 
     @Transactional(readOnly = true)
     public List<ReservaAutorizadaResumo> listarAutorizadas(Usuario seguranca) {
-        validarSeguranca(seguranca);
+        Permissao.exigir(seguranca, Perfil.SEGURANCA);
         LocalDate dataAtual = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
         return reservaRepository.listarAutorizadasParaSeguranca(
                         StatusReserva.APROVADA, dataAtual)
@@ -48,7 +48,7 @@ public class ConsultaSegurancaService {
 
     @Transactional(readOnly = true)
     public DetalheReservaAutorizada detalhar(Long reservaId, Usuario seguranca) {
-        validarSeguranca(seguranca);
+        Permissao.exigir(seguranca, Perfil.SEGURANCA);
         if (reservaId == null) {
             throw new IllegalArgumentException("A reserva é obrigatória");
         }
@@ -75,7 +75,7 @@ public class ConsultaSegurancaService {
     @Transactional
     public int registrarPresencas(
             Long reservaId, Usuario seguranca, Map<Long, PresencaParticipante> marcacoes) {
-        validarSeguranca(seguranca);
+        Permissao.exigir(seguranca, Perfil.SEGURANCA);
         if (reservaId == null) {
             throw new IllegalArgumentException("A reserva é obrigatória");
         }
@@ -132,15 +132,5 @@ public class ConsultaSegurancaService {
                 participante.getRmOuRg(),
                 categoria,
                 participante.getPresenca());
-    }
-
-    private void validarSeguranca(Usuario seguranca) {
-        if (seguranca == null
-                || seguranca.getId() == null
-                || !seguranca.isAtivo()
-                || seguranca.getPerfil() != Perfil.SEGURANCA) {
-            throw new AccessDeniedException(
-                    "Usuário sem permissão para consultar reservas autorizadas");
-        }
     }
 }
