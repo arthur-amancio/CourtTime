@@ -1,0 +1,15 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+u [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>Usuario</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- perfil: Perfil<BR ALIGN="LEFT"/>- versaoAcesso: long<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+a [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>AuditoriaUsuario</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- operacao: OperacaoAuditoriaUsuario<BR ALIGN="LEFT"/>- perfilAnterior: Perfil<BR ALIGN="LEFT"/>- perfilNovo: Perfil<BR ALIGN="LEFT"/>- ativoAnterior: Boolean<BR ALIGN="LEFT"/>- ativoNovo: Boolean<BR ALIGN="LEFT"/>- realizadaEm: Instant<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+c [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ContribuicaoApm</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- valor: BigDecimal<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+j [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>AjusteContribuicaoApm</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- valorAnterior: BigDecimal<BR ALIGN="LEFT"/>- valorNovo: BigDecimal<BR ALIGN="LEFT"/>- motivo: String<BR ALIGN="LEFT"/>- ajustadaEm: Instant<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+u -> a [label="operador" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+u2 [shape=box,label="Usuario\n(referência ao afetado)"];
+u2 -> a [label="usuarioAfetado" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+c -> j [label="contribuicao" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+u -> j [label="ajustadaPor" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+
+}

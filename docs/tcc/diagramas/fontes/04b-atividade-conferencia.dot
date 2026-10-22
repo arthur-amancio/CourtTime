@@ -1,0 +1,50 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [nodesep=0.14, ranksep=0.14, newrank=true];
+subgraph cluster_l0 { label="SECRETARIA"; style=solid; color="#777777";
+d [shape=box, label="De 04a2: conferir PDF\natual\ne assinatura no ITI\nexterno" style="dashed,rounded"];
+v [shape=diamond, label="Documentação\nregular?" ];
+blank0_2 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_3 [shape=box, label="" style=invis width=0.4 height=0.02];
+pa [shape=box, label="Registrar recebimento\nou aplicar crédito (05b)" style="rounded,filled"];
+blank0_5 [shape=box, label="" style=invis width=0.4 height=0.02];
+}
+subgraph cluster_l1 { label="COURTTIME"; style=solid; color="#777777";
+blank1_0 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank1_1 [shape=box, label="" style=invis width=0.4 height=0.02];
+co [shape=box, label="Devolver com motivo,\nautor e data;\naluno retoma 04a / 04a2" style="dashed,rounded"];
+ok [shape=box, label="Registrar conferência\nhumana;\nrevalidar lista e ≥ 10\nALUNOS" style="rounded,filled"];
+blank1_4 [shape=box, label="" style=invis width=0.4 height=0.02];
+av [shape=box, label="Vincular à conferência\nexata;\nPENDENTE_ANALISE; seguir\n04c" style="dashed,rounded"];
+}
+{rank=same;d;blank1_0;}
+d -> blank1_0 [style=invis weight=100];
+d -> v [label="" style=invis weight=10];
+blank1_0 -> blank1_1 [label="" style=invis weight=10];
+{rank=same;v;blank1_1;}
+v -> blank1_1 [style=invis weight=100];
+v -> blank0_2 [label="" style=invis weight=10];
+blank1_1 -> co [label="" style=invis weight=10];
+{rank=same;blank0_2;co;}
+blank0_2 -> co [style=invis weight=100];
+blank0_2 -> blank0_3 [label="" style=invis weight=10];
+co -> ok [label="" style=invis weight=10];
+{rank=same;blank0_3;ok;}
+blank0_3 -> ok [style=invis weight=100];
+blank0_3 -> pa [label="" style=invis weight=10];
+ok -> blank1_4 [label="" style=invis weight=10];
+{rank=same;pa;blank1_4;}
+pa -> blank1_4 [style=invis weight=100];
+pa -> blank0_5 [label="" style=invis weight=10];
+blank1_4 -> av [label="" style=invis weight=10];
+{rank=same;blank0_5;av;}
+blank0_5 -> av [style=invis weight=100];
+d -> v [label="" constraint=false];
+v -> co [label="[não]" constraint=false];
+v -> ok [label="[sim]" constraint=false];
+ok -> pa [label="" constraint=false];
+pa -> av [label="[registro válido]" constraint=false];
+
+}

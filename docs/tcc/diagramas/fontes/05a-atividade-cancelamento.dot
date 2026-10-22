@@ -1,0 +1,57 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [nodesep=0.14, ranksep=0.14, newrank=true];
+subgraph cluster_l0 { label="ADMINISTRADOR"; style=solid; color="#777777";
+st [shape=circle, label="" width=0.16 height=0.16 fixedsize=true fillcolor="#222222"];
+c [shape=box, label="Cancelar reserva com\nmotivo" style="rounded,filled"];
+blank0_2 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_3 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_4 [shape=box, label="" style=invis width=0.4 height=0.02];
+wa [shape=box, label="Avisar aluno manualmente\npelo WhatsApp" style="rounded,filled"];
+r [shape=box, label="Aluno pode iniciar 05a2" style="dashed,rounded"];
+}
+subgraph cluster_l1 { label="COURTTIME"; style=solid; color="#777777";
+blank1_0 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank1_1 [shape=box, label="" style=invis width=0.4 height=0.02];
+v [shape=diamond, label="Aprovada; operação\npermitida?" ];
+no [shape=box, label="Recusar sem alterar\nestado" style="rounded,filled"];
+ok [shape=box, label="CANCELADA; motivo, autor\ne data;\npreservar documentos e\nhistórico" style="rounded,filled"];
+blank1_5 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank1_6 [shape=box, label="" style=invis width=0.4 height=0.02];
+}
+{rank=same;st;blank1_0;}
+st -> blank1_0 [style=invis weight=100];
+st -> c [label="" style=invis weight=10];
+blank1_0 -> blank1_1 [label="" style=invis weight=10];
+{rank=same;c;blank1_1;}
+c -> blank1_1 [style=invis weight=100];
+c -> blank0_2 [label="" style=invis weight=10];
+blank1_1 -> v [label="" style=invis weight=10];
+{rank=same;blank0_2;v;}
+blank0_2 -> v [style=invis weight=100];
+blank0_2 -> blank0_3 [label="" style=invis weight=10];
+v -> no [label="" style=invis weight=10];
+{rank=same;blank0_3;no;}
+blank0_3 -> no [style=invis weight=100];
+blank0_3 -> blank0_4 [label="" style=invis weight=10];
+no -> ok [label="" style=invis weight=10];
+{rank=same;blank0_4;ok;}
+blank0_4 -> ok [style=invis weight=100];
+blank0_4 -> wa [label="" style=invis weight=10];
+ok -> blank1_5 [label="" style=invis weight=10];
+{rank=same;wa;blank1_5;}
+wa -> blank1_5 [style=invis weight=100];
+wa -> r [label="" style=invis weight=10];
+blank1_5 -> blank1_6 [label="" style=invis weight=10];
+{rank=same;r;blank1_6;}
+r -> blank1_6 [style=invis weight=100];
+st -> c [label="" constraint=false];
+c -> v [label="" constraint=false];
+v -> no [label="[não]" constraint=false];
+v -> ok [label="[sim]" constraint=false];
+ok -> wa [label="" constraint=false];
+wa -> r [label="" constraint=false];
+
+}

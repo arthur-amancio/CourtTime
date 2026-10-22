@@ -1,0 +1,11 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+Quadra [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>quadras</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>nome: varchar NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+DisponibilidadeQuadra [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>disponibilidades_quadra</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>dia_semana: varchar / enum NN<BR ALIGN="LEFT"/>horario_inicio: time NN<BR ALIGN="LEFT"/>horario_fim: time NN<BR ALIGN="LEFT"/>ativa: boolean NN<BR ALIGN="LEFT"/>FK quadra_id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+BloqueioQuadra [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>bloqueios_quadra</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>data: date NN<BR ALIGN="LEFT"/>horario_inicio: time NN<BR ALIGN="LEFT"/>horario_fim: time NN<BR ALIGN="LEFT"/>motivo: varchar NN<BR ALIGN="LEFT"/>ativo: boolean NN<BR ALIGN="LEFT"/>FK quadra_id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+Quadra -> DisponibilidadeQuadra [label="quadra_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+Quadra -> BloqueioQuadra [label="quadra_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+
+}

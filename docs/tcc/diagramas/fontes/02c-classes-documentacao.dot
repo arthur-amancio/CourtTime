@@ -1,0 +1,14 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+r [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>Reserva</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- revisaoParticipantes: int<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+d [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>DocumentoReserva</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- versao: int<BR ALIGN="LEFT"/>- revisaoParticipantes: int<BR ALIGN="LEFT"/>- chaveArmazenamento: String<BR ALIGN="LEFT"/>- sha256: String<BR ALIGN="LEFT"/>- enviadoEm: Instant<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+c [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ConferenciaDocumento</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- resultado: ResultadoConferenciaDocumento<BR ALIGN="LEFT"/>- justificativa: String<BR ALIGN="LEFT"/>- conferidoEm: Instant<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+a [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ContribuicaoApm</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- valor: BigDecimal<BR ALIGN="LEFT"/>- observacoes: String<BR ALIGN="LEFT"/>- registradaEm: Instant<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+r -> d [label="reserva" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+d -> c [label="documento / conferencia" dir=none taillabel="1" headlabel="0..1" labeldistance=1.8 ];
+c -> a [label="conferenciaDocumento" dir=none taillabel="1" headlabel="0..1" labeldistance=1.8 ];
+r -> a [label="reserva" dir=none taillabel="1" headlabel="0..1" labeldistance=1.8 ];
+
+}
