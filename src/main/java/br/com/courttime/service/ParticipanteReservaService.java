@@ -26,7 +26,7 @@ public class ParticipanteReservaService {
 
     private static final int TAMANHO_MAXIMO_NOME = 150;
     private static final int TAMANHO_MAXIMO_RM_OU_RG = 30;
-    public static final int MINIMO_DE_ALUNOS = 10;
+    public static final int MINIMO_DE_PARTICIPANTES = 10;
 
     public static final String MENSAGEM_VINCULO_OBRIGATORIO =
             "Na categoria Outro, escolha o vínculo: ex-aluno, pai ou mãe, irmão ou irmã de aluno, ou professor da ETEC";
@@ -72,7 +72,7 @@ public class ParticipanteReservaService {
                 quantidadeAlunos,
                 quantidadeOutros,
                 participantes.size(),
-                quantidadeAlunos >= MINIMO_DE_ALUNOS);
+                participantes.size() >= MINIMO_DE_PARTICIPANTES);
     }
 
     @Transactional(readOnly = true)
@@ -103,11 +103,10 @@ public class ParticipanteReservaService {
             throw new IllegalStateException(
                     "A lista de participantes foi alterada após o envio do documento");
         }
-        long quantidadeAlunos = participanteRepository.countByReservaAndCategoria(
-                reserva, CategoriaParticipante.ALUNO);
-        if (quantidadeAlunos < MINIMO_DE_ALUNOS) {
+        long quantidadeParticipantes = participanteRepository.countByReserva(reserva);
+        if (quantidadeParticipantes < MINIMO_DE_PARTICIPANTES) {
             throw new IllegalStateException(
-                    "A solicitação deve possuir no mínimo 10 alunos participantes");
+                    "A solicitação deve possuir no mínimo 10 participantes, de qualquer categoria");
         }
     }
 

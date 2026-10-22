@@ -10,6 +10,7 @@ import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.PagamentoAdicionalRepository;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -98,7 +99,6 @@ class PortariaServiceTest {
         ResumoPortaria resumo = service.resumir(reserva);
 
         assertEquals(12, resumo.presentes());
-        assertEquals(10, resumo.pagos());
         assertEquals(2, resumo.pessoasAPagar());
         assertEquals(new BigDecimal("4.00"), resumo.valorAPagar());
         assertTrue(resumo.mostrarValores());
@@ -123,6 +123,19 @@ class PortariaServiceTest {
 
         verify(participanteService).acrescentarNaPortaria(
                 reserva, seguranca, "Visitante", "RG-9", CategoriaParticipante.ALUNO, null);
+    }
+
+    @Test
+    void naoAcrescentaPessoaDepoisDaLiberacao() {
+        reserva.registrarLiberacao(seguranca, Instant.now());
+        when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
+
+        IllegalStateException erro = assertThrows(IllegalStateException.class,
+                () -> service.acrescentarPessoa(20L, seguranca, "Visitante", "RG-9",
+                        CategoriaParticipante.OUTRO, VinculoParticipante.PAI_OU_MAE));
+
+        assertEquals(PortariaService.MENSAGEM_RESERVA_LIBERADA, erro.getMessage());
+        verifyNoInteractions(participanteService);
     }
 
     // ------------------------------------------------------------- R11: liberação
@@ -228,7 +241,6 @@ class PortariaServiceTest {
 
         ResumoPortaria resumo = service.resumir(reserva);
 
-        assertEquals(12, resumo.pagos());
         assertEquals(0, resumo.pessoasAPagar());
     }
 
@@ -246,7 +258,7 @@ class PortariaServiceTest {
     void r11SecretariaConfirmaORepasseDaPortaria() {
         PagamentoAdicional pagamento = pagamento(2, LocalPagamento.PORTARIA);
         pagamento.setId(70L);
-        when(pagamentoRepository.findById(70L)).thenReturn(Optional.of(pagamento));
+        when(pagamentoRepository.findByIdForUpdate(70L)).thenReturn(Optional.of(pagamento));
 
         service.confirmarRepasse(70L, secretaria);
 
@@ -260,7 +272,7 @@ class PortariaServiceTest {
     void r11PagamentoFeitoNaSecretariaNaoTemRepasse() {
         PagamentoAdicional pagamento = pagamento(2, LocalPagamento.SECRETARIA);
         pagamento.setId(71L);
-        when(pagamentoRepository.findById(71L)).thenReturn(Optional.of(pagamento));
+        when(pagamentoRepository.findByIdForUpdate(71L)).thenReturn(Optional.of(pagamento));
 
         assertThrows(IllegalStateException.class, () -> service.confirmarRepasse(71L, secretaria));
     }

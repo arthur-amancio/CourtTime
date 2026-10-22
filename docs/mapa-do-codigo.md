@@ -15,7 +15,7 @@ Uma página para explicar o código na banca. Cada parte cabe em uma frase.
 
 Os `record` da pasta `service` (como `ResumoPortaria` e `DetalheReservaAutorizada`) não têm regra: só levam os dados prontos para a tela.
 
-## Quem pode o quê (duas travas)
+## Quem pode o quê (três verificações)
 
 1. **`SecurityConfig`:** cada perfil só abre as próprias rotas (`/admin/**`, `/secretaria/**`, `/seguranca/**`, `/solicitacoes/**`).
 2. **`Permissao.exigir(...)`:** cada serviço confere de novo o perfil, para a regra valer mesmo se for chamada de outro lugar.
@@ -38,7 +38,7 @@ A situação mostrada ao aluno em cada etapa vem do `SituacaoSolicitacaoService`
 
 | Regra | Classe | O que procurar |
 |---|---|---|
-| Mínimo de 10 alunos na solicitação | `ParticipanteReservaService` | `MINIMO_DE_ALUNOS` |
+| Mínimo de 10 participantes no total, contando Aluno e Outro | `ParticipanteReservaService` | `MINIMO_DE_PARTICIPANTES` |
 | 1 dia de antecedência | `CalendarioDisponibilidadeService` | `DIAS_MINIMOS_DE_ANTECEDENCIA` |
 | Duas reservas no mesmo horário não são aprovadas | `ReservaService.aprovar` | trava da quadra e `periodoEstaDisponivel` |
 | R01 — documento até o dia anterior | `DocumentoReservaService` | `prazoFinalDeEnvio` |
@@ -52,7 +52,7 @@ A situação mostrada ao aluno em cada etapa vem do `SituacaoSolicitacaoService`
 | R10 — pessoas a mais na portaria | `PortariaService` | `acrescentarPessoa`, `calcularPessoasAPagar` |
 | R11 — liberação com 10 presentes e sem valor pendente | `PortariaService` | `liberarQuadra` |
 
-As regras estão descritas em [regras-etec.md](regras-etec.md).
+O CourtTime aplica o mínimo total por decisão atual do grupo. O formulário oficial versionado ainda menciona dez alunos; a ETEC precisa confirmar ou atualizar o termo antes da homologação documental. As regras e a divergência estão descritas em [regras-etec.md](regras-etec.md).
 
 ## Como explicar em 2 minutos uma regra (exemplo: R10)
 

@@ -74,7 +74,7 @@
                         <option value="ALUNO">Aluno</option>
                         <option value="OUTRO">Outro participante</option>
                     </select>
-                    <p id="categoria-ajuda" class="campo__ajuda">O mínimo exigido é de dez participantes na categoria Aluno.</p>
+                    <p id="categoria-ajuda" class="campo__ajuda">O mínimo exigido é de dez participantes no total, contando Aluno e Outro.</p>
                     <p id="categoria-erro" class="campo__erro"
                        th:if="${#fields.hasErrors('categoria')}"
                        th:errors="*{categoria}">Selecione a categoria.</p>

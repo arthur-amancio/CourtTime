@@ -126,7 +126,7 @@ o script **não** altera a senha dela.
 | Segurança | `seguranca1.demo@exemplo.invalid` | Visualizar somente reservas autorizadas; nenhuma contribuição ou PDF |
 
 Para percorrer uma reserva completa, use **data futura e horário livre**,
-registre **dez participantes da categoria Aluno** com identidades
+registre **dez participantes no total** (Aluno e Outro, conforme a regra atual do sistema) com identidades
 explicitamente fictícias, envie **PDF sintético** e siga a ordem:
 
 1. Aluno: solicitação → participantes → **Documentos → Gerar formulário

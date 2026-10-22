@@ -133,6 +133,24 @@ class ConsultaSegurancaServiceTest {
     }
 
     @Test
+    void r11PresencaNaoPodeSerAlteradaDepoisDaLiberacao() {
+        reserva.registrarLiberacao(seguranca, Instant.now());
+        ParticipanteReserva ana = participante("Ana", "RM-1", CategoriaParticipante.ALUNO);
+        ana.setId(31L);
+        ana.registrarPresenca(PresencaParticipante.PRESENTE, seguranca, Instant.now());
+        when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
+                .thenReturn(List.of(ana));
+
+        IllegalStateException erro = assertThrows(IllegalStateException.class,
+                () -> service.registrarPresencas(20L, seguranca,
+                        Map.of(31L, PresencaParticipante.AUSENTE)));
+
+        assertEquals(PortariaService.MENSAGEM_RESERVA_LIBERADA, erro.getMessage());
+        verify(participanteRepository, never()).save(any());
+    }
+
+    @Test
     void r08PresencaForaDoDiaParticipanteAlheioOuReservaNaoAprovadaSaoRecusados() {
         ParticipanteReserva ana = participante("Ana", "RM-1", CategoriaParticipante.ALUNO);
         ana.setId(31L);

@@ -243,7 +243,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
     }
 
     @Test
-    void resumoContaSeparadamenteEAtendeMinimoSomenteComDezAlunos() {
+    void resumoContaSeparadamenteEAtendeMinimoComDezParticipantesDeQualquerCategoria() {
         for (int indice = 1; indice <= 9; indice++) {
             adicionarParticipante(indice, CategoriaParticipante.ALUNO);
         }
@@ -255,7 +255,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
         assertEquals(9, abaixoDoMinimo.quantidadeAlunos());
         assertEquals(2, abaixoDoMinimo.quantidadeOutros());
         assertEquals(11, abaixoDoMinimo.total());
-        assertFalse(abaixoDoMinimo.minimoDeAlunosAtendido());
+        assertTrue(abaixoDoMinimo.minimoDeParticipantesAtendido());
 
         adicionarParticipante(10, CategoriaParticipante.ALUNO);
         ResumoParticipantes minimoAtendido = participanteService.resumir(
@@ -263,7 +263,7 @@ class ParticipanteReservaPostgreSqlIntegrationTest {
         assertEquals(10, minimoAtendido.quantidadeAlunos());
         assertEquals(2, minimoAtendido.quantidadeOutros());
         assertEquals(12, minimoAtendido.total());
-        assertTrue(minimoAtendido.minimoDeAlunosAtendido());
+        assertTrue(minimoAtendido.minimoDeParticipantesAtendido());
     }
 
     private void adicionarParticipante(int indice, CategoriaParticipante categoria) {

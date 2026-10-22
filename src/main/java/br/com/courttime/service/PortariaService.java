@@ -40,6 +40,8 @@ public class PortariaService {
     public static final int MINIMO_DE_PRESENTES = 10;
     public static final String MENSAGEM_FORA_DO_DIA =
             "Esta ação só pode ser feita no dia da reserva.";
+    public static final String MENSAGEM_RESERVA_LIBERADA =
+            "A conferência foi encerrada porque a quadra já foi liberada.";
 
     private final ReservaRepository reservaRepository;
     private final ParticipanteReservaRepository participanteRepository;
@@ -83,17 +85,10 @@ public class PortariaService {
                 .mapToLong(PagamentoAdicional::getQuantidadePessoas)
                 .sum();
         long pessoasAPagar = calcularPessoasAPagar(presentes, daLista + pagosAMais);
-        BigDecimal recebidoNaPortaria = pagamentos.stream()
-                .filter(pagamento -> pagamento.getLocal() == LocalPagamento.PORTARIA)
-                .map(PagamentoAdicional::getValor)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         return new ResumoPortaria(
                 presentes,
-                daLista + pagosAMais,
                 pessoasAPagar,
                 calcularValor(pessoasAPagar),
-                recebidoNaPortaria,
                 reserva.getLiberadaEm());
     }
 
@@ -108,6 +103,7 @@ public class PortariaService {
             VinculoParticipante vinculo) {
         Permissao.exigir(seguranca, Perfil.SEGURANCA);
         Reserva reserva = obterReservaDeHoje(reservaId);
+        exigirNaoLiberada(reserva);
         return participanteService.acrescentarNaPortaria(
                 reserva, seguranca, nomeCompleto, rmOuRg, categoria, vinculo);
     }
@@ -131,9 +127,7 @@ public class PortariaService {
     public void liberarQuadra(Long reservaId, Usuario seguranca) {
         Permissao.exigir(seguranca, Perfil.SEGURANCA);
         Reserva reserva = obterReservaDeHoje(reservaId);
-        if (reserva.isLiberada()) {
-            throw new IllegalStateException("A quadra já foi liberada para esta reserva.");
-        }
+        exigirNaoLiberada(reserva);
         ResumoPortaria resumo = resumir(reserva);
         if (!resumo.minimoAtingido()) {
             throw new IllegalStateException("Quadra não liberada: " + resumo.presentes()
@@ -178,7 +172,7 @@ public class PortariaService {
         if (pagamentoId == null) {
             throw new IllegalArgumentException("O pagamento é obrigatório");
         }
-        PagamentoAdicional pagamento = pagamentoRepository.findById(pagamentoId)
+        PagamentoAdicional pagamento = pagamentoRepository.findByIdForUpdate(pagamentoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado"));
         if (!pagamento.aguardaRepasse()) {
             throw new IllegalStateException("Este pagamento não aguarda repasse.");
@@ -189,6 +183,7 @@ public class PortariaService {
 
     private PagamentoAdicional registrarPagamento(
             Reserva reserva, Usuario usuario, LocalPagamento local) {
+        exigirNaoLiberada(reserva);
         ResumoPortaria resumo = resumir(reserva);
         if (!resumo.temValorAPagar()) {
             throw new IllegalStateException("Não há valor a mais para pagar nesta reserva.");
@@ -220,5 +215,11 @@ public class PortariaService {
 
     private LocalDate hoje() {
         return LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
+    }
+
+    private void exigirNaoLiberada(Reserva reserva) {
+        if (reserva.isLiberada()) {
+            throw new IllegalStateException(MENSAGEM_RESERVA_LIBERADA);
+        }
     }
 }

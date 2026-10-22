@@ -57,8 +57,9 @@
             <section class="painel" aria-labelledby="participantes-title">
                 <div class="painel__cabecalho">
                     <h2 id="participantes-title">Identificação dos participantes</h2>
-                    <p class="campo__ajuda" th:if="${detalhe.presencaPermitida}">Confira o nome e o RM ou RG de quem entrar e marque presente ou ausente.</p>
-                    <p class="campo__ajuda" th:unless="${detalhe.presencaPermitida}">Confira o nome e o RM ou RG de quem entrar na quadra. A presença só pode ser marcada no dia da reserva.</p>
+                    <p class="campo__ajuda" th:if="${detalhe.presencaPermitida and (detalhe.portaria == null or !detalhe.portaria.liberada())}">Confira o nome e o RM ou RG de quem entrar e marque presente ou ausente.</p>
+                    <p class="campo__ajuda" th:if="${detalhe.portaria != null and detalhe.portaria.liberada()}">A conferência foi encerrada quando a quadra foi liberada.</p>
+                    <p class="campo__ajuda" th:unless="${detalhe.presencaPermitida or (detalhe.portaria != null and detalhe.portaria.liberada())}">Confira o nome e o RM ou RG de quem entrar na quadra. A presença só pode ser marcada no dia da reserva.</p>
                 </div>
                 <div class="vazio" th:if="${#lists.isEmpty(detalhe.participantes)}">
                     <span class="vazio__icone"><svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg></span>
@@ -87,7 +88,7 @@
                                 <td data-label="Categoria" th:text="${participante.categoria}">Aluno</td>
                                 <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
                                 <td data-label="Presença">
-                                    <fieldset class="presenca" th:if="${detalhe.presencaPermitida}">
+                                    <fieldset class="presenca" th:if="${detalhe.presencaPermitida and (detalhe.portaria == null or !detalhe.portaria.liberada())}">
                                         <legend class="visually-hidden" th:text="|Presença de ${participante.nomeCompleto}|">Presença</legend>
                                         <label class="opcao-marcavel">
                                             <input type="radio" th:name="|presenca-${participante.id}|" value="PRESENTE"
@@ -100,14 +101,14 @@
                                             <span>Ausente</span>
                                         </label>
                                     </fieldset>
-                                    <span th:unless="${detalhe.presencaPermitida}"
+                                    <span th:unless="${detalhe.presencaPermitida and (detalhe.portaria == null or !detalhe.portaria.liberada())}"
                                           th:text="${participante.presenca == null ? 'Não marcada' : participante.presenca.descricao}">Não marcada</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="grupo-botoes bloco-espaco" th:if="${detalhe.presencaPermitida}">
+                <div class="grupo-botoes bloco-espaco" th:if="${detalhe.presencaPermitida and (detalhe.portaria == null or !detalhe.portaria.liberada())}">
                     <button class="botao" type="submit">Registrar presença</button>
                 </div>
                 </form>
@@ -132,10 +133,6 @@
                             <span class="indicador__rotulo">Presentes (mínimo 10)</span>
                         </div>
                         <div class="indicador">
-                            <span class="indicador__valor" th:text="${portaria.pagos()}">10</span>
-                            <span class="indicador__rotulo">Pessoas já pagas</span>
-                        </div>
-                        <div class="indicador">
                             <span class="indicador__valor" th:text="${portaria.pessoasAPagar()}">0</span>
                             <span class="indicador__rotulo">Pessoas a mais sem pagar</span>
                         </div>
@@ -145,15 +142,14 @@
                         <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
                         <div>
                             <p><strong th:text="|Falta pagar R$ ${#numbers.formatDecimal(portaria.valorAPagar(), 1, 'POINT', 2, 'COMMA')}.|">Falta pagar R$ 4,00.</strong></p>
-                            <p>Quem passou do total já pago só entra depois do pagamento na secretaria. Trocar uma pessoa por outra não cobra nada.</p>
+                            <p>Quem passou do total já pago só entra depois que o pagamento for registrado. Trocar uma pessoa por outra não cobra nada.</p>
                         </div>
                     </div>
-                    <p class="campo__ajuda" th:if="${portaria.valorRecebidoNaPortaria().signum() > 0}"
-                       th:text="|Recebido na portaria: R$ ${#numbers.formatDecimal(portaria.valorRecebidoNaPortaria(), 1, 'POINT', 2, 'COMMA')}. Entregue o valor à secretaria.|">Recebido na portaria: R$ 4,00.</p>
                     <p class="campo__ajuda" th:if="${portaria.liberada()}"
                        th:text="|Liberada às ${#temporals.format(portaria.liberadaEm(), 'HH:mm')}.|">Liberada às 08:00.</p>
+                    <p class="campo__ajuda" th:if="${portaria.liberada()}">A liberação encerra a conferência de presença e de pessoas adicionais.</p>
 
-                    <div class="grupo-botoes">
+                    <div class="grupo-botoes" th:if="${!portaria.liberada()}">
                         <form method="post" th:unless="${portaria.liberada()}"
                               th:action="@{/seguranca/reservas/{id}/liberar(id=${detalhe.reserva.id})}">
                             <button class="botao" type="submit">
@@ -170,7 +166,8 @@
                 </div>
             </section>
 
-            <section class="painel" aria-labelledby="acrescentar-title" th:if="${detalhe.portaria != null}">
+            <section class="painel" aria-labelledby="acrescentar-title"
+                     th:if="${detalhe.portaria != null and !detalhe.portaria.liberada()}">
                 <div class="painel__cabecalho">
                     <h2 id="acrescentar-title">Acrescentar pessoa</h2>
                     <p class="campo__ajuda">Para quem chegou e não está na lista. A pessoa entra como presente. Para tirar alguém, marque como ausente na lista acima.</p>

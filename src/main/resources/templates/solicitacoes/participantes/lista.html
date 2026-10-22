@@ -66,16 +66,16 @@
                 </div>
             </section>
 
-            <div class="alerta alerta--sucesso" th:if="${resumo.minimoDeAlunosAtendido}">
+            <div class="alerta alerta--sucesso" th:if="${resumo.minimoDeParticipantesAtendido}">
                 <svg th:replace="~{fragments/icones :: icone('check-circulo')}"></svg>
                 <div>
-                    <p><strong>Mínimo de alunos atendido</strong></p>
-                    <p>A lista possui ao menos dez participantes na categoria Aluno.</p>
+                    <p><strong>Mínimo de participantes atendido</strong></p>
+                    <p>A lista possui ao menos dez participantes, contando as categorias Aluno e Outro.</p>
                 </div>
             </div>
-            <div class="alerta alerta--aviso" th:unless="${resumo.minimoDeAlunosAtendido}">
+            <div class="alerta alerta--aviso" th:unless="${resumo.minimoDeParticipantesAtendido}">
                 <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
-                <p>A lista ainda precisa atingir o mínimo exigido de dez alunos antes da etapa documental.</p>
+                <p>A lista ainda precisa atingir o mínimo exigido de dez participantes, de qualquer categoria, antes da etapa documental.</p>
             </div>
 
             <section class="painel" aria-labelledby="lista-title">
