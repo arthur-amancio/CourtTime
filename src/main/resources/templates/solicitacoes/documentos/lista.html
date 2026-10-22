@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Documentos enviados</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}" href="/img/favicon.svg">
     <script th:replace="~{fragments/layout :: script}"></script>
     <script th:src="@{/js/envio-pdf.js}" src="/js/envio-pdf.js" defer></script>
 </head>
@@ -48,7 +49,7 @@
                 </div>
                 <form class="painel__corpo pilha pilha--compacta" method="post"
                       th:action="@{/solicitacoes/{id}/formulario-oficial(id=${solicitacao.id})}">
-                    <p>O CourtTime preenche o formulário original da ETEC com a data, o horário e os participantes cadastrados. Baixe, assine pelo gov.br e envie o PDF assinado logo abaixo.</p>
+                    <p>O CourtTime preenche o formulário original da Etec com a data, o horário e os participantes cadastrados. Baixe, assine pelo gov.br e envie o PDF assinado logo abaixo.</p>
                     <div class="campos-linha">
                         <div class="campo">
                             <label for="cpf">CPF do solicitante</label>
@@ -86,7 +87,7 @@
                             <p>Assine o PDF pelo gov.br (assinatura eletrônica gratuita da conta gov.br). A secretaria confere a assinatura no verificador oficial. O envio ao CourtTime não comprova nem valida a assinatura.</p>
                             <ul>
                                 <li>Antes do envio, confira se a lista do documento corresponde ao cadastro e contém no mínimo dez alunos.</li>
-                                <li>Use o formulário oficial da ETEC: gere-o preenchido abaixo ou peça o impresso na secretaria.</li>
+                                <li>Use o formulário oficial da Etec: gere-o preenchido abaixo ou peça o impresso na secretaria.</li>
                             </ul>
                         </div>
                     </div>

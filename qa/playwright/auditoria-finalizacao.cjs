@@ -243,7 +243,7 @@ async function semRolagemHorizontal(page, rotulo, url) {
     await alunoC.locator('#categoria').selectOption('OUTRO');
     await alunoC.getByRole('button', { name: 'Salvar participante' }).click();
     check((await alunoC.locator('body').innerText()).includes('escolha o vínculo'), 'R09: Outro sem vínculo é recusado');
-    check(await alunoC.locator('#vinculo option').count() === 5, 'R09: só os quatro vínculos da ETEC (mais "não se aplica")');
+    check(await alunoC.locator('#vinculo option').count() === 5, 'R09: só os quatro vínculos da Etec (mais "não se aplica")');
     await alunoC.locator('#vinculo').selectOption('PAI_OU_MAE');
     await alunoC.getByRole('button', { name: 'Salvar participante' }).click();
     check((await alunoC.locator('body').innerText()).includes('Já existe um participante com este RM ou RG'), 'RM ou RG repetido é recusado com mensagem');

@@ -52,7 +52,7 @@ class QuadraControllerTest {
     void setUp() {
         quadra = new Quadra();
         quadra.setNome("Quadra Poliesportiva");
-        quadra.setDescricao("Quadra esportiva da ETEC.");
+        quadra.setDescricao("Quadra esportiva da Etec.");
         quadra.setAtiva(true);
         data = LocalDate.of(2026, 10, 12);
     }
@@ -74,7 +74,7 @@ class QuadraControllerTest {
         mockMvc.perform(get("/quadra").with(user("aluno@escola.test").roles("ALUNO")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Quadra Poliesportiva")))
-                .andExpect(content().string(containsString("Quadra esportiva da ETEC.")))
+                .andExpect(content().string(containsString("Quadra esportiva da Etec.")))
                 .andExpect(content().string(containsString("Ativa")))
                 .andExpect(content().string(containsString(
                         "Não há horários de funcionamento cadastrados para esta data.")));
