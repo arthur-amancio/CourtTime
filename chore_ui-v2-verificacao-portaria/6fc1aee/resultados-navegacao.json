@@ -1,0 +1,285 @@
+{
+  "suite": "Contratos de navegacao dos quatro perfis",
+  "sha": "6fc1aee626c7478a35a93b5b70d7f70b4de1c042",
+  "contagem": {
+    "pass": 49,
+    "fail": 0,
+    "pending": 0
+  },
+  "resultados": [
+    {
+      "status": "PASS",
+      "nome": "ALUNO: navegacao /quadra",
+      "detalhe": "link /Acessar|Quadra|Calend/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: navegacao /solicitacoes/nova",
+      "detalhe": "link /Solicitar|Nova/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: navegacao /solicitacoes",
+      "detalhe": "link /Consultar|Minhas/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: navegacao /solicitacoes/2/participantes",
+      "detalhe": "link /Participantes/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: navegacao /solicitacoes/2/documentos",
+      "detalhe": "link /Documento/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: recurso de outro proprietario ocultado",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: backend recusa rota de outro perfil",
+      "detalhe": "/admin -> HTTP 403",
+      "perfil": "ALUNO",
+      "rota": "/admin"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: backend recusa rota de outro perfil",
+      "detalhe": "/secretaria/documentos -> HTTP 403",
+      "perfil": "ALUNO",
+      "rota": "/secretaria/documentos"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: backend recusa rota de outro perfil",
+      "detalhe": "/seguranca/reservas -> HTTP 403",
+      "perfil": "ALUNO",
+      "rota": "/seguranca/reservas"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: logout sem CSRF recusado",
+      "detalhe": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: logout por GET nao encerra a sessao",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: sessao preservada apos GET /logout",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: logout POST com token CSRF",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "ALUNO: sessao encerrada nao acessa area autenticada",
+      "detalhe": "http://127.0.0.1:18081/login"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: navegacao /admin/solicitacoes",
+      "detalhe": "link /solicita/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: navegacao /admin/usuarios",
+      "detalhe": "link /usu.rio/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: navegacao /admin/horarios",
+      "detalhe": "link /Hor.rios semanais/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: navegacao /admin/bloqueios",
+      "detalhe": "link /Bloqueios/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: backend recusa rota de outro perfil",
+      "detalhe": "/secretaria/documentos -> HTTP 403",
+      "perfil": "ADMINISTRADOR",
+      "rota": "/secretaria/documentos"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: backend recusa rota de outro perfil",
+      "detalhe": "/secretaria/contribuicoes -> HTTP 403",
+      "perfil": "ADMINISTRADOR",
+      "rota": "/secretaria/contribuicoes"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: backend recusa rota de outro perfil",
+      "detalhe": "/seguranca/reservas -> HTTP 403",
+      "perfil": "ADMINISTRADOR",
+      "rota": "/seguranca/reservas"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: logout sem CSRF recusado",
+      "detalhe": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: logout por GET nao encerra a sessao",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: sessao preservada apos GET /logout",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: logout POST com token CSRF",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "ADMINISTRADOR: sessao encerrada nao acessa area autenticada",
+      "detalhe": "http://127.0.0.1:18081/login"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: navegacao /secretaria/documentos",
+      "detalhe": "link /fila|document/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: navegacao /secretaria/contribuicoes",
+      "detalhe": "link /contribui/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: backend recusa rota de outro perfil",
+      "detalhe": "/admin -> HTTP 403",
+      "perfil": "SECRETARIA",
+      "rota": "/admin"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: backend recusa rota de outro perfil",
+      "detalhe": "/admin/solicitacoes -> HTTP 403",
+      "perfil": "SECRETARIA",
+      "rota": "/admin/solicitacoes"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: backend recusa rota de outro perfil",
+      "detalhe": "/seguranca/reservas -> HTTP 403",
+      "perfil": "SECRETARIA",
+      "rota": "/seguranca/reservas"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: backend recusa rota de outro perfil",
+      "detalhe": "/solicitacoes -> HTTP 403",
+      "perfil": "SECRETARIA",
+      "rota": "/solicitacoes"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: logout sem CSRF recusado",
+      "detalhe": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: logout por GET nao encerra a sessao",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: sessao preservada apos GET /logout",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: logout POST com token CSRF",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "SECRETARIA: sessao encerrada nao acessa area autenticada",
+      "detalhe": "http://127.0.0.1:18081/login"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: navegacao /seguranca/reservas",
+      "detalhe": "link /reservas/i"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: sem links administrativos ou financeiros",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: reserva cancelada nao e autorizacao",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: backend recusa rota de outro perfil",
+      "detalhe": "/admin -> HTTP 403",
+      "perfil": "SEGURANCA",
+      "rota": "/admin"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: backend recusa rota de outro perfil",
+      "detalhe": "/secretaria/documentos -> HTTP 403",
+      "perfil": "SEGURANCA",
+      "rota": "/secretaria/documentos"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: backend recusa rota de outro perfil",
+      "detalhe": "/secretaria/contribuicoes -> HTTP 403",
+      "perfil": "SEGURANCA",
+      "rota": "/secretaria/contribuicoes"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: backend recusa rota de outro perfil",
+      "detalhe": "/solicitacoes -> HTTP 403",
+      "perfil": "SEGURANCA",
+      "rota": "/solicitacoes"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: logout sem CSRF recusado",
+      "detalhe": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: logout por GET nao encerra a sessao",
+      "detalhe": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: sessao preservada apos GET /logout",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: logout POST com token CSRF",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "SEGURANCA: sessao encerrada nao acessa area autenticada",
+      "detalhe": "http://127.0.0.1:18081/login"
+    }
+  ],
+  "fonteIds": "/home/runner/work/CourtTime/CourtTime/evidencias-ui/resultados-e2e.json"
+}
