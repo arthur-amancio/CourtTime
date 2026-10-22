@@ -1,0 +1,441 @@
+{
+  "sha": "f78395601dd1e6b16b9d76ffd36a509dd7c0181f",
+  "ids": {
+    "r1": 4,
+    "grande": 5,
+    "r3": 6,
+    "r5": 7
+  },
+  "results": [
+    {
+      "status": "PASS",
+      "name": "conta Carla Auditoria Exemplo",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "conta Davi Auditoria Exemplo",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não acessa /admin",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não acessa /admin/solicitacoes",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não acessa /secretaria/documentos",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não acessa /secretaria/contribuicoes",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não acessa /seguranca/reservas",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não acessa /admin",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não acessa /solicitacoes",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não acessa /seguranca/reservas",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não acessa /admin",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não acessa /solicitacoes",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não acessa /secretaria/documentos",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não acessa /secretaria/contribuicoes",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "administrador não acessa /solicitacoes",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "administrador não acessa /secretaria/documentos",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "administrador não acessa /seguranca/reservas",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "página 403 em português e sem detalhes técnicos",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "visitante é levado ao login: /inicio",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "visitante é levado ao login: /solicitacoes",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "visitante é levado ao login: /admin",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "visitante é levado ao login: /seguranca/reservas",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "página 404 em português",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "R09: Outro sem vínculo é recusado",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "R09: só os quatro vínculos da ETEC (mais \"não se aplica\")",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "RM ou RG repetido é recusado com mensagem",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "participante da categoria Outro incluído",
+      "detail": "10 alunos + 1 outro"
+    },
+    {
+      "status": "PASS",
+      "name": "R09: vínculo aparece na lista de participantes",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "edição de participante",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "remoção de participante",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não altera participantes de outra pessoa",
+      "detail": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "name": "tela explica como gerar, assinar e enviar",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "formulário oficial gerado em PDF",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "cabeçalho Content-Type do PDF",
+      "detail": "application/pdf"
+    },
+    {
+      "status": "PASS",
+      "name": "cabeçalho Content-Disposition para download",
+      "detail": "attachment; filename=\"formulario-reserva-quadra-solicitacao-4.pdf\""
+    },
+    {
+      "status": "PASS",
+      "name": "PDF não fica em cache",
+      "detail": "no-store"
+    },
+    {
+      "status": "PASS",
+      "name": "cabeçalho nosniff",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "CPF não vai na URL",
+      "detail": "http://127.0.0.1:18081/solicitacoes/4/formulario-oficial"
+    },
+    {
+      "status": "PASS",
+      "name": "geração do PDF exige token CSRF",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não gera o formulário de outra pessoa",
+      "detail": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "name": "curso acima de 80 caracteres é recusado com mensagem",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "CPF em branco é recusado com mensagem",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "formulário com 31 participantes gerado",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "PASS",
+      "name": "contribuição #4",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "aprovação de R1",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "reserva aprovada não oferece remarcação",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "remarcação de reserva aprovada é recusada",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "PASS",
+      "name": "formulário não é gerado depois da aprovação",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "segurança vê participantes sem CPF, valores ou e-mails",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não baixa o PDF pela rota administrativa",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "segurança não baixa o PDF pela rota do aluno",
+      "detail": "HTTP 403"
+    },
+    {
+      "status": "PASS",
+      "name": "detalhe administrativo mostra quem aprovou",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "reserva cancelada não abre para a segurança",
+      "detail": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não abre a remarcação da reserva de outra pessoa",
+      "detail": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "name": "aluno não remarca a reserva de outra pessoa",
+      "detail": "HTTP 404"
+    },
+    {
+      "status": "PASS",
+      "name": "remarcação respeita a antecedência mínima",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "remarcação respeita a grade atual",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "celular 360px sem conteúdo para fora: remarcacao",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 390px sem conteúdo para fora: remarcacao",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "remarcação nasce pendente e vinculada",
+      "detail": "#6"
+    },
+    {
+      "status": "PASS",
+      "name": "sem a opção marcada, nenhum participante é copiado",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "remarcação não reaproveita o PDF",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "reserva cancelada mantém participantes e registro",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "remarcação não reaproveita contribuição",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "segunda remarcação pela tela é recusada",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "PASS",
+      "name": "segunda remarcação por envio direto é recusada",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "lista de solicitações não manda o aluno olhar \"abaixo\"",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "contribuição #7",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "detalhe administrativo mostra o motivo da rejeição",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "administração encontra rejeitadas e canceladas",
+      "detail": "[\"/admin/solicitacoes/3\",\"/admin/solicitacoes/2\",\"/admin/solicitacoes/7\",\"/admin/solicitacoes/4\"]"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 360px sem conteúdo para fora: admin-solicitacoes",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 390px sem conteúdo para fora: admin-solicitacoes",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "painel: o total é a soma das situações",
+      "detail": "[\"7 Total\",\"3 Aguardando documentação\",\"1 Aguardando análise Abrir fila de análise\",\"1 Aprovadas\",\"1 Rejeitadas\",\"1 Canceladas\",\"4 Horários semanais\",\"1 Bloqueios futuros\"]"
+    },
+    {
+      "status": "PASS",
+      "name": "data ou horário inválido mostra mensagem compreensível",
+      "detail": "Informe uma data válida Informe um horário válido Data Início Fim Motivo Teste Informe uma justificativa objetiva, com até 200 caracteres."
+    },
+    {
+      "status": "PASS",
+      "name": "horário adulterado na solicitação não mostra erro técnico",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "edição de usuário",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "redefinição de senha encerra a sessão anterior",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "login com a senha redefinida",
+      "detail": ""
+    },
+    {
+      "status": "PASS",
+      "name": "celular 360px sem conteúdo para fora: documentos",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 390px sem conteúdo para fora: documentos",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 360px sem conteúdo para fora: detalhe-cancelada",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 390px sem conteúdo para fora: detalhe-cancelada",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 360px sem conteúdo para fora: admin-detalhe-cancelada",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 390px sem conteúdo para fora: admin-detalhe-cancelada",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 360px sem conteúdo para fora: admin-painel",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    },
+    {
+      "status": "PASS",
+      "name": "celular 390px sem conteúdo para fora: admin-painel",
+      "detail": "{\"rolagem\":false,\"fora\":[]}"
+    }
+  ]
+}
