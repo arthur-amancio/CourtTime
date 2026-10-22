@@ -135,6 +135,7 @@ class ConsultaSegurancaServiceTest {
 
     @Test
     void r11PresencaNaoPodeSerAlteradaDepoisDaLiberacao() {
+        reserva.setDataUtilizacao(LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
         reserva.registrarLiberacao(seguranca, Instant.now());
         ParticipanteReserva ana = participante("Ana", "RM-1", CategoriaParticipante.ALUNO);
         ana.setId(31L);

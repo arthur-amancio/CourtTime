@@ -209,6 +209,7 @@ class DocumentoReservaServiceTest {
         reserva.setDataUtilizacao(amanha);
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
+        when(participanteRepository.countByReserva(reserva)).thenReturn(10L);
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(0);
         when(documentoRepository.saveAndFlush(any(DocumentoReserva.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));

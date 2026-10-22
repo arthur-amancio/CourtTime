@@ -1,13 +1,16 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.ConferenciaDocumento;
+import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.DocumentoReserva;
+import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
 import br.com.courttime.repository.AjusteContribuicaoApmRepository;
 import br.com.courttime.repository.BloqueioQuadraRepository;
@@ -112,6 +115,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
         outroAluno = novoUsuario("outro.aluno.documento@teste.local");
         secretaria = novoUsuario("secretaria.documento@teste.local", Perfil.SECRETARIA);
         reserva = novaReserva(aluno, StatusReserva.PENDENTE_DOCUMENTACAO);
+        cadastrarMinimoDeParticipantes(reserva);
     }
 
     @AfterEach
@@ -211,6 +215,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
     @Test
     void documentoDeOutraSolicitacaoDoMesmoAlunoNaoPodeSerBaixadoPorIdMisturado() {
         Reserva outraReserva = novaReserva(aluno, StatusReserva.PENDENTE_DOCUMENTACAO);
+        cadastrarMinimoDeParticipantes(outraReserva);
         DocumentoReserva documento = documentoService.enviar(
                 outraReserva.getId(), aluno, "outro-termo.pdf", "application/pdf", pdf("outro"));
 
@@ -296,6 +301,21 @@ class DocumentoReservaPostgreSqlIntegrationTest {
         conferencia.setJustificativa("Correção solicitada no teste");
         conferencia.setConferidoPor(secretaria);
         conferenciaRepository.saveAndFlush(conferencia);
+    }
+
+    private void cadastrarMinimoDeParticipantes(Reserva alvo) {
+        for (int indice = 1; indice <= ParticipanteReservaService.MINIMO_DE_PARTICIPANTES; indice++) {
+            ParticipanteReserva participante = new ParticipanteReserva();
+            participante.setReserva(alvo);
+            participante.setNomeCompleto("Participante sintético " + indice);
+            participante.setRmOuRg("DOC-" + alvo.getId() + "-" + indice);
+            participante.setCategoria(indice <= 8
+                    ? CategoriaParticipante.ALUNO : CategoriaParticipante.OUTRO);
+            if (indice > 8) {
+                participante.setVinculo(VinculoParticipante.PAI_OU_MAE);
+            }
+            participanteRepository.saveAndFlush(participante);
+        }
     }
 
     private byte[] pdf(String conteudo) {
