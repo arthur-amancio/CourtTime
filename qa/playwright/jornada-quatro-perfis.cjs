@@ -62,7 +62,7 @@ function definirDataDeDemonstracaoHoje(reservaId) {
   }
   const resultado = execFileSync('psql', [
     '-h', 'localhost', '-U', 'courttime_e2e', '-d', 'courttime_e2e', '-v', 'ON_ERROR_STOP=1',
-    '-tAc', `UPDATE reservas SET data_utilizacao = '${today}' WHERE id = ${reservaId} RETURNING id`,
+    '-qAtc', `UPDATE reservas SET data_utilizacao = '${today}' WHERE id = ${reservaId} AND status = 'APROVADA' RETURNING id`,
   ], { encoding: 'utf8', env: process.env }).trim();
   if (resultado !== String(reservaId)) {
     throw new Error(`A reserva aprovada #${reservaId} não foi atualizada no banco descartável.`);
