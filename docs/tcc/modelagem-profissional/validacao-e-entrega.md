@@ -48,8 +48,8 @@ node docs\tcc\modelagem-profissional\gerar-diagramas.cjs
 Resultado da verificação final:
 
 - **Maven:** `mvnw clean verify` executado duas vezes. Em cada execução, 472 testes foram descobertos: 406 passaram, 65 foram ignorados pela configuração e um terminou em erro antes da asserção. `DocumentoStorageLocalTest.recusaLinkSimbolicoMesmoComChaveValida` não conseguiu criar o link simbólico de preparação porque a conta do Windows não possui o privilégio necessário (`FileSystemException: O cliente não tem o privilégio necessário`). A repetição fora da restrição do workspace teve o mesmo resultado. Nenhum teste funcional falhou e nenhum código da aplicação foi alterado por esta entrega.
-- **Commit:** pendente de criação.
-- **Pull request draft:** pendente de publicação.
+- **Commit da modelagem:** [`0edaf2a`](https://github.com/arthur-amancio/CourtTime/commit/0edaf2a47a53e12b6dfc3fff5437a75ab14ea8b6).
+- **Pull request draft:** [#88 — docs(tcc): reconstruir modelagem profissional editável](https://github.com/arthur-amancio/CourtTime/pull/88), aberto contra o branch do PR #87.
 
 ## Riscos e limites
 
