@@ -1,0 +1,97 @@
+{
+  "generatedAt": "2026-10-22",
+  "baseCommit": "6fc1aee626c7478a35a93b5b70d7f70b4de1c042",
+  "pullRequests": [
+    85,
+    86,
+    87
+  ],
+  "canvas": {
+    "format": "A4 landscape",
+    "width": 1123,
+    "height": 794
+  },
+  "diagrams": [
+    {
+      "figure": 1,
+      "file": "01-casos-de-uso-gerais",
+      "title": "Casos de uso do CourtTime — visão geral",
+      "caption": "Casos de uso gerais do CourtTime",
+      "editableSource": "fontes/01-casos-de-uso-gerais.drawio",
+      "vector": "svg/01-casos-de-uso-gerais.svg",
+      "printSource": "impressao/01-casos-de-uso-gerais.html"
+    },
+    {
+      "figure": 2,
+      "file": "02-casos-de-uso-portaria-secretaria",
+      "title": "Casos de uso — portaria e Secretaria",
+      "caption": "Casos de uso da portaria e da Secretaria",
+      "editableSource": "fontes/02-casos-de-uso-portaria-secretaria.drawio",
+      "vector": "svg/02-casos-de-uso-portaria-secretaria.svg",
+      "printSource": "impressao/02-casos-de-uso-portaria-secretaria.html"
+    },
+    {
+      "figure": 3,
+      "file": "03-classes-nucleo-reservas",
+      "title": "Diagrama de classes — núcleo de reservas",
+      "caption": "Diagrama de classes do núcleo de reservas",
+      "editableSource": "fontes/03-classes-nucleo-reservas.drawio",
+      "vector": "svg/03-classes-nucleo-reservas.svg",
+      "printSource": "impressao/03-classes-nucleo-reservas.html"
+    },
+    {
+      "figure": 4,
+      "file": "04-classes-documentacao-contribuicao-portaria",
+      "title": "Diagrama de classes — documentação, contribuição e portaria",
+      "caption": "Diagrama de classes de documentação, contribuição e portaria",
+      "editableSource": "fontes/04-classes-documentacao-contribuicao-portaria.drawio",
+      "vector": "svg/04-classes-documentacao-contribuicao-portaria.svg",
+      "printSource": "impressao/04-classes-documentacao-contribuicao-portaria.html"
+    },
+    {
+      "figure": 5,
+      "file": "05-der-postgresql",
+      "title": "DER lógico do banco PostgreSQL",
+      "caption": "Diagrama entidade-relacionamento lógico do CourtTime",
+      "editableSource": "fontes/05-der-postgresql.drawio",
+      "vector": "svg/05-der-postgresql.svg",
+      "printSource": "impressao/05-der-postgresql.html"
+    },
+    {
+      "figure": 6,
+      "file": "06-atividade-reserva-completa",
+      "title": "Atividades — ciclo completo da reserva",
+      "caption": "Diagrama de atividades da reserva completa",
+      "editableSource": "fontes/06-atividade-reserva-completa.drawio",
+      "vector": "svg/06-atividade-reserva-completa.svg",
+      "printSource": "impressao/06-atividade-reserva-completa.html"
+    },
+    {
+      "figure": 7,
+      "file": "07-atividade-cancelamento-remarcacao",
+      "title": "Atividades — cancelamento institucional e remarcação",
+      "caption": "Diagrama de atividades do cancelamento e da remarcação",
+      "editableSource": "fontes/07-atividade-cancelamento-remarcacao.drawio",
+      "vector": "svg/07-atividade-cancelamento-remarcacao.svg",
+      "printSource": "impressao/07-atividade-cancelamento-remarcacao.html"
+    },
+    {
+      "figure": 8,
+      "file": "08-atividade-liberacao-quadra",
+      "title": "Atividades — conferência e liberação da quadra",
+      "caption": "Diagrama de atividades da liberação da quadra",
+      "editableSource": "fontes/08-atividade-liberacao-quadra.drawio",
+      "vector": "svg/08-atividade-liberacao-quadra.svg",
+      "printSource": "impressao/08-atividade-liberacao-quadra.html"
+    },
+    {
+      "figure": 9,
+      "file": "09-arquitetura-courttime",
+      "title": "Arquitetura do CourtTime",
+      "caption": "Arquitetura lógica e tecnológica do CourtTime",
+      "editableSource": "fontes/09-arquitetura-courttime.drawio",
+      "vector": "svg/09-arquitetura-courttime.svg",
+      "printSource": "impressao/09-arquitetura-courttime.html"
+    }
+  ]
+}
