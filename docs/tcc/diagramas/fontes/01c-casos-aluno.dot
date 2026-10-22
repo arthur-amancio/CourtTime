@@ -1,0 +1,23 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [rankdir=LR];
+a [shape=box, label="«actor»\nALUNO" fillcolor="#eeeeee"];
+subgraph cluster_system { label="CourtTime"; color="#222222";
+c [shape=ellipse, label="Criar solicitação" ];
+p [shape=ellipse, label="Cadastrar e revisar\nparticipantes" ];
+f [shape=ellipse, label="Gerar formulário oficial" ];
+e [shape=ellipse, label="Enviar PDF assinado" ];
+h [shape=ellipse, label="Acompanhar solicitação\ne documentos próprios" ];
+r [shape=ellipse, label="Solicitar remarcação" ];
+}
+a -> c [label="" dir=none];
+a -> p [label="" dir=none];
+a -> f [label="" dir=none];
+a -> e [label="" dir=none];
+a -> h [label="" dir=none];
+a -> r [label="" dir=none];
+r -> c [label="«include»" style=dashed arrowhead=open];
+
+}

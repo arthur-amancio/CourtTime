@@ -1,0 +1,917 @@
+{
+  "ConferenciaDocumento": {
+    "table": "conferencias_documento",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "documento",
+        "column": "documento_id",
+        "type": "DocumentoReserva",
+        "nullable": false,
+        "pk": false,
+        "fk": "DocumentoReserva",
+        "unique": true,
+        "annotations": "@NotNull\n    @OneToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"documento_id\", nullable = false, unique = true, updatable = false)"
+      },
+      {
+        "field": "resultado",
+        "column": "resultado",
+        "type": "ResultadoConferenciaDocumento",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Enumerated(EnumType.STRING)\n    @Column(nullable = false, length = 30, updatable = false)"
+      },
+      {
+        "field": "justificativa",
+        "column": "justificativa",
+        "type": "String",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Size(max = 500)\n    @Column(length = 500, updatable = false)"
+      },
+      {
+        "field": "conferidoPor",
+        "column": "conferido_por_id",
+        "type": "Usuario",
+        "nullable": false,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"conferido_por_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "conferidoEm",
+        "column": "conferido_em",
+        "type": "Instant",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"conferido_em\", nullable = false, updatable = false)"
+      }
+    ]
+  },
+  "ContribuicaoApm": {
+    "table": "contribuicoes_apm",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "reserva",
+        "column": "reserva_id",
+        "type": "Reserva",
+        "nullable": false,
+        "pk": false,
+        "fk": "Reserva",
+        "unique": false,
+        "annotations": "@NotNull\n    @OneToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"reserva_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "conferenciaDocumento",
+        "column": "conferencia_documento_id",
+        "type": "ConferenciaDocumento",
+        "nullable": false,
+        "pk": false,
+        "fk": "ConferenciaDocumento",
+        "unique": false,
+        "annotations": "@NotNull\n    @OneToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"conferencia_documento_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "valor",
+        "column": "valor",
+        "type": "BigDecimal",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @DecimalMin(value = \"0.00\", inclusive = false)\n    @Digits(integer = 10, fraction = 2)\n    @Column(nullable = false, precision = 12, scale = 2)"
+      },
+      {
+        "field": "observacoes",
+        "column": "observacoes",
+        "type": "String",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Size(max = 500)\n    @Column(length = 500)"
+      },
+      {
+        "field": "registradaPor",
+        "column": "registrada_por_id",
+        "type": "Usuario",
+        "nullable": false,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"registrada_por_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "registradaEm",
+        "column": "registrada_em",
+        "type": "Instant",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"registrada_em\", nullable = false, updatable = false)"
+      }
+    ]
+  },
+  "Quadra": {
+    "table": "quadras",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "nome",
+        "column": "nome",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false, length = 100)"
+      },
+      {
+        "field": "descricao",
+        "column": "descricao",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false, length = 500)"
+      },
+      {
+        "field": "ativa",
+        "column": "ativa",
+        "type": "boolean",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false)"
+      }
+    ]
+  },
+  "DocumentoReserva": {
+    "table": "documentos_reserva",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "reserva",
+        "column": "reserva_id",
+        "type": "Reserva",
+        "nullable": false,
+        "pk": false,
+        "fk": "Reserva",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"reserva_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "versao",
+        "column": "versao",
+        "type": "int",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Min(1)\n    @Column(nullable = false, updatable = false)"
+      },
+      {
+        "field": "revisaoParticipantes",
+        "column": "revisao_participantes",
+        "type": "int",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Min(0)\n    @Column(name = \"revisao_participantes\", nullable = false, updatable = false,\n            columnDefinition = \"integer default 0\")"
+      },
+      {
+        "field": "nomeOriginal",
+        "column": "nome_original",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotBlank\n    @Size(max = 255)\n    @Column(name = \"nome_original\", nullable = false, length = 255, updatable = false)"
+      },
+      {
+        "field": "chaveArmazenamento",
+        "column": "chave_armazenamento",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": true,
+        "annotations": "@NotBlank\n    @Size(max = 80)\n    @Column(name = \"chave_armazenamento\", nullable = false, length = 80,\n            unique = true, updatable = false)"
+      },
+      {
+        "field": "sha256",
+        "column": "sha256",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotBlank\n    @Size(min = 64, max = 64)\n    @Column(name = \"sha256\", nullable = false, length = 64, updatable = false)"
+      },
+      {
+        "field": "tamanhoBytes",
+        "column": "tamanho_bytes",
+        "type": "long",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Min(1)\n    @Column(name = \"tamanho_bytes\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "enviadoPor",
+        "column": "enviado_por_id",
+        "type": "Usuario",
+        "nullable": false,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"enviado_por_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "enviadoEm",
+        "column": "enviado_em",
+        "type": "Instant",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"enviado_em\", nullable = false, updatable = false)"
+      }
+    ]
+  },
+  "BloqueioQuadra": {
+    "table": "bloqueios_quadra",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "data",
+        "column": "data",
+        "type": "LocalDate",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Column(nullable = false)"
+      },
+      {
+        "field": "horarioInicio",
+        "column": "horario_inicio",
+        "type": "LocalTime",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Column(nullable = false)"
+      },
+      {
+        "field": "horarioFim",
+        "column": "horario_fim",
+        "type": "LocalTime",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Column(nullable = false)"
+      },
+      {
+        "field": "motivo",
+        "column": "motivo",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotBlank\n    @Size(max = 200)\n    @Column(nullable = false, length = 200)"
+      },
+      {
+        "field": "ativo",
+        "column": "ativo",
+        "type": "boolean",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false)"
+      },
+      {
+        "field": "quadra",
+        "column": "quadra_id",
+        "type": "Quadra",
+        "nullable": false,
+        "pk": false,
+        "fk": "Quadra",
+        "unique": false,
+        "annotations": "@ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"quadra_id\", nullable = false)\n    @NotNull"
+      }
+    ]
+  },
+  "AuditoriaUsuario": {
+    "table": "auditorias_usuario",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "operador",
+        "column": "operador_id",
+        "type": "Usuario",
+        "nullable": false,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"operador_id\", nullable = false)"
+      },
+      {
+        "field": "usuarioAfetado",
+        "column": "usuario_afetado_id",
+        "type": "Usuario",
+        "nullable": false,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"usuario_afetado_id\", nullable = false)"
+      },
+      {
+        "field": "operacao",
+        "column": "operacao",
+        "type": "OperacaoAuditoriaUsuario",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Enumerated(EnumType.STRING)\n    @Column(nullable = false, length = 30)"
+      },
+      {
+        "field": "perfilAnterior",
+        "column": "perfil_anterior",
+        "type": "Perfil",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Enumerated(EnumType.STRING)\n    @Column(name = \"perfil_anterior\", length = 20)"
+      },
+      {
+        "field": "perfilNovo",
+        "column": "perfil_novo",
+        "type": "Perfil",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Enumerated(EnumType.STRING)\n    @Column(name = \"perfil_novo\", length = 20)"
+      },
+      {
+        "field": "ativoAnterior",
+        "column": "ativo_anterior",
+        "type": "Boolean",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"ativo_anterior\")"
+      },
+      {
+        "field": "ativoNovo",
+        "column": "ativo_novo",
+        "type": "Boolean",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"ativo_novo\")"
+      },
+      {
+        "field": "realizadaEm",
+        "column": "realizada_em",
+        "type": "Instant",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"realizada_em\", nullable = false, updatable = false)"
+      }
+    ]
+  },
+  "DisponibilidadeQuadra": {
+    "table": "disponibilidades_quadra",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "diaSemana",
+        "column": "dia_semana",
+        "type": "DiaSemana",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Enumerated(EnumType.STRING)\n    @Column(nullable = false, length = 10)\n    @NotNull"
+      },
+      {
+        "field": "horarioInicio",
+        "column": "horario_inicio",
+        "type": "LocalTime",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false)\n    @NotNull"
+      },
+      {
+        "field": "horarioFim",
+        "column": "horario_fim",
+        "type": "LocalTime",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false)\n    @NotNull"
+      },
+      {
+        "field": "ativa",
+        "column": "ativa",
+        "type": "boolean",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false)"
+      },
+      {
+        "field": "quadra",
+        "column": "quadra_id",
+        "type": "Quadra",
+        "nullable": false,
+        "pk": false,
+        "fk": "Quadra",
+        "unique": false,
+        "annotations": "@ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"quadra_id\", nullable = false)\n    @NotNull"
+      }
+    ]
+  },
+  "AjusteContribuicaoApm": {
+    "table": "ajustes_contribuicao_apm",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "contribuicao",
+        "column": "contribuicao_id",
+        "type": "ContribuicaoApm",
+        "nullable": false,
+        "pk": false,
+        "fk": "ContribuicaoApm",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"contribuicao_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "valorAnterior",
+        "column": "valor_anterior",
+        "type": "BigDecimal",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @DecimalMin(value = \"0.00\", inclusive = false)\n    @Digits(integer = 10, fraction = 2)\n    @Column(name = \"valor_anterior\", nullable = false, precision = 12, scale = 2,\n            updatable = false)"
+      },
+      {
+        "field": "valorNovo",
+        "column": "valor_novo",
+        "type": "BigDecimal",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @DecimalMin(value = \"0.00\", inclusive = false)\n    @Digits(integer = 10, fraction = 2)\n    @Column(name = \"valor_novo\", nullable = false, precision = 12, scale = 2,\n            updatable = false)"
+      },
+      {
+        "field": "observacoesAnteriores",
+        "column": "observacoes_anteriores",
+        "type": "String",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Size(max = 500)\n    @Column(name = \"observacoes_anteriores\", length = 500, updatable = false)"
+      },
+      {
+        "field": "observacoesNovas",
+        "column": "observacoes_novas",
+        "type": "String",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Size(max = 500)\n    @Column(name = \"observacoes_novas\", length = 500, updatable = false)"
+      },
+      {
+        "field": "motivo",
+        "column": "motivo",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotBlank\n    @Size(max = 500)\n    @Column(nullable = false, length = 500, updatable = false)"
+      },
+      {
+        "field": "ajustadaPor",
+        "column": "ajustada_por_id",
+        "type": "Usuario",
+        "nullable": false,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"ajustada_por_id\", nullable = false, updatable = false)"
+      },
+      {
+        "field": "ajustadaEm",
+        "column": "ajustada_em",
+        "type": "Instant",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"ajustada_em\", nullable = false, updatable = false)"
+      }
+    ]
+  },
+  "ParticipanteReserva": {
+    "table": "participantes_reserva",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "reserva",
+        "column": "reserva_id",
+        "type": "Reserva",
+        "nullable": false,
+        "pk": false,
+        "fk": "Reserva",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"reserva_id\", nullable = false)"
+      },
+      {
+        "field": "nomeCompleto",
+        "column": "nome_completo",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotBlank\n    @Size(max = 150)\n    @Column(name = \"nome_completo\", nullable = false, length = 150)"
+      },
+      {
+        "field": "rmOuRg",
+        "column": "rm_ou_rg",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotBlank\n    @Size(max = 30)\n    @Column(name = \"rm_ou_rg\", nullable = false, length = 30)"
+      },
+      {
+        "field": "categoria",
+        "column": "categoria",
+        "type": "CategoriaParticipante",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Enumerated(EnumType.STRING)\n    @Column(nullable = false, length = 10)"
+      }
+    ]
+  },
+  "Usuario": {
+    "table": "usuarios",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "nome",
+        "column": "nome",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false, length = 150)"
+      },
+      {
+        "field": "email",
+        "column": "email",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": true,
+        "annotations": "@Column(nullable = false, unique = true, length = 254)"
+      },
+      {
+        "field": "senha",
+        "column": "senha",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false, length = 100)"
+      },
+      {
+        "field": "perfil",
+        "column": "perfil",
+        "type": "Perfil",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Enumerated(EnumType.STRING)\n    @Column(nullable = false, length = 20)"
+      },
+      {
+        "field": "ativo",
+        "column": "ativo",
+        "type": "boolean",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false)"
+      },
+      {
+        "field": "versaoAcesso",
+        "column": "versao_acesso",
+        "type": "long",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"versao_acesso\", nullable = false, columnDefinition = \"bigint default 0\")"
+      }
+    ]
+  },
+  "Reserva": {
+    "table": "reservas",
+    "fields": [
+      {
+        "field": "id",
+        "column": "id",
+        "type": "Long",
+        "nullable": false,
+        "pk": true,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)"
+      },
+      {
+        "field": "quadra",
+        "column": "quadra_id",
+        "type": "Quadra",
+        "nullable": false,
+        "pk": false,
+        "fk": "Quadra",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"quadra_id\", nullable = false)"
+      },
+      {
+        "field": "solicitante",
+        "column": "solicitante_id",
+        "type": "Usuario",
+        "nullable": false,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@NotNull\n    @ManyToOne(fetch = FetchType.LAZY, optional = false)\n    @JoinColumn(name = \"solicitante_id\", nullable = false)"
+      },
+      {
+        "field": "dataUtilizacao",
+        "column": "data_utilizacao",
+        "type": "LocalDate",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Column(name = \"data_utilizacao\", nullable = false)"
+      },
+      {
+        "field": "horarioInicio",
+        "column": "horario_inicio",
+        "type": "LocalTime",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Column(nullable = false)"
+      },
+      {
+        "field": "horarioFim",
+        "column": "horario_fim",
+        "type": "LocalTime",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Column(nullable = false)"
+      },
+      {
+        "field": "finalidade",
+        "column": "finalidade",
+        "type": "String",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotBlank\n    @Size(max = 300)\n    @Column(nullable = false, length = 300)"
+      },
+      {
+        "field": "status",
+        "column": "status",
+        "type": "StatusReserva",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@NotNull\n    @Enumerated(EnumType.STRING)\n    @Column(nullable = false, length = 30)"
+      },
+      {
+        "field": "revisaoParticipantes",
+        "column": "revisao_participantes",
+        "type": "int",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@PositiveOrZero\n    @Column(name = \"revisao_participantes\", nullable = false,\n            columnDefinition = \"integer default 0\")"
+      },
+      {
+        "field": "analisadaPor",
+        "column": "analisada_por_id",
+        "type": "Usuario",
+        "nullable": true,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@ManyToOne(fetch = FetchType.LAZY)\n    @JoinColumn(name = \"analisada_por_id\")"
+      },
+      {
+        "field": "motivoRejeicao",
+        "column": "motivo_rejeicao",
+        "type": "String",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(length = 500)"
+      },
+      {
+        "field": "motivoCancelamentoInstitucional",
+        "column": "motivo_cancelamento_institucional",
+        "type": "String",
+        "nullable": true,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(name = \"motivo_cancelamento_institucional\", length = 500)"
+      },
+      {
+        "field": "canceladaPor",
+        "column": "cancelada_por_id",
+        "type": "Usuario",
+        "nullable": true,
+        "pk": false,
+        "fk": "Usuario",
+        "unique": false,
+        "annotations": "@ManyToOne(fetch = FetchType.LAZY)\n    @JoinColumn(name = \"cancelada_por_id\")"
+      },
+      {
+        "field": "remarcacaoDe",
+        "column": "remarcacao_de_id",
+        "type": "Reserva",
+        "nullable": true,
+        "pk": false,
+        "fk": "Reserva",
+        "unique": true,
+        "annotations": "@OneToOne(fetch = FetchType.LAZY)\n    @JoinColumn(name = \"remarcacao_de_id\", unique = true)"
+      },
+      {
+        "field": "criadaEm",
+        "column": "criada_em",
+        "type": "Instant",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false, updatable = false)"
+      },
+      {
+        "field": "atualizadaEm",
+        "column": "atualizada_em",
+        "type": "Instant",
+        "nullable": false,
+        "pk": false,
+        "fk": null,
+        "unique": false,
+        "annotations": "@Column(nullable = false)"
+      }
+    ]
+  }
+}

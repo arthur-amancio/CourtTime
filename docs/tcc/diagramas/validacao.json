@@ -1,0 +1,262 @@
+[
+  {
+    "id": "01a-casos-geral",
+    "figure": 22,
+    "page": 1,
+    "orientation": "retrato",
+    "node_font_pt": 14.4,
+    "edge_font_pt": 11.7,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "01b-casos-acesso",
+    "figure": 23,
+    "page": 2,
+    "orientation": "paisagem",
+    "node_font_pt": 15.8,
+    "edge_font_pt": 12.84,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "01c-casos-aluno",
+    "figure": 24,
+    "page": 3,
+    "orientation": "paisagem",
+    "node_font_pt": 11.62,
+    "edge_font_pt": 9.44,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "01d-casos-instituicao",
+    "figure": 25,
+    "page": 4,
+    "orientation": "retrato",
+    "node_font_pt": 12.34,
+    "edge_font_pt": 10.03,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "01e-casos-portaria",
+    "figure": 26,
+    "page": 5,
+    "orientation": "paisagem",
+    "node_font_pt": 14.73,
+    "edge_font_pt": 11.96,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "04a-atividade-solicitacao",
+    "figure": 27,
+    "page": 6,
+    "orientation": "retrato",
+    "node_font_pt": 13.67,
+    "edge_font_pt": 11.1,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "04a2-atividade-envio",
+    "figure": 28,
+    "page": 7,
+    "orientation": "retrato",
+    "node_font_pt": 13.17,
+    "edge_font_pt": 10.7,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "04b-atividade-conferencia",
+    "figure": 29,
+    "page": 8,
+    "orientation": "retrato",
+    "node_font_pt": 12.53,
+    "edge_font_pt": 10.18,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "04c-atividade-aprovacao",
+    "figure": 30,
+    "page": 9,
+    "orientation": "retrato",
+    "node_font_pt": 11.69,
+    "edge_font_pt": 9.49,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "05a-atividade-cancelamento",
+    "figure": 31,
+    "page": 10,
+    "orientation": "retrato",
+    "node_font_pt": 11.61,
+    "edge_font_pt": 9.43,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "05a2-atividade-remarcacao",
+    "figure": 32,
+    "page": 11,
+    "orientation": "retrato",
+    "node_font_pt": 11.72,
+    "edge_font_pt": 9.52,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "05b-atividade-credito",
+    "figure": 33,
+    "page": 12,
+    "orientation": "retrato",
+    "node_font_pt": 12.98,
+    "edge_font_pt": 10.55,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "06-atividade-presenca",
+    "figure": 34,
+    "page": 13,
+    "orientation": "retrato",
+    "node_font_pt": 12.75,
+    "edge_font_pt": 10.36,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "06b-atividade-registro",
+    "figure": 35,
+    "page": 14,
+    "orientation": "retrato",
+    "node_font_pt": 12.36,
+    "edge_font_pt": 10.04,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "02a-classes-reservas",
+    "figure": 36,
+    "page": 15,
+    "orientation": "retrato",
+    "node_font_pt": 14.6,
+    "edge_font_pt": 11.86,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "02b-classes-agenda",
+    "figure": 37,
+    "page": 16,
+    "orientation": "paisagem",
+    "node_font_pt": 15.17,
+    "edge_font_pt": 12.32,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "02c-classes-documentacao",
+    "figure": 38,
+    "page": 17,
+    "orientation": "retrato",
+    "node_font_pt": 13.96,
+    "edge_font_pt": 11.35,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "02d-classes-auditoria",
+    "figure": 39,
+    "page": 18,
+    "orientation": "paisagem",
+    "node_font_pt": 15.8,
+    "edge_font_pt": 12.84,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "02e-classes-extensoes",
+    "figure": 40,
+    "page": 19,
+    "orientation": "retrato",
+    "node_font_pt": 14.95,
+    "edge_font_pt": 12.14,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "02f-enumeracoes",
+    "figure": 41,
+    "page": 20,
+    "orientation": "paisagem",
+    "node_font_pt": 13.72,
+    "edge_font_pt": 11.15,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "03a-der-reservas",
+    "figure": 42,
+    "page": 21,
+    "orientation": "retrato",
+    "node_font_pt": 14.34,
+    "edge_font_pt": 11.65,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "03b-der-agenda",
+    "figure": 43,
+    "page": 22,
+    "orientation": "paisagem",
+    "node_font_pt": 16.63,
+    "edge_font_pt": 13.51,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "03c-der-documentos",
+    "figure": 44,
+    "page": 23,
+    "orientation": "retrato",
+    "node_font_pt": 13.96,
+    "edge_font_pt": 11.35,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "03d-der-auditoria",
+    "figure": 45,
+    "page": 24,
+    "orientation": "paisagem",
+    "node_font_pt": 17.59,
+    "edge_font_pt": 14.3,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "03e-der-extensoes",
+    "figure": 46,
+    "page": 25,
+    "orientation": "retrato",
+    "node_font_pt": 14.95,
+    "edge_font_pt": 12.14,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  },
+  {
+    "id": "07-arquitetura",
+    "figure": 47,
+    "page": 26,
+    "orientation": "retrato",
+    "node_font_pt": 10.06,
+    "edge_font_pt": 8.18,
+    "syntax": "ok",
+    "visual_review": "inspecionado em renderização e página A4; sem cortes observados"
+  }
+]
