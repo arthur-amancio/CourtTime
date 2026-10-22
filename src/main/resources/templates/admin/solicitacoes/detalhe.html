@@ -106,10 +106,10 @@
                 <section class="painel" aria-labelledby="participantes-title">
                     <div class="painel__cabecalho">
                         <h2 id="participantes-title">Participantes</h2>
-                        <span class="badge badge--aprovada" th:if="${detalhe.resumoParticipantes.minimoDeAlunosAtendido}">
+                        <span class="badge badge--aprovada" th:if="${detalhe.resumoParticipantes.minimoDeParticipantesAtendido}">
                             <svg th:replace="~{fragments/icones :: icone('check')}"></svg><span>Mínimo atendido</span>
                         </span>
-                        <span class="badge badge--rejeitada" th:unless="${detalhe.resumoParticipantes.minimoDeAlunosAtendido}">
+                        <span class="badge badge--rejeitada" th:unless="${detalhe.resumoParticipantes.minimoDeParticipantesAtendido}">
                             <svg th:replace="~{fragments/icones :: icone('x')}"></svg><span>Mínimo não atendido</span>
                         </span>
                         <p class="campo__ajuda" th:text="|${detalhe.resumoParticipantes.quantidadeAlunos} aluno(s) e ${detalhe.resumoParticipantes.quantidadeOutros} demais participante(s).|">10 alunos.</p>

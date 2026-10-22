@@ -102,6 +102,12 @@ public class ConsultaSegurancaService {
         if (!participantes.keySet().containsAll(marcacoes.keySet())) {
             throw new IllegalArgumentException("Participante não pertence a esta reserva");
         }
+        boolean alteracaoSolicitada = marcacoes.entrySet().stream()
+                .anyMatch(marcacao -> marcacao.getValue() != null
+                        && participantes.get(marcacao.getKey()).getPresenca() != marcacao.getValue());
+        if (reserva.isLiberada() && alteracaoSolicitada) {
+            throw new IllegalStateException(PortariaService.MENSAGEM_RESERVA_LIBERADA);
+        }
         Instant agora = Instant.now();
         int alteradas = 0;
         for (Map.Entry<Long, PresencaParticipante> marcacao : marcacoes.entrySet()) {

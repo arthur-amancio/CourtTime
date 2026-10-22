@@ -187,7 +187,7 @@ definir um limite, ele deve ser aplicado na lista de participantes, não no PDF.
 
 | Regra do termo | O que o sistema faz | Diferença | Precisa da ETEC? |
 |---|---|---|---|
-| Mínimo de 10 alunos | valida 10 alunos na conferência do documento | nenhuma | não |
+| Mínimo registrado no modelo: 10 alunos | CourtTime exige 10 participantes de qualquer categoria, conforme decisão atual do grupo | divergência entre a regra atual do software e o modelo oficial | **sim; atualização/aprovação da ETEC pendente** |
 | Participantes com documento com foto | a segurança consulta nome e RM/RG para conferir | a conferência é humana, na portaria | não |
 | Contribuição de R$ 2,00 por participante por hora | a secretaria digita o valor; o sistema não calcula | o sistema não confere o valor | **sim** |
 | Reserva só se concretiza com a contribuição | a contribuição é pré-requisito da análise | nenhuma | não |
@@ -219,3 +219,13 @@ institucional, não técnica.**
 Também vale registrar: o termo **não estabelece prazo para a decisão da
 direção**. O PR #27 assume apenas o limite mínimo defensável, que é não autorizar
 algo que já aconteceu, e **não inventa prazo**.
+
+## Divergência sobre o mínimo de participantes
+
+O modelo original em `src/main/resources/modelos/formulario-reserva-quadra.pdf`
+foi mantido sem alteração e contém a cláusula de mínimo de dez alunos. A decisão
+de projeto registrada em 22/10/2026 instrui o CourtTime a contar dez pessoas no
+total, incluindo Aluno e Outro, na solicitação/formulário. A validação do código
+segue a instrução mais recente do grupo; isso não prova que a cláusula do termo
+tenha sido alterada pela ETEC. A equipe precisa obter uma versão atualizada ou
+confirmação institucional antes de declarar o fluxo documental homologado.

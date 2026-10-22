@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('node:child_process');
 
 const { carregarConfiguracao } = require('./suporte/configuracao.cjs');
 const {
@@ -54,6 +55,19 @@ const enumDays = ['DOMINGO', 'SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'S
 const ptDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
 function dayFor(iso) { return enumDays[new Date(`${iso}T12:00:00Z`).getUTCDay()]; }
 function ptDayFor(iso) { return ptDays[new Date(`${iso}T12:00:00Z`).getUTCDay()]; }
+function definirDataDeDemonstracaoHoje(reservaId) {
+  if (process.env.COURTTIME_E2E_ACK_ISOLATED_DB !== 'YES'
+      || process.env.COURTTIME_E2E_DATABASE_NAME !== 'courttime_e2e') {
+    throw new Error('A simulação de reserva de hoje exige o banco descartável courttime_e2e.');
+  }
+  const resultado = execFileSync('psql', [
+    '-h', 'localhost', '-U', 'courttime_e2e', '-d', 'courttime_e2e', '-v', 'ON_ERROR_STOP=1',
+    '-tAc', `UPDATE reservas SET data_utilizacao = '${today}' WHERE id = ${reservaId} AND status = 'APROVADA' RETURNING id`,
+  ], { encoding: 'utf8', env: process.env }).trim();
+  if (resultado !== String(reservaId)) {
+    throw new Error(`A reserva aprovada #${reservaId} não foi atualizada no banco descartável.`);
+  }
+}
 function proximaDataDoDia(diaSemana, deslocamentoMinimo = 7) {
   for (let deslocamento = deslocamentoMinimo; deslocamento < deslocamentoMinimo + 14; deslocamento += 1) {
     const candidata = isoInSaoPaulo(deslocamento);
@@ -118,19 +132,21 @@ async function createRequest(page, date, time, purpose) {
   return id;
 }
 
-async function addTenStudents(page, requestId, prefix) {
+async function addTenParticipants(page, requestId, prefix) {
   for (let i = 1; i <= 10; i += 1) {
     await page.goto(`${BASE}/solicitacoes/${requestId}/participantes/novo`);
     await page.locator('#nomeCompleto').fill(`${prefix} ${String(i).padStart(2, '0')}`);
     await page.locator('#rmOuRg').fill(`RM-${requestId}-${String(i).padStart(3, '0')}`);
-    await page.locator('#categoria').selectOption('ALUNO');
+    const categoria = i <= 8 ? 'ALUNO' : 'OUTRO';
+    await page.locator('#categoria').selectOption(categoria);
+    if (categoria === 'OUTRO') await page.locator('#vinculo').selectOption('PAI_OU_MAE');
     await Promise.all([
       page.waitForURL(url => url.pathname === `/solicitacoes/${requestId}/participantes`),
       page.getByRole('button', { name: 'Salvar participante' }).click(),
     ]);
   }
   const body = await page.locator('body').innerText();
-  assert(body.includes('Mínimo de alunos atendido') && body.includes('10\nAlunos'), 'dez alunos, não dez participantes', `solicitação #${requestId}`);
+  assert(body.includes('Mínimo de participantes atendido') && body.includes('8\nAlunos') && body.includes('2\nDemais participantes'), 'mínimo inicial conta dez pessoas de categorias diferentes', `solicitação #${requestId}`);
 }
 
 async function upload(page, requestId, name, buffer, mime = 'application/pdf') {
@@ -286,8 +302,8 @@ async function responsiveAudit(page, label, url) {
     let response = await alunoB.goto(`${BASE}/solicitacoes/${requestA}`);
     assert(response.status() === 404, 'IDOR de solicitação alheia', `HTTP ${response.status()}`);
 
-    await addTenStudents(alunoA, requestA, 'Participante Sintético A');
-    await addTenStudents(alunoB, requestB, 'Participante Sintético B');
+    await addTenParticipants(alunoA, requestA, 'Participante Sintético A');
+    await addTenParticipants(alunoB, requestB, 'Participante Sintético B');
     await responsiveAudit(alunoA, 'aluno-participantes', `${BASE}/solicitacoes/${requestA}/participantes`);
 
     // Formulário oficial preenchido: CPF e curso só no momento da geração.
@@ -486,6 +502,79 @@ async function responsiveAudit(page, label, url) {
     assert(securityBody.includes('A presença só pode ser marcada no dia da reserva.') && await seguranca.locator('input[type="radio"][name^="presenca-"]').count() === 0, 'R08: presença só no dia da reserva');
     const presencaForaDoDia = await csrfFetch(seguranca, `/seguranca/reservas/${approvedId}/presencas`, { 'presenca-1': 'PRESENTE' });
     assert(presencaForaDoDia.text.includes('A presença só pode ser registrada no dia da reserva.'), 'R08: marcação fora do dia é recusada no servidor');
+
+    // Jornada real de portaria: 2 ausências substituídas não geram cobrança;
+    // 2 acréscimos líquidos geram R$ 4,00, pagos à segurança e repassados à Secretaria.
+    // A data é deslocada somente no PostgreSQL descartável, sem cadastrar
+    // horários institucionais fictícios nem afetar outros ambientes.
+    definirDataDeDemonstracaoHoje(approvedId);
+    await seguranca.goto(`${BASE}/seguranca/reservas/${approvedId}`);
+    const ausentes = await seguranca.locator('input[type="radio"][name^="presenca-"][value="AUSENTE"]').evaluateAll(inputs => inputs.slice(0, 2).map(input => input.name));
+    const nomesPresenca = await seguranca.locator('input[type="radio"][name^="presenca-"][value="PRESENTE"]').evaluateAll(inputs => inputs.map(input => input.name));
+    for (const name of nomesPresenca) {
+      const presenca = ausentes.includes(name) ? 'AUSENTE' : 'PRESENTE';
+      await seguranca.locator(`input[type="radio"][name="${name}"][value="${presenca}"]`).check();
+    }
+    await Promise.all([
+      seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      seguranca.getByRole('button', { name: 'Registrar presença' }).click(),
+    ]);
+    const primeiraPessoa = { nome: 'Substituto sintético A', identificador: `PORTARIA-${approvedId}-A` };
+    const segundaPessoa = { nome: 'Substituto sintético B', identificador: `PORTARIA-${approvedId}-B` };
+    for (const pessoa of [primeiraPessoa, segundaPessoa]) {
+      await seguranca.locator('#nomeCompleto').fill(pessoa.nome);
+      await seguranca.locator('#rmOuRg').fill(pessoa.identificador);
+      await seguranca.locator('#categoria').selectOption('OUTRO');
+      await seguranca.locator('#vinculo').selectOption('PAI_OU_MAE');
+      await Promise.all([
+        seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+        seguranca.getByRole('button', { name: 'Acrescentar pessoa' }).click(),
+      ]);
+    }
+    securityBody = await seguranca.locator('body').innerText();
+    const presentesNaTroca = await seguranca.locator('.indicador').filter({ hasText: 'Presentes (mínimo 10)' }).locator('.indicador__valor').innerText();
+    assert(presentesNaTroca === '10' && !securityBody.includes('Falta pagar R$'), 'troca de duas pessoas não cobra valor adicional', `presentes=${presentesNaTroca}`);
+    for (let i = 1; i <= 2; i += 1) {
+      await seguranca.locator('#nomeCompleto').fill(`Pessoa adicional sintética ${i}`);
+      await seguranca.locator('#rmOuRg').fill(`PORTARIA-${approvedId}-EXTRA-${i}`);
+      await seguranca.locator('#categoria').selectOption('OUTRO');
+      await seguranca.locator('#vinculo').selectOption('PAI_OU_MAE');
+      await Promise.all([
+        seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+        seguranca.getByRole('button', { name: 'Acrescentar pessoa' }).click(),
+      ]);
+    }
+    securityBody = await seguranca.locator('body').innerText();
+    assert(securityBody.includes('Falta pagar R$ 4,00.') && !securityBody.includes('Recebido por'), 'segurança vê somente o saldo devido, sem histórico de pagamentos');
+    await Promise.all([
+      seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      seguranca.getByRole('button', { name: 'Recebi o valor na portaria' }).click(),
+    ]);
+    await Promise.all([
+      seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      seguranca.getByRole('button', { name: 'Liberar quadra' }).click(),
+    ]);
+    securityBody = await seguranca.locator('body').innerText();
+    assert(securityBody.includes('A conferência foi encerrada') && await seguranca.locator('input[type="radio"][name^="presenca-"]').count() === 0 && await seguranca.locator('#nomeCompleto').count() === 0, 'liberação encerra conferência e bloqueia alterações na interface');
+    const alteracaoAposLiberacao = await csrfFetch(seguranca, `/seguranca/reservas/${approvedId}/presencas`, { [nomesPresenca[0]]: 'AUSENTE' });
+    assert(alteracaoAposLiberacao.text.includes('A conferência foi encerrada'), 'servidor rejeita alteração de presença após liberação');
+    const inclusaoAposLiberacao = await csrfFetch(seguranca, `/seguranca/reservas/${approvedId}/pessoas`, {
+      nomeCompleto: 'Inclusão tardia sintética',
+      rmOuRg: `PORTARIA-${approvedId}-TARDIA`,
+      categoria: 'OUTRO',
+      vinculo: 'PAI_OU_MAE',
+    });
+    assert(inclusaoAposLiberacao.text.includes('A conferência foi encerrada'), 'servidor rejeita inclusão de pessoa após liberação');
+
+    await secretaria.goto(`${BASE}/secretaria/contribuicoes`);
+    const repassesTabela = secretaria.getByRole('table', { name: 'Recebido pela portaria, a confirmar' });
+    const repasse = repassesTabela.locator('tbody tr').filter({ hasText: `Solicitação #${approvedId}` });
+    assert(await repasse.count() === 1 && (await repasse.innerText()).includes('R$ 4,00'), 'secretaria confere valor e operador do repasse da portaria');
+    await Promise.all([
+      secretaria.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      repasse.getByRole('button', { name: 'Confirmar repasse' }).click(),
+    ]);
+    assert((await secretaria.locator('body').innerText()).includes('Repasse da portaria confirmado.'), 'secretaria registra repasse recebido');
     response = await seguranca.goto(`${BASE}/secretaria/contribuicoes`);
     assert(response.status() === 403, 'segurança não acessa dados financeiros', `HTTP ${response.status()}`);
     response = await seguranca.goto(`${BASE}/secretaria/documentos`);
@@ -527,7 +616,7 @@ async function responsiveAudit(page, label, url) {
     const remarcadaId = Number(donoCancelada.url().match(/\/solicitacoes\/(\d+)$/)[1]);
     assert((await donoCancelada.locator('body').innerText()).includes('Esta solicitação remarca a reserva de'), 'nova solicitação mostra a reserva de origem', `#${remarcadaId}`);
     await donoCancelada.goto(`${BASE}/solicitacoes/${remarcadaId}/participantes`);
-    assert((await donoCancelada.locator('body').innerText()).includes('Mínimo de alunos atendido'), 'participantes copiados para a remarcação');
+    assert((await donoCancelada.locator('body').innerText()).includes('Mínimo de participantes atendido'), 'participantes copiados para a remarcação');
     await donoCancelada.goto(`${BASE}/solicitacoes/${approvedId}`);
     const canceladaBody = await donoCancelada.locator('body').innerText();
     assert(!canceladaBody.includes('Solicitar outro horário') && canceladaBody.includes('ver a nova solicitação'), 'reserva cancelada aponta para a remarcação e não oferece outra');

@@ -125,7 +125,7 @@ class ParticipanteReservaControllerTest {
                 .andExpect(content().string(containsString("Beatriz Almeida")))
                 .andExpect(content().string(containsString("RM-1234")))
                 .andExpect(content().string(containsString("Demais participantes")))
-                .andExpect(content().string(containsString("Mínimo de alunos atendido")))
+                .andExpect(content().string(containsString("Mínimo de participantes atendido")))
                 .andExpect(content().string(containsString("Não há limite máximo de participantes")));
     }
 

@@ -8,14 +8,13 @@ import java.time.Instant;
  *
  * presentes  = participantes marcados como presentes (da lista e acrescentados)
  * pagos      = participantes da lista do documento + pessoas já pagas a mais
- * a pagar    = presentes - pagos, nunca menor que zero
+ * a pagar    = presentes - pagos, nunca menor que zero. O total pago não é
+ *              exposto ao perfil Segurança; somente o saldo devido é exibido.
  */
 public record ResumoPortaria(
         long presentes,
-        long pagos,
         long pessoasAPagar,
         BigDecimal valorAPagar,
-        BigDecimal valorRecebidoNaPortaria,
         Instant liberadaEm) {
 
     public boolean minimoAtingido() {
@@ -30,8 +29,8 @@ public record ResumoPortaria(
         return liberadaEm != null;
     }
 
-    /** A tela da segurança só mostra valores quando há algo a pagar ou já recebido. */
+    /** A segurança só vê o complemento que ainda precisa ser pago. */
     public boolean mostrarValores() {
-        return temValorAPagar() || valorRecebidoNaPortaria.signum() > 0;
+        return temValorAPagar();
     }
 }

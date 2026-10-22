@@ -24,6 +24,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -286,8 +287,7 @@ class SegurancaReservaControllerTest {
                                 31L, "Visitante", "RG-1", "Aluno",
                                 PresencaParticipante.PRESENTE, true)),
                         true,
-                        new ResumoPortaria(12, 10, 2, new BigDecimal("4.00"),
-                                BigDecimal.ZERO, null)));
+                        new ResumoPortaria(12, 2, new BigDecimal("4.00"), null)));
 
         mockMvc.perform(get("/seguranca/reservas/20")
                         .with(user(seguranca.getEmail()).roles("SEGURANCA")))
@@ -309,13 +309,35 @@ class SegurancaReservaControllerTest {
                                 31L, "Carlos Participante", "RM-123", "Aluno",
                                 PresencaParticipante.PRESENTE)),
                         true,
-                        new ResumoPortaria(10, 10, 0, new BigDecimal("0.00"),
-                                BigDecimal.ZERO, null)));
+                        new ResumoPortaria(10, 0, new BigDecimal("0.00"), null)));
 
         mockMvc.perform(get("/seguranca/reservas/20")
                         .with(user(seguranca.getEmail()).roles("SEGURANCA")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Liberar quadra")))
+                .andExpect(content().string(not(containsString("R$"))));
+    }
+
+    @Test
+    void r11DepoisDaLiberacaoTelaEncerraConferenciaEEscondeAlteracoes() throws Exception {
+        prepararSeguranca();
+        when(consultaSegurancaService.detalhar(20L, seguranca))
+                .thenReturn(new DetalheReservaAutorizada(
+                        resumo,
+                        List.of(new ParticipanteConferencia(
+                                31L, "Carlos Participante", "RM-123", "Aluno",
+                                PresencaParticipante.PRESENTE, true)),
+                        true,
+                        new ResumoPortaria(10, 0, new BigDecimal("0.00"), Instant.now())));
+
+        mockMvc.perform(get("/seguranca/reservas/20")
+                        .with(user(seguranca.getEmail()).roles("SEGURANCA")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("A conferência foi encerrada")))
+                .andExpect(content().string(not(containsString("name=\"presenca-31\""))))
+                .andExpect(content().string(not(containsString("Registrar presença"))))
+                .andExpect(content().string(not(containsString("Acrescentar pessoa"))))
+                .andExpect(content().string(not(containsString("Recebi o valor na portaria"))))
                 .andExpect(content().string(not(containsString("R$"))));
     }
 

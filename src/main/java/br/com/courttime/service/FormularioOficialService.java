@@ -82,6 +82,10 @@ public class FormularioOficialService {
             throw new IllegalStateException(
                     "Cadastre os participantes antes de gerar o formulário");
         }
+        if (participantes.size() < ParticipanteReservaService.MINIMO_DE_PARTICIPANTES) {
+            throw new IllegalStateException(
+                    "Cadastre no mínimo 10 participantes, de qualquer categoria, antes de gerar o formulário");
+        }
 
         DadosFormularioReserva dados = new DadosFormularioReserva(
                 solicitante.getNome(),

@@ -6,6 +6,7 @@ import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
+import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
 import org.apache.pdfbox.Loader;
@@ -116,6 +117,35 @@ class FormularioOficialServiceTest {
 
         assertThrows(IllegalStateException.class,
                 () -> service.gerar(30L, aluno, "12345678909", "Informática"));
+    }
+
+    @Test
+    void formularioExigeDezParticipantesDeQualquerCategoria() {
+        when(reservaRepository.findByIdAndSolicitante(30L, aluno)).thenReturn(Optional.of(reserva));
+        List<ParticipanteReserva> pessoas = participantes(10);
+        pessoas.forEach(pessoa -> {
+            pessoa.setCategoria(CategoriaParticipante.OUTRO);
+            pessoa.setVinculo(VinculoParticipante.PAI_OU_MAE);
+        });
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
+                .thenReturn(pessoas);
+        when(calendarioService.obterDataAtual()).thenReturn(LocalDate.of(2026, 10, 20));
+
+        byte[] pdf = service.gerar(30L, aluno, "12345678909", "Informática");
+
+        assertTrue(pdf.length > 0);
+    }
+
+    @Test
+    void formularioRecusaNoveParticipantes() {
+        when(reservaRepository.findByIdAndSolicitante(30L, aluno)).thenReturn(Optional.of(reserva));
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
+                .thenReturn(participantes(9));
+
+        IllegalStateException erro = assertThrows(IllegalStateException.class,
+                () -> service.gerar(30L, aluno, "12345678909", "Informática"));
+
+        assertTrue(erro.getMessage().contains("10 participantes"));
     }
 
     @Test

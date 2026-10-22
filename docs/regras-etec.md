@@ -18,7 +18,7 @@ O plano de implementação está em
 
 Requisitos que **continuam valendo** sem mudança:
 
-- mínimo de dez participantes na categoria Aluno;
+- mínimo de dez participantes no total, contando Aluno e Outro, conforme a decisão de projeto registrada abaixo;
 - os quatro perfis e o controle de acesso por perfil e por dono da solicitação;
 - calendário, horários semanais e bloqueios;
 - prevenção de reservas conflitantes;
@@ -69,6 +69,18 @@ e o aviso vai aparecer na tela.
 
 **Hoje.** Já está assim. Foi conferido com 31 participantes: o PDF sai com 3
 páginas. Os textos sobre um limite "a confirmar" foram retirados.
+
+**Decisão de projeto registrada em 22/10/2026.** A solicitação e o formulário
+preenchido pelo CourtTime devem conter no mínimo dez participantes no total,
+contando as categorias Aluno e Outro. Esta é a instrução atual do grupo para o
+software; não é uma nova citação nem uma confirmação atribuída ao responsável da
+ETEC.
+
+**Divergência documental pendente.** O modelo oficial que está versionado no
+repositório ainda diz "no mínimo 10 (dez) alunos". O modelo permanece intacto.
+Até a ETEC fornecer ou aprovar uma versão compatível, o CourtTime implementa a
+regra mais recente do grupo, mas a conformidade institucional do formulário não
+está homologada.
 
 ## R03 — Contribuição à APM
 
@@ -289,11 +301,10 @@ recebe o valor, avisa a secretaria e entrega o dinheiro a ela.
 - R11.7 — Presença, acréscimo, pagamento na portaria e liberação só podem
   ser feitos no dia da reserva.
 
-**A confirmar.** O formulário oficial diz "no mínimo 10 (dez) alunos" para
-reservar. O grupo informou que, na portaria, valem 10 pessoas de qualquer
-categoria. Até o Leandro confirmar se a regra da solicitação também muda,
-a solicitação continua exigindo 10 alunos e a portaria exige 10 presentes de
-qualquer categoria.
+**Divergência documental.** A regra atual do CourtTime para solicitação e
+portaria é mínimo de dez participantes de qualquer categoria. O modelo oficial
+versionado ainda menciona dez alunos, conforme registrado em R02. A aplicação
+não altera essa cláusula nem presume que a ETEC tenha aprovado a mudança.
 
 ---
 
