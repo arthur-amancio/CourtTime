@@ -13,6 +13,7 @@ import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.ContribuicaoApmService;
 import br.com.courttime.service.ContribuicaoPendente;
 import br.com.courttime.service.DetalheContribuicaoApm;
+import br.com.courttime.service.PortariaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -57,6 +58,8 @@ class SecretariaContribuicaoControllerTest {
     private ContribuicaoApmService contribuicaoService;
     @MockitoBean
     private UsuarioRepository usuarioRepository;
+    @MockitoBean
+    private PortariaService portariaService;
 
     private Usuario secretaria;
     private Reserva reserva;
@@ -151,6 +154,43 @@ class SecretariaContribuicaoControllerTest {
                 .andExpect(content().string(containsString("R$ 0,00")))
                 .andExpect(content().string(containsString("Aplicar crédito")))
                 .andExpect(content().string(containsString("R$ 2,00 — pendente de decisão da ETEC")));
+    }
+
+
+    @Test
+    void r11SecretariaRegistraValorAMaisEConfirmaRepasseComCsrf() throws Exception {
+        mockMvc.perform(post("/secretaria/contribuicoes/portaria/20/pagamento")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA")))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(portariaService);
+
+        prepararSecretaria();
+        mockMvc.perform(post("/secretaria/contribuicoes/portaria/20/pagamento")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA"))
+                        .with(csrf())
+                        .param("valor", "999.00"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/secretaria/contribuicoes"))
+                .andExpect(flash().attribute("mensagemSucesso",
+                        "Valor a mais registrado. A portaria já pode liberar a entrada."));
+        // O valor vem do cálculo do serviço; o enviado à mão é ignorado.
+        verify(portariaService).registrarPagamentoNaSecretaria(20L, secretaria);
+
+        mockMvc.perform(post("/secretaria/contribuicoes/portaria/repasses/70")
+                        .with(user(secretaria.getEmail()).roles("SECRETARIA"))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("mensagemSucesso", "Repasse da portaria confirmado."));
+        verify(portariaService).confirmarRepasse(70L, secretaria);
+    }
+
+    @Test
+    void r11SegurancaNaoUsaAsAcoesDaSecretaria() throws Exception {
+        mockMvc.perform(post("/secretaria/contribuicoes/portaria/20/pagamento")
+                        .with(user("seguranca@escola.test").roles("SEGURANCA"))
+                        .with(csrf()))
+                .andExpect(status().isForbidden());
+        verifyNoInteractions(portariaService);
     }
 
     @Test

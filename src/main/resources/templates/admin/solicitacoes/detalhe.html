@@ -106,13 +106,15 @@
                 <section class="painel" aria-labelledby="participantes-title">
                     <div class="painel__cabecalho">
                         <h2 id="participantes-title">Participantes</h2>
-                        <span class="badge badge--aprovada" th:if="${detalhe.resumoParticipantes.minimoDeAlunosAtendido}">
+                        <span class="badge badge--aprovada" th:if="${detalhe.resumoParticipantes.minimoDeParticipantesAtendido}">
                             <svg th:replace="~{fragments/icones :: icone('check')}"></svg><span>Mínimo atendido</span>
                         </span>
-                        <span class="badge badge--rejeitada" th:unless="${detalhe.resumoParticipantes.minimoDeAlunosAtendido}">
+                        <span class="badge badge--rejeitada" th:unless="${detalhe.resumoParticipantes.minimoDeParticipantesAtendido}">
                             <svg th:replace="~{fragments/icones :: icone('x')}"></svg><span>Mínimo não atendido</span>
                         </span>
                         <p class="campo__ajuda" th:text="|${detalhe.resumoParticipantes.quantidadeAlunos} aluno(s) e ${detalhe.resumoParticipantes.quantidadeOutros} demais participante(s).|">10 alunos.</p>
+                        <p class="campo__ajuda" th:if="${detalhe.solicitacao.liberadaEm != null}"
+                           th:text="|Quadra liberada pela portaria em ${#temporals.format(detalhe.solicitacao.liberadaEm, 'dd/MM/yyyy HH:mm')}.|">Quadra liberada pela portaria.</p>
                     </div>
                     <div class="tabela-wrapper" th:unless="${#lists.isEmpty(detalhe.participantes)}">
                         <table class="tabela tabela--cartoes">
@@ -120,7 +122,10 @@
                             <thead><tr><th scope="col">Nome completo</th><th scope="col">RM ou RG</th><th scope="col">Categoria</th><th scope="col">Presença</th></tr></thead>
                             <tbody>
                                 <tr th:each="participante : ${detalhe.participantes}">
-                                    <th scope="row" data-label="Nome completo" th:text="${participante.nomeCompleto}">Ana Souza</th>
+                                    <th scope="row" data-label="Nome completo">
+                                        <span th:text="${participante.nomeCompleto}">Ana Souza</span>
+                                        <span class="badge badge--analise" th:if="${participante.adicionadoNaPortaria}">Acrescentado na portaria</span>
+                                    </th>
                                     <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
                                     <td data-label="Categoria">
                                         <span th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</span>

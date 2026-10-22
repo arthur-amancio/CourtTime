@@ -4,5 +4,5 @@ public record ResumoParticipantes(
         long quantidadeAlunos,
         long quantidadeOutros,
         long total,
-        boolean minimoDeAlunosAtendido) {
+        boolean minimoDeParticipantesAtendido) {
 }

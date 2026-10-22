@@ -83,6 +83,75 @@
                 </ul>
             </section>
 
+            <!-- R11: valor das pessoas acrescentadas na portaria (R$ 2,00 por pessoa a mais). -->
+            <section class="painel" aria-labelledby="portaria-title"
+                     th:if="${!#lists.isEmpty(valoresAMais) or !#lists.isEmpty(repasses)}">
+                <div class="painel__cabecalho">
+                    <h2 id="portaria-title">Pessoas a mais na portaria</h2>
+                    <p class="campo__ajuda">Quem passou do total já pago só entra depois de pagar. Trocar uma pessoa por outra não cobra nada.</p>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(valoresAMais)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption class="visually-hidden">Valores a mais aguardando pagamento hoje</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Solicitação</th>
+                                <th scope="col">Horário</th>
+                                <th scope="col">Pessoas a mais</th>
+                                <th scope="col">Valor</th>
+                                <th scope="col"><span class="visually-hidden">Ação</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="pendente : ${valoresAMais}">
+                                <th scope="row" data-label="Solicitação">
+                                    <span th:text="${pendente.reserva().solicitante.nome}">Ana Souza</span>
+                                    <span class="tabela__secundario" th:text="|Solicitação #${pendente.reserva().id}|">Solicitação #20</span>
+                                </th>
+                                <td data-label="Horário" th:text="|${#temporals.format(pendente.reserva().horarioInicio, 'HH:mm')} – ${#temporals.format(pendente.reserva().horarioFim, 'HH:mm')}|">08:00 – 09:00</td>
+                                <td data-label="Pessoas a mais" th:text="${pendente.pessoasAPagar()}">2</td>
+                                <td data-label="Valor" th:text="|R$ ${#numbers.formatDecimal(pendente.valor(), 1, 'POINT', 2, 'COMMA')}|">R$ 4,00</td>
+                                <td class="acoes-celula">
+                                    <form method="post" class="acoes-tabela"
+                                          th:action="@{/secretaria/contribuicoes/portaria/{id}/pagamento(id=${pendente.reserva().id})}">
+                                        <button class="botao botao--sm" type="submit">Registrar recebimento<span class="visually-hidden" th:text="| da solicitação #${pendente.reserva().id}|"></span></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tabela-wrapper" th:unless="${#lists.isEmpty(repasses)}">
+                    <table class="tabela tabela--cartoes">
+                        <caption>Recebido pela portaria, a confirmar</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Solicitação</th>
+                                <th scope="col">Recebido por</th>
+                                <th scope="col">Valor</th>
+                                <th scope="col"><span class="visually-hidden">Ação</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="repasse : ${repasses}">
+                                <th scope="row" data-label="Solicitação">
+                                    <span th:text="${repasse.reserva.solicitante.nome}">Ana Souza</span>
+                                    <span class="tabela__secundario" th:text="|Solicitação #${repasse.reserva.id}|">Solicitação #20</span>
+                                </th>
+                                <td data-label="Recebido por" th:text="|${repasse.registradoPor.nome}, ${#temporals.format(repasse.registradoEm, 'dd/MM/yyyy HH:mm')}|">Segurança, 22/10/2026 08:00</td>
+                                <td data-label="Valor" th:text="|R$ ${#numbers.formatDecimal(repasse.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 4,00</td>
+                                <td class="acoes-celula">
+                                    <form method="post" class="acoes-tabela"
+                                          th:action="@{/secretaria/contribuicoes/portaria/repasses/{id}(id=${repasse.id})}">
+                                        <button class="botao botao--secundario botao--sm" type="submit">Confirmar repasse<span class="visually-hidden" th:text="| da solicitação #${repasse.reserva.id}|"></span></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <section class="painel" aria-labelledby="historico-title">
                 <div class="painel__cabecalho">
                     <h2 id="historico-title">Histórico de contribuições</h2>

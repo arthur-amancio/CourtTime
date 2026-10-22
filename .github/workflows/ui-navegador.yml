@@ -9,6 +9,7 @@ on:
     branches:
       - 'feat/ui-v2-**'
       - 'chore/ui-v2-**'
+      - 'feat/portaria-liberacao-acrescimos'
       - 'test/qa-redesign-v2'
   workflow_dispatch:
 
@@ -120,6 +121,8 @@ jobs:
 
       - name: Jornada dos quatro perfis
         working-directory: qa/playwright
+        env:
+          PGPASSWORD: e2e_descartavel
         run: npm run test:jornada
 
       - name: Contratos de navegação e autorização

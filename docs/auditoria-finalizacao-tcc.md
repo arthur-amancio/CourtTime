@@ -41,7 +41,7 @@ ponto, conferimos o código, as rotas e a execução num navegador real.
 | Aluno | início, consulta da quadra com calendário, grade e bloqueios | jornada |
 | Aluno | nova solicitação com antecedência de um dia, período de uma hora e finalidade | jornada; sondas |
 | Aluno | minhas solicitações e detalhes, só as próprias (outra pessoa recebe 404) | jornada; sondas |
-| Aluno | participantes: incluir, editar, remover, RM/RG único, mínimo de dez alunos | jornada; sondas |
+| Aluno | participantes: incluir, editar, remover, RM/RG único, mínimo total de dez pessoas | jornada; sondas |
 | Aluno | formulário oficial preenchido, inclusive com 31 participantes e nome longo; CPF e curso não gravados | sondas; `FormularioReservaPdfTest` |
 | Aluno | envio versionado do PDF, devolução com justificativa e nova versão | jornada |
 | Aluno | aprovação, cancelamento com motivo e remarcação uma única vez, com cópia opcional de participantes | jornada; sondas |
@@ -120,7 +120,7 @@ decididos e estão no sistema:
 
 - o modelo oficial do termo está no projeto;
 - a secretaria confere a documentação;
-- o mínimo de dez alunos vale na conferência;
+- o mínimo atual do sistema é dez pessoas de qualquer categoria; o termo oficial versionado ainda diverge;
 - a categoria Outro não conta para o mínimo;
 - a substituição acontece por devolução e nova versão.
 

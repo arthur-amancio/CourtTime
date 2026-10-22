@@ -8,9 +8,9 @@ A consulta diária divide cada intervalo semanal em períodos de uma hora e cons
 
 ## Base de solicitações de reserva
 
-O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO`. O registro presencial da contribuição promove a solicitação para `PENDENTE_ANALISE` somente quando a versão mais recente do PDF está conferida, corresponde à revisão atual da lista e possui ao menos dez participantes na categoria `ALUNO`.
+O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova solicitação começa como `PENDENTE_DOCUMENTACAO`. O registro presencial da contribuição promove a solicitação para `PENDENTE_ANALISE` somente quando a versão mais recente do PDF está conferida, corresponde à revisão atual da lista e possui ao menos dez participantes no total, contando `ALUNO` e `OUTRO`. A regra mais recente do grupo ainda diverge da cláusula do modelo oficial, que menciona dez alunos; consulte `docs/regras-etec.md` antes de considerar o fluxo documental homologado.
 
-Na aprovação, o backend bloqueia a solicitação e o registro da única quadra durante a transação. Antes de autorizar, revalida o administrador, o documento e sua conferência manual, a revisão e o mínimo de alunos, a contribuição vinculada à conferência exata, os horários semanais, os bloqueios e as reservas já aprovadas. Essa serialização impede decisões repetidas e aprovações concorrentes para períodos conflitantes.
+Na aprovação, o backend bloqueia a solicitação e o registro da única quadra durante a transação. Antes de autorizar, revalida o administrador, o documento e sua conferência manual, a revisão e o mínimo total de participantes, a contribuição vinculada à conferência exata, os horários semanais, os bloqueios e as reservas já aprovadas. Essa serialização impede decisões repetidas e aprovações concorrentes para períodos conflitantes.
 
 O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Nessa etapa, o aluno pode revisar os participantes da própria solicitação e enviar versões do PDF preparado externamente. O CourtTime preserva cada arquivo original sem modificá-lo e não declara que a assinatura foi validada.
 
@@ -21,7 +21,7 @@ As regras do procedimento da quadra, explicadas pelo responsável na ETEC em 21/
 | Regra | No sistema |
 |---|---|
 | R01 Antecedência | Solicitação a partir de amanhã; PDF assinado até o dia anterior ao uso |
-| R02 Participantes | Mínimo de dez alunos, sem limite máximo |
+| R02 Participantes | Mínimo de dez participantes no total, qualquer categoria; sem limite máximo. Divergência com o modelo oficial pendente de atualização/aprovação da ETEC. |
 | R03 Contribuição à APM | R$ 2,00 por participante, calculado; a secretaria registra o recebimento |
 | R04 Remarcação | O valor pago na reserva cancelada vira crédito; cobra-se só a diferença |
 | R05 Cancelamento | Motivo obrigatório; aviso ao aluno pelo WhatsApp, fora do sistema |
@@ -150,7 +150,7 @@ As operações relevantes são registradas em `auditorias_usuario`, sem senha, h
 
 ## Participantes e PDFs enviados
 
-Antes do primeiro envio, ou depois de uma devolução documental para correção, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. Um mesmo RM ou RG não pode ser repetido na solicitação. A conferência e a aprovação exigem no mínimo dez participantes na categoria `ALUNO`. Na categoria `OUTRO`, o vínculo é obrigatório (R09): ex-aluno da ETEC, pai ou mãe de aluno, irmão ou irmã de aluno, ou professor da ETEC. Não há limite máximo (R02): acima de 30 participantes, o formulário oficial ganha páginas adicionais. O PDF assinado deve ser enviado até o dia anterior ao uso (R01).
+Antes do primeiro envio, ou depois de uma devolução documental para correção, o aluno proprietário pode cadastrar nome completo, RM ou RG e categoria `ALUNO` ou `OUTRO`, além de revisar as contagens separadas. Um mesmo RM ou RG não pode ser repetido na solicitação. A conferência e a aprovação exigem no mínimo dez participantes no total, contando `ALUNO` e `OUTRO`, conforme a instrução atual do grupo. Na categoria `OUTRO`, o vínculo é obrigatório (R09): ex-aluno da ETEC, pai ou mãe de aluno, irmão ou irmã de aluno, ou professor da ETEC. O modelo oficial versionado ainda exige dez alunos; a ETEC precisa confirmar ou atualizar o termo antes da homologação institucional. Não há limite máximo (R02): acima de 30 participantes, o formulário oficial ganha páginas adicionais. O PDF assinado deve ser enviado até o dia anterior ao uso (R01).
 
 O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O conteúdo também deve iniciar com a assinatura de arquivo PDF. Cada envio cria uma nova versão com chave física aleatória, tamanho, SHA-256 e a revisão da lista de participantes; versões anteriores não são substituídas. Enquanto a versão aguarda conferência, a lista e um novo upload permanecem bloqueados. Os downloads passam por autorização da aplicação, usam resposta sem cache e nunca expõem o caminho físico.
 
@@ -158,7 +158,7 @@ O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O co
 
 Na mesma tela, enquanto a solicitação aguarda documentação, o aluno informa CPF e curso e baixa o **formulário oficial da ETEC preenchido** com o nome do solicitante, a data, o horário, a data de preenchimento e os participantes. O arquivo original (`src/main/resources/modelos/formulario-reserva-quadra.pdf`) é usado como modelo sem alteração: o texto é sobreposto com Apache PDFBox. CPF e curso não são gravados; o CPF é enviado por POST e conferido pelos dígitos verificadores. Acima de 30 participantes, a página oficial de participantes é repetida, sem omitir ninguém. Assinaturas, presença, nome do vigilante e data de aprovação nunca são preenchidos pelo sistema. Detalhes e coordenadas em `docs/integracao-pdf-oficial.md`.
 
-A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. A validação exige que a lista não tenha mudado e contenha ao menos dez alunos. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência é humana (R07): para validar, a secretaria confirma que conferiu a assinatura gov.br no verificador oficial do ITI (`validar.iti.gov.br`), e essa confirmação fica registrada. O CourtTime não verifica a assinatura sozinho e a validação não aprova a reserva. A política de retenção e descarte dos documentos ainda depende da ETEC; até lá, nada é apagado.
+A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. A validação exige que a lista não tenha mudado e contenha ao menos dez participantes no total, conforme a instrução atual do grupo. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência é humana (R07): para validar, a secretaria confirma que conferiu a assinatura gov.br no verificador oficial do ITI (`validar.iti.gov.br`), e essa confirmação fica registrada. O CourtTime não verifica a assinatura sozinho e a validação não aprova a reserva. A política de retenção e descarte dos documentos ainda depende da ETEC; até lá, nada é apagado.
 
 ## Contribuições presenciais
 

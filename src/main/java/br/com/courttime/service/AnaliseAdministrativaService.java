@@ -79,6 +79,7 @@ public class AnaliseAdministrativaService {
         long alunos = participantes.stream()
                 .filter(participante -> participante.getCategoria() == CategoriaParticipante.ALUNO)
                 .count();
+        long total = participantes.size();
         DocumentoReserva documento = documentoRepository
                 .obterVersaoMaisRecenteComConferencia(reserva)
                 .orElse(null);
@@ -89,7 +90,7 @@ public class AnaliseAdministrativaService {
                         alunos,
                         participantes.size() - alunos,
                         participantes.size(),
-                        alunos >= ParticipanteReservaService.MINIMO_DE_ALUNOS),
+                        total >= ParticipanteReservaService.MINIMO_DE_PARTICIPANTES),
                 documento,
                 contribuicaoRepository.obterPorReservaId(reservaId).orElse(null));
     }

@@ -108,6 +108,14 @@ public class Reserva {
 
     private Instant canceladaEm;
 
+    /** R11: quando e por quem a portaria liberou a quadra. Nulo até a liberação. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "liberada_por_id")
+    private Usuario liberadaPor;
+
+    @Column(name = "liberada_em")
+    private Instant liberadaEm;
+
     @PrePersist
     void prePersist() {
         Instant agora = Instant.now();
@@ -269,5 +277,22 @@ public class Reserva {
 
     public void setCanceladaEm(Instant canceladaEm) {
         this.canceladaEm = canceladaEm;
+    }
+
+    public Usuario getLiberadaPor() {
+        return liberadaPor;
+    }
+
+    public Instant getLiberadaEm() {
+        return liberadaEm;
+    }
+
+    public boolean isLiberada() {
+        return liberadaEm != null;
+    }
+
+    public void registrarLiberacao(Usuario seguranca, Instant instante) {
+        this.liberadaPor = seguranca;
+        this.liberadaEm = instante;
     }
 }

@@ -6,6 +6,7 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.DocumentoReservaRepository;
+import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.storage.DocumentoStorage;
 import org.junit.jupiter.api.AfterEach;
@@ -43,6 +44,8 @@ class DocumentoReservaServiceTest {
     @Mock
     private DocumentoReservaRepository documentoRepository;
     @Mock
+    private ParticipanteReservaRepository participanteRepository;
+    @Mock
     private ReservaRepository reservaRepository;
     @Mock
     private DocumentoStorage documentoStorage;
@@ -55,7 +58,7 @@ class DocumentoReservaServiceTest {
     @BeforeEach
     void setUp() {
         service = new DocumentoReservaService(
-                documentoRepository, reservaRepository, documentoStorage);
+                documentoRepository, participanteRepository, reservaRepository, documentoStorage);
         aluno = usuario(10L, Perfil.ALUNO, true);
         reserva = reserva(20L, aluno, StatusReserva.PENDENTE_DOCUMENTACAO);
         pdf = "%PDF-1.7\nconteudo sintetico".getBytes(StandardCharsets.US_ASCII);
@@ -73,6 +76,7 @@ class DocumentoReservaServiceTest {
     void enviaNovaVersaoComNomeSeguroHashEChaveOpaca() {
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
+        when(participanteRepository.countByReserva(reserva)).thenReturn(10L);
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(0);
         when(documentoRepository.saveAndFlush(any(DocumentoReserva.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -103,6 +107,7 @@ class DocumentoReservaServiceTest {
     void rollbackRemoveSomenteArquivoDaNovaVersao() {
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
+        when(participanteRepository.countByReserva(reserva)).thenReturn(10L);
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(0);
         when(documentoRepository.saveAndFlush(any(DocumentoReserva.class)))
                 .thenThrow(new IllegalStateException("falha no banco"));
@@ -143,6 +148,7 @@ class DocumentoReservaServiceTest {
 
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
+        when(participanteRepository.countByReserva(reserva)).thenReturn(10L);
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(0);
         when(documentoRepository.saveAndFlush(any(DocumentoReserva.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -169,6 +175,19 @@ class DocumentoReservaServiceTest {
     }
 
     @Test
+    void envioExigeDezParticipantesDeQualquerCategoriaAntesDeArmazenar() {
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
+                .thenReturn(Optional.of(reserva));
+        when(participanteRepository.countByReserva(reserva)).thenReturn(9L);
+
+        IllegalStateException erro = assertThrows(IllegalStateException.class,
+                () -> service.enviar(20L, aluno, "termo.pdf", "application/pdf", pdf));
+
+        assertTrue(erro.getMessage().contains("10 participantes"));
+        verifyNoInteractions(documentoRepository, documentoStorage);
+    }
+
+    @Test
     void r01RecusaEnvioNoDiaDaUtilizacaoEDepoisDela() {
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
@@ -190,6 +209,7 @@ class DocumentoReservaServiceTest {
         reserva.setDataUtilizacao(amanha);
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));
+        when(participanteRepository.countByReserva(reserva)).thenReturn(10L);
         when(documentoRepository.obterMaiorVersao(reserva)).thenReturn(0);
         when(documentoRepository.saveAndFlush(any(DocumentoReserva.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));

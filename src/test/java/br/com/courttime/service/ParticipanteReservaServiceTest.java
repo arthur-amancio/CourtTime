@@ -214,36 +214,31 @@ class ParticipanteReservaServiceTest {
     }
 
     @Test
-    void resumoSeparaCategoriasEExigeDezAlunos() {
-        List<ParticipanteReserva> noveAlunosEOutro = participantes(
-                reserva, 9, 1);
-        List<ParticipanteReserva> dezAlunosEDoisOutros = participantes(
-                reserva, 10, 2);
+    void resumoSeparaCategoriasEContaOminimoNoTotal() {
+        List<ParticipanteReserva> noveParticipantes = participantes(reserva, 9, 0);
+        List<ParticipanteReserva> noveAlunosEOutro = participantes(reserva, 9, 1);
         when(reservaRepository.findByIdAndSolicitante(20L, aluno))
                 .thenReturn(Optional.of(reserva));
         when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
-                .thenReturn(noveAlunosEOutro, dezAlunosEDoisOutros);
+                .thenReturn(noveParticipantes, noveAlunosEOutro);
 
         ResumoParticipantes abaixoDoMinimo = service.resumir(20L, aluno);
         ResumoParticipantes minimoAtendido = service.resumir(20L, aluno);
 
-        assertEquals(9, abaixoDoMinimo.quantidadeAlunos());
-        assertEquals(1, abaixoDoMinimo.quantidadeOutros());
-        assertEquals(10, abaixoDoMinimo.total());
-        assertFalse(abaixoDoMinimo.minimoDeAlunosAtendido());
-        assertEquals(10, minimoAtendido.quantidadeAlunos());
-        assertEquals(2, minimoAtendido.quantidadeOutros());
-        assertEquals(12, minimoAtendido.total());
-        assertTrue(minimoAtendido.minimoDeAlunosAtendido());
+        assertEquals(9, abaixoDoMinimo.total());
+        assertFalse(abaixoDoMinimo.minimoDeParticipantesAtendido());
+        assertEquals(9, minimoAtendido.quantidadeAlunos());
+        assertEquals(1, minimoAtendido.quantidadeOutros());
+        assertEquals(10, minimoAtendido.total());
+        assertTrue(minimoAtendido.minimoDeParticipantesAtendido());
     }
 
     @Test
-    void documentoExigeMesmaRevisaoEDezAlunos() {
+    void documentoExigeMesmaRevisaoEDezParticipantesDeQualquerCategoria() {
         DocumentoReserva documento = new DocumentoReserva();
         documento.setReserva(reserva);
         documento.setRevisaoParticipantes(0);
-        when(participanteRepository.countByReservaAndCategoria(
-                reserva, CategoriaParticipante.ALUNO)).thenReturn(9L, 10L);
+        when(participanteRepository.countByReserva(reserva)).thenReturn(9L, 10L);
 
         assertThrows(IllegalStateException.class,
                 () -> service.validarDocumentoAtual(reserva, documento));

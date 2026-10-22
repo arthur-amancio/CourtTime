@@ -7,6 +7,7 @@ import br.com.courttime.entity.ResultadoConferenciaDocumento;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.DocumentoReservaRepository;
+import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.security.Permissao;
 import br.com.courttime.storage.DocumentoStorage;
@@ -40,14 +41,17 @@ public class DocumentoReservaService {
             "application/pdf", "application/octet-stream");
 
     private final DocumentoReservaRepository documentoRepository;
+    private final ParticipanteReservaRepository participanteRepository;
     private final ReservaRepository reservaRepository;
     private final DocumentoStorage documentoStorage;
 
     public DocumentoReservaService(
             DocumentoReservaRepository documentoRepository,
+            ParticipanteReservaRepository participanteRepository,
             ReservaRepository reservaRepository,
             DocumentoStorage documentoStorage) {
         this.documentoRepository = documentoRepository;
+        this.participanteRepository = participanteRepository;
         this.reservaRepository = reservaRepository;
         this.documentoStorage = documentoStorage;
     }
@@ -89,6 +93,11 @@ public class DocumentoReservaService {
         }
         if (prazoDeEnvioEncerrado(reserva)) {
             throw new IllegalStateException(MENSAGEM_PRAZO_ENCERRADO);
+        }
+        if (participanteRepository.countByReserva(reserva)
+                < ParticipanteReservaService.MINIMO_DE_PARTICIPANTES) {
+            throw new IllegalStateException(
+                    "A solicitação deve possuir no mínimo 10 participantes, de qualquer categoria");
         }
         if (!envioEstaPermitido(reserva)) {
             throw new IllegalStateException(
