@@ -113,7 +113,7 @@ public class FormularioOficialService {
         if (!modelo.exists()) {
             // Sem o original não há o que preencher: nunca se cria um termo substituto.
             throw new IllegalStateException(
-                    "O modelo oficial do formulário da ETEC não está disponível no sistema");
+                    "O modelo oficial do formulário da Etec não está disponível no sistema");
         }
         try (InputStream entrada = modelo.getInputStream()) {
             return entrada.readAllBytes();

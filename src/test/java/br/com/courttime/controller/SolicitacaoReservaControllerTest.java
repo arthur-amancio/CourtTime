@@ -82,7 +82,7 @@ class SolicitacaoReservaControllerTest {
         quadra = new Quadra();
         quadra.setId(1L);
         quadra.setNome("Quadra Poliesportiva");
-        quadra.setDescricao("Quadra esportiva da ETEC.");
+        quadra.setDescricao("Quadra esportiva da Etec.");
         quadra.setAtiva(true);
 
         aluno = new Usuario();

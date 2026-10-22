@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Quadra</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}" href="/img/favicon.svg">
     <script th:replace="~{fragments/layout :: script}"></script>
 </head>
 <body class="app-autenticado">
@@ -22,7 +23,7 @@
         <header class="cabecalho-pagina">
             <div class="cabecalho-pagina__texto">
                 <h1 id="page-title" th:text="${quadra.nome}">Quadra Poliesportiva</h1>
-                <p th:text="${quadra.descricao}">Quadra esportiva da ETEC.</p>
+                <p th:text="${quadra.descricao}">Quadra esportiva da Etec.</p>
             </div>
             <div class="cabecalho-pagina__acoes"
                  th:if="${usuarioLogado != null and usuarioLogado.perfil.name() == 'ALUNO'}">

@@ -50,7 +50,7 @@
             <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
             <span class="marca__texto">
                 <span class="marca__nome">CourtTime</span>
-                <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
+                <span class="marca__escola">Etec Prof. Armando José Farinazzo</span>
             </span>
         </a>
         <button class="lateral__fechar" type="button" data-menu-fechar hidden>
@@ -83,10 +83,24 @@
     </div>
 </aside>
 
+<!--
+  Régua de logotipos institucionais (Manual de Identidade Visual do CPS, 2026):
+  Etec, CPS e Governo do Estado, nesta ordem, com o Governo sempre à direita.
+  Arquivos vetoriais nas cores originais; não aplicar filtro, sombra ou
+  transparência.
+-->
+<ul th:fragment="regua(classe)" class="regua-logos" th:classappend="${classe}" aria-label="Instituições">
+    <li><img class="regua-logos__etec" th:src="@{/img/logos/etec-fernandopolis.svg}" src="/img/logos/etec-fernandopolis.svg"
+             width="207" height="130" alt="Etec Prof. Armando José Farinazzo, Fernandópolis"></li>
+    <li><img class="regua-logos__cps" th:src="@{/img/logos/cps.svg}" src="/img/logos/cps.svg"
+             width="119" height="78" alt="Centro Paula Souza"></li>
+    <li><img class="regua-logos__governo" th:src="@{/img/logos/governo-sp.svg}" src="/img/logos/governo-sp.svg"
+             width="164" height="35" alt="Governo do Estado de São Paulo"></li>
+</ul>
+
 <footer th:fragment="rodape" class="rodape-app">
-    <img class="logos-institucionais logos-institucionais--sm" th:src="@{/img/logos-etec-cps-governo-sp.png}" src="/img/logos-etec-cps-governo-sp.png"
-         width="563" height="89" alt="ETEC Prof. Armando José Farinazzo, Centro Paula Souza e Governo do Estado de São Paulo">
-    <p><strong>CourtTime</strong> · ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
+    <ul th:replace="~{fragments/layout :: regua(' regua-logos--sm')}"></ul>
+    <p><strong>CourtTime</strong> · Etec Prof. Armando José Farinazzo · Fernandópolis/SP</p>
     <p>Trabalho de Conclusão de Curso · Técnico em Informática para Internet</p>
 </footer>
 
