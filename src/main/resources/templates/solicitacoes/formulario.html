@@ -163,17 +163,17 @@
                         <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
                         <div>
                             <p><strong>O envio não autoriza o uso da quadra.</strong></p>
-                            <p>O envio registra uma solicitação preliminar, que começa como Pendente de documentação. A utilização ainda depende da documentação e da aprovação da instituição.</p>
+                            <p>O envio salva um rascunho. Cadastre ao menos dez participantes, somando Aluno e Outro, para registrar a solicitação e avançar para a documentação. A utilização ainda depende da aprovação da instituição.</p>
                         </div>
                     </div>
                 </div>
                 <div class="painel__rodape">
                     <p class="resumo-escolha" id="resumo-escolha" aria-live="polite" data-resumo-horario
                        th:attr="data-data-extenso=${consulta.dataFormatada}">
-                        Escolha um período disponível e informe a finalidade para registrar a solicitação.
+                        Escolha um período disponível e informe a finalidade para salvar o rascunho. A solicitação avança após o cadastro de dez participantes.
                     </p>
                     <div class="grupo-botoes">
-                        <button class="botao" type="submit" aria-describedby="resumo-escolha">Registrar solicitação</button>
+                        <button class="botao" type="submit" aria-describedby="resumo-escolha">Salvar rascunho</button>
                         <a class="botao botao--fantasma" th:href="@{/solicitacoes}">Cancelar</a>
                     </div>
                 </div>

@@ -128,8 +128,10 @@ public class SolicitacaoReservaController {
             }
             redirectAttributes.addFlashAttribute(
                     "mensagemSucesso",
-                    "Solicitação registrada. A utilização da quadra ainda depende "
-                            + "da documentação e da aprovação da instituição.");
+                    reserva.isRascunho()
+                            ? "Rascunho salvo. Cadastre ao menos dez participantes para registrar a solicitação e avançar para a documentação."
+                            : "Solicitação registrada. A utilização da quadra ainda depende "
+                                    + "da documentação e da aprovação da instituição.");
             return "redirect:/solicitacoes/" + reserva.getId();
         } catch (IllegalArgumentException | IllegalStateException exception) {
             bindingResult.reject("solicitacao.invalida", exception.getMessage());

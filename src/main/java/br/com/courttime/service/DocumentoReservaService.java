@@ -87,6 +87,10 @@ public class DocumentoReservaService {
                         reservaId, solicitante.getId())
                 .orElseThrow(() -> new AccessDeniedException(
                         "A solicitação não existe ou não pertence ao usuário autenticado"));
+        if (reserva.isRascunho()) {
+            throw new IllegalStateException(
+                    "Cadastre no mínimo 10 participantes antes de enviar o documento");
+        }
         if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
             throw new IllegalStateException(
                     "O documento só pode ser enviado enquanto a documentação está pendente");
@@ -140,7 +144,8 @@ public class DocumentoReservaService {
     }
 
     private boolean envioEstaPermitido(Reserva reserva) {
-        if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO
+        if (reserva.isRascunho()
+                || reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO
                 || prazoDeEnvioEncerrado(reserva)) {
             return false;
         }

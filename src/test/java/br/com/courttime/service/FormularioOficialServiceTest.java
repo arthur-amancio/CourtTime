@@ -111,6 +111,15 @@ class FormularioOficialServiceTest {
     }
 
     @Test
+    void rascunhoNaoGeraFormularioMesmoComRequisicaoDireta() {
+        reserva.setRascunho(true);
+        when(reservaRepository.findByIdAndSolicitante(30L, aluno)).thenReturn(Optional.of(reserva));
+
+        assertThrows(IllegalStateException.class,
+                () -> service.gerar(30L, aluno, "12345678909", "Informática"));
+    }
+
+    @Test
     void exigeParticipantesCadastrados() {
         when(reservaRepository.findByIdAndSolicitante(30L, aluno)).thenReturn(Optional.of(reserva));
         when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva)).thenReturn(List.of());
