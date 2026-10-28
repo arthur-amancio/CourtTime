@@ -82,6 +82,13 @@ Até a ETEC fornecer ou aprovar uma versão compatível, o CourtTime implementa 
 regra mais recente do grupo, mas a conformidade institucional do formulário não
 está homologada.
 
+**Fluxo funcional.** O primeiro envio salva um rascunho vinculado ao aluno,
+sem tratá-lo como solicitação formal. Ao atingir dez participantes cadastrados
+(Aluno e Outro somados), o sistema conclui automaticamente a etapa inicial e
+libera a documentação. Se a lista editável cair abaixo de dez, volta a ser
+rascunho; o PDF continua bloqueado. Reservas anteriores conservam o estado
+existente. O PDF institucional original não foi alterado.
+
 ## R03 — Contribuição à APM
 
 **Relato.** A contribuição é de R$ 2,00 por participante, de qualquer
@@ -276,6 +283,10 @@ R$ 4,00, pagos na secretaria.
 - R10.4 — Valor a pagar = R$ 2,00 × (presentes − pagos), nunca menor que
   zero. "Pagos" são os participantes da lista do documento mais as pessoas a
   mais já pagas. Não há devolução para quem faltou.
+- R10.5 — Se a pessoa adicional A pagou e saiu antes da liberação, sua presença
+  muda para AUSENTE, mas o pagamento e a identificação permanecem. B pode usar
+  a vaga já paga sem nova cobrança; se B e C entrarem, apenas C gera R$ 2,00
+  adicionais. Sem substituto, não há estorno nem crédito para outra reserva.
 
 ## R11 — Liberação da quadra na portaria
 

@@ -7,9 +7,10 @@ function verificarAmbienteIsolado({ baseUrl, consentimento, nomeBanco, marcadorI
       'Execucao bloqueada. Defina COURTTIME_E2E_ACK_ISOLATED_DB=YES somente apos verificar um banco descartavel e vazio.'
     );
   }
-  if (nomeBanco !== 'courttime_e2e') {
+  if (nomeBanco !== 'courttime_e2e'
+      && !/^courttime_e2e_p0p1(?:_run[2-9][0-9]*)?$/.test(nomeBanco || '')) {
     throw new Error(
-      'Execucao bloqueada. COURTTIME_E2E_DATABASE_NAME deve ser courttime_e2e (nunca courttime_demo ou courttime_test).'
+      'Execucao bloqueada. COURTTIME_E2E_DATABASE_NAME deve identificar um banco E2E dedicado (nunca courttime_demo ou courttime_test).'
     );
   }
 
