@@ -90,6 +90,7 @@ public class ReservaService {
         reserva.setHorarioFim(horarioFim);
         reserva.setFinalidade(finalidadeNormalizada);
         reserva.setStatus(StatusReserva.PENDENTE_DOCUMENTACAO);
+        reserva.setRascunho(true);
         return reservaRepository.save(reserva);
     }
 
@@ -117,7 +118,7 @@ public class ReservaService {
      * criarSolicitacao (antecedência, grade, bloqueios e disponibilidade), e
      * registra de qual reserva cancelada ela veio. A cancelada não é alterada.
      * Aprovação e PDF nunca são reaproveitados: a nova começa em
-     * PENDENTE_DOCUMENTACAO. Os participantes só são copiados se o aluno pedir,
+     * Rascunho até atingir dez participantes. Os participantes só são copiados se o aluno pedir,
      * e continuam editáveis antes do envio do documento. O valor pago na
      * cancelada vira crédito só no registro da nova contribuição (R04).
      */

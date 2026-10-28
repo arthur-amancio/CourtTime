@@ -17,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ public class ParticipanteReservaService {
 
     private static final int TAMANHO_MAXIMO_NOME = 150;
     private static final int TAMANHO_MAXIMO_RM_OU_RG = 30;
-    public static final int MINIMO_DE_ALUNOS = 10;
+    public static final int MINIMO_DE_PARTICIPANTES = 10;
 
     public static final String MENSAGEM_VINCULO_OBRIGATORIO =
             "Na categoria Outro, escolha o vínculo: ex-aluno, pai ou mãe, irmão ou irmã de aluno, ou professor da ETEC";
@@ -71,7 +72,7 @@ public class ParticipanteReservaService {
                 quantidadeAlunos,
                 quantidadeOutros,
                 participantes.size(),
-                quantidadeAlunos >= MINIMO_DE_ALUNOS);
+                participantes.size() >= MINIMO_DE_PARTICIPANTES);
     }
 
     @Transactional(readOnly = true)
@@ -102,11 +103,10 @@ public class ParticipanteReservaService {
             throw new IllegalStateException(
                     "A lista de participantes foi alterada após o envio do documento");
         }
-        long quantidadeAlunos = participanteRepository.countByReservaAndCategoria(
-                reserva, CategoriaParticipante.ALUNO);
-        if (quantidadeAlunos < MINIMO_DE_ALUNOS) {
+        long quantidadeParticipantes = participanteRepository.countByReserva(reserva);
+        if (quantidadeParticipantes < MINIMO_DE_PARTICIPANTES) {
             throw new IllegalStateException(
-                    "A solicitação deve possuir no mínimo 10 alunos participantes");
+                    "A solicitação deve possuir no mínimo 10 participantes, de qualquer categoria");
         }
     }
 
@@ -125,8 +125,31 @@ public class ParticipanteReservaService {
         preencher(participante, nomeCompleto, rmOuRg, categoria, vinculo);
         impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), null);
         participante = participanteRepository.save(participante);
+        atualizarEstadoDaLista(reserva);
         incrementarRevisao(reserva);
         return participante;
+    }
+
+    /**
+     * R10: pessoa acrescentada pela segurança no dia da reserva. Segue as mesmas
+     * regras do cadastro do aluno (nome, RM ou RG, categoria e vínculo R09), mas
+     * não altera a revisão da lista: o documento assinado continua o mesmo.
+     * Chamado pelo PortariaService, que já conferiu o perfil, a reserva e o dia.
+     */
+    @Transactional
+    public ParticipanteReserva acrescentarNaPortaria(
+            Reserva reserva,
+            Usuario seguranca,
+            String nomeCompleto,
+            String rmOuRg,
+            CategoriaParticipante categoria,
+            VinculoParticipante vinculo) {
+        ParticipanteReserva participante = new ParticipanteReserva();
+        participante.setReserva(reserva);
+        preencher(participante, nomeCompleto, rmOuRg, categoria, vinculo);
+        impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), null);
+        participante.marcarAdicionadoNaPortaria(seguranca, Instant.now());
+        return participanteRepository.save(participante);
     }
 
     @Transactional
@@ -152,6 +175,7 @@ public class ParticipanteReservaService {
         Reserva reserva = obterReservaEditavel(reservaId, solicitante);
         ParticipanteReserva participante = obterParticipanteDaReserva(participanteId, reserva);
         participanteRepository.delete(participante);
+        atualizarEstadoDaLista(reserva);
         incrementarRevisao(reserva);
     }
 
@@ -220,6 +244,10 @@ public class ParticipanteReservaService {
         }
         List<ParticipanteReserva> originais =
                 participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(cancelada);
+        // Quem foi acrescentado na portaria não faz parte da lista do aluno.
+        originais = originais.stream()
+                .filter(original -> !original.isAdicionadoNaPortaria())
+                .toList();
         for (ParticipanteReserva original : originais) {
             ParticipanteReserva copia = new ParticipanteReserva();
             copia.setReserva(remarcacao);
@@ -230,9 +258,19 @@ public class ParticipanteReservaService {
             participanteRepository.save(copia);
         }
         if (!originais.isEmpty()) {
+            atualizarEstadoDaLista(remarcacao);
             incrementarRevisao(remarcacao);
         }
         return originais.size();
+    }
+
+    private void atualizarEstadoDaLista(Reserva reserva) {
+        // A reserva é travada durante as edições. A contagem inclui Aluno e Outro.
+        long total = participanteRepository.countByReserva(reserva);
+        boolean rascunho = total < MINIMO_DE_PARTICIPANTES;
+        if (reserva.isRascunho() != rascunho) {
+            reserva.setRascunho(rascunho);
+        }
     }
 
     private void incrementarRevisao(Reserva reserva) {

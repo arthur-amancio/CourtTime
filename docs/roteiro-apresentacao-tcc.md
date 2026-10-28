@@ -102,7 +102,7 @@ demonstração trava logo no início; nesse caso cadastre um intervalo em
 - **Data:** no mínimo o dia seguinte. A regra de antecedência recusa hoje.
 - **Horário:** um período de uma hora dentro da grade.
 - **Finalidade:** "Treino da turma do 3º INFONET".
-- **Participantes:** dez, categoria Aluno, com nomes claramente fictícios
+- **Participantes:** dez no total, incluindo Aluno e Outro, com nomes claramente fictícios
   (`Participante Fictício 1` a `10`) e RM fictício (`RM-1001` em diante). Para
   mostrar a regra do "Outro", acrescente um 11º, categoria **Outro**, vínculo
   **Pai ou mãe de aluno**.
@@ -130,7 +130,7 @@ sair e entrar o tempo todo.
    isso vem do termo da ETEC.
 4. Preencha e envie. Mostre que a situação nasce **Pendente de documentação** e
    que **nada foi autorizado ainda**.
-5. **Participantes** → cadastre os dez alunos e o participante **Outro**.
+5. **Participantes** → cadastre dez participantes no total, incluindo as categorias **Aluno** e **Outro**.
    Mostre que o vínculo é obrigatório (ex-aluno, pai ou mãe, irmão ou irmã, ou
    professor da ETEC) e que não existe opção "amigo".
 6. **Documentos** → **Gerar formulário preenchido** com um CPF fictício válido
@@ -215,7 +215,7 @@ sair e entrar o tempo todo.
 | Não aparece a marcação de presença | A reserva não é de hoje. Use a reserva preparada na véspera (seção 6) |
 | "Na categoria Outro, escolha o vínculo" | Escolha o vínculo no campo logo abaixo da categoria |
 | Aplicação não sobe com erro de administrador | As variáveis do bootstrap ficaram definidas. Remova-as e suba de novo |
-| Não consegue validar o documento | A lista de participantes mudou depois do envio, ou há menos de dez alunos |
+| Não consegue validar o documento | A lista de participantes mudou depois do envio, ou há menos de dez participantes no total |
 | Banco em estado confuso | Rode `.\scripts\Reiniciar-Demonstracao.ps1` e recomece do zero |
 | **A demonstração ao vivo falhar** | Mostre a execução automatizada: o teste `JornadaCompletaE2ETest` e o workflow **UI — navegador real** percorrem este roteiro no GitHub Actions, com PostgreSQL isolado. É a mesma jornada, executada pela máquina |
 
@@ -230,7 +230,7 @@ real, token CSRF real e upload real:
 - consulta de disponibilidade com grade semanal e bloqueios;
 - solicitação com antecedência mínima de um dia, e PDF assinado até o dia
   anterior ao uso (R01);
-- cadastro de participantes, exigência de dez alunos, sem limite máximo (R02),
+- cadastro de participantes, exigência atual de dez participantes de qualquer categoria, sem limite máximo (R02); o modelo oficial ainda cita dez alunos,
   e vínculo obrigatório na categoria Outro (R09);
 - envio versionado de PDF, guardado fora da área pública;
 - conferência documental da secretaria, com confirmação da assinatura gov.br

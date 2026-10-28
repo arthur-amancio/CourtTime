@@ -65,6 +65,20 @@ public class ParticipanteReserva {
     @Column(name = "presenca_registrada_em")
     private Instant presencaRegistradaEm;
 
+    /**
+     * R10: pessoa acrescentada pela segurança no dia da reserva, fora da lista
+     * do documento assinado. Nulo (falso) para quem foi cadastrado pelo aluno.
+     */
+    @Column(name = "adicionado_na_portaria")
+    private Boolean adicionadoNaPortaria;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "adicionado_por_id")
+    private Usuario adicionadoPor;
+
+    @Column(name = "adicionado_em")
+    private Instant adicionadoEm;
+
     public Long getId() {
         return id;
     }
@@ -134,6 +148,26 @@ public class ParticipanteReserva {
     }
 
     /** Registra a marcação da portaria com quem marcou e quando. */
+    public boolean isAdicionadoNaPortaria() {
+        return Boolean.TRUE.equals(adicionadoNaPortaria);
+    }
+
+    public Usuario getAdicionadoPor() {
+        return adicionadoPor;
+    }
+
+    public Instant getAdicionadoEm() {
+        return adicionadoEm;
+    }
+
+    /** R10: marca a pessoa como acrescentada pela segurança, já presente. */
+    public void marcarAdicionadoNaPortaria(Usuario seguranca, Instant instante) {
+        this.adicionadoNaPortaria = Boolean.TRUE;
+        this.adicionadoPor = seguranca;
+        this.adicionadoEm = instante;
+        registrarPresenca(PresencaParticipante.PRESENTE, seguranca, instante);
+    }
+
     public void registrarPresenca(PresencaParticipante presenca, Usuario seguranca, Instant instante) {
         this.presenca = presenca;
         this.presencaRegistradaPor = seguranca;

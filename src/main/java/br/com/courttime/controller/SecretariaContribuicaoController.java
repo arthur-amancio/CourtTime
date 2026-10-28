@@ -4,6 +4,7 @@ import br.com.courttime.entity.Usuario;
 import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ContribuicaoApmService;
 import br.com.courttime.service.DetalheContribuicaoApm;
+import br.com.courttime.service.PortariaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,17 +21,54 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SecretariaContribuicaoController {
 
     private final ContribuicaoApmService contribuicaoService;
+    private final PortariaService portariaService;
 
     public SecretariaContribuicaoController(
-            ContribuicaoApmService contribuicaoService) {
+            ContribuicaoApmService contribuicaoService,
+            PortariaService portariaService) {
         this.contribuicaoService = contribuicaoService;
+        this.portariaService = portariaService;
     }
 
     @GetMapping
     public String listar(@UsuarioAtual Usuario secretaria, Model model) {
         model.addAttribute("pendentes", contribuicaoService.listarPendentes(secretaria));
         model.addAttribute("registradas", contribuicaoService.listarRegistradas(secretaria));
+        // R11: pessoas acrescentadas na portaria.
+        model.addAttribute("valoresAMais", portariaService.listarValoresPendentes(secretaria));
+        model.addAttribute("repasses", portariaService.listarAguardandoRepasse(secretaria));
         return "secretaria/contribuicoes/lista";
+    }
+
+    /** R11: os alunos pagaram na secretaria o valor das pessoas a mais. */
+    @PostMapping("/portaria/{reservaId}/pagamento")
+    public String registrarValorAMais(
+            @PathVariable Long reservaId,
+            @UsuarioAtual Usuario secretaria,
+            RedirectAttributes redirectAttributes) {
+        try {
+            portariaService.registrarPagamentoNaSecretaria(reservaId, secretaria);
+            redirectAttributes.addFlashAttribute(
+                    "mensagemSucesso", "Valor a mais registrado. A portaria já pode liberar a entrada.");
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
+        }
+        return "redirect:/secretaria/contribuicoes";
+    }
+
+    /** R11: a secretaria recebeu da segurança o dinheiro pago na portaria. */
+    @PostMapping("/portaria/repasses/{pagamentoId}")
+    public String confirmarRepasse(
+            @PathVariable Long pagamentoId,
+            @UsuarioAtual Usuario secretaria,
+            RedirectAttributes redirectAttributes) {
+        try {
+            portariaService.confirmarRepasse(pagamentoId, secretaria);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Repasse da portaria confirmado.");
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
+        }
+        return "redirect:/secretaria/contribuicoes";
     }
 
     @GetMapping("/solicitacoes/{reservaId}")

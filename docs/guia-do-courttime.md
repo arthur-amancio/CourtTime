@@ -62,7 +62,7 @@ autoriza o uso. Só a aprovação da administração autoriza.
 - **Não há limite máximo** de participantes (R02). Acima de 30, o formulário
   oficial ganha páginas adicionais.
 - O período é sempre de **uma hora**, alinhado à grade cadastrada.
-- São necessários no mínimo **dez alunos** participantes para validar o documento.
+- São necessários no mínimo **dez participantes no total**, contando Aluno e Outro, para validar o documento. O modelo oficial versionado ainda menciona dez alunos; essa divergência precisa ser confirmada pela ETEC.
 - Na categoria **Outro**, o vínculo é obrigatório (R09): ex-aluno da ETEC, pai
   ou mãe de aluno, irmão ou irmã de aluno, ou professor da ETEC.
 - A aprovação é recusada se o horário de utilização **já começou ou já passou**.
@@ -201,7 +201,7 @@ Em `/admin/bloqueios` é possível bloquear datas específicas.
 Para exercitar o fluxo completo é preciso respeitar as regras reais:
 
 - a data precisa ser de amanhã em diante;
-- a solicitação precisa de **no mínimo dez alunos** participantes;
+- a solicitação precisa de **no mínimo dez participantes de qualquer categoria** (o modelo oficial versionado ainda menciona dez alunos);
 - o PDF enviado é fictício e **não deve ser apresentado como termo assinado**.
 
 ## 8. Testes

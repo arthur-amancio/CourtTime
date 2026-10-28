@@ -27,12 +27,15 @@ public class ConsultaSegurancaService {
 
     private final ReservaRepository reservaRepository;
     private final ParticipanteReservaRepository participanteRepository;
+    private final PortariaService portariaService;
 
     public ConsultaSegurancaService(
             ReservaRepository reservaRepository,
-            ParticipanteReservaRepository participanteRepository) {
+            ParticipanteReservaRepository participanteRepository,
+            PortariaService portariaService) {
         this.reservaRepository = reservaRepository;
         this.participanteRepository = participanteRepository;
+        this.portariaService = portariaService;
     }
 
     @Transactional(readOnly = true)
@@ -63,9 +66,11 @@ public class ConsultaSegurancaService {
                 .stream()
                 .map(this::identificacao)
                 .toList();
-        // Proposta técnica (ainda a confirmar com a ETEC): presença só no dia da reserva.
+        // Presença, pessoas a mais e liberação só no dia da reserva (R08, R10, R11).
+        boolean hoje = reserva.getDataUtilizacao().equals(dataAtual);
         return new DetalheReservaAutorizada(
-                resumir(reserva), participantes, reserva.getDataUtilizacao().equals(dataAtual));
+                resumir(reserva), participantes, hoje,
+                hoje ? portariaService.resumir(reserva) : null);
     }
 
     /**
@@ -96,6 +101,12 @@ public class ConsultaSegurancaService {
                 .forEach(participante -> participantes.put(participante.getId(), participante));
         if (!participantes.keySet().containsAll(marcacoes.keySet())) {
             throw new IllegalArgumentException("Participante não pertence a esta reserva");
+        }
+        boolean alteracaoSolicitada = marcacoes.entrySet().stream()
+                .anyMatch(marcacao -> marcacao.getValue() != null
+                        && participantes.get(marcacao.getKey()).getPresenca() != marcacao.getValue());
+        if (reserva.isLiberada() && alteracaoSolicitada) {
+            throw new IllegalStateException(PortariaService.MENSAGEM_RESERVA_LIBERADA);
         }
         Instant agora = Instant.now();
         int alteradas = 0;
@@ -131,6 +142,7 @@ public class ConsultaSegurancaService {
                 participante.getNomeCompleto(),
                 participante.getRmOuRg(),
                 categoria,
-                participante.getPresenca());
+                participante.getPresenca(),
+                participante.isAdicionadoNaPortaria());
     }
 }

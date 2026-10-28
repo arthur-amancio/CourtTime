@@ -13,7 +13,7 @@
     <aside th:replace="~{fragments/layout :: lateral}"></aside>
 
     <main id="conteudo" class="container app-main"
-          th:with="status=${solicitacao.status.name()},etapa=${status == 'PENDENTE_DOCUMENTACAO' ? 1 : (status == 'PENDENTE_ANALISE' ? 2 : 3)}">
+          th:with="status=${solicitacao.status.name()},etapa=${solicitacao.rascunho ? 0 : (status == 'PENDENTE_DOCUMENTACAO' ? 1 : (status == 'PENDENTE_ANALISE' ? 2 : 3))}">
         <nav class="breadcrumb" aria-label="Navegação estrutural">
             <a th:href="@{/inicio}">Início</a>
             <span aria-hidden="true">/</span>
@@ -48,7 +48,7 @@
                 <h1>Detalhes da solicitação</h1>
                 <p>A solicitação não representa autorização imediata para utilizar a quadra.</p>
             </div>
-            <span th:replace="~{fragments/situacao :: selo(${solicitacao.status})}"></span>
+            <span th:replace="~{fragments/situacao :: situacao(${solicitacao.status}, ${situacao})}"></span>
         </header>
 
         <!-- Etapas do processo: orientação visual derivada somente do status gravado.
@@ -60,18 +60,19 @@
             </div>
             <div class="painel__corpo">
                 <ol class="etapas">
-                    <li class="etapa etapa--concluida">
+                    <li class="etapa" th:classappend="${etapa == 0} ? ' etapa--atual' : ' etapa--concluida'"
+                        th:aria-current="${etapa == 0} ? 'step'">
                         <span class="etapa__marcador" aria-hidden="true"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></span>
-                        <span class="etapa__rotulo"><span class="visually-hidden">Concluída: </span>Solicitação registrada</span>
+                        <span class="etapa__rotulo"><span class="visually-hidden" th:text="${etapa == 0} ? 'Etapa atual: ' : 'Concluída: '">Concluída: </span>Participantes cadastrados</span>
                     </li>
-                    <li class="etapa" th:classappend="${etapa > 1} ? ' etapa--concluida' : ' etapa--atual'"
+                    <li class="etapa" th:classappend="${etapa > 1} ? ' etapa--concluida' : (${etapa == 1} ? ' etapa--atual' : '')"
                         th:aria-current="${etapa == 1} ? 'step'">
                         <span class="etapa__marcador" aria-hidden="true">
                             <th:block th:if="${etapa > 1}"><svg th:replace="~{fragments/icones :: icone('check')}"></svg></th:block>
                             <th:block th:unless="${etapa > 1}">2</th:block>
                         </span>
                         <span class="etapa__rotulo">
-                            <span class="visually-hidden" th:text="${etapa > 1} ? 'Concluída: ' : 'Etapa atual: '">Etapa atual: </span>Documentação e contribuição
+                            <span class="visually-hidden" th:text="${etapa > 1} ? 'Concluída: ' : (${etapa == 1} ? 'Etapa atual: ' : '')">Etapa atual: </span>Documentação e contribuição
                         </span>
                     </li>
                     <li class="etapa" th:classappend="${etapa > 2} ? ' etapa--concluida' : (${etapa == 2} ? ' etapa--atual' : '')"
@@ -139,7 +140,7 @@
                         </div>
                         <div>
                             <dt>Status da solicitação</dt>
-                            <dd th:text="${solicitacao.status.descricao}">Pendente de documentação</dd>
+                            <dd th:text="${situacao.titulo}">Pendente de documentação</dd>
                         </div>
                         <div class="dados__largo">
                             <dt>Finalidade</dt>
@@ -154,7 +155,7 @@
                 <div class="painel__corpo pilha pilha--compacta">
                     <a class="acao-rapida" th:href="@{/solicitacoes/{id}/participantes(id=${solicitacao.id})}">
                         <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('usuarios')}"></svg></span>
-                        <span><strong>Revisar participantes</strong><span>Lista com no mínimo dez alunos</span></span>
+                        <span><strong>Revisar participantes</strong><span>Lista com no mínimo dez pessoas de qualquer categoria</span></span>
                     </a>
                     <a class="acao-rapida" th:href="@{/solicitacoes/{id}/documentos(id=${solicitacao.id})}">
                         <span class="acao-rapida__icone"><svg th:replace="~{fragments/icones :: icone('documento')}"></svg></span>

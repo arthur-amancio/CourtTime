@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -40,6 +41,8 @@ class ConsultaSegurancaServiceTest {
     private ReservaRepository reservaRepository;
     @Mock
     private ParticipanteReservaRepository participanteRepository;
+    @Mock
+    private PortariaService portariaService;
 
     private ConsultaSegurancaService service;
     private Usuario seguranca;
@@ -48,7 +51,7 @@ class ConsultaSegurancaServiceTest {
     @BeforeEach
     void setUp() {
         service = new ConsultaSegurancaService(
-                reservaRepository, participanteRepository);
+                reservaRepository, participanteRepository, portariaService);
         seguranca = usuario(1L, "Agente da segurança", Perfil.SEGURANCA, true);
         reserva = reservaAutorizada();
     }
@@ -128,6 +131,25 @@ class ConsultaSegurancaServiceTest {
         assertNotNull(ana.getPresencaRegistradaEm());
         verify(participanteRepository).save(ana);
         verify(participanteRepository).save(bruno);
+    }
+
+    @Test
+    void r11PresencaNaoPodeSerAlteradaDepoisDaLiberacao() {
+        reserva.setDataUtilizacao(LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
+        reserva.registrarLiberacao(seguranca, Instant.now());
+        ParticipanteReserva ana = participante("Ana", "RM-1", CategoriaParticipante.ALUNO);
+        ana.setId(31L);
+        ana.registrarPresenca(PresencaParticipante.PRESENTE, seguranca, Instant.now());
+        when(reservaRepository.findByIdForUpdate(20L)).thenReturn(Optional.of(reserva));
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
+                .thenReturn(List.of(ana));
+
+        IllegalStateException erro = assertThrows(IllegalStateException.class,
+                () -> service.registrarPresencas(20L, seguranca,
+                        Map.of(31L, PresencaParticipante.AUSENTE)));
+
+        assertEquals(PortariaService.MENSAGEM_RESERVA_LIBERADA, erro.getMessage());
+        verify(participanteRepository, never()).save(any());
     }
 
     @Test

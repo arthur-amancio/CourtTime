@@ -69,6 +69,10 @@ public class FormularioOficialService {
         Reserva reserva = reservaRepository.findByIdAndSolicitante(reservaId, solicitante)
                 .orElseThrow(() -> new AccessDeniedException(
                         "A solicitação não existe ou não pertence ao usuário autenticado"));
+        if (reserva.isRascunho()) {
+            throw new IllegalStateException(
+                    "Cadastre no mínimo 10 participantes antes de gerar o formulário");
+        }
         if (reserva.getStatus() != StatusReserva.PENDENTE_DOCUMENTACAO) {
             throw new IllegalStateException(
                     "O formulário só pode ser gerado enquanto a solicitação aguarda documentação");
@@ -81,6 +85,10 @@ public class FormularioOficialService {
         if (participantes.isEmpty()) {
             throw new IllegalStateException(
                     "Cadastre os participantes antes de gerar o formulário");
+        }
+        if (participantes.size() < ParticipanteReservaService.MINIMO_DE_PARTICIPANTES) {
+            throw new IllegalStateException(
+                    "Cadastre no mínimo 10 participantes, de qualquer categoria, antes de gerar o formulário");
         }
 
         DadosFormularioReserva dados = new DadosFormularioReserva(

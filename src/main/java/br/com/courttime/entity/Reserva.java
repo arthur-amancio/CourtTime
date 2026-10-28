@@ -70,6 +70,9 @@ public class Reserva {
     @Column(nullable = false, length = 30)
     private StatusReserva status = StatusReserva.PENDENTE_DOCUMENTACAO;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean rascunho;
+
     @PositiveOrZero
     @Column(name = "revisao_participantes", nullable = false,
             columnDefinition = "integer default 0")
@@ -107,6 +110,14 @@ public class Reserva {
     private Instant analisadaEm;
 
     private Instant canceladaEm;
+
+    /** R11: quando e por quem a portaria liberou a quadra. Nulo até a liberação. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "liberada_por_id")
+    private Usuario liberadaPor;
+
+    @Column(name = "liberada_em")
+    private Instant liberadaEm;
 
     @PrePersist
     void prePersist() {
@@ -192,6 +203,14 @@ public class Reserva {
         this.status = status;
     }
 
+    public boolean isRascunho() {
+        return rascunho;
+    }
+
+    public void setRascunho(boolean rascunho) {
+        this.rascunho = rascunho;
+    }
+
     public int getRevisaoParticipantes() {
         return revisaoParticipantes;
     }
@@ -269,5 +288,22 @@ public class Reserva {
 
     public void setCanceladaEm(Instant canceladaEm) {
         this.canceladaEm = canceladaEm;
+    }
+
+    public Usuario getLiberadaPor() {
+        return liberadaPor;
+    }
+
+    public Instant getLiberadaEm() {
+        return liberadaEm;
+    }
+
+    public boolean isLiberada() {
+        return liberadaEm != null;
+    }
+
+    public void registrarLiberacao(Usuario seguranca, Instant instante) {
+        this.liberadaPor = seguranca;
+        this.liberadaEm = instante;
     }
 }
