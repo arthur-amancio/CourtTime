@@ -1,8 +1,26 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
-Atualizado em 29/10/2026. Finalização acadêmica preservada; **pacote de preparação da banca concluído em quatro documentos**. Próxima atividade: encaminhamento humano ao orientador, registro das decisões institucionais e ensaio reservado da demonstração. Não repetir auditoria inicial, testes Java/Playwright, geração de figuras ou revisão das provas já registradas sem alteração que justifique nova validação.
+Atualizado em 29/10/2026. **Sprint 4 publicada em pasta própria: DOCX editável e PDF A4 de 86 páginas, com pendências documentais explícitas.** O candidato anterior de 82 páginas foi preservado. Próxima atividade: obter os documentos ausentes dos autores e revisar a checklist com o professor. Não repetir testes Java/Playwright ou revisão de provas sem mudança que justifique nova validação.
 
-## Última missão — preparação da banca e homologação
+## Última missão — Sprint 4, entrega em 12/11/2026 às 18h
+
+Registro completo, links, hashes e retomada: [ENTREGA-SPRINT4.md](sprint4/ENTREGA-SPRINT4.md). [Pasta privada da Sprint](https://drive.google.com/drive/folders/1px4l2dhTnXTPT24X0eKWnCdLn4x9kmL1).
+
+### Concluído nesta edição documental
+
+Documento integral reaproveitado, IV–VII na estrutura exigida; 86 páginas A4, 34 figuras, sete quadros e 25 referências. Diagrama específico de atores acrescentado; classes/DER e `rascunho` preservados; DER realocado para A. Dicionários em colunas legíveis, 65 atributos/tipos confrontados com Java. Apêndice B com 11 perguntas reais recuperadas do cabeçalho da planilha indicada pelo usuário; 28 registros mantidos com os limites da pesquisa exploratória. Nenhuma pergunta de logo nesse instrumento.
+
+Word 16 exportou o PDF. Todas as páginas conferidas na prova digital, com reinspeção das alterações e comparação raster das páginas mantidas: zero folhas vazias/erro de campo/tinta textual fora do limiar auditado. 63 entradas de sumário, 41 de listas e 73 rodapés numerados conferidos. Sete entregas principais baixadas do Drive e idênticas por SHA-256; DOCX/PDF/ZIP/XML reabertos. O oitavo arquivo registra a validação. Permissões mantidas privadas, sem alteração de compartilhamento.
+
+Os sete arquivos principais são DOCX, PDF, checklist, pendências, ZIP com 34 PNGs/cinco SVGs/dois Draw.io e PDFs separados dos apêndices A/B. Fontes e provas locais em `C:\Users\arthur.francisco\Documents\CourtTime-Sprint4-20261112`. Nenhuma suíte de software foi reexecutada; nenhum código, banco ou diagrama original foi modificado. O candidato congelado e seu PDF mantêm integridade/horário anteriores. A pendência de identificação autoral de Romário foi resolvida na Sprint: **Romário Vitorino Ferreira**, confirmado no PDF primário; registros antigos abaixo conservam o estado histórico anterior.
+
+### Pendências e próxima ação exata
+
+**P0 documental condicional:** questionário impresso C e enquete da logo D não localizados; faltam originais ou orientação expressa de não aplicabilidade. **P1:** formulário online original/alternativas, ferramentas de criação da marca e autorização de reprodução do formulário institucional. Original Google Forms não recuperado: buscas sem resultado no acesso disponível e host do navegador indisponível; não significa inexistência. Permanecem decisões institucionais, método/hipótese e banca. **P2:** prova física.
+
+Situação: **pronto para revisão do orientador; não integralmente concluído para submissão enquanto os itens incompletos não forem resolvidos/dispensados pelo professor**. Próxima tarefa: usar a checklist publicada para obter dos autores e do professor os documentos/pareceres; incorporar somente evidências reais e refazer índices/PDF/prova após qualquer edição. Não modificar o candidato congelado. Compartilhamento/submissão pelos integrantes até 12/11/2026 às 18h de São Paulo. Alterações versionadas desta missão restritas ao índice da Sprint e a este checkpoint; publicação na branch documental existente, sem merge.
+
+## Missão anterior — preparação da banca e homologação
 
 **Ambiente:** Windows/PowerShell, worktree isolada `C:\Users\arthur.francisco\Desktop\CourtTime-Missao88`, branch `docs/modelagem-uml-profissional`, PR #88. HEAD de entrada: `47b0a5333fc98a5e600aa79335896e4334972cc7`. Nenhum código, banco, PDF candidato ou documento acadêmico congelado foi modificado.
 
