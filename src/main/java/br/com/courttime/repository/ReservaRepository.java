@@ -37,6 +37,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     long countByStatus(StatusReserva status);
 
+    long countByRascunhoFalse();
+
+    long countByStatusAndRascunhoFalse(StatusReserva status);
+
     boolean existsByRemarcacaoDe(Reserva reservaCancelada);
 
     Optional<Reserva> findByRemarcacaoDe(Reserva reservaCancelada);

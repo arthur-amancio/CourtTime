@@ -57,11 +57,12 @@ function dayFor(iso) { return enumDays[new Date(`${iso}T12:00:00Z`).getUTCDay()]
 function ptDayFor(iso) { return ptDays[new Date(`${iso}T12:00:00Z`).getUTCDay()]; }
 function definirDataDeDemonstracaoHoje(reservaId) {
   if (process.env.COURTTIME_E2E_ACK_ISOLATED_DB !== 'YES'
-      || process.env.COURTTIME_E2E_DATABASE_NAME !== 'courttime_e2e') {
-    throw new Error('A simulação de reserva de hoje exige o banco descartável courttime_e2e.');
+      || (process.env.COURTTIME_E2E_DATABASE_NAME !== 'courttime_e2e'
+          && !/^courttime_e2e_p0p1(?:_run[2-9][0-9]*)?$/.test(process.env.COURTTIME_E2E_DATABASE_NAME || ''))) {
+    throw new Error('A simulação de reserva de hoje exige um banco E2E descartável autorizado.');
   }
   const resultado = execFileSync('psql', [
-    '-h', 'localhost', '-U', 'courttime_e2e', '-d', 'courttime_e2e', '-v', 'ON_ERROR_STOP=1',
+    '-h', 'localhost', '-U', process.env.COURTTIME_DB_USERNAME, '-d', process.env.COURTTIME_E2E_DATABASE_NAME, '-v', 'ON_ERROR_STOP=1',
     '-qAtc', `UPDATE reservas SET data_utilizacao = '${today}' WHERE id = ${reservaId} AND status = 'APROVADA' RETURNING id`,
   ], { encoding: 'utf8', env: process.env }).trim();
   if (resultado !== String(reservaId)) {
@@ -125,14 +126,18 @@ async function createRequest(page, date, time, purpose) {
   await page.locator('#finalidade').fill(purpose);
   await Promise.all([
     page.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
-    page.getByRole('button', { name: 'Registrar solicitação' }).click(),
+    page.getByRole('button', { name: 'Salvar rascunho' }).click(),
   ]);
   const id = Number(page.url().match(/\/solicitacoes\/(\d+)$/)[1]);
-  assert((await page.locator('body').innerText()).includes('Solicitação registrada.'), 'criação da solicitação', `#${id}`);
+  assert((await page.locator('body').innerText()).includes('Rascunho salvo.'), 'criação do rascunho', `#${id}`);
   return id;
 }
 
 async function addTenParticipants(page, requestId, prefix) {
+  await page.goto(`${BASE}/solicitacoes/${requestId}`);
+  assert((await page.locator('body').innerText()).includes('Rascunho'), 'pedido sem participantes permanece rascunho');
+  await page.goto(`${BASE}/solicitacoes/${requestId}/documentos`);
+  assert(await page.getByRole('button', { name: 'Gerar formulário preenchido' }).count() === 0 && await page.getByRole('button', { name: 'Enviar nova versão' }).count() === 0, 'rascunho não permite gerar nem enviar PDF');
   for (let i = 1; i <= 10; i += 1) {
     await page.goto(`${BASE}/solicitacoes/${requestId}/participantes/novo`);
     await page.locator('#nomeCompleto').fill(`${prefix} ${String(i).padStart(2, '0')}`);
@@ -144,9 +149,15 @@ async function addTenParticipants(page, requestId, prefix) {
       page.waitForURL(url => url.pathname === `/solicitacoes/${requestId}/participantes`),
       page.getByRole('button', { name: 'Salvar participante' }).click(),
     ]);
+    if (i === 9) {
+      await page.goto(`${BASE}/solicitacoes/${requestId}`);
+      assert((await page.locator('body').innerText()).includes('Rascunho'), 'nove participantes não formalizam a solicitação');
+    }
   }
   const body = await page.locator('body').innerText();
   assert(body.includes('Mínimo de participantes atendido') && body.includes('8\nAlunos') && body.includes('2\nDemais participantes'), 'mínimo inicial conta dez pessoas de categorias diferentes', `solicitação #${requestId}`);
+  await page.goto(`${BASE}/solicitacoes/${requestId}`);
+  assert((await page.locator('body').innerText()).includes('Pendente de documentação'), 'dez participantes formalizam a solicitação');
 }
 
 async function upload(page, requestId, name, buffer, mime = 'application/pdf') {
@@ -289,7 +300,7 @@ async function responsiveAudit(page, label, url) {
     await paginaSemJavascript.locator('#finalidade').fill('Solicitação sintética sem JavaScript');
     await Promise.all([
       paginaSemJavascript.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
-      paginaSemJavascript.getByRole('button', { name: 'Registrar solicitação' }).click(),
+      paginaSemJavascript.getByRole('button', { name: 'Salvar rascunho' }).click(),
     ]);
     const detalheSemJavascript = await paginaSemJavascript.locator('body').innerText();
     assert(/10:00\s*(às|–|-)\s*11:00/.test(detalheSemJavascript), 'backend define duração de uma hora sem campo horarioFim');
@@ -550,6 +561,38 @@ async function responsiveAudit(page, label, url) {
       seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
       seguranca.getByRole('button', { name: 'Recebi o valor na portaria' }).click(),
     ]);
+    const adicionalA = seguranca.locator('tbody tr').filter({ hasText: 'Pessoa adicional sintética 1' });
+    await adicionalA.locator('input[type="radio"][value="AUSENTE"]').check();
+    await Promise.all([
+      seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      seguranca.getByRole('button', { name: 'Registrar presença' }).click(),
+    ]);
+    securityBody = await seguranca.locator('body').innerText();
+    assert(securityBody.includes('Pessoa adicional sintética 1') && !securityBody.includes('Falta pagar R$'), 'ausência da pessoa adicional paga preserva histórico e não gera estorno');
+    await seguranca.locator('#nomeCompleto').fill('Pessoa substituta de adicional sintética B');
+    await seguranca.locator('#rmOuRg').fill(`PORTARIA-${approvedId}-EXTRA-B`);
+    await seguranca.locator('#categoria').selectOption('OUTRO');
+    await seguranca.locator('#vinculo').selectOption('PAI_OU_MAE');
+    await Promise.all([
+      seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      seguranca.getByRole('button', { name: 'Acrescentar pessoa' }).click(),
+    ]);
+    securityBody = await seguranca.locator('body').innerText();
+    assert(securityBody.includes('Pessoa adicional sintética 1') && securityBody.includes('Pessoa substituta de adicional sintética B') && !securityBody.includes('Falta pagar R$'), 'substituta B reutiliza vaga paga por A sem cobrança');
+    await seguranca.locator('#nomeCompleto').fill('Pessoa adicional sintética C');
+    await seguranca.locator('#rmOuRg').fill(`PORTARIA-${approvedId}-EXTRA-C`);
+    await seguranca.locator('#categoria').selectOption('OUTRO');
+    await seguranca.locator('#vinculo').selectOption('PAI_OU_MAE');
+    await Promise.all([
+      seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      seguranca.getByRole('button', { name: 'Acrescentar pessoa' }).click(),
+    ]);
+    securityBody = await seguranca.locator('body').innerText();
+    assert(securityBody.includes('Falta pagar R$ 2,00.'), 'somente C exige complemento de R$ 2,00');
+    await Promise.all([
+      seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      seguranca.getByRole('button', { name: 'Recebi o valor na portaria' }).click(),
+    ]);
     await Promise.all([
       seguranca.waitForNavigation({ waitUntil: 'domcontentloaded' }),
       seguranca.getByRole('button', { name: 'Liberar quadra' }).click(),
@@ -569,12 +612,14 @@ async function responsiveAudit(page, label, url) {
     await secretaria.goto(`${BASE}/secretaria/contribuicoes`);
     const repassesTabela = secretaria.getByRole('table', { name: 'Recebido pela portaria, a confirmar' });
     const repasse = repassesTabela.locator('tbody tr').filter({ hasText: `Solicitação #${approvedId}` });
-    assert(await repasse.count() === 1 && (await repasse.innerText()).includes('R$ 4,00'), 'secretaria confere valor e operador do repasse da portaria');
-    await Promise.all([
-      secretaria.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-      repasse.getByRole('button', { name: 'Confirmar repasse' }).click(),
-    ]);
-    assert((await secretaria.locator('body').innerText()).includes('Repasse da portaria confirmado.'), 'secretaria registra repasse recebido');
+    assert(await repasse.count() === 2 && (await repasse.allInnerTexts()).some(texto => texto.includes('R$ 4,00')) && (await repasse.allInnerTexts()).some(texto => texto.includes('R$ 2,00')), 'secretaria confere dois repasses separados de R$ 4,00 e R$ 2,00');
+    for (const valor of ['R$ 4,00', 'R$ 2,00']) {
+      await Promise.all([
+        secretaria.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+        repassesTabela.locator('tbody tr').filter({ hasText: `Solicitação #${approvedId}` }).filter({ hasText: valor }).getByRole('button', { name: 'Confirmar repasse' }).click(),
+      ]);
+      assert((await secretaria.locator('body').innerText()).includes('Repasse da portaria confirmado.'), `secretaria confirma repasse ${valor}`);
+    }
     response = await seguranca.goto(`${BASE}/secretaria/contribuicoes`);
     assert(response.status() === 403, 'segurança não acessa dados financeiros', `HTTP ${response.status()}`);
     response = await seguranca.goto(`${BASE}/secretaria/documentos`);
@@ -611,7 +656,7 @@ async function responsiveAudit(page, label, url) {
     await selecionarHorario(donoCancelada, '09:00');
     await Promise.all([
       donoCancelada.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
-      donoCancelada.getByRole('button', { name: 'Registrar solicitação' }).click(),
+      donoCancelada.getByRole('button', { name: 'Salvar rascunho' }).click(),
     ]);
     const remarcadaId = Number(donoCancelada.url().match(/\/solicitacoes\/(\d+)$/)[1]);
     assert((await donoCancelada.locator('body').innerText()).includes('Esta solicitação remarca a reserva de'), 'nova solicitação mostra a reserva de origem', `#${remarcadaId}`);

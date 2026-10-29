@@ -125,6 +125,7 @@ public class ParticipanteReservaService {
         preencher(participante, nomeCompleto, rmOuRg, categoria, vinculo);
         impedirIdentificacaoDuplicada(reserva, participante.getRmOuRg(), null);
         participante = participanteRepository.save(participante);
+        atualizarEstadoDaLista(reserva);
         incrementarRevisao(reserva);
         return participante;
     }
@@ -174,6 +175,7 @@ public class ParticipanteReservaService {
         Reserva reserva = obterReservaEditavel(reservaId, solicitante);
         ParticipanteReserva participante = obterParticipanteDaReserva(participanteId, reserva);
         participanteRepository.delete(participante);
+        atualizarEstadoDaLista(reserva);
         incrementarRevisao(reserva);
     }
 
@@ -256,9 +258,19 @@ public class ParticipanteReservaService {
             participanteRepository.save(copia);
         }
         if (!originais.isEmpty()) {
+            atualizarEstadoDaLista(remarcacao);
             incrementarRevisao(remarcacao);
         }
         return originais.size();
+    }
+
+    private void atualizarEstadoDaLista(Reserva reserva) {
+        // A reserva é travada durante as edições. A contagem inclui Aluno e Outro.
+        long total = participanteRepository.countByReserva(reserva);
+        boolean rascunho = total < MINIMO_DE_PARTICIPANTES;
+        if (reserva.isRascunho() != rascunho) {
+            reserva.setRascunho(rascunho);
+        }
     }
 
     private void incrementarRevisao(Reserva reserva) {

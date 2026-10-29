@@ -119,6 +119,29 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
     }
 
     @Test
+    void painelContaApenasSolicitacoesFormalizadas() {
+        Reserva rascunho = new Reserva();
+        rascunho.setQuadra(quadra);
+        rascunho.setSolicitante(aluno);
+        rascunho.setDataUtilizacao(dataFutura);
+        rascunho.setHorarioInicio(LocalTime.of(8, 0));
+        rascunho.setHorarioFim(LocalTime.of(9, 0));
+        rascunho.setFinalidade("Rascunho sintético");
+        rascunho.setRascunho(true);
+        reservaRepository.saveAndFlush(rascunho);
+
+        PainelAdministrativo painel = administracaoService.carregarPainel(administrador);
+        assertEquals(0, painel.totalSolicitacoes());
+        assertEquals(0, painel.pendentesDocumentacao());
+
+        rascunho.setRascunho(false);
+        reservaRepository.saveAndFlush(rascunho);
+        painel = administracaoService.carregarPainel(administrador);
+        assertEquals(1, painel.totalSolicitacoes());
+        assertEquals(1, painel.pendentesDocumentacao());
+    }
+
+    @Test
     void horarioCadastradoPermaneceNoPostgresEApareceNoCalendario() {
         DisponibilidadeQuadra criada = administracaoService.cadastrarHorario(
                 administrador,

@@ -38,6 +38,12 @@ public class SituacaoSolicitacaoService {
         if (solicitacao == null || solicitacao.getStatus() == null) {
             throw new IllegalArgumentException("A solicitação é obrigatória");
         }
+        if (solicitacao.isRascunho()) {
+            return new SituacaoSolicitacao(
+                    "Rascunho",
+                    "Cadastre ao menos dez participantes, somando Aluno e Outro. Só então a solicitação avança para a documentação.",
+                    false);
+        }
         return switch (solicitacao.getStatus()) {
             case APROVADA -> new SituacaoSolicitacao(
                     "Aprovada",
