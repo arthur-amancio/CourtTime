@@ -39,4 +39,6 @@ test('recusa URLs remotas, publicas e com porta errada', () => {
 test('aceita apenas a instancia de loopback com confirmacao de banco efemero', () => {
   assert.equal(verificarAmbienteIsolado(correto), true);
   assert.equal(verificarAmbienteIsolado({ ...correto, baseUrl: 'http://localhost:18081/' }), true);
+  assert.equal(verificarAmbienteIsolado({ ...correto, nomeBanco: 'courttime_e2e_p0p1' }), true);
+  assert.equal(verificarAmbienteIsolado({ ...correto, nomeBanco: 'courttime_e2e_p0p1_run2' }), true);
 });

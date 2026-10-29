@@ -127,7 +127,7 @@ class SolicitacaoReservaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Nova solicitação")))
                 .andExpect(content().string(containsString("08:00 – 09:00")))
-                .andExpect(content().string(containsString("solicitação preliminar")));
+                .andExpect(content().string(containsString("salva um rascunho")));
     }
 
     @Test

@@ -136,6 +136,45 @@ class PortariaPostgreSqlIntegrationTest {
     }
 
     @Test
+    void vagaPagaPorAdicionalPodeSerReutilizadaSemEstornoOuCobrancaDuplicada() {
+        ParticipanteReserva adicionalA = portariaService.acrescentarPessoa(
+                reserva.getId(), seguranca, "Adicional A", "PORTARIA-PAGO-A",
+                CategoriaParticipante.OUTRO, VinculoParticipante.PAI_OU_MAE);
+        PagamentoAdicional pagamentoA = portariaService.registrarPagamentoNaPortaria(
+                reserva.getId(), seguranca);
+        assertEquals(new BigDecimal("2.00"), pagamentoA.getValor());
+
+        consultaSegurancaService.registrarPresencas(reserva.getId(), seguranca,
+                java.util.Map.of(adicionalA.getId(), PresencaParticipante.AUSENTE));
+        ResumoPortaria semSubstituto = portariaService.resumir(reserva);
+        assertEquals(10, semSubstituto.presentes());
+        assertEquals(0, semSubstituto.pessoasAPagar());
+        assertEquals(1, pagamentoRepository.findByReservaOrderByRegistradoEmAscIdAsc(reserva).size());
+
+        ParticipanteReserva adicionalB = portariaService.acrescentarPessoa(
+                reserva.getId(), seguranca, "Adicional B", "PORTARIA-PAGO-B",
+                CategoriaParticipante.OUTRO, VinculoParticipante.PAI_OU_MAE);
+        assertEquals(11, portariaService.resumir(reserva).presentes());
+        assertEquals(0, portariaService.resumir(reserva).pessoasAPagar());
+        assertThrows(IllegalStateException.class,
+                () -> portariaService.registrarPagamentoNaPortaria(reserva.getId(), seguranca));
+        assertEquals(PresencaParticipante.AUSENTE,
+                participanteRepository.findById(adicionalA.getId()).orElseThrow().getPresenca());
+        assertEquals(PresencaParticipante.PRESENTE,
+                participanteRepository.findById(adicionalB.getId()).orElseThrow().getPresenca());
+        assertNotNull(participanteRepository.findById(adicionalA.getId()).orElseThrow().getAdicionadoPor());
+
+        acrescentar("Adicional C", "PORTARIA-PAGO-C");
+        assertEquals(12, portariaService.resumir(reserva).presentes());
+        assertEquals(1, portariaService.resumir(reserva).pessoasAPagar());
+        PagamentoAdicional pagamentoC = portariaService.registrarPagamentoNaSecretaria(
+                reserva.getId(), secretaria);
+        assertEquals(new BigDecimal("2.00"), pagamentoC.getValor());
+        assertEquals(2, pagamentoRepository.findByReservaOrderByRegistradoEmAscIdAsc(reserva).size());
+        assertEquals(0, portariaService.resumir(reserva).pessoasAPagar());
+    }
+
+    @Test
     void duasTentativasSimultaneasDePagamentoRegistramUmUnicoComplemento() throws Exception {
         acrescentar("Pessoa adicional A", "PORTARIA-Y1");
         acrescentar("Pessoa adicional B", "PORTARIA-Y2");

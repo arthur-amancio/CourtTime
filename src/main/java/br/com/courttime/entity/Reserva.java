@@ -70,6 +70,9 @@ public class Reserva {
     @Column(nullable = false, length = 30)
     private StatusReserva status = StatusReserva.PENDENTE_DOCUMENTACAO;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean rascunho;
+
     @PositiveOrZero
     @Column(name = "revisao_participantes", nullable = false,
             columnDefinition = "integer default 0")
@@ -198,6 +201,14 @@ public class Reserva {
 
     public void setStatus(StatusReserva status) {
         this.status = status;
+    }
+
+    public boolean isRascunho() {
+        return rascunho;
+    }
+
+    public void setRascunho(boolean rascunho) {
+        this.rascunho = rascunho;
     }
 
     public int getRevisaoParticipantes() {

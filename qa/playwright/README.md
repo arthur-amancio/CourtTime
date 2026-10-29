@@ -21,8 +21,8 @@ sintéticos registrados em `resultados-e2e.json`.
 ## Pré-requisitos
 
 - Java 17 e aplicação CourtTime em uma instância separada;
-- PostgreSQL 16 com banco novo, vazio e descartável chamado
-  **exatamente** `courttime_e2e`;
+- PostgreSQL com banco novo, vazio e descartável chamado
+  `courttime_e2e`, `courttime_e2e_p0p1` ou uma nova execução com sufixo `_runN`;
 - Node.js 20 ou superior;
 - Chromium instalado pelo Playwright ou disponível no sistema.
 
@@ -61,7 +61,7 @@ Antes do primeiro dado ser criado, o roteiro autentica esse administrador e
 exige encontrar `COURTTIME_E2E_INSTANCE_TOKEN` na página. Isso vincula o alvo
 HTTP ao bootstrap da instância descartável. Ainda é responsabilidade de quem
 executa conferir no PostgreSQL que `current_database()` retorna
-`courttime_e2e`; nenhuma variável declarativa substitui essa conferência.
+o nome indicado em `COURTTIME_E2E_DATABASE_NAME`; nenhuma variável declarativa substitui essa conferência.
 
 Defina as senhas sintéticas somente no ambiente da sessão. Não as grave em
 arquivo, linha de comando versionada, log ou captura:

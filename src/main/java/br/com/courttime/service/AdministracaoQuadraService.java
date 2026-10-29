@@ -63,8 +63,8 @@ public class AdministracaoQuadraService {
                         .stream()
                         .filter(BloqueioQuadra::isAtivo)
                         .toList(),
-                reservaRepository.count(),
-                reservaRepository.countByStatus(StatusReserva.PENDENTE_DOCUMENTACAO),
+                reservaRepository.countByRascunhoFalse(),
+                reservaRepository.countByStatusAndRascunhoFalse(StatusReserva.PENDENTE_DOCUMENTACAO),
                 reservaRepository.countByStatus(StatusReserva.PENDENTE_ANALISE),
                 reservaRepository.countByStatus(StatusReserva.APROVADA),
                 reservaRepository.countByStatus(StatusReserva.REJEITADA),

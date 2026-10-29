@@ -175,6 +175,17 @@ class DocumentoReservaServiceTest {
     }
 
     @Test
+    void rascunhoNaoPodeEnviarPdfMesmoSeClienteForjarDezParticipantes() {
+        reserva.setRascunho(true);
+        when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
+                .thenReturn(Optional.of(reserva));
+
+        assertThrows(IllegalStateException.class, () -> service.enviar(
+                20L, aluno, "termo.pdf", "application/pdf", pdf));
+        verifyNoInteractions(documentoStorage);
+    }
+
+    @Test
     void envioExigeDezParticipantesDeQualquerCategoriaAntesDeArmazenar() {
         when(reservaRepository.findByIdAndSolicitanteIdForUpdate(20L, 10L))
                 .thenReturn(Optional.of(reserva));

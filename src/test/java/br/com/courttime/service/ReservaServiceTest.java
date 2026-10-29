@@ -101,6 +101,7 @@ class ReservaServiceTest {
                 aluno, quadra, DATA, INICIO, FIM, "  Treino da turma  ");
 
         assertEquals(StatusReserva.PENDENTE_DOCUMENTACAO, reserva.getStatus());
+        assertTrue(reserva.isRascunho());
         assertEquals("Treino da turma", reserva.getFinalidade());
         assertEquals(aluno, reserva.getSolicitante());
     }

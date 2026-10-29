@@ -100,7 +100,7 @@ async function criarSolicitacao(page, data, hora, finalidade) {
   await page.locator('#finalidade').fill(finalidade);
   await Promise.all([
     page.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
-    page.getByRole('button', { name: 'Registrar solicitação' }).click(),
+    page.getByRole('button', { name: 'Salvar rascunho' }).click(),
   ]);
   return Number(page.url().match(/\/solicitacoes\/(\d+)$/)[1]);
 }
@@ -366,11 +366,11 @@ async function semRolagemHorizontal(page, rotulo, url) {
     await alunoC.locator('input[name="copiarParticipantes"][type="checkbox"]').uncheck();
     await Promise.all([
       alunoC.waitForURL(url => /^\/solicitacoes\/\d+$/.test(url.pathname)),
-      alunoC.getByRole('button', { name: 'Registrar solicitação' }).click(),
+      alunoC.getByRole('button', { name: 'Salvar rascunho' }).click(),
     ]);
     ids.r3 = Number(alunoC.url().match(/\/solicitacoes\/(\d+)$/)[1]);
     corpo = await alunoC.locator('body').innerText();
-    check(corpo.includes('Esta solicitação remarca a reserva de') && corpo.includes('Pendente de documentação'), 'remarcação nasce pendente e vinculada', `#${ids.r3}`);
+    check(corpo.includes('Esta solicitação remarca a reserva de') && corpo.includes('Rascunho'), 'remarcação nasce como rascunho e vinculada', `#${ids.r3}`);
     await alunoC.goto(`${BASE}/solicitacoes/${ids.r3}/participantes`);
     check((await alunoC.locator('body').innerText()).includes('0\nTotal'), 'sem a opção marcada, nenhum participante é copiado');
     await alunoC.goto(`${BASE}/solicitacoes/${ids.r3}/documentos`);
