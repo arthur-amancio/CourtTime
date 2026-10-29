@@ -28,6 +28,13 @@ Margens 2,5 cm; cabeçalho/rodapé 1,25 cm; Arial12, citações longas/notas11; 
 Consultas realizadas em29out2026. Normalizar os espaços e referências conforme orientação institucional antes da entrega.
 
 ## Fontes incompletas ou não verificadas nesta execução
-Laudon e Laudon; Elmasri e Navathe2016; ISO9241-11:2018; NIST2004; OWASP2021; Santos e Romário2025; Moreira2024; Lima et al.2026. Não se conclui que sejam inexistentes. Faltam dados bibliográficos completos e conferência das afirmações nas obras originais. Não inventar páginas, DOI ou editora. Atribuições quantitativas do questionário foram suspensas na cópia até conferência dos dados primários.
+Laudon e Laudon; Elmasri e Navathe2016; ISO9241-11:2018; NIST2004; OWASP2021. Faltam dados bibliográficos completos e conferência das afirmações nas obras originais. Não inventar páginas, DOI ou editora. Atribuições quantitativas do questionário foram suspensas na cópia até conferência dos dados primários.
+
+## Estudos relacionados localizados em fontes primárias
+- SANTOS, Mateus Coelho; ROMÁRIO. Desenvolvimento de um Sistema de Agendamento e Gestão de Reservas para Hotéis. NATIVA, v.8,n.3,2025, publicação16dez2025. O resumo confirma PHP, Bootstrap e MySQL. O segundo autor aparece apenas como Romário no registro; não completar sobrenome por inferência. https://jiparana.emnuvens.com.br/riacti/article/view/2214
+- MOREIRA, Eber Junio Borges. Agendamento de recursos acadêmicos em Instituições de Ensino Superior: Estudo de caso na Universidade de Brasília. Registro CEDIS/UnB,2024. O registro institucional descreve SARA; verificar a folha de rosto da dissertação antes de fechar referência e páginas. https://cedis.unb.br/pt/publications/2024-eber-junio-borges-moreira-agendamento-de-recursos-academicos-em-instituicoes-de-ensin/
+- LIMA, Lívia Beatriz Maia de; GABRIEL, Geísa Morais; MILANEZ, Alysson Filgueira; MAIA, David Candeia Medeiros. Estudo de caso sobre testes funcionais em um sistema de reserva de salas. Revista de Engenharia e Tecnologia,v.18,n.1,22maio2026. A rota sem locale permitiu leitura do resumo, que confirma Selenium,JUnit,JMeter,Lighthouse e problemas de usabilidade/responsividade/conexão/carga. O campo DOI do site está incompleto (apenas prefixo); não reproduzi-lo como DOI válido. Paginação ainda não conferida. https://revistas.uepg.br/index.php/ret/en/article/view/25815
+
+Esses registros confirmam a existência dos estudos; não equivalem a leitura integral nem validam automaticamente cada interpretação do capítuloI. Consulta em29out2026.
 
 P1: completar correspondência citação↔referência. P1: validar artigos e pesquisa local. P2: glossário e refinamento editorial. As três fontes verificadas não substituem a revisão integral da bibliografia.
