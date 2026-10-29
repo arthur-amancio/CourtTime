@@ -24,7 +24,7 @@ Os `record` da pasta `service` (como `ResumoPortaria` e `DetalheReservaAutorizad
 ## O caminho de uma solicitação
 
 ```
-Aluno          → cria a solicitação e cadastra os participantes        ReservaService, ParticipanteReservaService
+Aluno          → salva rascunho; dez participantes formalizam o pedido ReservaService, ParticipanteReservaService
 Aluno          → gera o formulário oficial e envia o PDF assinado       FormularioOficialService, DocumentoReservaService
 Secretaria     → confere a assinatura gov.br e valida o documento       ConferenciaDocumentoService
 Secretaria     → registra a contribuição de R$ 2,00 por participante    ContribuicaoApmService
