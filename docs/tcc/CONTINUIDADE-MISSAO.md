@@ -17,4 +17,6 @@ Nova execução Playwright: SHA02efd1599b2c33f1e45e145219b01a185c5425fa, banco v
 
 Commits:24d99fe mapa/PR87;609036a sincronização em88;c456d6f modelagem. Resultados e entregas em revisao-20261029/ENTREGA-E-VALIDACAO.md.
 
-Próxima tarefa exata: conferir publicação/CI do HEAD final88 e relatório; terminar renderização da cópia do TCC, revisão bibliográfica, resumo/abstract, listas e sumário paginados. Não mesclar na main.
+Publicado PR88 em8701b9d; CI315 conferido nos logs:477 aprovados por matriz PostgreSQL16/18,0 falhas/erros/skips. A cópia do TCC foi exportada e inspecionada: capa com ano na mesma página; corrigidos recuos/justificação nas tabelas e bloqueada divisão de linhas entre páginas. PDFs de prova privados em data/fontes-academicas. A renderização completa das páginas ainda não está aprovada.
+
+Próxima tarefa exata: revisar a cópia inteira em A4, concluir bibliografia e pré-textuais, criar sumário/listas paginados e conferir figuras antigas versus novas. Não mesclar na main.

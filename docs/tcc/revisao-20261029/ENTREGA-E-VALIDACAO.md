@@ -30,5 +30,9 @@ P1: revisar A4 de todas as figuras e atualizar nativo Astah05/06/09A; conciliar 
 P1: diagnosticar registros anteriores ao campo rascunho em cópia antes de migração autorizada. Não foi alterado banco real.
 P2: privilégio symlink local; refinamentos editoriais e glossário se pertinente.
 
+## Verificação posterior
+CI315 em8701b9d:477 testes aprovados por matriz PostgreSQL16/18,0 falhas/erros/skips; logs conferidos. https://github.com/arthur-amancio/CourtTime/actions/runs/40810912204
+A cópia nativa foi exportada e páginas selecionadas foram inspecionadas. Corrigidos recuos nas tabelas, fonte11 nas células, parágrafo de rascunho em corpo12, margem2,5cm e espaço da capa para manter2026 na mesma página. Linhas de tabelas foram protegidas contra divisão entre páginas. Não equivale a aprovação visual das cem páginas nem do formato final. Provas privadas em data/fontes-academicas.
+
 ## Retomada
 Começar por docs/tcc/CONTINUIDADE-MISSAO.md. Conferir HEADs e CI antes de novos edits. Fontes integrais e PDF exportado ficam privados em data/fontes-academicas; não adicionar data/ ao Git. Revisar a cópia, nunca o consolidado original. Sem merge na main, force push, deploy ou mudança de compartilhamento.
