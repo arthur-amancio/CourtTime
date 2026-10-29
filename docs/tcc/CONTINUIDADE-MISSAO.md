@@ -1,6 +1,42 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
-Atualizado em 29/10/2026. Fase de finalização acadêmica concluída. **Próxima atividade: revisão humana do candidato pelo orientador e pelos autores, usando a checklist.** Não repetir auditoria inicial, testes Java/Playwright, geração de figuras ou revisão das provas já registradas sem alteração que justifique nova validação.
+Atualizado em 29/10/2026. Finalização acadêmica preservada; **pacote de preparação da banca concluído em quatro documentos**. Próxima atividade: encaminhamento humano ao orientador, registro das decisões institucionais e ensaio reservado da demonstração. Não repetir auditoria inicial, testes Java/Playwright, geração de figuras ou revisão das provas já registradas sem alteração que justifique nova validação.
+
+## Última missão — preparação da banca e homologação
+
+**Ambiente:** Windows/PowerShell, worktree isolada `C:\Users\arthur.francisco\Desktop\CourtTime-Missao88`, branch `docs/modelagem-uml-profissional`, PR #88. HEAD de entrada: `47b0a5333fc98a5e600aa79335896e4334972cc7`. Nenhum código, banco, PDF candidato ou documento acadêmico congelado foi modificado.
+
+### Entregas novas
+
+- [Revisão para o orientador](preparacao-banca/REVISAO-ORIENTADOR.md): identificação/equipe, síntese da implementação, metodologia e limites, resultados comprovados, situação do TCC, links e tabela com sete decisões institucionais/acadêmicas.
+- [Apresentação e roteiro](preparacao-banca/APRESENTACAO-E-ROTEIRO.md): 15 slides, notas de fala, indicação de figuras reais e tempos que somam 720 segundos. Entrega em Markdown editável; nenhum PPTX foi produzido ou validado.
+- [Demonstração](preparacao-banca/DEMONSTRACAO.md): quatro perfis, contas e dados sintéticos propostos, preparação privada, inicialização, substituição de vaga paga, remarcação e contingências. Roteiro ainda precisa de ensaio; nenhuma nova instância foi executada.
+- [Prontidão de integração](preparacao-banca/PRONTIDAO-INTEGRACAO.md): snapshot dos quatro PRs, CI, ancestralidade, escopos, triagem textual e comandos para futura integração autorizada. Nenhum merge/retarget foi executado.
+
+### Evidências desta missão
+
+PRs #85–#88 consultados: abertos, em rascunho e com `mergeable=true` no snapshot. Ancestralidade main→85→86→87→88 conferida: quatro resultados positivos. Bases preservadas. HEADs: #85 `fe21d89`, #86 `4fb7a06`, #87 `24d99fe`, #88 de entrada `47b0a53`.
+
+CI #319 em `47b0a53`, logs dos jobs PostgreSQL 16 e 18 consultados: 477 testes aprovados por matriz, zero falhas/erros/skips e BUILD SUCCESS. Link: https://github.com/arthur-amancio/CourtTime/actions/runs/40868642896 . Proteção QA #109 aprovada; isso não é jornada de navegador. O novo commit documental tem seu próprio estado de CI, que não deve ser presumido a partir desse snapshot.
+
+Nenhum Maven, PostgreSQL, Playwright ou auditoria integral de PDF foi executado novamente. Evidências anteriores de navegador e limitação Windows de symlink permanecem vinculadas às suas versões. `src/`, `qa/`, `pom.xml` e `.github/` sem diferenças entre a base funcional `4fb7a06` e `47b0a53`.
+
+Validação documental executada: quatro arquivos esperados; 37 links locais existentes; 15 slides numerados e soma de 720 segundos; sete decisões na tabela; cercas de código equilibradas e UTF-8 sem caracteres de substituição. `git diff --cached --check` aprovado. Triagem de padrões de tokens/chaves/URLs com credenciais: zero ocorrências nos padrões conferidos; não equivale a auditoria integral de histórico/binários. Integridade do PDF conferida por SHA-256, sem nova renderização: `8475492fe64eb55aed671c57f62e8f78d0fc3dd753cc480b921890c4c9edd77b`, idêntico ao candidato anterior.
+
+### Commit e publicação
+
+- `d57e7775417357287842718721a3793829983c4f` — `docs(tcc): preparar revisao do orientador e demonstracao da banca`, quatro documentos/429 linhas. Link: https://github.com/arthur-amancio/CourtTime/commit/d57e7775417357287842718721a3793829983c4f .
+- A atualização deste checkpoint é registrada em commit documental separado na mesma branch e publicada junto dos materiais no PR #88. Conferir o SHA final e a confirmação do push no Git; nenhuma aprovação de CI do novo HEAD é antecipada aqui.
+
+### Pendências e próxima ação exata
+
+**P0:** nenhum defeito novo confirmado nesta revisão documental; conflitos ou CI negativos que surgirem em futura mudança de base bloquearão o merge afetado.
+
+**P1:** obter parecer do orientador sobre método/hipótese; confirmar banca, mínimo de participantes, vínculos de OUTRO, horário-limite documental, crédito excedente e retenção. Permanecem os limites bibliográficos e de amostragem já registrados. Preparar banco sintético novo e ensaiar os três cenários A/B/C; não há novas contas ou reservas criadas nesta missão. Autorizações de revisão/integração continuam pendentes; nenhum merge foi feito.
+
+**P2:** apresentação em formato nativo e prova física de legibilidade, conforme recursos e orientação.
+
+**Próxima tarefa exata:** usar `preparacao-banca/REVISAO-ORIENTADOR.md` para a revisão humana, registrar respostas com responsável/data e preencher a ficha privada de ensaio de `DEMONSTRACAO.md`. Preparar antecipadamente uma reserva para o dia da demonstração: a portaria atua no dia do uso e uma solicitação criada hoje é futura. Não contornar essa regra durante a exposição. Só alterar a cópia acadêmica após retorno real, preservando o candidato congelado e refazendo paginação/prova se necessário. Não repetir as fases já concluídas.
 
 ## Entregas atuais
 
