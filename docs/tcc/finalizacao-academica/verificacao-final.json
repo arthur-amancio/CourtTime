@@ -1,0 +1,332 @@
+{
+  "arquivo": "CourtTime-candidato.pdf",
+  "paginas": 82,
+  "introducao_fisica": 16,
+  "paginas_vazias": [],
+  "fora_margens": [],
+  "figuras": {
+    "1": 23,
+    "2": 24,
+    "3": 24,
+    "4": 25,
+    "5": 25,
+    "6": 29,
+    "7": 30,
+    "8": 30,
+    "9": 31,
+    "10": 31,
+    "11": 31,
+    "12": 41,
+    "13": 45,
+    "14": 46,
+    "15": 49,
+    "16": 50,
+    "17": 57,
+    "18": 58,
+    "19": 59,
+    "20": 61,
+    "21": 62,
+    "22": 63,
+    "23": 64,
+    "24": 65,
+    "25": 66,
+    "26": 67,
+    "27": 68,
+    "28": 69,
+    "29": 70,
+    "30": 71,
+    "31": 72,
+    "32": 73,
+    "33": 74
+  },
+  "quadros": {
+    "1": 23,
+    "2": 32,
+    "3": 40,
+    "4": 42,
+    "5": 44,
+    "6": 51,
+    "7": 52
+  },
+  "a4": true,
+  "foliacao": [
+    {
+      "fisica": 16,
+      "numero": 15
+    },
+    {
+      "fisica": 17,
+      "numero": 16
+    },
+    {
+      "fisica": 18,
+      "numero": 17
+    },
+    {
+      "fisica": 19,
+      "numero": 18
+    },
+    {
+      "fisica": 20,
+      "numero": 19
+    },
+    {
+      "fisica": 21,
+      "numero": 20
+    },
+    {
+      "fisica": 22,
+      "numero": 21
+    },
+    {
+      "fisica": 23,
+      "numero": 22
+    },
+    {
+      "fisica": 24,
+      "numero": 23
+    },
+    {
+      "fisica": 25,
+      "numero": 24
+    },
+    {
+      "fisica": 26,
+      "numero": 25
+    },
+    {
+      "fisica": 27,
+      "numero": 26
+    },
+    {
+      "fisica": 28,
+      "numero": 27
+    },
+    {
+      "fisica": 29,
+      "numero": 28
+    },
+    {
+      "fisica": 30,
+      "numero": 29
+    },
+    {
+      "fisica": 31,
+      "numero": 30
+    },
+    {
+      "fisica": 32,
+      "numero": 31
+    },
+    {
+      "fisica": 33,
+      "numero": 32
+    },
+    {
+      "fisica": 34,
+      "numero": 33
+    },
+    {
+      "fisica": 35,
+      "numero": 34
+    },
+    {
+      "fisica": 36,
+      "numero": 35
+    },
+    {
+      "fisica": 37,
+      "numero": 36
+    },
+    {
+      "fisica": 38,
+      "numero": 37
+    },
+    {
+      "fisica": 39,
+      "numero": 38
+    },
+    {
+      "fisica": 40,
+      "numero": 39
+    },
+    {
+      "fisica": 41,
+      "numero": 40
+    },
+    {
+      "fisica": 42,
+      "numero": 41
+    },
+    {
+      "fisica": 43,
+      "numero": 42
+    },
+    {
+      "fisica": 44,
+      "numero": 43
+    },
+    {
+      "fisica": 45,
+      "numero": 44
+    },
+    {
+      "fisica": 46,
+      "numero": 45
+    },
+    {
+      "fisica": 47,
+      "numero": 46
+    },
+    {
+      "fisica": 48,
+      "numero": 47
+    },
+    {
+      "fisica": 49,
+      "numero": 48
+    },
+    {
+      "fisica": 50,
+      "numero": 49
+    },
+    {
+      "fisica": 51,
+      "numero": 50
+    },
+    {
+      "fisica": 52,
+      "numero": 51
+    },
+    {
+      "fisica": 53,
+      "numero": 52
+    },
+    {
+      "fisica": 54,
+      "numero": 53
+    },
+    {
+      "fisica": 55,
+      "numero": 54
+    },
+    {
+      "fisica": 56,
+      "numero": 55
+    },
+    {
+      "fisica": 57,
+      "numero": 56
+    },
+    {
+      "fisica": 58,
+      "numero": 57
+    },
+    {
+      "fisica": 59,
+      "numero": 58
+    },
+    {
+      "fisica": 60,
+      "numero": 59
+    },
+    {
+      "fisica": 61,
+      "numero": 60
+    },
+    {
+      "fisica": 62,
+      "numero": 61
+    },
+    {
+      "fisica": 63,
+      "numero": 62
+    },
+    {
+      "fisica": 64,
+      "numero": 63
+    },
+    {
+      "fisica": 65,
+      "numero": 64
+    },
+    {
+      "fisica": 66,
+      "numero": 65
+    },
+    {
+      "fisica": 67,
+      "numero": 66
+    },
+    {
+      "fisica": 68,
+      "numero": 67
+    },
+    {
+      "fisica": 69,
+      "numero": 68
+    },
+    {
+      "fisica": 70,
+      "numero": 69
+    },
+    {
+      "fisica": 71,
+      "numero": 70
+    },
+    {
+      "fisica": 72,
+      "numero": 71
+    },
+    {
+      "fisica": 73,
+      "numero": 72
+    },
+    {
+      "fisica": 74,
+      "numero": 73
+    },
+    {
+      "fisica": 75,
+      "numero": 74
+    },
+    {
+      "fisica": 76,
+      "numero": 75
+    },
+    {
+      "fisica": 77,
+      "numero": 76
+    },
+    {
+      "fisica": 78,
+      "numero": 77
+    },
+    {
+      "fisica": 79,
+      "numero": 78
+    },
+    {
+      "fisica": 80,
+      "numero": 79
+    },
+    {
+      "fisica": 81,
+      "numero": 80
+    },
+    {
+      "fisica": 82,
+      "numero": 81
+    }
+  ],
+  "sha256": "8475492fe64eb55aed671c57f62e8f78d0fc3dd753cc480b921890c4c9edd77b",
+  "titulos_paginados": 103,
+  "referencias": 24,
+  "fontes_legendas": 40,
+  "resumo_palavras": 180,
+  "abstract_palavras": 163,
+  "data": "2026-10-29",
+  "base_funcional": "4fb7a06",
+  "classificacao": "Pronto para revisão do orientador",
+  "inspecao_visual": "Todas as 82 páginas; pranchas completas e ampliações dos diagramas/tabelas durante as revisões."
+}
