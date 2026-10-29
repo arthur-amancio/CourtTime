@@ -6,6 +6,8 @@ Atualizado em 29/10/2026. **Sprint 4 publicada em pasta própria: DOCX editável
 
 Registro completo, links, hashes e retomada: [ENTREGA-SPRINT4.md](sprint4/ENTREGA-SPRINT4.md). [Pasta privada da Sprint](https://drive.google.com/drive/folders/1px4l2dhTnXTPT24X0eKWnCdLn4x9kmL1).
 
+Publicação confirmada: commit [4e61cf84026b8f1e3289a76dab48060457925c17](https://github.com/arthur-amancio/CourtTime/commit/4e61cf84026b8f1e3289a76dab48060457925c17), `docs(tcc): publicar entrega Sprint 4 e checkpoint`, enviado à branch do PR #88 por push normal. O registro de validação também foi baixado e conferido: **oito arquivos publicados idênticos aos locais**, em cinco arquivos na raiz, um ZIP de recursos e dois PDFs de apêndices; duas subpastas. Nenhuma aprovação de CI do novo commit é presumida. Esta nota final de confirmação é registrada separadamente.
+
 ### Concluído nesta edição documental
 
 Documento integral reaproveitado, IV–VII na estrutura exigida; 86 páginas A4, 34 figuras, sete quadros e 25 referências. Diagrama específico de atores acrescentado; classes/DER e `rascunho` preservados; DER realocado para A. Dicionários em colunas legíveis, 65 atributos/tipos confrontados com Java. Apêndice B com 11 perguntas reais recuperadas do cabeçalho da planilha indicada pelo usuário; 28 registros mantidos com os limites da pesquisa exploratória. Nenhuma pergunta de logo nesse instrumento.
