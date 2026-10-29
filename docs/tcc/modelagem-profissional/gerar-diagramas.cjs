@@ -366,7 +366,7 @@ function classesCore() {
   const nodes = [
     n('usuario', 'class', 35, 100, 210, 150, 'Usuario', ['- id: Long', '- nome: String', '- email: String', '- perfil: Perfil', '- ativo: boolean', '- versaoAcesso: long']),
     n('quadra', 'class', 35, 395, 210, 120, 'Quadra', ['- id: Long', '- nome: String', '- descricao: String', '- ativa: boolean']),
-    n('reserva', 'class', 400, 105, 320, 285, 'Reserva', ['- id: Long', '- dataUtilizacao: LocalDate', '- horarioInicio: LocalTime', '- horarioFim: LocalTime', '- finalidade: String', '- status: StatusReserva', '- revisaoParticipantes: int', '- criadaEm / atualizadaEm: Instant', '- analisadaEm / canceladaEm: Instant [0..1]', '- liberadaEm: Instant [0..1]', '+ isIntervaloValido(): boolean', '+ isLiberada(): boolean', '+ registrarLiberacao(usuario, instante): void'], { stereotype: 'entity', fontSize: 10.5, lineHeight: 14 }),
+    n('reserva', 'class', 400, 105, 320, 285, 'Reserva', ['- id: Long', '- dataUtilizacao: LocalDate', '- horarioInicio: LocalTime', '- horarioFim: LocalTime', '- finalidade: String', '- status: StatusReserva', '- rascunho: boolean', '- revisaoParticipantes: int', '- criadaEm / atualizadaEm: Instant', '- analisadaEm / canceladaEm: Instant [0..1]', '- liberadaEm: Instant [0..1]', '+ isIntervaloValido(): boolean', '+ isLiberada(): boolean', '+ registrarLiberacao(usuario, instante): void'], { stereotype: 'entity', fontSize: 10.5, lineHeight: 14 }),
     n('participante', 'class', 825, 90, 260, 230, 'ParticipanteReserva', ['- id: Long', '- nomeCompleto: String', '- rmOuRg: String', '- categoria: CategoriaParticipante', '- vinculo: VinculoParticipante [0..1]', '- presenca: PresencaParticipante [0..1]', '- adicionadoNaPortaria: Boolean [0..1]', '+ registrarPresenca(...): void', '+ marcarAdicionadoNaPortaria(...): void'], { stereotype: 'entity', fontSize: 10.3, lineHeight: 14 }),
     n('disponibilidade', 'class', 360, 500, 260, 155, 'DisponibilidadeQuadra', ['- id: Long', '- diaSemana: DiaSemana', '- horarioInicio: LocalTime', '- horarioFim: LocalTime', '- ativa: boolean', '+ isIntervaloValido(): boolean'], { stereotype: 'entity' }),
     n('bloqueio', 'class', 760, 500, 260, 155, 'BloqueioQuadra', ['- id: Long', '- data: LocalDate', '- horarioInicio: LocalTime', '- horarioFim: LocalTime', '- motivo: String', '- ativo: boolean', '+ isIntervaloValido(): boolean'], { stereotype: 'entity' }),
@@ -385,7 +385,7 @@ function classesCore() {
 
 function classesDocumentation() {
   const nodes = [
-    n('reserva', 'class', 20, 95, 205, 135, 'Reserva', ['- status: StatusReserva', '- revisaoParticipantes: int', '- liberadaEm: Instant [0..1]', '+ isLiberada(): boolean'], { stereotype: 'entity' }),
+    n('reserva', 'class', 20, 95, 205, 135, 'Reserva', ['- status: StatusReserva', '- rascunho: boolean', '- revisaoParticipantes: int', '- liberadaEm: Instant [0..1]', '+ isLiberada(): boolean'], { stereotype: 'entity' }),
     n('participante', 'class', 20, 360, 235, 175, 'ParticipanteReserva', ['- categoria: CategoriaParticipante', '- vinculo: VinculoParticipante [0..1]', '- presenca: PresencaParticipante [0..1]', '- adicionadoNaPortaria: Boolean [0..1]', '- adicionadoEm: Instant [0..1]'], { stereotype: 'entity', fontSize: 10.2 }),
     n('documento', 'class', 300, 85, 235, 185, 'DocumentoReserva', ['- versao: int', '- revisaoParticipantes: int', '- chaveArmazenamento: String', '- sha256: String', '- tamanhoBytes: long', '- enviadoEm: Instant'], { stereotype: 'entity' }),
     n('conferencia', 'class', 590, 85, 235, 185, 'ConferenciaDocumento', ['- resultado: ResultadoConferenciaDocumento', '- justificativa: String [0..1]', '- assinaturaGovBrConferida: Boolean [0..1]', '- conferidoEm: Instant'], { stereotype: 'entity', fontSize: 9.8 }),
@@ -414,7 +414,7 @@ function erd() {
     entity('quadras', 270, 82, 185, 118, 'quadras', ['PK id: bigint', 'NN nome: varchar(100)', 'NN descricao: varchar(500)', 'NN ativa: boolean'], { fontSize: 9.5 }),
     entity('disponibilidades', 500, 82, 250, 135, 'disponibilidades_quadra', ['PK id: bigint', 'FK NN quadra_id → quadras.id', 'NN dia_semana: varchar(10)', 'NN horario_inicio / horario_fim: time', 'NN ativa: boolean'], { fontSize: 9.2 }),
     entity('bloqueios', 800, 82, 250, 135, 'bloqueios_quadra', ['PK id: bigint', 'FK NN quadra_id → quadras.id', 'NN data: date', 'NN horario_inicio / horario_fim: time', 'NN motivo: varchar(200)', 'NN ativo: boolean'], { fontSize: 9.2 }),
-    entity('reservas', 250, 280, 300, 245, 'reservas', ['PK id: bigint', 'FK NN quadra_id → quadras.id', 'FK NN solicitante_id → usuarios.id', 'FK analisada_por_id → usuarios.id', 'FK cancelada_por_id → usuarios.id', 'FK liberada_por_id → usuarios.id', 'UQ FK remarcacao_de_id → reservas.id', 'NN data_utilizacao: date', 'NN horario_inicio / horario_fim: time', 'NN finalidade: varchar(300)', 'NN status: varchar(30)', 'NN revisao_participantes: integer', 'criada_em / atualizada_em: timestamp', 'analisada_em / cancelada_em / liberada_em'], { fontSize: 8.8, lineHeight: 12.2 }),
+    entity('reservas', 250, 280, 300, 245, 'reservas', ['PK id: bigint', 'FK NN quadra_id → quadras.id', 'FK NN solicitante_id → usuarios.id', 'FK analisada_por_id → usuarios.id', 'FK cancelada_por_id → usuarios.id', 'FK liberada_por_id → usuarios.id', 'UQ FK remarcacao_de_id → reservas.id', 'NN data_utilizacao: date', 'NN horario_inicio / horario_fim: time', 'NN finalidade: varchar(300)', 'NN status: varchar(30)', 'NN rascunho: boolean DEFAULT false', 'NN revisao_participantes: integer', 'criada_em / atualizada_em: timestamp', 'analisada_em / cancelada_em / liberada_em'], { fontSize: 8.8, lineHeight: 12.2 }),
     entity('participantes', 20, 305, 200, 205, 'participantes_reserva', ['PK id: bigint', 'FK NN reserva_id → reservas.id', 'NN nome_completo: varchar(150)', 'NN rm_ou_rg: varchar(30)', 'NN categoria: varchar(10)', 'vinculo: varchar(20)', 'presenca: varchar(10)', 'FK presenca_registrada_por_id', 'adicionado_na_portaria: boolean', 'FK adicionado_por_id', 'presenca_registrada_em / adicionado_em'], { fontSize: 8.5, lineHeight: 11.5 }),
     entity('documentos', 600, 265, 230, 190, 'documentos_reserva', ['PK id: bigint', 'FK NN reserva_id → reservas.id', 'UQ (reserva_id, versao)', 'NN versao / revisao_participantes: integer', 'UQ NN chave_armazenamento: varchar(80)', 'NN nome_original: varchar(255)', 'NN sha256: char(64)', 'NN tamanho_bytes: bigint', 'FK NN enviado_por_id → usuarios.id', 'NN enviado_em: timestamp'], { fontSize: 8.7, lineHeight: 11.7 }),
     entity('conferencias', 870, 265, 230, 170, 'conferencias_documento', ['PK id: bigint', 'UQ FK NN documento_id', 'NN resultado: varchar(30)', 'justificativa: varchar(500)', 'assinatura_gov_br_conferida: boolean', 'FK NN conferido_por_id → usuarios.id', 'NN conferido_em: timestamp'], { fontSize: 8.8, lineHeight: 12 }),
@@ -438,7 +438,7 @@ function erd() {
     e('r12', 'usuarios', 'auditorias', [pt(20, 160), pt(8, 160), pt(8, 730), pt(1005, 730), pt(1005, 725)], { label: 'operador / afetado', labelPos: pt(500, 724), labelWidth: 105, startLabel: '1', endLabel: '0..*', startLabelPos: pt(15, 174), endLabelPos: pt(1018, 716) }),
     e('r13', 'reservas', 'reservas', [pt(550, 430), pt(575, 430), pt(575, 545), pt(235, 545), pt(235, 455), pt(250, 455)], { label: 'remarcacao_de (UQ)', labelPos: pt(405, 539), labelWidth: 110, startLabel: '0..1', endLabel: '0..1', startLabelPos: pt(560, 445), endLabelPos: pt(238, 470) })
   ];
-  return { figure: 5, file: '05-der-postgresql', title: 'DER lógico do banco PostgreSQL', subtitle: 'Derivado das 12 entidades JPA da base 6fc1aee; PK, FK, UQ e NN indicam restrições persistidas', caption: 'Diagrama entidade-relacionamento lógico do CourtTime', nodes, edges };
+  return { figure: 5, file: '05-der-postgresql', title: 'DER lógico do banco PostgreSQL', subtitle: 'Derivado das 12 entidades JPA da base funcional 4fb7a06; PK, FK, UQ e NN indicam restrições persistidas', caption: 'Diagrama entidade-relacionamento lógico do CourtTime', nodes, edges };
 }
 
 function activityComplete() {
@@ -449,9 +449,9 @@ function activityComplete() {
     n('lane-admin', 'lane', 20, 460, 1080, 115, 'Administração', [], { header: COLORS.redLight }),
     n('lane-seguranca', 'lane', 20, 575, 1080, 135, 'Segurança', [], { header: COLORS.greenLight }),
     n('start', 'start', 112, 130, 18, 18, ''),
-    n('criar', 'action', 155, 112, 125, 55, 'Selecionar período e criar solicitação'),
+    n('criar', 'action', 155, 112, 125, 55, 'Selecionar período e salvar rascunho'),
     n('validar', 'action', 315, 245, 135, 55, 'Validar antecedência, grade e disponibilidade'),
-    n('participantes', 'action', 480, 112, 140, 55, 'Cadastrar ao menos 10 participantes'),
+    n('participantes', 'action', 480, 112, 140, 55, 'Cadastrar 10 pessoas e formalizar pedido'),
     n('formulario', 'action', 650, 112, 130, 55, 'Gerar, assinar no gov.br e enviar PDF'),
     n('armazenar', 'action', 815, 245, 125, 55, 'Versionar PDF e travar lista'),
     n('conferir', 'action', 155, 372, 135, 55, 'Conferir PDF e assinatura no ITI'),
@@ -501,7 +501,7 @@ function activityReschedule() {
     n('solicitar', 'action', 575, 450, 145, 58, 'Solicitar remarcação e escolher novo período'),
     n('validar-origem', 'action', 735, 285, 135, 58, 'Travar origem e validar sucessora única', [], { wrap: 21, fontSize: 10.8 }),
     n('copiar', 'decision', 750, 445, 110, 75, 'Copiar participantes?'),
-    n('nova', 'action', 900, 285, 170, 58, 'Criar nova PENDENTE_DOCUMENTACAO vinculada à origem'),
+    n('nova', 'action', 900, 285, 170, 58, 'Criar rascunho vinculado; formalizar com 10 pessoas'),
     n('documentar', 'action', 900, 450, 170, 58, 'Refazer documento e aprovação'),
     n('calcular', 'action', 575, 595, 175, 60, 'Calcular devido, crédito, diferença e excedente'),
     n('registrar', 'action', 800, 595, 160, 60, 'Registrar uso do crédito e eventual diferença'),
@@ -623,8 +623,8 @@ for (const diagram of diagrams) {
 }
 
 const manifest = {
-  generatedAt: '2026-10-22',
-  baseCommit: '6fc1aee626c7478a35a93b5b70d7f70b4de1c042',
+  generatedAt: '2026-10-29',
+  baseCommit: '4fb7a06c8343234487bd15260c67e31a3b765aaa',
   pullRequests: [85, 86, 87],
   canvas: { format: 'A4 landscape', width: W, height: H },
   diagrams: diagrams.map((diagram) => ({

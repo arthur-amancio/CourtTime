@@ -2,7 +2,7 @@
 
 ## Escopo analisado
 
-A correspondência usa o commit `6fc1aee626c7478a35a93b5b70d7f70b4de1c042`, cabeça do PR #87 no início do trabalho. O histórico confirma que os PRs #85 e #86 são ancestrais dessa revisão. Os caminhos abaixo são relativos à raiz do repositório.
+A correspondência usa a árvore funcional do commit `4fb7a06c8343234487bd15260c67e31a3b765aaa`, incorporada aos PRs #87 e #88 por merges que preservam o histórico. Os caminhos abaixo são relativos à raiz do repositório.
 
 ## Casos de uso e atividades
 
@@ -11,6 +11,7 @@ A correspondência usa o commit `6fc1aee626c7478a35a93b5b70d7f70b4de1c042`, cabe
 | Autorização por Aluno, Secretaria, Segurança e Administrador | `SecurityConfig` | `src/main/java/br/com/courttime/config/SecurityConfig.java` associa `/solicitacoes/**`, `/secretaria/**`, `/seguranca/**` e `/admin/**` aos perfis |
 | Consultar agenda e criar solicitação | `SolicitacaoReservaController`, `ReservaService`, `CalendarioDisponibilidadeService` | criação valida quadra, faixa de horário, antecedência, disponibilidade e concorrência |
 | Manter ao menos dez pessoas, sem cota por categoria | `ParticipanteReservaService` | constante `MINIMO_DE_PARTICIPANTES = 10` e validação do total da lista |
+| Distinguir rascunho de solicitação formal | `Reserva.rascunho`, `ReservaService`, `ParticipanteReservaService` | novos pedidos começam rascunho; soma ALUNO+OUTRO formaliza com dez; lista editável abaixo do mínimo retorna a rascunho; PDF bloqueado no backend |
 | Gerar e enviar formulário oficial | `FormularioOficialService`, `FormularioReservaPdf`, `DocumentoReservaService`, `DocumentoReservaController` | formulário é preenchido, versionado, armazenado e relacionado à revisão dos participantes |
 | Conferir documento e assinatura | `ConferenciaDocumentoService` | resultado, justificativa, conferência da assinatura e usuário responsável |
 | Registrar R$ 2,00 por participante | `ContribuicaoApmService` | constante `VALOR_POR_PARTICIPANTE = 2.00` e multiplicação pela quantidade |
