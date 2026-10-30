@@ -61,24 +61,22 @@ public class AdminQuadraController {
             @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            prepararFormularioHorario(model, null);
-            return "admin/horarios/formulario";
+        if (!bindingResult.hasErrors()) {
+            try {
+                administracaoService.cadastrarHorario(
+                        administrador,
+                        form.getDiaSemana(),
+                        form.getHorarioInicio(),
+                        form.getHorarioFim());
+                redirectAttributes.addFlashAttribute(
+                        "mensagemSucesso", "Horário semanal cadastrado com sucesso.");
+                return "redirect:/admin/horarios";
+            } catch (IllegalArgumentException | IllegalStateException exception) {
+                bindingResult.reject("horario.invalido", exception.getMessage());
+            }
         }
-        try {
-            administracaoService.cadastrarHorario(
-                    administrador,
-                    form.getDiaSemana(),
-                    form.getHorarioInicio(),
-                    form.getHorarioFim());
-            redirectAttributes.addFlashAttribute(
-                    "mensagemSucesso", "Horário semanal cadastrado com sucesso.");
-            return "redirect:/admin/horarios";
-        } catch (IllegalArgumentException | IllegalStateException exception) {
-            bindingResult.reject("horario.invalido", exception.getMessage());
-            prepararFormularioHorario(model, null);
-            return "admin/horarios/formulario";
-        }
+        prepararFormularioHorario(model, null);
+        return "admin/horarios/formulario";
     }
 
     @GetMapping("/horarios/{id}/editar")
@@ -103,25 +101,23 @@ public class AdminQuadraController {
             @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            prepararFormularioHorario(model, id);
-            return "admin/horarios/formulario";
+        if (!bindingResult.hasErrors()) {
+            try {
+                administracaoService.editarHorario(
+                        id,
+                        administrador,
+                        form.getDiaSemana(),
+                        form.getHorarioInicio(),
+                        form.getHorarioFim());
+                redirectAttributes.addFlashAttribute(
+                        "mensagemSucesso", "Horário semanal atualizado com sucesso.");
+                return "redirect:/admin/horarios";
+            } catch (IllegalArgumentException | IllegalStateException exception) {
+                bindingResult.reject("horario.invalido", exception.getMessage());
+            }
         }
-        try {
-            administracaoService.editarHorario(
-                    id,
-                    administrador,
-                    form.getDiaSemana(),
-                    form.getHorarioInicio(),
-                    form.getHorarioFim());
-            redirectAttributes.addFlashAttribute(
-                    "mensagemSucesso", "Horário semanal atualizado com sucesso.");
-            return "redirect:/admin/horarios";
-        } catch (IllegalArgumentException | IllegalStateException exception) {
-            bindingResult.reject("horario.invalido", exception.getMessage());
-            prepararFormularioHorario(model, id);
-            return "admin/horarios/formulario";
-        }
+        prepararFormularioHorario(model, id);
+        return "admin/horarios/formulario";
     }
 
     @PostMapping("/horarios/{id}/alternar")
@@ -165,25 +161,23 @@ public class AdminQuadraController {
             @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            prepararFormularioBloqueio(model);
-            return "admin/bloqueios/formulario";
+        if (!bindingResult.hasErrors()) {
+            try {
+                administracaoService.cadastrarBloqueio(
+                        administrador,
+                        form.getData(),
+                        form.getHorarioInicio(),
+                        form.getHorarioFim(),
+                        form.getMotivo());
+                redirectAttributes.addFlashAttribute(
+                        "mensagemSucesso", "Bloqueio cadastrado com sucesso.");
+                return "redirect:/admin/bloqueios";
+            } catch (IllegalArgumentException | IllegalStateException exception) {
+                bindingResult.reject("bloqueio.invalido", exception.getMessage());
+            }
         }
-        try {
-            administracaoService.cadastrarBloqueio(
-                    administrador,
-                    form.getData(),
-                    form.getHorarioInicio(),
-                    form.getHorarioFim(),
-                    form.getMotivo());
-            redirectAttributes.addFlashAttribute(
-                    "mensagemSucesso", "Bloqueio cadastrado com sucesso.");
-            return "redirect:/admin/bloqueios";
-        } catch (IllegalArgumentException | IllegalStateException exception) {
-            bindingResult.reject("bloqueio.invalido", exception.getMessage());
-            prepararFormularioBloqueio(model);
-            return "admin/bloqueios/formulario";
-        }
+        prepararFormularioBloqueio(model);
+        return "admin/bloqueios/formulario";
     }
 
     @PostMapping("/bloqueios/{id}/desativar")
