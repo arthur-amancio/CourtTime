@@ -11,6 +11,7 @@ on:
       - 'chore/ui-v2-**'
       - 'feat/portaria-liberacao-acrescimos'
       - 'test/qa-redesign-v2'
+      - 'refactor/simplificacao-final-courttime'
   workflow_dispatch:
 
 permissions:
@@ -122,6 +123,7 @@ jobs:
       - name: Jornada dos quatro perfis
         working-directory: qa/playwright
         env:
+          COURTTIME_DB_USERNAME: courttime_e2e
           PGPASSWORD: e2e_descartavel
         run: npm run test:jornada
 

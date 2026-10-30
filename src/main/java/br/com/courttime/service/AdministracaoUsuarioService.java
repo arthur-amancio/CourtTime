@@ -68,11 +68,11 @@ public class AdministracaoUsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public UsuarioEdicao obterParaEdicao(Long id, Usuario administrador) {
+    public UsuarioResumo obterParaEdicao(Long id, Usuario administrador) {
         validarAdministradorAtual(administrador);
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
-        return detalhar(usuario);
+        return resumir(usuario);
     }
 
     @Transactional
@@ -331,12 +331,4 @@ public class AdministracaoUsuarioService {
                 usuario.isAtivo());
     }
 
-    private UsuarioEdicao detalhar(Usuario usuario) {
-        return new UsuarioEdicao(
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getEmail(),
-                usuario.getPerfil(),
-                usuario.isAtivo());
-    }
 }

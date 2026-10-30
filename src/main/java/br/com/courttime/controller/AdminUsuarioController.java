@@ -7,7 +7,7 @@ import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.AdministracaoUsuarioService;
-import br.com.courttime.service.UsuarioEdicao;
+import br.com.courttime.service.UsuarioResumo;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -92,7 +92,7 @@ public class AdminUsuarioController {
     @GetMapping("/{id}/editar")
     public String editar(
             @PathVariable Long id, @UsuarioAtual Usuario administrador, Model model) {
-        UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(
+        UsuarioResumo usuario = administracaoUsuarioService.obterParaEdicao(
                 id, administrador);
         EdicaoUsuarioForm form = new EdicaoUsuarioForm();
         form.setNome(usuario.nome());
@@ -111,7 +111,7 @@ public class AdminUsuarioController {
             @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
-        UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(id, administrador);
+        UsuarioResumo usuario = administracaoUsuarioService.obterParaEdicao(id, administrador);
         if (bindingResult.hasErrors()) {
             prepararEdicao(model, usuario);
             return "admin/usuarios/edicao";
@@ -153,7 +153,7 @@ public class AdminUsuarioController {
     @GetMapping("/{id}/senha")
     public String senha(
             @PathVariable Long id, @UsuarioAtual Usuario administrador, Model model) {
-        UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(
+        UsuarioResumo usuario = administracaoUsuarioService.obterParaEdicao(
                 id, administrador);
         model.addAttribute("usuario", usuario);
         model.addAttribute("form", new RedefinicaoSenhaForm());
@@ -168,7 +168,7 @@ public class AdminUsuarioController {
             @UsuarioAtual Usuario administrador,
             Model model,
             RedirectAttributes redirectAttributes) {
-        UsuarioEdicao usuario = administracaoUsuarioService.obterParaEdicao(id, administrador);
+        UsuarioResumo usuario = administracaoUsuarioService.obterParaEdicao(id, administrador);
         if (bindingResult.hasErrors()) {
             model.addAttribute("usuario", usuario);
             return "admin/usuarios/senha";
@@ -191,7 +191,7 @@ public class AdminUsuarioController {
         model.addAttribute("perfis", administracaoUsuarioService.perfisCadastraveis());
     }
 
-    private void prepararEdicao(Model model, UsuarioEdicao usuario) {
+    private void prepararEdicao(Model model, UsuarioResumo usuario) {
         List<Perfil> perfis = usuario.perfil() == Perfil.ADMINISTRADOR
                 ? List.of(Perfil.ADMINISTRADOR)
                 : administracaoUsuarioService.perfisCadastraveis();

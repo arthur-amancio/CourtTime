@@ -74,11 +74,11 @@ class AnaliseAdministrativaServiceTest {
     void listaSomenteReservasAutorizadasAtuaisOuFuturas() {
         LocalDate hoje = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
         reserva.setStatus(StatusReserva.APROVADA);
-        when(reservaRepository.listarAutorizadasParaAdministracao(
+        when(reservaRepository.listarAutorizadas(
                 StatusReserva.APROVADA, hoje)).thenReturn(List.of(reserva));
 
         assertEquals(List.of(reserva), service.listarAutorizadasAtuais(administrador));
-        verify(reservaRepository).listarAutorizadasParaAdministracao(
+        verify(reservaRepository).listarAutorizadas(
                 StatusReserva.APROVADA, hoje);
     }
 

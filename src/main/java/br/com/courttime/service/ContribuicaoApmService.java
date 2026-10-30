@@ -62,17 +62,17 @@ public class ContribuicaoApmService {
                         StatusReserva.PENDENTE_DOCUMENTACAO,
                         ResultadoConferenciaDocumento.VALIDADO)
                 .stream()
-                .map(this::pendente)
+                .map(reserva -> pendente(reserva, contribuicaoDaReservaCancelada(reserva).orElse(null)))
                 .toList();
     }
 
-    private ContribuicaoPendente pendente(Reserva reserva) {
+    private ContribuicaoPendente pendente(Reserva reserva, ContribuicaoApm origem) {
         long participantes = participanteService.contarParticipantes(reserva);
-        return contribuicaoDaReservaCancelada(reserva)
-                .map(origem -> new ContribuicaoPendente(
-                        reserva, participantes,
-                        origem.getReserva().getId(), origem.getValorEfetivamentePago()))
-                .orElseGet(() -> new ContribuicaoPendente(reserva, participantes));
+        if (origem == null) {
+            return new ContribuicaoPendente(reserva, participantes);
+        }
+        return new ContribuicaoPendente(reserva, participantes,
+                origem.getReserva().getId(), origem.getValorEfetivamentePago());
     }
 
     /**
@@ -143,7 +143,8 @@ public class ContribuicaoApmService {
 
         // A lista está travada desde o envio, então a contagem atual é a do
         // documento conferido (R03.1). A secretaria não digita o valor (R03.2).
-        ContribuicaoPendente calculo = pendente(reserva);
+        ContribuicaoApm origem = contribuicaoDaReservaCancelada(reserva).orElse(null);
+        ContribuicaoPendente calculo = pendente(reserva, origem);
         if (calculo.valorDevido().signum() <= 0) {
             throw new IllegalStateException("A solicitação não possui participantes cadastrados");
         }
@@ -157,8 +158,7 @@ public class ContribuicaoApmService {
         contribuicao.setValor(calculo.valorACobrar());
         if (calculo.temCredito()) {
             contribuicao.setCreditoAplicado(calculo.creditoAplicado());
-            contribuicao.setContribuicaoOrigem(
-                    contribuicaoDaReservaCancelada(reserva).orElseThrow());
+            contribuicao.setContribuicaoOrigem(origem);
         }
         contribuicao.setObservacoes(observacoesNormalizadas);
         contribuicao.setRegistradaPor(operadora);

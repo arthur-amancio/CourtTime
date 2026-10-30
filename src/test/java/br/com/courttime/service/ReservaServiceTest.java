@@ -89,6 +89,15 @@ class ReservaServiceTest {
     }
 
     @Test
+    void alunoSemIdentidadePersistidaNaoConsultaSolicitacoes() {
+        aluno.setId(null);
+
+        assertThrows(AccessDeniedException.class, () -> service.listarSolicitacoesDoUsuario(aluno));
+
+        verify(reservaRepository, never()).findBySolicitanteOrderByCriadaEmDesc(any());
+    }
+
+    @Test
     void activeStudentCreatesPendingRequestForAvailablePeriod() {
         when(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())
                 .thenReturn(DATA);

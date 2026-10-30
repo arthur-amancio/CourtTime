@@ -75,28 +75,26 @@ public class ParticipanteReservaController {
         if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
         }
-        if (bindingResult.hasErrors()) {
-            prepararFormulario(model, reserva, form, null, "Adicionar participante");
-            return "solicitacoes/participantes/formulario";
+        if (!bindingResult.hasErrors()) {
+            try {
+                participanteService.adicionar(
+                        reservaId,
+                        usuario,
+                        form.getNomeCompleto(),
+                        form.getRmOuRg(),
+                        form.getCategoria(),
+                        form.getVinculo());
+                redirectAttributes.addFlashAttribute(
+                        "mensagemSucesso", "Participante adicionado à solicitação.");
+                return redirecionarLista(reservaId);
+            } catch (IllegalArgumentException exception) {
+                bindingResult.reject("participante.invalido", exception.getMessage());
+            } catch (IllegalStateException exception) {
+                return redirecionarErro(reservaId, exception.getMessage(), redirectAttributes);
+            }
         }
-        try {
-            participanteService.adicionar(
-                    reservaId,
-                    usuario,
-                    form.getNomeCompleto(),
-                    form.getRmOuRg(),
-                    form.getCategoria(),
-                    form.getVinculo());
-            redirectAttributes.addFlashAttribute(
-                    "mensagemSucesso", "Participante adicionado à solicitação.");
-            return redirecionarLista(reservaId);
-        } catch (IllegalArgumentException exception) {
-            bindingResult.reject("participante.invalido", exception.getMessage());
-            prepararFormulario(model, reserva, form, null, "Adicionar participante");
-            return "solicitacoes/participantes/formulario";
-        } catch (IllegalStateException exception) {
-            return redirecionarErro(reservaId, exception.getMessage(), redirectAttributes);
-        }
+        prepararFormulario(model, reserva, form, null, "Adicionar participante");
+        return "solicitacoes/participantes/formulario";
     }
 
     @GetMapping("/{participanteId}/editar")
@@ -134,29 +132,27 @@ public class ParticipanteReservaController {
         if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
         }
-        if (bindingResult.hasErrors()) {
-            prepararFormulario(model, reserva, form, participanteId, "Editar participante");
-            return "solicitacoes/participantes/formulario";
+        if (!bindingResult.hasErrors()) {
+            try {
+                participanteService.editar(
+                        reservaId,
+                        participanteId,
+                        usuario,
+                        form.getNomeCompleto(),
+                        form.getRmOuRg(),
+                        form.getCategoria(),
+                        form.getVinculo());
+                redirectAttributes.addFlashAttribute(
+                        "mensagemSucesso", "Participante atualizado.");
+                return redirecionarLista(reservaId);
+            } catch (IllegalArgumentException exception) {
+                bindingResult.reject("participante.invalido", exception.getMessage());
+            } catch (IllegalStateException exception) {
+                return redirecionarErro(reservaId, exception.getMessage(), redirectAttributes);
+            }
         }
-        try {
-            participanteService.editar(
-                    reservaId,
-                    participanteId,
-                    usuario,
-                    form.getNomeCompleto(),
-                    form.getRmOuRg(),
-                    form.getCategoria(),
-                    form.getVinculo());
-            redirectAttributes.addFlashAttribute(
-                    "mensagemSucesso", "Participante atualizado.");
-            return redirecionarLista(reservaId);
-        } catch (IllegalArgumentException exception) {
-            bindingResult.reject("participante.invalido", exception.getMessage());
-            prepararFormulario(model, reserva, form, participanteId, "Editar participante");
-            return "solicitacoes/participantes/formulario";
-        } catch (IllegalStateException exception) {
-            return redirecionarErro(reservaId, exception.getMessage(), redirectAttributes);
-        }
+        prepararFormulario(model, reserva, form, participanteId, "Editar participante");
+        return "solicitacoes/participantes/formulario";
     }
 
     @PostMapping("/{participanteId}/remover")

@@ -54,7 +54,7 @@ public class AnaliseAdministrativaService {
         Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         LocalDate dataAtual = LocalDate.now(
                 CalendarioDisponibilidadeService.FUSO_HORARIO);
-        return reservaRepository.listarAutorizadasParaAdministracao(
+        return reservaRepository.listarAutorizadas(
                 StatusReserva.APROVADA, dataAtual);
     }
 
