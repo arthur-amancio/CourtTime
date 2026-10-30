@@ -66,7 +66,7 @@ public class ReservaService {
             LocalTime horarioInicio,
             LocalTime horarioFim,
             String finalidade) {
-        validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         Objects.requireNonNull(quadra, "A quadra é obrigatória");
         Objects.requireNonNull(data, "A data é obrigatória");
         if (data.isBefore(calendarioDisponibilidadeService.obterDataMinimaParaSolicitacao())) {
@@ -96,13 +96,13 @@ public class ReservaService {
 
     @Transactional(readOnly = true)
     public List<Reserva> listarSolicitacoesDoUsuario(Usuario solicitante) {
-        validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         return reservaRepository.findBySolicitanteOrderByCriadaEmDesc(solicitante);
     }
 
     @Transactional(readOnly = true)
     public Reserva obterSolicitacaoDoUsuario(Long reservaId, Usuario solicitante) {
-        validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         if (reservaId == null) {
             throw new IllegalArgumentException("A solicitação é obrigatória");
         }
@@ -132,7 +132,7 @@ public class ReservaService {
             LocalTime horarioFim,
             String finalidade,
             boolean copiarParticipantes) {
-        validarUsuarioAtivoComPerfil(solicitante, Perfil.ALUNO);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         if (reservaCanceladaId == null) {
             throw new IllegalArgumentException("A solicitação cancelada é obrigatória");
         }
@@ -293,12 +293,6 @@ public class ReservaService {
         return contribuicao != null
                 && contribuicao.getId() != null
                 && Objects.equals(contribuicao.getId(), documento.getId());
-    }
-
-    private void validarUsuarioAtivoComPerfil(Usuario usuario, Perfil perfilEsperado) {
-        if (usuario == null || !usuario.isAtivo() || usuario.getPerfil() != perfilEsperado) {
-            throw new AccessDeniedException("Usuário sem permissão para esta operação");
-        }
     }
 
     private void impedirAnaliseDaPropriaSolicitacao(Reserva reserva, Usuario administrador) {
