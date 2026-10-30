@@ -1,0 +1,431 @@
+[
+  {
+    "figura": 1,
+    "legenda": "Figura 1 — Página pública do ArenaFácil",
+    "pagina": 23,
+    "fisica": 24,
+    "arquivo": "figuras/figura-01.png",
+    "pixels": [
+      980,
+      465
+    ],
+    "dpi_horizontal": 174,
+    "sha256": "40e239841328c3eeeb9e01d6de23197227002561c33a650619d884f417b5cd55"
+  },
+  {
+    "figura": 2,
+    "legenda": "Figura 2 — Página pública do ArenaPoint",
+    "pagina": 24,
+    "fisica": 25,
+    "arquivo": "figuras/figura-02.png",
+    "pixels": [
+      980,
+      463
+    ],
+    "dpi_horizontal": 175,
+    "sha256": "38e831c805bb68398712d8fddb2ac63f2b6c4dc8be07249005ea74c285604710"
+  },
+  {
+    "figura": 3,
+    "legenda": "Figura 3 — Página pública do SuaArena",
+    "pagina": 24,
+    "fisica": 25,
+    "arquivo": "figuras/figura-03.png",
+    "pixels": [
+      980,
+      463
+    ],
+    "dpi_horizontal": 173,
+    "sha256": "637b2aef986e56db9ff5f5c3804d8892bf2c2accd87fabfe2e10dec8269ce5bb"
+  },
+  {
+    "figura": 4,
+    "legenda": "Figura 4 — Página pública do Qodra",
+    "pagina": 25,
+    "fisica": 26,
+    "arquivo": "figuras/figura-04.png",
+    "pixels": [
+      980,
+      465
+    ],
+    "dpi_horizontal": 186,
+    "sha256": "e046da730cd6eddf90f7613fb323f62bedba8a3f621138547ff32cbf8dfd2051"
+  },
+  {
+    "figura": 5,
+    "legenda": "Figura 5 — Página pública do Arena Manager",
+    "pagina": 25,
+    "fisica": 26,
+    "arquivo": "figuras/figura-05.png",
+    "pixels": [
+      980,
+      460
+    ],
+    "dpi_horizontal": 180,
+    "sha256": "94e71d1a301c4227748f5d831d77cf9221edf9c6b43dd9996293d307638dcc51"
+  },
+  {
+    "figura": 6,
+    "legenda": "Figura 6 — Logotipo principal horizontal do CourtTime",
+    "pagina": 29,
+    "fisica": 30,
+    "arquivo": "figuras/figura-06.png",
+    "pixels": [
+      1388,
+      322
+    ],
+    "dpi_horizontal": 263,
+    "sha256": "fd77c376fbeddbd5caa3b3a0938d87d93e71a73babd4e40ea659dfda3a79ffb5"
+  },
+  {
+    "figura": 7,
+    "legenda": "Figura 7 — Logotipo principal vertical do CourtTime",
+    "pagina": 30,
+    "fisica": 31,
+    "arquivo": "figuras/figura-07.png",
+    "pixels": [
+      602,
+      650
+    ],
+    "dpi_horizontal": 271,
+    "sha256": "95605427f2898c11b062f3b4906674d16b66e680ef72e37f49f77e5a70be0ab5"
+  },
+  {
+    "figura": 8,
+    "legenda": "Figura 8 — Ícone principal do CourtTime",
+    "pagina": 30,
+    "fisica": 31,
+    "arquivo": "figuras/figura-08.png",
+    "pixels": [
+      540,
+      406
+    ],
+    "dpi_horizontal": 259,
+    "sha256": "0c9c0b76d6c0a268aca39a50fb8f3ee2e38ca1a5ef692361791727e74884f940"
+  },
+  {
+    "figura": 9,
+    "legenda": "Figura 9 — Logotipo horizontal alternativo do CourtTime",
+    "pagina": 31,
+    "fisica": 32,
+    "arquivo": "figuras/figura-09.png",
+    "pixels": [
+      1380,
+      308
+    ],
+    "dpi_horizontal": 261,
+    "sha256": "1e39a364c7ea3d92d4b057f0254c9f74ee4192820ad0725f9904efdb07348dd1"
+  },
+  {
+    "figura": 10,
+    "legenda": "Figura 10 — Logotipo vertical alternativo do CourtTime",
+    "pagina": 31,
+    "fisica": 32,
+    "arquivo": "figuras/figura-10.png",
+    "pixels": [
+      636,
+      692
+    ],
+    "dpi_horizontal": 287,
+    "sha256": "90c2ab31c62f618c1c4f010d1a4f44d9296b23c83137899b5319548b402dfd77"
+  },
+  {
+    "figura": 11,
+    "legenda": "Figura 11 — Ícone alternativo do CourtTime",
+    "pagina": 31,
+    "fisica": 32,
+    "arquivo": "figuras/figura-11.png",
+    "pixels": [
+      568,
+      430
+    ],
+    "dpi_horizontal": 273,
+    "sha256": "9d274c97333f21df600dd8afa388ae3dbc1dbcc9cb678542bef9042822fceda5"
+  },
+  {
+    "figura": 12,
+    "legenda": "Figura 12 — Casos de uso gerais do CourtTime (diagrama UML 01).",
+    "pagina": 41,
+    "fisica": 42,
+    "arquivo": "figuras/figura-12.png",
+    "pixels": [
+      786,
+      992
+    ],
+    "dpi_horizontal": 171,
+    "sha256": "0ccc3af94d2ae8c065fd673e4f07c66aa5d0a892b97ecfdc1ace7123bd4c1aad"
+  },
+  {
+    "figura": 13,
+    "legenda": "Figura 13 — Solicitação e administração do CourtTime (diagrama UML 02).",
+    "pagina": 45,
+    "fisica": 46,
+    "arquivo": "figuras/figura-13.png",
+    "pixels": [
+      841,
+      1380
+    ],
+    "dpi_horizontal": 195,
+    "sha256": "6ea80919fee441af88aca2c4a36d6fa8e85301cc7304fa90dcdcdbb04fb7bbb1"
+  },
+  {
+    "figura": 14,
+    "legenda": "Figura 14 — Portaria e contribuições do CourtTime (diagrama UML 03).",
+    "pagina": 46,
+    "fisica": 47,
+    "arquivo": "figuras/figura-14.png",
+    "pixels": [
+      993,
+      769
+    ],
+    "dpi_horizontal": 166,
+    "sha256": "38fca12771ce2b74a698f285102dd7419c68d4e6a47bce15aa319500f461e1a8"
+  },
+  {
+    "figura": 15,
+    "legenda": "Figura 15 — Classes do núcleo de reservas — atributos selecionados",
+    "pagina": 49,
+    "fisica": 50,
+    "arquivo": "figuras/classes-nucleo.png",
+    "pixels": [
+      1600,
+      1560
+    ],
+    "dpi_horizontal": 288,
+    "sha256": "aadbd83d9afe530d100224e2cea24ba4131fedb3ebe64b8845b8a7cbcc0758a5"
+  },
+  {
+    "figura": 16,
+    "legenda": "Figura 16 — Classes de documentação, contribuição e portaria",
+    "pagina": 50,
+    "fisica": 51,
+    "arquivo": "figuras/classes-documentacao.png",
+    "pixels": [
+      1517,
+      2048
+    ],
+    "dpi_horizontal": 273,
+    "sha256": "79b3fbfab0ae3eb04d628dfd40d57d629eeffd4721eea292c6572c8fbaf95dea"
+  },
+  {
+    "figura": 17,
+    "legenda": "Figura 17 — DER do núcleo de reservas do CourtTime.",
+    "pagina": 57,
+    "fisica": 58,
+    "arquivo": "figuras/der-nucleo.png",
+    "pixels": [
+      1517,
+      2048
+    ],
+    "dpi_horizontal": 273,
+    "sha256": "8b90cff453e215f77d5133832ce211bb51ef5f7a7542e1aeba8ac7f88821d0d7"
+  },
+  {
+    "figura": 18,
+    "legenda": "Figura 18 — DER do controle documental do CourtTime.",
+    "pagina": 58,
+    "fisica": 59,
+    "arquivo": "figuras/der-documentacao.png",
+    "pixels": [
+      1517,
+      2048
+    ],
+    "dpi_horizontal": 273,
+    "sha256": "23ab210eeb370873187ce3e0debd3beaf4117da63d6a9a7b4d1b54d3b36c235a"
+  },
+  {
+    "figura": 19,
+    "legenda": "Figura 19 — Componentes arquiteturais do CourtTime (UML 11).",
+    "pagina": 59,
+    "fisica": 60,
+    "arquivo": "figuras/figura-19.png",
+    "pixels": [
+      941,
+      648
+    ],
+    "dpi_horizontal": 158,
+    "sha256": "14c27075698246f9a6a2fd4538afd6a7d842d7c895b5f078bd4a8482d1e40f4c"
+  },
+  {
+    "figura": 20,
+    "legenda": "Figura 20 — Página inicial do CourtTime — recorte móvel",
+    "pagina": 61,
+    "fisica": 62,
+    "arquivo": "figuras/tela-pagina-publica.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "9a4ed354e494c32a00489100d46f90650a0064d0368167d3d6150d81860c79da"
+  },
+  {
+    "figura": 21,
+    "legenda": "Figura 21 — Tela de autenticação — recorte móvel",
+    "pagina": 62,
+    "fisica": 63,
+    "arquivo": "figuras/tela-login.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "7e5c315bdbec0a4e509253ee8b089b6b78494e0f366b5489407f8bb7d9d54f49"
+  },
+  {
+    "figura": 22,
+    "legenda": "Figura 22 — Painel inicial do Administrador no CourtTime — recorte móvel",
+    "pagina": 63,
+    "fisica": 64,
+    "arquivo": "figuras/tela-admin-painel.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "1af4845e23db2ae20b95fe595053b2bf581edcf0beaf42917222102c5c337758"
+  },
+  {
+    "figura": 23,
+    "legenda": "Figura 23 — Consulta de datas e horários da quadra — recorte móvel",
+    "pagina": 64,
+    "fisica": 65,
+    "arquivo": "figuras/tela-aluno-calendario.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "c23e5cfd23e9f7193507f0fee136fb44eb814e8c15433a6d1c8cab63136a6b6e"
+  },
+  {
+    "figura": 24,
+    "legenda": "Figura 24 — Formulário de solicitação de reserva — recorte móvel",
+    "pagina": 65,
+    "fisica": 66,
+    "arquivo": "figuras/tela-aluno-nova-solicitacao.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "98cede6376616941e5c890e409d58f3ba20148c97ae06ae0a463e4937fc7d8da"
+  },
+  {
+    "figura": 25,
+    "legenda": "Figura 25 — Cadastro e conferência da lista de participantes — recorte móvel",
+    "pagina": 66,
+    "fisica": 67,
+    "arquivo": "figuras/tela-aluno-participantes.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "a453bf013634f752f7d3e2de9738de897c9788f40f7c4844067a3f5734bff6e5"
+  },
+  {
+    "figura": 26,
+    "legenda": "Figura 26 — Envio e acompanhamento do documento de reserva — recorte móvel",
+    "pagina": 67,
+    "fisica": 68,
+    "arquivo": "figuras/tela-aluno-documentos.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "684fbe6e0b622460d4ce4ea7504dff609f77df34f705bc10d28519756611b81c"
+  },
+  {
+    "figura": 27,
+    "legenda": "Figura 27 — Detalhes de solicitação cancelada — recorte móvel",
+    "pagina": 68,
+    "fisica": 69,
+    "arquivo": "figuras/tela-final-detalhe-cancelada.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "41dd64d6baba3500110c65557842755e3762772a4ab9d5a866c948ad5e4488e1"
+  },
+  {
+    "figura": 28,
+    "legenda": "Figura 28 — Conferência documental pela secretaria — recorte móvel",
+    "pagina": 69,
+    "fisica": 70,
+    "arquivo": "figuras/tela-secretaria-documento.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "c214290579ca723e92ac7596adce3f5d2913fd73822162061d3704f988493f70"
+  },
+  {
+    "figura": 29,
+    "legenda": "Figura 29 — Registro de contribuição à APM — recorte móvel",
+    "pagina": 70,
+    "fisica": 71,
+    "arquivo": "figuras/tela-secretaria-contribuicoes.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "02e77bb0f1dfc105caed0fa467aca75de79a1b79a8c85fcf7459767bdd3cf551"
+  },
+  {
+    "figura": 30,
+    "legenda": "Figura 30 — Análise administrativa de solicitações — recorte móvel",
+    "pagina": 71,
+    "fisica": 72,
+    "arquivo": "figuras/tela-admin-solicitacoes.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "85189a8d32a55554fa06b84d427c2deac7f703bd96f52d4a4d472229e6e87ba1"
+  },
+  {
+    "figura": 31,
+    "legenda": "Figura 31 — Administração dos horários semanais — recorte móvel",
+    "pagina": 72,
+    "fisica": 73,
+    "arquivo": "figuras/tela-admin-horarios.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "46db39b652a4c9844890cd36a650a34619b4b3d3486f461c86ce83dd4c542187"
+  },
+  {
+    "figura": 32,
+    "legenda": "Figura 32 — Consulta de reservas autorizadas pela Segurança (sem reservas no",
+    "pagina": 73,
+    "fisica": 74,
+    "arquivo": "figuras/tela-seguranca-reservas.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "1e44fd65ec159dc88bcd195184f15a479269eed6fe0aafc077adf287203e6aaa"
+  },
+  {
+    "figura": 33,
+    "legenda": "Figura 33 — Conferência encerrada e quadra liberada — recorte móvel",
+    "pagina": 74,
+    "fisica": 75,
+    "arquivo": "figuras/tela-seguranca-reserva.png",
+    "pixels": [
+      780,
+      1560
+    ],
+    "dpi_horizontal": 225,
+    "sha256": "ec03ce9727cfbb337c16503879e199d707a8074442f259d54aaef586e5a0b036"
+  }
+]

@@ -1,0 +1,141 @@
+[
+  {
+    "tag": "LISTAFIGURAS_A",
+    "items": [
+      "Figura 1 — Página pública do ArenaFácil",
+      "Figura 2 — Página pública do ArenaPoint",
+      "Figura 3 — Página pública do SuaArena",
+      "Figura 4 — Página pública do Qodra",
+      "Figura 5 — Página pública do Arena Manager",
+      "Figura 6 — Logotipo principal horizontal do CourtTime",
+      "Figura 7 — Logotipo principal vertical do CourtTime",
+      "Figura 8 — Ícone principal do CourtTime",
+      "Figura 9 — Logotipo horizontal alternativo do CourtTime",
+      "Figura 10 — Logotipo vertical alternativo do CourtTime",
+      "Figura 11 — Ícone alternativo do CourtTime",
+      "Figura 12 — Casos de uso gerais do CourtTime (diagrama UML 01).",
+      "Figura 13 — Solicitação e administração do CourtTime (diagrama UML 02).",
+      "Figura 14 — Portaria e contribuições do CourtTime (diagrama UML 03).",
+      "Figura 15 — Classes do núcleo de reservas — atributos selecionados",
+      "Figura 16 — Classes de documentação, contribuição e portaria",
+      "Figura 17 — DER do núcleo de reservas do CourtTime."
+    ],
+    "text": "Figura 1 — Página pública do ArenaFácil ............................................................... 23\nFigura 2 — Página pública do ArenaPoint ............................................................... 24\nFigura 3 — Página pública do SuaArena ................................................................. 24\nFigura 4 — Página pública do Qodra ....................................................................... 25\nFigura 5 — Página pública do Arena Manager ........................................................ 25\nFigura 6 — Logotipo principal horizontal do CourtTime ........................................... 29\nFigura 7 — Logotipo principal vertical do CourtTime ............................................... 30\nFigura 8 — Ícone principal do CourtTime ................................................................ 30\nFigura 9 — Logotipo horizontal alternativo do CourtTime ....................................... 31\nFigura 10 — Logotipo vertical alternativo do CourtTime .......................................... 31\nFigura 11 — Ícone alternativo do CourtTime ........................................................... 31\nFigura 12 — Casos de uso gerais do CourtTime (diagrama UML 01). .................... 41\nFigura 13 — Solicitação e administração do CourtTime (diagrama UML 02). ......... 45\nFigura 14 — Portaria e contribuições do CourtTime (diagrama UML 03). ............... 46\nFigura 15 — Classes do núcleo de reservas — atributos selecionados .................. 49\nFigura 16 — Classes de documentação, contribuição e portaria ............................ 50\nFigura 17 — DER do núcleo de reservas do CourtTime. ........................................ 57"
+  },
+  {
+    "tag": "LISTAFIGURAS_B",
+    "items": [
+      "Figura 18 — DER do controle documental do CourtTime.",
+      "Figura 19 — Componentes arquiteturais do CourtTime (UML 11).",
+      "Figura 20 — Página inicial do CourtTime — recorte móvel",
+      "Figura 21 — Tela de autenticação — recorte móvel",
+      "Figura 22 — Painel inicial do Administrador no CourtTime — recorte móvel",
+      "Figura 23 — Consulta de datas e horários da quadra — recorte móvel",
+      "Figura 24 — Formulário de solicitação de reserva — recorte móvel",
+      "Figura 25 — Cadastro e conferência da lista de participantes — recorte móvel",
+      "Figura 26 — Envio e acompanhamento do documento de reserva — recorte móvel",
+      "Figura 27 — Detalhes de solicitação cancelada — recorte móvel",
+      "Figura 28 — Conferência documental pela secretaria — recorte móvel",
+      "Figura 29 — Registro de contribuição à APM — recorte móvel",
+      "Figura 30 — Análise administrativa de solicitações — recorte móvel",
+      "Figura 31 — Administração dos horários semanais — recorte móvel",
+      "Figura 32 — Consulta de reservas autorizadas pela Segurança (sem reservas no período) — recorte móvel",
+      "Figura 33 — Conferência encerrada e quadra liberada — recorte móvel"
+    ],
+    "text": "Figura 18 — DER do controle documental do CourtTime. ...................................... 58\nFigura 19 — Componentes arquiteturais do CourtTime (UML 11). ......................... 59\nFigura 20 — Página inicial do CourtTime — recorte móvel ..................................... 61\nFigura 21 — Tela de autenticação — recorte móvel ............................................... 62\nFigura 22 — Painel inicial do Administrador no CourtTime — recorte móvel .......... 63\nFigura 23 — Consulta de datas e horários da quadra — recorte móvel .................. 64\nFigura 24 — Formulário de solicitação de reserva — recorte móvel ....................... 65\nFigura 25 — Cadastro e conferência da lista de participantes — recorte\nmóvel ....................................................................................................................... 66\nFigura 26 — Envio e acompanhamento do documento de reserva — recorte\nmóvel ....................................................................................................................... 67\nFigura 27 — Detalhes de solicitação cancelada — recorte móvel .......................... 68\nFigura 28 — Conferência documental pela secretaria — recorte móvel ................. 69\nFigura 29 — Registro de contribuição à APM — recorte móvel .............................. 70\nFigura 30 — Análise administrativa de solicitações — recorte móvel ..................... 71\nFigura 31 — Administração dos horários semanais — recorte móvel ..................... 72\nFigura 32 — Consulta de reservas autorizadas pela Segurança (sem reservas\nno período) — recorte móvel ................................................................................... 73\nFigura 33 — Conferência encerrada e quadra liberada — recorte móvel ............... 74"
+  },
+  {
+    "tag": "LISTAQUADROS",
+    "items": [
+      "Quadro 1. Comparação entre softwares similares",
+      "Quadro 2. Paleta cromática da identidade visual do CourtTime",
+      "Quadro 3 — Atores e responsabilidades do CourtTime",
+      "Quadro 4 — Lista de casos de uso do CourtTime",
+      "Quadro 5 — Dicionário de mensagens e retornos",
+      "Quadro 6 — Classes persistidas no CourtTime",
+      "Quadro 7 — Dicionário de atributos essenciais do CourtTime"
+    ],
+    "text": "Quadro 1. Comparação entre softwares similares ................................................... 23\nQuadro 2. Paleta cromática da identidade visual do CourtTime .............................. 32\nQuadro 3 — Atores e responsabilidades do CourtTime .......................................... 40\nQuadro 4 — Lista de casos de uso do CourtTime ................................................... 42\nQuadro 5 — Dicionário de mensagens e retornos ................................................... 44\nQuadro 6 — Classes persistidas no CourtTime ....................................................... 51\nQuadro 7 — Dicionário de atributos essenciais do CourtTime ................................ 52"
+  },
+  {
+    "tag": "SUMARIO_A",
+    "items": [
+      "INTRODUÇÃO",
+      "CAPÍTULO I",
+      "FUNDAMENTAÇÃO TEÓRICA",
+      "1.1 Sistemas web e sistemas de informação",
+      "1.1.1 A importância e os benefícios dos sistemas computacionais na atualidade",
+      "1.1.2 Sistemas Web",
+      "1.1.3 Relação com o CourtTime",
+      "1.2 Sistemas de agendamento e gerenciamento de recursos",
+      "1.3 Banco de dados aplicado a sistemas de reserva",
+      "1.4 Autenticação, autorização e controle de acesso",
+      "1.5 Segurança da informação",
+      "1.6 Responsividade e usabilidade",
+      "1.7 Pesquisa de Softwares Similares",
+      "1.8 Pesquisas Relacionadas",
+      "CAPÍTULO II",
+      "2. IDENTIDADE VISUAL",
+      "2.1 Logo",
+      "2.2 Paleta de Cores",
+      "2.3 Tipografia",
+      "2.4 Briefing",
+      "2.4.1 Público-alvo e usuários"
+    ],
+    "text": "INTRODUÇÃO ......................................................................................................... 15\nCAPÍTULO I ............................................................................................................. 17\nFUNDAMENTAÇÃO TEÓRICA .............................................................................. 17\n1.1 Sistemas web e sistemas de informação ...................................................... 17\n1.1.1 A importância e os benefícios dos sistemas computacionais na\natualidade ............................................................................................................... 17\n1.1.2 Sistemas Web ................................................................................................ 18\n1.1.3 Relação com o CourtTime ............................................................................ 18\n1.2 Sistemas de agendamento e gerenciamento de recursos ........................... 19\n1.3 Banco de dados aplicado a sistemas de reserva ......................................... 19\n1.4 Autenticação, autorização e controle de acesso .......................................... 20\n1.5 Segurança da informação ............................................................................... 21\n1.6 Responsividade e usabilidade ........................................................................ 21\n1.7 Pesquisa de Softwares Similares ................................................................... 22\n1.8 Pesquisas Relacionadas ................................................................................. 26\nCAPÍTULO II ............................................................................................................ 28\n2. IDENTIDADE VISUAL ......................................................................................... 28\n2.1 Logo .................................................................................................................. 29\n2.2 Paleta de Cores ................................................................................................ 32\n2.3 Tipografia .......................................................................................................... 33\n2.4 Briefing ............................................................................................................. 33\n2.4.1 Público-alvo e usuários ................................................................................ 33"
+  },
+  {
+    "tag": "SUMARIO_B",
+    "items": [
+      "2.4.2 Contexto, propósito e posicionamento",
+      "2.4.3 Escopo, restrições e diferenciais da versão inicial",
+      "2.4.4 Fluxo principal de utilização",
+      "2.4.5 Tecnologias e requisitos de qualidade",
+      "CAPÍTULO III",
+      "3. LEVANTAMENTO DE REQUISITOS",
+      "3.1 Procedimentos de levantamento de requisitos",
+      "3.2 Questionário de viabilidade do software",
+      "CAPÍTULO IV",
+      "4. MODELAGEM DE REQUISITOS",
+      "4.1 Requisitos funcionais e não funcionais",
+      "4.2 Atores do sistema",
+      "4.3 Lista de casos de uso",
+      "4.3.1 Dicionário de mensagens e retornos",
+      "4.4 Diagramas de casos de uso",
+      "4.5 Atividades e verificação dos fluxos",
+      "4.6 Pendências institucionais e limites de verificação",
+      "CAPÍTULO V",
+      "5. ANÁLISE ORIENTADA A OBJETOS",
+      "5.1 Diagrama de classes",
+      "5.2 Dicionário de atributos"
+    ],
+    "text": "2.4.2 Contexto, propósito e posicionamento ...................................................... 34\n2.4.3 Escopo, restrições e diferenciais da versão inicial ................................... 35\n2.4.4 Fluxo principal de utilização ........................................................................ 35\n2.4.5 Tecnologias e requisitos de qualidade ....................................................... 36\nCAPÍTULO III ........................................................................................................... 37\n3. LEVANTAMENTO DE REQUISITOS .................................................................. 37\n3.1 Procedimentos de levantamento de requisitos ............................................ 37\n3.2 Questionário de viabilidade do software ....................................................... 37\nCAPÍTULO IV .......................................................................................................... 38\n4. MODELAGEM DE REQUISITOS ........................................................................ 38\n4.1 Requisitos funcionais e não funcionais ........................................................ 38\n4.2 Atores do sistema ............................................................................................ 40\n4.3 Lista de casos de uso ...................................................................................... 41\n4.3.1 Dicionário de mensagens e retornos .......................................................... 43\n4.4 Diagramas de casos de uso ............................................................................ 45\n4.5 Atividades e verificação dos fluxos ............................................................... 46\n4.6 Pendências institucionais e limites de verificação ...................................... 47\nCAPÍTULO V ........................................................................................................... 48\n5. ANÁLISE ORIENTADA A OBJETOS ................................................................. 48\n5.1 Diagrama de classes ....................................................................................... 48\n5.2 Dicionário de atributos .................................................................................... 51"
+  },
+  {
+    "tag": "SUMARIO_C",
+    "items": [
+      "5.3 Modelo entidade-relacionamento e esquema físico",
+      "5.4 Arquitetura de componentes",
+      "5.5 Consistência entre a modelagem e a aplicação",
+      "CAPÍTULO VI",
+      "6. TELAS DO SISTEMA",
+      "6.1. Acesso público e autenticação",
+      "6.2. Consulta e solicitação pelo aluno",
+      "6.3. Conferência documental e contribuições na secretaria",
+      "6.4. Administração das reservas e da quadra",
+      "6.5. Conferência de entrada pela segurança",
+      "6.6. Critérios de seleção das imagens",
+      "CAPÍTULO VII",
+      "7. TECNOLOGIAS UTILIZADAS",
+      "7.1. Tecnologias utilizadas na documentação e na modelagem",
+      "7.2. Tecnologias utilizadas na programação",
+      "7.3. Ferramentas utilizadas na criação e no tratamento das imagens",
+      "7.4. Ferramentas de teste e validação",
+      "7.5. Resultados da validação funcional",
+      "7.6. Limitações e questões pendentes",
+      "CONSIDERAÇÕES FINAIS",
+      "REFERÊNCIAS"
+    ],
+    "text": "5.3 Modelo entidade-relacionamento e esquema físico ..................................... 56\n5.4 Arquitetura de componentes .......................................................................... 59\n5.5 Consistência entre a modelagem e a aplicação ........................................... 59\nCAPÍTULO VI .......................................................................................................... 60\n6. TELAS DO SISTEMA .......................................................................................... 60\n6.1. Acesso público e autenticação ..................................................................... 60\n6.2. Consulta e solicitação pelo aluno ................................................................. 63\n6.3. Conferência documental e contribuições na secretaria ............................. 68\n6.4. Administração das reservas e da quadra ..................................................... 70\n6.5. Conferência de entrada pela segurança ....................................................... 72\n6.6. Critérios de seleção das imagens ................................................................. 74\nCAPÍTULO VII ......................................................................................................... 75\n7. TECNOLOGIAS UTILIZADAS ............................................................................ 75\n7.1. Tecnologias utilizadas na documentação e na modelagem ....................... 75\n7.2. Tecnologias utilizadas na programação ....................................................... 75\n7.3. Ferramentas utilizadas na criação e no tratamento das imagens ............. 76\n7.4. Ferramentas de teste e validação ................................................................. 77\n7.5. Resultados da validação funcional ............................................................... 77\n7.6. Limitações e questões pendentes ................................................................ 78\nCONSIDERAÇÕES FINAIS .................................................................................... 79\nREFERÊNCIAS ....................................................................................................... 80"
+  }
+]
