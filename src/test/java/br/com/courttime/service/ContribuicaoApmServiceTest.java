@@ -235,6 +235,7 @@ class ContribuicaoApmServiceTest {
         assertEquals(new BigDecimal(cobrado), nova.getValor());
         assertEquals(new BigDecimal(aplicado), nova.getCreditoAplicado());
         assertSame(origem, nova.getContribuicaoOrigem());
+        verify(contribuicaoRepository).obterPorReservaId(5L);
         assertEquals(5L, detalhe.reservaOrigemId());
         assertEquals(new BigDecimal(credito).subtract(new BigDecimal(aplicado)), detalhe.saldoExcedente());
         assertEquals(StatusReserva.PENDENTE_ANALISE, reserva.getStatus(), "R04.5: o crédito não aprova");

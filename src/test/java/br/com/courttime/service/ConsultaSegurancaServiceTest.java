@@ -2,6 +2,7 @@ package br.com.courttime.service;
 
 import br.com.courttime.entity.CategoriaParticipante;
 import br.com.courttime.entity.ParticipanteReserva;
+import br.com.courttime.entity.PagamentoAdicional;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.PresencaParticipante;
 import br.com.courttime.entity.Quadra;
@@ -9,6 +10,7 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.ParticipanteReservaRepository;
+import br.com.courttime.repository.PagamentoAdicionalRepository;
 import br.com.courttime.repository.ReservaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.time.Instant;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -30,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -84,13 +89,56 @@ class ConsultaSegurancaServiceTest {
                 20L, StatusReserva.APROVADA, hoje)).thenReturn(Optional.of(reserva));
         when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva))
                 .thenReturn(List.of(participante));
-        when(participanteRepository.countByReserva(reserva)).thenReturn(1L);
 
         DetalheReservaAutorizada detalhe = service.detalhar(20L, seguranca);
 
         assertEquals("Carlos Participante", detalhe.participantes().get(0).nomeCompleto());
         assertEquals("RM-123", detalhe.participantes().get(0).rmOuRg());
         assertEquals("Aluno", detalhe.participantes().get(0).categoria());
+        assertEquals(1, detalhe.reserva().quantidadeParticipantes());
+        verify(participanteRepository, never()).countByReserva(any());
+    }
+
+    @Test
+    void detalheDeHojeReutilizaAListaNaContagemENaSubstituicaoPaga() {
+        LocalDate hoje = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
+        reserva.setDataUtilizacao(hoje);
+        List<ParticipanteReserva> lista = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            ParticipanteReserva original = participante("Original " + i, "RM-" + i,
+                    CategoriaParticipante.ALUNO);
+            original.registrarPresenca(PresencaParticipante.PRESENTE, seguranca, Instant.now());
+            lista.add(original);
+        }
+        ParticipanteReserva ausente = participante("Adicional A", "RG-A", CategoriaParticipante.ALUNO);
+        ausente.marcarAdicionadoNaPortaria(seguranca, Instant.now());
+        ausente.registrarPresenca(PresencaParticipante.AUSENTE, seguranca, Instant.now());
+        ParticipanteReserva substituto = participante("Substituto B", "RG-B", CategoriaParticipante.ALUNO);
+        substituto.marcarAdicionadoNaPortaria(seguranca, Instant.now());
+        lista.add(ausente);
+        lista.add(substituto);
+        PagamentoAdicional pagamento = new PagamentoAdicional();
+        pagamento.setQuantidadePessoas(1);
+        pagamento.setValor(new BigDecimal("2.00"));
+        PagamentoAdicionalRepository pagamentos = mock(PagamentoAdicionalRepository.class);
+        PortariaService portaria = new PortariaService(reservaRepository, participanteRepository,
+                mock(ParticipanteReservaService.class), pagamentos);
+        ConsultaSegurancaService consulta = new ConsultaSegurancaService(
+                reservaRepository, participanteRepository, portaria);
+        when(reservaRepository.obterAutorizadaParaSeguranca(20L, StatusReserva.APROVADA, hoje))
+                .thenReturn(Optional.of(reserva));
+        when(participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva)).thenReturn(lista);
+        when(pagamentos.findByReservaOrderByRegistradoEmAscIdAsc(reserva)).thenReturn(List.of(pagamento));
+
+        DetalheReservaAutorizada detalhe = consulta.detalhar(20L, seguranca);
+
+        assertEquals(12, detalhe.reserva().quantidadeParticipantes());
+        assertEquals(12, detalhe.participantes().size());
+        assertEquals(11, detalhe.portaria().presentes());
+        assertEquals(new BigDecimal("0.00"), detalhe.portaria().valorAPagar());
+        assertEquals(PresencaParticipante.AUSENTE, ausente.getPresenca());
+        verify(participanteRepository).findByReservaOrderByNomeCompletoAscIdAsc(reserva);
+        verify(participanteRepository, never()).countByReserva(any());
     }
 
     @Test

@@ -70,8 +70,11 @@ public class PortariaService {
 
     @Transactional(readOnly = true)
     public ResumoPortaria resumir(Reserva reserva) {
-        List<ParticipanteReserva> participantes =
-                participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva);
+        return resumir(reserva, participanteRepository.findByReservaOrderByNomeCompletoAscIdAsc(reserva));
+    }
+
+    // A consulta de segurança já carregou esta lista para identificar os participantes.
+    ResumoPortaria resumir(Reserva reserva, List<ParticipanteReserva> participantes) {
         List<PagamentoAdicional> pagamentos =
                 pagamentoRepository.findByReservaOrderByRegistradoEmAscIdAsc(reserva);
 

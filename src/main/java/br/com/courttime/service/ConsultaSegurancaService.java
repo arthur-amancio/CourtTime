@@ -45,7 +45,7 @@ public class ConsultaSegurancaService {
         return reservaRepository.listarAutorizadasParaSeguranca(
                         StatusReserva.APROVADA, dataAtual)
                 .stream()
-                .map(this::resumir)
+                .map(reserva -> resumir(reserva, participanteRepository.countByReserva(reserva)))
                 .toList();
     }
 
@@ -61,16 +61,17 @@ public class ConsultaSegurancaService {
                         reservaId, StatusReserva.APROVADA, dataAtual)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Reserva autorizada não encontrada"));
-        List<ParticipanteConferencia> participantes = participanteRepository
-                .findByReservaOrderByNomeCompletoAscIdAsc(reserva)
+        List<ParticipanteReserva> cadastrados = participanteRepository
+                .findByReservaOrderByNomeCompletoAscIdAsc(reserva);
+        List<ParticipanteConferencia> participantes = cadastrados
                 .stream()
                 .map(this::identificacao)
                 .toList();
         // Presença, pessoas a mais e liberação só no dia da reserva (R08, R10, R11).
         boolean hoje = reserva.getDataUtilizacao().equals(dataAtual);
         return new DetalheReservaAutorizada(
-                resumir(reserva), participantes, hoje,
-                hoje ? portariaService.resumir(reserva) : null);
+                resumir(reserva, cadastrados.size()), participantes, hoje,
+                hoje ? portariaService.resumir(reserva, cadastrados) : null);
     }
 
     /**
@@ -121,7 +122,7 @@ public class ConsultaSegurancaService {
         return alteradas;
     }
 
-    private ReservaAutorizadaResumo resumir(Reserva reserva) {
+    private ReservaAutorizadaResumo resumir(Reserva reserva, long quantidadeParticipantes) {
         return new ReservaAutorizadaResumo(
                 reserva.getId(),
                 reserva.getDataUtilizacao(),
@@ -129,7 +130,7 @@ public class ConsultaSegurancaService {
                 reserva.getHorarioFim(),
                 reserva.getQuadra().getNome(),
                 reserva.getSolicitante().getNome(),
-                participanteRepository.countByReserva(reserva));
+                quantidadeParticipantes);
     }
 
     private ParticipanteConferencia identificacao(ParticipanteReserva participante) {
