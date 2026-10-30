@@ -1,8 +1,35 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
-Atualizado em 29/10/2026. **Sprint 4 publicada em pasta própria: DOCX editável e PDF A4 de 86 páginas, com pendências documentais explícitas.** O candidato anterior de 82 páginas foi preservado. Próxima atividade: obter os documentos ausentes dos autores e revisar a checklist com o professor. Não repetir testes Java/Playwright ou revisão de provas sem mudança que justifique nova validação.
+Atualizado em 30/10/2026. **Pacote de revisão da Sprint preservado e publicado; PowerPoint/PDF de 15 slides, guia de estudos com 48 respostas e três simulados com gabarito separado entregues. A equipe já pode estudar.** Sprint pronta para revisão, ainda condicionada às respostas/dispensas documentais para submissão integral. Não reiniciar a revisão das 86 páginas ou as suítes Java/Playwright sem problema concreto.
 
-## Última missão — Sprint 4, entrega em 12/11/2026 às 18h
+## Última missão — conclusão dirigida e estudos para a banca
+
+Índice executivo com todos os arquivos, evidências, limites e próximas ações: [ENTREGA-BANCA.md](preparacao-banca/ENTREGA-BANCA.md), também [publicado no Drive](https://drive.google.com/file/d/18n3nWAluT7BjHjhHsL_fcOEizVjGjCCF/view).
+
+- [CourtTime — Sprint 4 — Revisão Final](https://drive.google.com/drive/folders/1CZNSBZ0jFOZsbcCGUtojkh7tL2890h4Q): seis arquivos, DOCX/PDF/checklist idênticos aos anteriores, resumo de uma página em DOCX/PDF e guia de fechamento/envio. Nenhuma V2 do TCC criada sem conteúdo novo comprovado; candidato congelado e versão de 86 páginas preservados.
+- [CourtTime — Estudos para a Banca](https://drive.google.com/drive/folders/1bznMp3NHebvquAafKTM6R69bRMuCcMtd): PowerPoint editável e PDF correspondentes; guia em DOCX/PDF/Markdown; simulados e gabarito separados em PDF/Markdown; roteiros A/B, plano honesto de ensaio e índice. Todos os links individuais estão no índice, evitando repetir dezenas de arquivos no Git.
+
+### Concluído e verificado
+
+Lidas as pendências anteriores e o código pertinente por amostragem dirigida de métodos/classes reais. Consultados também os quatro repositórios didáticos solicitados, sem modificar fontes ou copiar seus dados. Guia de 13 páginas com projeto, tecnologias, arquitetura, regras e **48 perguntas respondidas**. Três simulados, **24 questões** em três páginas; gabarito separado, **24 respostas** em quatro páginas. Aplicação dos simulados ao grupo ainda não realizada.
+
+Apresentação real produzida pela API de arquivos do PowerPoint 16, em alternativa ao runtime de artefatos indisponível: **15 slides 16:9 com notas**, identidade CourtTime, figuras reais e tabelas editáveis. PDF de 15 páginas. Propostas A = 720 segundos de fala, três minutos por integrante; B = 480 de fala + 240 de demonstração. Não há confirmação institucional do tempo. Distribuição de falas proposta não representa atribuição de autoria de módulos.
+
+Inspeção visual de todos os slides, do resumo de uma página e das **20 páginas** de guia/simulados/gabarito. Corrigida quebra que isolava uma pergunta. Checagens desses três PDFs: zero páginas vazias, zero desvios de A4 e zero blocos de texto fora da área segura auditada. Pacote/geometria PPTX sem achados; 15 notas e tabelas nativas nos slides 12/13 conferidas. **16 arquivos principais baixados do Drive com SHA-256 idêntico**, pasta correta, `shared=false` e somente proprietário nas permissões consultadas; índice adicional verificado separadamente ao finalizar. Arquivos DOCX/PPTX reabertos como ZIPs íntegros, PDFs abertos. Fonte de 86 páginas sem nova auditoria integral: hashes anteriores preservados, conforme índice.
+
+Google Forms integral não recuperado. Precisão adicional: a busca do conector exclui o MIME de Forms; resultados vazios não provam inexistência. Planilha identificada e 11 enunciados comprovados mantidos, sem inventar alternativas. Host do navegador retornou `The browser access host is unavailable`. Nenhuma pergunta de logo nos enunciados recuperados. Não localizados originais impressos/votação, não confirmada ferramenta original da marca. Formulário institucional consultado, preservado separado por falta de autorização de reprodução comprovada.
+
+**Ensaio ao vivo NÃO executado:** nenhum banco, conta ou reserva novo criado; host de navegador indisponível e nenhuma B preparada para hoje. Plano detalha quatro perfis, segurança em 390 px/desktop, A futura e B aprovada para a data de uso, preparada pelo fluxo normal até o dia anterior. Troca deve ser anunciada. Inclui substituição A paga → A ausente → B presente, C excedente, repasse, liberação, bloqueios e recuperação em outro banco sintético novo. Não apresentar fixture que muda data como operação normal. Sem resultados de execução presumidos.
+
+Nenhuma suíte Java/PostgreSQL/Playwright reexecutada, código/banco/configuração principal/diagramas originais sem alteração, sem merges ou compartilhamento. CI e navegador citados são históricos e identificados por commit. Fontes, scripts de criação/renderização, provas e hashes locais: `C:\Users\arthur.francisco\Documents\CourtTime-Conclusao-20261030` (`sprint/`, `estudos/`, `build/`). Alterações Git limitadas a este checkpoint e ao novo índice; publicação na branch documental existente do PR #88, sem merge.
+
+### Pendências humanas e próxima ação exata
+
+**P0 documental condicional:** autores fornecem originais legítimos de C/D ou professor orienta expressamente não aplicabilidade. **P1:** Forms original/alternativas/tipos, ferramentas da marca, autorização do anexo e pareceres sobre mínimo, OUTRO, prazo, excedente, retenção, método/hipótese e banca. **P1 de preparação:** confirmar tempo e realizar ensaio com B preparada no dia anterior. **P2:** prova física e teste no projetor.
+
+Próxima ação: abrir o resumo de uma página com o grupo e obter C/D/pareceres por responsável/data; enquanto isso, estudar o guia e responder os simulados antes do gabarito. Não editar o TCC só para criar outra versão. Se houver material novo comprovado, criar V2 recuperável, atualizar campos/índices, exportar PDF e conferir páginas afetadas/vizinhas e paginação global. Preparar B antes da data de uso e preencher a ficha de ensaio com resultados realmente observados. Compartilhamento e submissão pelos integrantes até 12/11/2026 às 18h de São Paulo.
+
+## Missão anterior — Sprint 4, entrega em 12/11/2026 às 18h
 
 Registro completo, links, hashes e retomada: [ENTREGA-SPRINT4.md](sprint4/ENTREGA-SPRINT4.md). [Pasta privada da Sprint](https://drive.google.com/drive/folders/1px4l2dhTnXTPT24X0eKWnCdLn4x9kmL1).
 
