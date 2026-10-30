@@ -6,6 +6,8 @@ Atualizado em 30/10/2026. **Pacote de revisão da Sprint preservado e publicado;
 
 Índice executivo com todos os arquivos, evidências, limites e próximas ações: [ENTREGA-BANCA.md](preparacao-banca/ENTREGA-BANCA.md), também [publicado no Drive](https://drive.google.com/file/d/18n3nWAluT7BjHjhHsL_fcOEizVjGjCCF/view).
 
+Publicação confirmada: [c3808c750fbab1c5f07918fe5b0b267f2c320c52](https://github.com/arthur-amancio/CourtTime/commit/c3808c750fbab1c5f07918fe5b0b267f2c320c52), `docs(tcc): publicar revisao Sprint 4 e materiais de estudo da banca`, enviado por push normal à branch do PR #88; SHA remoto conferido. Índice adicional baixado e idêntico por SHA-256, totalizando **17 arquivos verificados**, seis na pasta da Sprint e onze na de estudos. Esta confirmação final é registrada em commit documental separado. Nenhuma execução de CI do novo HEAD é presumida.
+
 - [CourtTime — Sprint 4 — Revisão Final](https://drive.google.com/drive/folders/1CZNSBZ0jFOZsbcCGUtojkh7tL2890h4Q): seis arquivos, DOCX/PDF/checklist idênticos aos anteriores, resumo de uma página em DOCX/PDF e guia de fechamento/envio. Nenhuma V2 do TCC criada sem conteúdo novo comprovado; candidato congelado e versão de 86 páginas preservados.
 - [CourtTime — Estudos para a Banca](https://drive.google.com/drive/folders/1bznMp3NHebvquAafKTM6R69bRMuCcMtd): PowerPoint editável e PDF correspondentes; guia em DOCX/PDF/Markdown; simulados e gabarito separados em PDF/Markdown; roteiros A/B, plano honesto de ensaio e índice. Todos os links individuais estão no índice, evitando repetir dezenas de arquivos no Git.
 
