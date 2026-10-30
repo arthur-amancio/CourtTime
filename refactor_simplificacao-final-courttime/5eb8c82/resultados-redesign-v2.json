@@ -1,0 +1,2907 @@
+{
+  "suite": "Interacoes, responsividade e acessibilidade do redesign V2",
+  "sha": "5eb8c8252b51846c1d6226097f4265bad2e8c416",
+  "contagem": {
+    "pass": 285,
+    "fail": 0,
+    "pending": 0
+  },
+  "resultados": [
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: pagina-publica 390",
+      "detalhe": "viewport",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: pagina-publica 390",
+      "detalhe": "h1=1",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: pagina-publica 390",
+      "detalhe": "lang=pt-BR",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: pagina-publica 390",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: pagina-publica 390",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: pagina-publica 430",
+      "detalhe": "viewport",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: pagina-publica 430",
+      "detalhe": "h1=1",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: pagina-publica 430",
+      "detalhe": "lang=pt-BR",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: pagina-publica 430",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: pagina-publica 430",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: pagina-publica 768",
+      "detalhe": "viewport",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: pagina-publica 768",
+      "detalhe": "h1=1",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: pagina-publica 768",
+      "detalhe": "lang=pt-BR",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: pagina-publica 768",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: pagina-publica 768",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: pagina-publica 1440",
+      "detalhe": "viewport",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: pagina-publica 1440",
+      "detalhe": "h1=1",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: pagina-publica 1440",
+      "detalhe": "lang=pt-BR",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: pagina-publica 1440",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: pagina-publica 1440",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: pagina-publica zoom-200",
+      "detalhe": "reflow equivalente a 200% sobre 1440px",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: pagina-publica zoom-200",
+      "detalhe": "h1=1",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: pagina-publica zoom-200",
+      "detalhe": "lang=pt-BR",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: pagina-publica zoom-200",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: pagina-publica zoom-200",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: pagina-publica zoom-400",
+      "detalhe": "reflow equivalente a 400% sobre 1440px",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: pagina-publica zoom-400",
+      "detalhe": "h1=1",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: pagina-publica zoom-400",
+      "detalhe": "lang=pt-BR",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: pagina-publica zoom-400",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: pagina-publica zoom-400",
+      "detalhe": "[]",
+      "tela": "pagina-publica",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sequencia de foco alcancavel: pagina-publica",
+      "detalhe": "Pular para o conteúdo -> CourtTime, página inicial -> Entrar -> Entrar no sistema -> Ver as etapas"
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco nao fica oculto por barra fixa: pagina-publica",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Shift+Tab retrocede o foco: pagina-publica",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: login 390",
+      "detalhe": "viewport",
+      "tela": "login",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: login 390",
+      "detalhe": "h1=1",
+      "tela": "login",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: login 390",
+      "detalhe": "lang=pt-BR",
+      "tela": "login",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: login 390",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: login 390",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: login 430",
+      "detalhe": "viewport",
+      "tela": "login",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: login 430",
+      "detalhe": "h1=1",
+      "tela": "login",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: login 430",
+      "detalhe": "lang=pt-BR",
+      "tela": "login",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: login 430",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: login 430",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: login 768",
+      "detalhe": "viewport",
+      "tela": "login",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: login 768",
+      "detalhe": "h1=1",
+      "tela": "login",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: login 768",
+      "detalhe": "lang=pt-BR",
+      "tela": "login",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: login 768",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: login 768",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: login 1440",
+      "detalhe": "viewport",
+      "tela": "login",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: login 1440",
+      "detalhe": "h1=1",
+      "tela": "login",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: login 1440",
+      "detalhe": "lang=pt-BR",
+      "tela": "login",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: login 1440",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: login 1440",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: login zoom-200",
+      "detalhe": "reflow equivalente a 200% sobre 1440px",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: login zoom-200",
+      "detalhe": "h1=1",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: login zoom-200",
+      "detalhe": "lang=pt-BR",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: login zoom-200",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: login zoom-200",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: login zoom-400",
+      "detalhe": "reflow equivalente a 400% sobre 1440px",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: login zoom-400",
+      "detalhe": "h1=1",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: login zoom-400",
+      "detalhe": "lang=pt-BR",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: login zoom-400",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: login zoom-400",
+      "detalhe": "[]",
+      "tela": "login",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sequencia de foco alcancavel: login",
+      "detalhe": "Pular para o conteúdo -> CourtTime, página inicial -> email -> password -> Entrar -> Voltar à página inicial"
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco nao fica oculto por barra fixa: login",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Shift+Tab retrocede o foco: login",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-calendario 390",
+      "detalhe": "viewport",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-calendario 390",
+      "detalhe": "h1=1",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-calendario 390",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-calendario 390",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-calendario 390",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-calendario 430",
+      "detalhe": "viewport",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-calendario 430",
+      "detalhe": "h1=1",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-calendario 430",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-calendario 430",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-calendario 430",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-calendario 768",
+      "detalhe": "viewport",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-calendario 768",
+      "detalhe": "h1=1",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-calendario 768",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-calendario 768",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-calendario 768",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-calendario 1440",
+      "detalhe": "viewport",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-calendario 1440",
+      "detalhe": "h1=1",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-calendario 1440",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-calendario 1440",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-calendario 1440",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-calendario zoom-200",
+      "detalhe": "reflow equivalente a 200% sobre 1440px",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-calendario zoom-200",
+      "detalhe": "h1=1",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-calendario zoom-200",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-calendario zoom-200",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-calendario zoom-200",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-calendario zoom-400",
+      "detalhe": "reflow equivalente a 400% sobre 1440px",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-calendario zoom-400",
+      "detalhe": "h1=1",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-calendario zoom-400",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-calendario zoom-400",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-calendario zoom-400",
+      "detalhe": "[]",
+      "tela": "aluno-calendario",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sequencia de foco alcancavel: aluno-calendario",
+      "detalhe": "Pular para o conteúdo -> CourtTime -> Menu -> Início -> Nova solicitação -> Sexta-feira, 30 de outubro de 2026, sem funcionamento cadastrado -> Sábado, 31 de outubro de 2026, sem funcionamento cadastrado -> Domingo, 1 de novembro de 2026, sem funcionamento cadastrado -> Segunda-feira, 2 de novembro de 2026, com funcionamento cadastrado -> Terça-feira, 3 de novembro de 2026, com funcionamento cadastrado -> Quarta-feira, 4 de novembro de 2026, com funcionamento cadastrado -> Quinta-feira, 5 de novembro de 2026, com funcionamento cadastrado -> Sexta-feira, 6 de novembro de 2026, sem funcionamento cadastrado -> Sábado, 7 de novembro de 2026, sem funcionamento cadastrado -> Domingo, 8 de novembro de 2026, sem funcionamento cadastrado -> Segunda-feira, 9 de novembro de 2026, com funcionamento cadastrado"
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco nao fica oculto por barra fixa: aluno-calendario",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Shift+Tab retrocede o foco: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu fechado declara aria-expanded: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu referencia painel: aluno-calendario",
+      "detalhe": "aria-controls=menu-principal"
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu abre pelo teclado: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Painel do menu visivel: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Fundo inerte com menu aberto: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Tab): aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Shift+Tab): aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Escape fecha menu: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco restaurado ao botao Menu: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario opcao A sem contadores por dia: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario possui dia habilitado e focavel: aluno-calendario",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario recebe foco pelo teclado: aluno-calendario",
+      "detalhe": "2026-10-30"
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario nativo abre a data com Enter: aluno-calendario",
+      "detalhe": "http://127.0.0.1:18081/quadra?data=2026-10-30"
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-nova-solicitacao 390",
+      "detalhe": "viewport",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-nova-solicitacao 390",
+      "detalhe": "h1=1",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-nova-solicitacao 390",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-nova-solicitacao 390",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-nova-solicitacao 390",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-nova-solicitacao 430",
+      "detalhe": "viewport",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-nova-solicitacao 430",
+      "detalhe": "h1=1",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-nova-solicitacao 430",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-nova-solicitacao 430",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-nova-solicitacao 430",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-nova-solicitacao 768",
+      "detalhe": "viewport",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-nova-solicitacao 768",
+      "detalhe": "h1=1",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-nova-solicitacao 768",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-nova-solicitacao 768",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-nova-solicitacao 768",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-nova-solicitacao 1440",
+      "detalhe": "viewport",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-nova-solicitacao 1440",
+      "detalhe": "h1=1",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-nova-solicitacao 1440",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-nova-solicitacao 1440",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-nova-solicitacao 1440",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-nova-solicitacao zoom-200",
+      "detalhe": "reflow equivalente a 200% sobre 1440px",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-nova-solicitacao zoom-200",
+      "detalhe": "h1=1",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-nova-solicitacao zoom-200",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-nova-solicitacao zoom-200",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-nova-solicitacao zoom-200",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: aluno-nova-solicitacao zoom-400",
+      "detalhe": "reflow equivalente a 400% sobre 1440px",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: aluno-nova-solicitacao zoom-400",
+      "detalhe": "h1=1",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: aluno-nova-solicitacao zoom-400",
+      "detalhe": "lang=pt-BR",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: aluno-nova-solicitacao zoom-400",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: aluno-nova-solicitacao zoom-400",
+      "detalhe": "[]",
+      "tela": "aluno-nova-solicitacao",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sequencia de foco alcancavel: aluno-nova-solicitacao",
+      "detalhe": "Pular para o conteúdo -> CourtTime -> Menu -> Início -> Solicitações -> Sábado, 31 de outubro de 2026, sem funcionamento cadastrado -> Domingo, 1 de novembro de 2026, sem funcionamento cadastrado -> Segunda-feira, 2 de novembro de 2026, com funcionamento cadastrado -> Terça-feira, 3 de novembro de 2026, com funcionamento cadastrado -> Quarta-feira, 4 de novembro de 2026, com funcionamento cadastrado -> Quinta-feira, 5 de novembro de 2026, com funcionamento cadastrado -> Sexta-feira, 6 de novembro de 2026, sem funcionamento cadastrado -> Sábado, 7 de novembro de 2026, sem funcionamento cadastrado -> Domingo, 8 de novembro de 2026, sem funcionamento cadastrado -> Segunda-feira, 9 de novembro de 2026, com funcionamento cadastrado -> Terça-feira, 10 de novembro de 2026, com funcionamento cadastrado"
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco nao fica oculto por barra fixa: aluno-nova-solicitacao",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Shift+Tab retrocede o foco: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu fechado declara aria-expanded: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu referencia painel: aluno-nova-solicitacao",
+      "detalhe": "aria-controls=menu-principal"
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu abre pelo teclado: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Painel do menu visivel: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Fundo inerte com menu aberto: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Tab): aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Shift+Tab): aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Escape fecha menu: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco restaurado ao botao Menu: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario opcao A sem contadores por dia: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario possui dia habilitado e focavel: aluno-nova-solicitacao",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario de solicitacao nao habilita datas passadas: aluno-nova-solicitacao",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario recebe foco pelo teclado: aluno-nova-solicitacao",
+      "detalhe": "2026-10-31"
+    },
+    {
+      "status": "PASS",
+      "nome": "Calendario nativo abre a data com Enter: aluno-nova-solicitacao",
+      "detalhe": "http://127.0.0.1:18081/solicitacoes/nova?data=2026-10-31"
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: administrador-painel 390",
+      "detalhe": "viewport",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: administrador-painel 390",
+      "detalhe": "h1=1",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: administrador-painel 390",
+      "detalhe": "lang=pt-BR",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: administrador-painel 390",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: administrador-painel 390",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: administrador-painel 430",
+      "detalhe": "viewport",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: administrador-painel 430",
+      "detalhe": "h1=1",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: administrador-painel 430",
+      "detalhe": "lang=pt-BR",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: administrador-painel 430",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: administrador-painel 430",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: administrador-painel 768",
+      "detalhe": "viewport",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: administrador-painel 768",
+      "detalhe": "h1=1",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: administrador-painel 768",
+      "detalhe": "lang=pt-BR",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: administrador-painel 768",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: administrador-painel 768",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: administrador-painel 1440",
+      "detalhe": "viewport",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: administrador-painel 1440",
+      "detalhe": "h1=1",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: administrador-painel 1440",
+      "detalhe": "lang=pt-BR",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: administrador-painel 1440",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: administrador-painel 1440",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: administrador-painel zoom-200",
+      "detalhe": "reflow equivalente a 200% sobre 1440px",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: administrador-painel zoom-200",
+      "detalhe": "h1=1",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: administrador-painel zoom-200",
+      "detalhe": "lang=pt-BR",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: administrador-painel zoom-200",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: administrador-painel zoom-200",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: administrador-painel zoom-400",
+      "detalhe": "reflow equivalente a 400% sobre 1440px",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: administrador-painel zoom-400",
+      "detalhe": "h1=1",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: administrador-painel zoom-400",
+      "detalhe": "lang=pt-BR",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: administrador-painel zoom-400",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: administrador-painel zoom-400",
+      "detalhe": "[]",
+      "tela": "administrador-painel",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sequencia de foco alcancavel: administrador-painel",
+      "detalhe": "Pular para o conteúdo -> CourtTime -> Menu -> Início -> Analisar solicitações -> 1\n                        Aguardando análise\n                        Abrir fila  -> Horários semanais -> Bloqueios -> Gerenciar usuários"
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco nao fica oculto por barra fixa: administrador-painel",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Shift+Tab retrocede o foco: administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu fechado declara aria-expanded: administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu referencia painel: administrador-painel",
+      "detalhe": "aria-controls=menu-principal"
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu abre pelo teclado: administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Painel do menu visivel: administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Fundo inerte com menu aberto: administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Tab): administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Shift+Tab): administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Escape fecha menu: administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco restaurado ao botao Menu: administrador-painel",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: secretaria-documentos 390",
+      "detalhe": "viewport",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: secretaria-documentos 390",
+      "detalhe": "h1=1",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: secretaria-documentos 390",
+      "detalhe": "lang=pt-BR",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: secretaria-documentos 390",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: secretaria-documentos 390",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: secretaria-documentos 430",
+      "detalhe": "viewport",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: secretaria-documentos 430",
+      "detalhe": "h1=1",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: secretaria-documentos 430",
+      "detalhe": "lang=pt-BR",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: secretaria-documentos 430",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: secretaria-documentos 430",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: secretaria-documentos 768",
+      "detalhe": "viewport",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: secretaria-documentos 768",
+      "detalhe": "h1=1",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: secretaria-documentos 768",
+      "detalhe": "lang=pt-BR",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: secretaria-documentos 768",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: secretaria-documentos 768",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: secretaria-documentos 1440",
+      "detalhe": "viewport",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: secretaria-documentos 1440",
+      "detalhe": "h1=1",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: secretaria-documentos 1440",
+      "detalhe": "lang=pt-BR",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: secretaria-documentos 1440",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: secretaria-documentos 1440",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: secretaria-documentos zoom-200",
+      "detalhe": "reflow equivalente a 200% sobre 1440px",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: secretaria-documentos zoom-200",
+      "detalhe": "h1=1",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: secretaria-documentos zoom-200",
+      "detalhe": "lang=pt-BR",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: secretaria-documentos zoom-200",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: secretaria-documentos zoom-200",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: secretaria-documentos zoom-400",
+      "detalhe": "reflow equivalente a 400% sobre 1440px",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: secretaria-documentos zoom-400",
+      "detalhe": "h1=1",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: secretaria-documentos zoom-400",
+      "detalhe": "lang=pt-BR",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: secretaria-documentos zoom-400",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: secretaria-documentos zoom-400",
+      "detalhe": "[]",
+      "tela": "secretaria-documentos",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sequencia de foco alcancavel: secretaria-documentos",
+      "detalhe": "Pular para o conteúdo -> CourtTime -> Menu -> Início -> Consultar a conferência da solicitação #3, versão 1 -> Consultar a conferência da solicitação #2, versão 2 -> Consultar a conferência da solicitação #2, versão 1"
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco nao fica oculto por barra fixa: secretaria-documentos",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Shift+Tab retrocede o foco: secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu fechado declara aria-expanded: secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu referencia painel: secretaria-documentos",
+      "detalhe": "aria-controls=menu-principal"
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu abre pelo teclado: secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Painel do menu visivel: secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Fundo inerte com menu aberto: secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Tab): secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Shift+Tab): secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Escape fecha menu: secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco restaurado ao botao Menu: secretaria-documentos",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: seguranca-reservas 390",
+      "detalhe": "viewport",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: seguranca-reservas 390",
+      "detalhe": "h1=1",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: seguranca-reservas 390",
+      "detalhe": "lang=pt-BR",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: seguranca-reservas 390",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: seguranca-reservas 390",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "390",
+        "width": 390,
+        "height": 844,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: seguranca-reservas 430",
+      "detalhe": "viewport",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: seguranca-reservas 430",
+      "detalhe": "h1=1",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: seguranca-reservas 430",
+      "detalhe": "lang=pt-BR",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: seguranca-reservas 430",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: seguranca-reservas 430",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "430",
+        "width": 430,
+        "height": 932,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: seguranca-reservas 768",
+      "detalhe": "viewport",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: seguranca-reservas 768",
+      "detalhe": "h1=1",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: seguranca-reservas 768",
+      "detalhe": "lang=pt-BR",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: seguranca-reservas 768",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: seguranca-reservas 768",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "768",
+        "width": 768,
+        "height": 1024,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: seguranca-reservas 1440",
+      "detalhe": "viewport",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: seguranca-reservas 1440",
+      "detalhe": "h1=1",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: seguranca-reservas 1440",
+      "detalhe": "lang=pt-BR",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: seguranca-reservas 1440",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: seguranca-reservas 1440",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "1440",
+        "width": 1440,
+        "height": 1000,
+        "tipo": "viewport"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: seguranca-reservas zoom-200",
+      "detalhe": "reflow equivalente a 200% sobre 1440px",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: seguranca-reservas zoom-200",
+      "detalhe": "h1=1",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: seguranca-reservas zoom-200",
+      "detalhe": "lang=pt-BR",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: seguranca-reservas zoom-200",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: seguranca-reservas zoom-200",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-200",
+        "width": 720,
+        "height": 500,
+        "tipo": "reflow equivalente a 200% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sem overflow horizontal: seguranca-reservas zoom-400",
+      "detalhe": "reflow equivalente a 400% sobre 1440px",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Um H1 principal: seguranca-reservas zoom-400",
+      "detalhe": "h1=1",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Idioma da pagina: seguranca-reservas zoom-400",
+      "detalhe": "lang=pt-BR",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Controles rotulados: seguranca-reservas zoom-400",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Ordem natural de foco: seguranca-reservas zoom-400",
+      "detalhe": "[]",
+      "tela": "seguranca-reservas",
+      "viewport": {
+        "nome": "zoom-400",
+        "width": 360,
+        "height": 500,
+        "tipo": "reflow equivalente a 400% sobre 1440px"
+      }
+    },
+    {
+      "status": "PASS",
+      "nome": "Sequencia de foco alcancavel: seguranca-reservas",
+      "detalhe": "Pular para o conteúdo -> CourtTime -> Menu -> Início"
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco nao fica oculto por barra fixa: seguranca-reservas",
+      "detalhe": "[]"
+    },
+    {
+      "status": "PASS",
+      "nome": "Shift+Tab retrocede o foco: seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu fechado declara aria-expanded: seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu referencia painel: seguranca-reservas",
+      "detalhe": "aria-controls=menu-principal"
+    },
+    {
+      "status": "PASS",
+      "nome": "Menu abre pelo teclado: seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Painel do menu visivel: seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Fundo inerte com menu aberto: seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Tab): seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco contido no menu (Shift+Tab): seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Escape fecha menu: seguranca-reservas",
+      "detalhe": ""
+    },
+    {
+      "status": "PASS",
+      "nome": "Foco restaurado ao botao Menu: seguranca-reservas",
+      "detalhe": ""
+    }
+  ],
+  "notaZoom": "Zoom avaliado pelo equivalente de reflow WCAG: viewport CSS de 720px (200%) e 360px (400%) sobre referencia de 1440px."
+}
