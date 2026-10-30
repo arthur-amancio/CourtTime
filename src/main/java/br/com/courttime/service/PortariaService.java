@@ -150,7 +150,7 @@ public class PortariaService {
     @Transactional(readOnly = true)
     public List<ValorAMaisPendente> listarValoresPendentes(Usuario secretaria) {
         Permissao.exigir(secretaria, Perfil.SECRETARIA);
-        return reservaRepository.listarAutorizadasParaSeguranca(StatusReserva.APROVADA, hoje())
+        return reservaRepository.listarAutorizadas(StatusReserva.APROVADA, hoje())
                 .stream()
                 .filter(reserva -> reserva.getDataUtilizacao().equals(hoje()))
                 .map(reserva -> {

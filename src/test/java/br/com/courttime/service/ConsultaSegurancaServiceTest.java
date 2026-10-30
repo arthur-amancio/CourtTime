@@ -64,7 +64,7 @@ class ConsultaSegurancaServiceTest {
     @Test
     void listaSomenteAutorizadasDeHojeEmDianteComDadosMinimos() {
         LocalDate hoje = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
-        when(reservaRepository.listarAutorizadasParaSeguranca(
+        when(reservaRepository.listarAutorizadas(
                 StatusReserva.APROVADA, hoje)).thenReturn(List.of(reserva));
         when(participanteRepository.countByReserva(reserva)).thenReturn(11L);
 
@@ -76,7 +76,7 @@ class ConsultaSegurancaServiceTest {
         assertEquals("Quadra Poliesportiva", resumo.quadra());
         assertEquals("Ana Aluna", resumo.solicitante());
         assertEquals(11L, resumo.quantidadeParticipantes());
-        verify(reservaRepository).listarAutorizadasParaSeguranca(
+        verify(reservaRepository).listarAutorizadas(
                 StatusReserva.APROVADA, hoje);
     }
 

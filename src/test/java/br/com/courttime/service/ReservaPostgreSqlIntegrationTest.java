@@ -208,7 +208,7 @@ class ReservaPostgreSqlIntegrationTest {
                 .getAnalisadaEm();
 
         List<Reserva> autorizadasAntes = reservaRepository
-                .listarAutorizadasParaAdministracao(
+                .listarAutorizadas(
                         StatusReserva.APROVADA,
                         LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO));
         assertEquals(List.of(aprovada.getId()),
@@ -228,10 +228,7 @@ class ReservaPostgreSqlIntegrationTest {
         assertTrue(documentoReservaRepository.findById(documentoId).isPresent());
         assertTrue(contribuicaoApmRepository.findById(contribuicaoId).isPresent());
         assertEquals(10, participanteReservaRepository.count());
-        assertTrue(reservaRepository.listarAutorizadasParaSeguranca(
-                StatusReserva.APROVADA,
-                LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)).isEmpty());
-        assertTrue(reservaRepository.listarAutorizadasParaAdministracao(
+        assertTrue(reservaRepository.listarAutorizadas(
                 StatusReserva.APROVADA,
                 LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)).isEmpty());
     }

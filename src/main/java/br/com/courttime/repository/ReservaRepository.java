@@ -91,19 +91,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
               and r.dataUtilizacao >= :dataAtual
             order by r.dataUtilizacao asc, r.horarioInicio asc, r.id asc
             """)
-    List<Reserva> listarAutorizadasParaSeguranca(
-            @Param("status") StatusReserva status,
-            @Param("dataAtual") LocalDate dataAtual);
-
-    @Query("""
-            select r from Reserva r
-            join fetch r.quadra
-            join fetch r.solicitante
-            where r.status = :status
-              and r.dataUtilizacao >= :dataAtual
-            order by r.dataUtilizacao asc, r.horarioInicio asc, r.id asc
-            """)
-    List<Reserva> listarAutorizadasParaAdministracao(
+    List<Reserva> listarAutorizadas(
             @Param("status") StatusReserva status,
             @Param("dataAtual") LocalDate dataAtual);
 

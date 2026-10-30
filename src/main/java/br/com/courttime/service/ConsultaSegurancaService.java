@@ -42,7 +42,7 @@ public class ConsultaSegurancaService {
     public List<ReservaAutorizadaResumo> listarAutorizadas(Usuario seguranca) {
         Permissao.exigir(seguranca, Perfil.SEGURANCA);
         LocalDate dataAtual = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO);
-        return reservaRepository.listarAutorizadasParaSeguranca(
+        return reservaRepository.listarAutorizadas(
                         StatusReserva.APROVADA, dataAtual)
                 .stream()
                 .map(reserva -> resumir(reserva, participanteRepository.countByReserva(reserva)))
