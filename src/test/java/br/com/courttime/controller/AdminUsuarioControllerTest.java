@@ -5,7 +5,6 @@ import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.service.AdministracaoUsuarioService;
-import br.com.courttime.service.UsuarioEdicao;
 import br.com.courttime.service.UsuarioResumo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -213,7 +212,7 @@ class AdminUsuarioControllerTest {
     void edicaoInvalidaAssociaErrosAosCampos() throws Exception {
         prepararAdministrador();
         when(administracaoUsuarioService.obterParaEdicao(20L, administrador))
-                .thenReturn(new UsuarioEdicao(
+                .thenReturn(new UsuarioResumo(
                         20L, "Ana Souza", "ana@escola.test", Perfil.ALUNO, true));
 
         mockMvc.perform(post("/admin/usuarios/20")
@@ -259,7 +258,7 @@ class AdminUsuarioControllerTest {
     void redefinicaoDeSenhaNaoApresentaCredencialAnterior() throws Exception {
         prepararAdministrador();
         when(administracaoUsuarioService.obterParaEdicao(20L, administrador))
-                .thenReturn(new UsuarioEdicao(
+                .thenReturn(new UsuarioResumo(
                         20L, "Ana Souza", "ana@escola.test", Perfil.ALUNO, true));
 
         mockMvc.perform(get("/admin/usuarios/20/senha")
@@ -273,7 +272,7 @@ class AdminUsuarioControllerTest {
     void redefinicaoInvalidaAssociaErroAConfirmacaoSemExporSenha() throws Exception {
         prepararAdministrador();
         when(administracaoUsuarioService.obterParaEdicao(20L, administrador))
-                .thenReturn(new UsuarioEdicao(
+                .thenReturn(new UsuarioResumo(
                         20L, "Ana Souza", "ana@escola.test", Perfil.ALUNO, true));
 
         mockMvc.perform(post("/admin/usuarios/20/senha")
