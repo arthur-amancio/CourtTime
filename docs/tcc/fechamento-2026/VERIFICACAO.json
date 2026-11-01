@@ -1,0 +1,282 @@
+{
+  "dateUtc": "2026-11-01T16:31:00.624920+00:00",
+  "workBranch": "docs/fechamento-final-tcc-20261101",
+  "initialHead": "b842f35593c8624793003349aaffbb69c21926b4",
+  "main": "4df490729734d9f45830e15be241cdb66c3f112f",
+  "codeChanged": false,
+  "suitesRerun": false,
+  "sixAncestryLinksVerified": true,
+  "ciJava": {
+    "conclusion": "success",
+    "headSha": "b842f35593c8624793003349aaffbb69c21926b4",
+    "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41275138403"
+  },
+  "ciBrowser": {
+    "conclusion": "success",
+    "headSha": "b842f35593c8624793003349aaffbb69c21926b4",
+    "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41275142391"
+  },
+  "packageFolder": "https://drive.google.com/drive/folders/1NfD2GXq_axKT-LhTC83ZUFgAF9Yh50Zs",
+  "submissionDeadlineSaoPaulo": "2026-11-12T18:00:00-03:00",
+  "submissionPerformed": false,
+  "messagesSent": false,
+  "mergesPerformed": false,
+  "permissionsChanged": false,
+  "sources": [
+    {
+      "sha256": "37c3fcff5600e148791fbce98c4145190fe222d034361e31c5f0f784b15c526e",
+      "bytes": 10414072,
+      "paragraphs": 580,
+      "tables": 7,
+      "inlineImages": 34,
+      "sections": [
+        {
+          "top": 2.4994305555555556,
+          "bottom": 2.4994305555555556,
+          "left": 2.4994305555555556,
+          "right": 2.4994305555555556
+        },
+        {
+          "top": 2.4994305555555556,
+          "bottom": 2.4994305555555556,
+          "left": 2.4994305555555556,
+          "right": 2.4994305555555556
+        }
+      ],
+      "role": "sprintDocx",
+      "driveId": "1rCi1j2CdBspSUT_i7bm8_gJCRkCrLPNu"
+    },
+    {
+      "sha256": "de2655531c4c66198f2976774b1574cdf66a6215808742978ee7225f87c4633f",
+      "bytes": 3931852,
+      "pages": 86,
+      "role": "sprintPdf",
+      "driveId": "1wl_qpCUk0lLY8KFp94SPx937Lj3HGLS0"
+    },
+    {
+      "sha256": "bf47bf3e7f658f30d6d7eca4a6fe8d307da69e61c9701817f0fb5c46a22b6369",
+      "bytes": 785820,
+      "slides": 15,
+      "role": "pptx",
+      "driveId": "1xgeiekwHLQeEhb9tHoZ4QctGJLcbnmTQ"
+    },
+    {
+      "sha256": "8e473c57cefc4ce04a9f09c703918d1d9c63df0e4d618e1e6be02bee44162d06",
+      "bytes": 576928,
+      "pages": 15,
+      "role": "slidesPdf",
+      "driveId": "1iuWy1E5M7hWkKriLB8KLDtcuqdyS4mW_"
+    },
+    {
+      "sha256": "ca96dd54dfadd60c7d4fcc37ed9866b7f0d0adf902e4b581d92c706262e6814b",
+      "bytes": 2582013,
+      "pages": 74,
+      "role": "manual",
+      "driveId": "1gTywCwLM8aKDV47bcC60M8l03YXWlqKp"
+    }
+  ],
+  "entities": [
+    {
+      "entity": "AuditoriaUsuario",
+      "manyToOne": 2,
+      "oneToOne": 0,
+      "sha256": "5b49d9cb26bd51568f7a9651929090651e8f4f4a1c179c283c95588c92080c54"
+    },
+    {
+      "entity": "DisponibilidadeQuadra",
+      "manyToOne": 1,
+      "oneToOne": 0,
+      "sha256": "941f690b97fd72dfdc00e2ebb48d9da57c1820d07edc0440db5e5fd836b44553"
+    },
+    {
+      "entity": "PagamentoAdicional",
+      "manyToOne": 3,
+      "oneToOne": 0,
+      "sha256": "74348e45551ab9b05803a8b12c0275a611dfb5bd8835e10d62b8704fa233b496"
+    },
+    {
+      "entity": "Usuario",
+      "manyToOne": 0,
+      "oneToOne": 0,
+      "sha256": "ea029a5a40b75c704b5d0d5aa969a1440c3a5b21a4ff49295420087dc3e78525"
+    },
+    {
+      "entity": "BloqueioQuadra",
+      "manyToOne": 1,
+      "oneToOne": 0,
+      "sha256": "4e6f8dbb76739073f022dc1b26c1bbf12802b538cd92b73f3cf1494d4988760b"
+    },
+    {
+      "entity": "ConferenciaDocumento",
+      "manyToOne": 1,
+      "oneToOne": 1,
+      "sha256": "b963acab4f41c1a7f9b05aff0f0bd77774f562a44ff73ed84f5b1d93073170a8"
+    },
+    {
+      "entity": "ContribuicaoApm",
+      "manyToOne": 2,
+      "oneToOne": 2,
+      "sha256": "02a1b44f65e689a6264b1f9d771fb1ba961091cb64fa141488717593b41476ea"
+    },
+    {
+      "entity": "AjusteContribuicaoApm",
+      "manyToOne": 2,
+      "oneToOne": 0,
+      "sha256": "29411a770903377913ac9f550b60698c2ec6749bf882b004f035679548f9d68e"
+    },
+    {
+      "entity": "DocumentoReserva",
+      "manyToOne": 2,
+      "oneToOne": 1,
+      "sha256": "f435cec47fd5aca486f983ea41a192c7ecfc759a0c5b066b5526ea01b0cdf1f7"
+    },
+    {
+      "entity": "ParticipanteReserva",
+      "manyToOne": 3,
+      "oneToOne": 0,
+      "sha256": "38551bbb1e1006dc7a55068ad24265b04456e706f8af3baed9cf9975f91c5201"
+    },
+    {
+      "entity": "Reserva",
+      "manyToOne": 5,
+      "oneToOne": 1,
+      "sha256": "d48d16957f3253aa2f0891420d9c63bec6be820d064d130424360cda6a7a7f92"
+    },
+    {
+      "entity": "Quadra",
+      "manyToOne": 0,
+      "oneToOne": 0,
+      "sha256": "6397588a9c06844a70e3a78365550bd65d07802b8c04298274e60d17481082eb"
+    }
+  ],
+  "attributeEntriesChecked": 65,
+  "pdfChecks": {
+    "emptyPages": [],
+    "a4Pages": 86
+  },
+  "visualPagesPrinted": [
+    38,
+    40,
+    41,
+    48,
+    50,
+    54,
+    73,
+    79,
+    80,
+    81,
+    83,
+    84,
+    85
+  ],
+  "visualScope": "inspeção dirigida, não nova auditoria integral; originais idênticos aos previamente aprovados digitalmente",
+  "humanRehearsalPerformed": false,
+  "formRecovery": "metadados da planilha reconfirmados, sem respostas individuais; busca MIME sem Forms recuperado, com limitação do conector; original deve ser fornecido pelo autor",
+  "paperAndLogoEvidence": "buscas específicas retornaram materiais secundários e pendências; nenhum original de aplicação/votação recuperado; não se afirma inexistência",
+  "assignmentSources": {
+    "chronogram": "https://docs.google.com/document/d/1fJ5JLo4traaYNeCywO8oikiOrrTZr8W6/edit",
+    "detailedAssignment": "exigências informadas pelo solicitante; enunciado autônomo da plataforma não recuperado; arquivo Sprint 4 encontrado é de UpBox e foi excluído como fonte do CourtTime"
+  },
+  "pullRequests": [
+    {
+      "number": 85,
+      "headRefOid": "fe21d898f9082acb30c9f71700fc7d7872a2ef5a",
+      "baseRefName": "main",
+      "headRefName": "feat/refatoracao-permissoes",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN"
+    },
+    {
+      "number": 86,
+      "headRefOid": "4fb7a06c8343234487bd15260c67e31a3b765aaa",
+      "baseRefName": "feat/refatoracao-permissoes",
+      "headRefName": "feat/portaria-liberacao-acrescimos",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN"
+    },
+    {
+      "number": 87,
+      "headRefOid": "24d99feda3cd9b070af9f4ddb5e327a81d1aed27",
+      "baseRefName": "feat/portaria-liberacao-acrescimos",
+      "headRefName": "chore/ui-v2-verificacao-portaria",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN"
+    },
+    {
+      "number": 88,
+      "headRefOid": "20e376ab616f6f2f913a20ae49e645f6a8938691",
+      "baseRefName": "chore/ui-v2-verificacao-portaria",
+      "headRefName": "docs/modelagem-uml-profissional",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN"
+    },
+    {
+      "number": 89,
+      "headRefOid": "abb240601d0e26616942f050e6aa72e6964e296f",
+      "baseRefName": "docs/modelagem-uml-profissional",
+      "headRefName": "refactor/simplificacao-final-courttime",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN"
+    },
+    {
+      "number": 90,
+      "headRefOid": "b842f35593c8624793003349aaffbb69c21926b4",
+      "baseRefName": "refactor/simplificacao-final-courttime",
+      "headRefName": "chore/cloud-finalizacao-courttime",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN"
+    }
+  ],
+  "newArtifacts": [
+    {
+      "name": "DIAGNOSTICO-E-INTEGRACAO.md",
+      "id": "1xo7HMP-tMSCYxaQDQxDFzr-2ySg1-RSp",
+      "url": "https://drive.google.com/file/d/1xo7HMP-tMSCYxaQDQxDFzr-2ySg1-RSp/view?usp=drivesdk",
+      "shared": false,
+      "sha256": "68a5daceee0d53017b97868dbd5ca0fa289ae2d35c8b17b07d60f4f30ae5ebdc"
+    },
+    {
+      "name": "CONFORMIDADE-SPRINT4.md",
+      "id": "10SMS8PNBP9yDROzjUDS0nnYxxIlj6KZn",
+      "url": "https://drive.google.com/file/d/10SMS8PNBP9yDROzjUDS0nnYxxIlj6KZn/view?usp=drivesdk",
+      "shared": false,
+      "sha256": "eb3890d179f86f6a50b346a06bc283c06a6a1104af414d691324fc8384e29afd"
+    },
+    {
+      "name": "DECISOES-E-ORIENTADOR.md",
+      "id": "17cuVAuzO-Nmt6RIRG7zYsKcPbhJnNHPh",
+      "url": "https://drive.google.com/file/d/17cuVAuzO-Nmt6RIRG7zYsKcPbhJnNHPh/view?usp=drivesdk",
+      "shared": false,
+      "sha256": "061b24d75fd600bab1c6a6f81b4445bc8873cc31c0406d95e415574fc2f8cc85"
+    },
+    {
+      "name": "KIT-DEFESA-E-DEMONSTRACAO.md",
+      "id": "1nI6F5Hd36XWo0O1KTz0qFTOM1jBI5bQc",
+      "url": "https://drive.google.com/file/d/1nI6F5Hd36XWo0O1KTz0qFTOM1jBI5bQc/view?usp=drivesdk",
+      "shared": false,
+      "sha256": "ffd82753da1171466b9021a4c09bd25539a17511dad7fbb22894bb0ad12942a8"
+    },
+    {
+      "name": "FICHA-ORIENTADOR.docx",
+      "id": "1mL-BbzektFA44BCUogaAEvOkksXa02-N",
+      "url": "https://docs.google.com/document/d/1mL-BbzektFA44BCUogaAEvOkksXa02-N/edit?usp=drivesdk&ouid=113694763087715335728&rtpof=true&sd=true",
+      "shared": false,
+      "sha256": "c184862baa7b0e8ccfc96501a20afd44859b2c7f1f318f4324ef810c83b7812d",
+      "pages": 2
+    },
+    {
+      "name": "FICHA-ORIENTADOR.pdf",
+      "id": "1eF7waHjUI-aH3r24TzXDXwXvLaZC5hoc",
+      "url": "https://drive.google.com/file/d/1eF7waHjUI-aH3r24TzXDXwXvLaZC5hoc/view?usp=drivesdk",
+      "shared": false,
+      "sha256": "28f0a05614ca852a3fbe4ce63564241eb757d0efec5ba74cd70403023189776d",
+      "pages": 2
+    }
+  ]
+}

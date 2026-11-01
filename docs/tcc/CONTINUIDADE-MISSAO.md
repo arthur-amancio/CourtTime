@@ -1,5 +1,42 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
+## Fechamento final — 01/11/2026
+
+**PRONTO COM RESSALVAS. INTEGRAÇÃO TECNICAMENTE PREPARADA — AGUARDANDO AUTORIZAÇÃO.**
+Branch `docs/fechamento-final-tcc-20261101`, entrada `b842f35593c8624793003349aaffbb69c21926b4`
+do [PR #90](https://github.com/arthur-amancio/CourtTime/pull/90). Main continua em
+`4df490729734d9f45830e15be241cdb66c3f112f`; #85–#90 mantêm HEADs/bases, OPEN/draft e MERGEABLE.
+Seis relações ancestrais e objetos funcionais da simulação anterior conferidos;
+12 entidades idênticas à referência do DER e 65 declarações de atributos/tipos reconciliadas.
+CI própria de `b842f35` reconfirmada: 479 testes por PostgreSQL 16/18, navegador 1.128/44 axe,
+sem regressão crítica conhecida. Código/candidato funcional não mudaram: sem repetir suítes ou simulação.
+
+[Pacote Final para Revisão e Entrega — 2026](https://drive.google.com/drive/folders/1NfD2GXq_axKT-LhTC83ZUFgAF9Yh50Zs):
+**oito arquivos novos**, privados e baixados novamente com bytes idênticos; originais existentes referenciados,
+sem duplicar diagramas. [Índice](https://drive.google.com/file/d/1AiBBqC2hWFmEZ-dNP7HbXrKgXZxW30Ye/view)
+e [fontes editáveis Markdown/manifesto](fechamento-2026/LEIA-PRIMEIRO.md).
+Novos: diagnóstico com classificação dos 12 critérios/checklist de merge, conformidade efetiva da Sprint,
+tabela única de decisões e propostas legítimas para C/D/anexo, ficha do orientador DOCX/PDF de duas páginas,
+mensagem formal **não enviada**, kit de 240 segundos com alternativas/contingências, divisão das quatro falas
+e 14 perguntas com réplicas, complementando os 48 questionamentos/três simulados existentes.
+
+Drive acessível: DOCX/PDF de 86 páginas e PPTX/PDF de 15 slides reabertos com hashes idênticos aos anteriores;
+34 figuras/sete quadros, margens e páginas densas conferidas de forma dirigida. Não houve motivo para editar/reexportar originais.
+Manual ETEC e cronograma recuperados; arquivo chamado “Sprint 4” do acervo era de UpBox e não foi usado como enunciado CourtTime.
+Enunciado autônomo da plataforma não recuperado: conferência usa exigências desta missão e cronograma original.
+Metadados da planilha reconfirmados sem ler respostas individuais; Forms integral/C/D e autorização do anexo não recuperados.
+Ausência de resultado de busca não prova inexistência. Faltam confirmação/dispensa humana e ferramenta original da marca.
+
+**Próxima ação exata:** integrante encaminhar pacote/ficha ao Prof. André, obter originais ou parecer para B/C/D/anexo,
+confirmar marca/método/regras e tempo da banca. Prazos internos propostos: autores 04/11; pareceres 06/11;
+eventual revisão recuperável 09/11; ensaio/projetor 10/11; conferência final 12/11 às 16h, antes do prazo de 18h São Paulo.
+Preparar B no dia anterior; não apresentar fixture de data como função normal. Ensaio humano e submissão não realizados.
+Integração futura #85→#90 depende de autorização separada; nenhum merge, deploy, mensagem ou mudança de compartilhamento.
+Arquivos acadêmicos congelados intactos. HEAD final desta entrega: commit que contém esta atualização, recuperável por
+`git fetch origin` e `git rev-parse origin/docs/fechamento-final-tcc-20261101`; o PR documental correspondente identifica publicação/CI.
+
+## Histórico — missão cloud de continuidade
+
 Atualizado em **01/11/2026 — missão cloud**. **PRONTO COM RESSALVAS** para revisão
 de integração: validação técnica aprovada em Linux, cadeia simulada sem conflitos;
 integração remota, ensaio humano e homologação institucional ainda não realizados.
