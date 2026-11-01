@@ -198,7 +198,7 @@ async function semRolagemHorizontal(page, rotulo, url) {
   try {
     const pdfCtx = await browser.newContext();
     const pdfPage = await pdfCtx.newPage();
-    await pdfPage.setContent('<!doctype html><html lang="pt-BR"><body><h1>Documento fictício da auditoria</h1></body></html>');
+    await pdfPage.setContent('<!doctype html><html lang="pt-BR"><body><h1>DEMONSTRAÇÃO — SEM VALIDADE INSTITUCIONAL</h1><p>Documento sintético, sem assinatura.</p></body></html>');
     const pdfFicticio = await pdfPage.pdf({ format: 'A4' });
     await pdfCtx.close();
 
@@ -387,6 +387,44 @@ async function semRolagemHorizontal(page, rotulo, url) {
     await alunoC.goto(`${BASE}/solicitacoes/nova`);
     const segundaPost = await postComCsrf(alunoC, '/solicitacoes', { origemId: String(ids.r1), data: dataRemarcacao, horarioInicio: '11:00', finalidade: 'Segunda tentativa' });
     check(texto(segundaPost.text).includes('já possui uma nova solicitação'), 'segunda remarcação por envio direto é recusada');
+
+    // R04: concluir a remarcação pela aplicação, sem herdar PDF/aprovação.
+    // A origem tem R$ 20,00; 12 participantes devem gerar só R$ 4,00 novos.
+    await incluirParticipantes(alunoC, ids.r3, 12, 'Participante Remarcação Sintética');
+    await admin.goto(`${BASE}/admin/solicitacoes/${ids.r3}`);
+    check(await admin.getByRole('button', { name: 'Aprovar e autorizar reserva' }).count() === 0,
+      'crédito da origem não libera aprovação sem nova documentação e contribuição');
+    const aprovacaoPrematura = await postComCsrf(admin, `/admin/solicitacoes/${ids.r3}/aprovar`);
+    check(texto(aprovacaoPrematura.text).includes('Somente solicitações com documentação conferida podem ser analisadas'),
+      'servidor recusa aprovação prematura da remarcação mesmo com crédito');
+    await alunoC.goto(`${BASE}/solicitacoes/${ids.r3}/documentos`);
+    const formularioRemarcacao = await gerarFormulario(alunoC, ids.r3, { cpf, curso: 'Informática' });
+    exigir(formularioRemarcacao.status === 200, 'novo formulário da remarcação');
+    const doc3 = await enviarPdf(alunoC, ids.r3, 'demonstracao-remarcacao-sem-assinatura.pdf', pdfFicticio);
+    check(doc3 !== doc1, 'remarcação recebe documento próprio');
+    await validarEContribuir(secretaria, doc3, ids.r3);
+    await secretaria.goto(`${BASE}/secretaria/contribuicoes/solicitacoes/${ids.r3}`);
+    const dadoFinanceiro = rotulo => secretaria.locator('dl.dados > div')
+      .filter({ has: secretaria.locator('dt', { hasText: rotulo }) }).locator('dd').innerText();
+    check((await dadoFinanceiro('Valor devido')).includes('12 participantes × R$ 2,00 = R$ 24,00'),
+      'remarcação calcula R$ 24,00 para doze participantes');
+    check((await dadoFinanceiro('Crédito da remarcação')).includes(`R$ 20,00, da reserva cancelada nº ${ids.r1}`),
+      'remarcação aplica R$ 20,00 e identifica a origem');
+    check((await dadoFinanceiro('Valor recebido')).trim() === 'R$ 4,00',
+      'remarcação cobra somente a diferença de R$ 4,00');
+    await secretaria.goto(`${BASE}/secretaria/contribuicoes/solicitacoes/${ids.r1}`);
+    check((await dadoFinanceiro('Valor recebido')).trim() === 'R$ 20,00',
+      'uso do crédito preserva o recebimento histórico da origem');
+    await admin.goto(`${BASE}/admin/solicitacoes/${ids.r3}`);
+    await Promise.all([
+      admin.waitForURL(url => url.pathname === '/admin/solicitacoes'),
+      admin.getByRole('button', { name: 'Aprovar e autorizar reserva' }).click(),
+    ]);
+    check((await admin.locator('body').innerText()).includes('Solicitação aprovada e reserva autorizada.'),
+      'remarcação recebe nova aprovação após documento, conferência e diferença');
+    await seguranca.goto(`${BASE}/seguranca/reservas/${ids.r3}`);
+    check((await seguranca.locator('body').innerText()).includes('Participante Remarcação Sintética 12'),
+      'segurança consulta a nova reserva autorizada e sua lista atual');
 
     await alunoC.goto(`${BASE}/solicitacoes`);
     corpo = await alunoC.locator('body').innerText();
