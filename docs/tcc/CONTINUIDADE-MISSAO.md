@@ -1,6 +1,118 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
-Atualizado em 30/10/2026. **PR #89 publicado em rascunho sobre #88; revisão final de código validada na CI com 479 testes por PostgreSQL 16/18 e jornada de navegador aprovada.** Código simplificado em rodadas pequenas, sem modificar a cadeia anterior. Sprint, PDFs, diagramas e apresentação congelados foram preservados. Não reiniciar a revisão acadêmica nem descartar as evidências anteriores.
+Atualizado em **01/11/2026 — missão cloud**. **PRONTO COM RESSALVAS** para revisão
+de integração: validação técnica aprovada em Linux, cadeia simulada sem conflitos;
+integração remota, ensaio humano e homologação institucional ainda não realizados.
+Histórico anterior preservado abaixo. Não reiniciar auditorias ou refatorações gerais.
+
+## Missão cloud — continuidade, integração e demonstração
+
+Branch nova: [`chore/cloud-finalizacao-courttime`](https://github.com/arthur-amancio/CourtTime/tree/chore/cloud-finalizacao-courttime).
+HEAD inicial de #89 confirmado por API/`git fetch`: `abb240601d0e26616942f050e6aa72e6964e296f`.
+Último commit de QA exercitado: [`ff094c8698266684f68a9510cd5772ec286a3f98`](https://github.com/arthur-amancio/CourtTime/commit/ff094c8698266684f68a9510cd5772ec286a3f98).
+HEAD final: commit que contém este checkpoint; recuperar com `git fetch origin` e
+`git rev-parse origin/chore/cloud-finalizacao-courttime`. Acréscimos após `ff094c8`
+somente documentais. Consultar o PR draft da branch para SHA publicado/CI própria;
+não transferir automaticamente resultados entre SHAs. Evidências completas e
+objetos de `src`/`qa`/`pom.xml`/`.github`: [JSON verificável](evidencias/cloud-20261101/resultados.json).
+
+**Ambiente reutilizável pelo checkout:** Debian 13.6 sem sudo; Python 3.12.14,
+Git/GitHub CLI autenticada e Chromium 154 disponíveis. Preparados Temurin
+17.0.21, Node 22.23.4 e PostgreSQL 16.15 em diretórios do usuário, checksums
+oficiais conferidos; Wrapper 3.9.16, Playwright 1.56.1 e `npm ci` aprovados.
+Maven inicialmente falhou por rede direta: proxy/truststore privados resolveram,
+sem mudar dependências. [Guia Bash/Linux](../desenvolvimento-cloud.md) contém
+inicialização, isolamento, quatro perfis, recuperação, encerramento e roteiro curto.
+
+**GitHub:** main intacta em `4df490729734d9f45830e15be241cdb66c3f112f`.
+Cinco ligações ancestrais conferidas; todos #85–#89 abertos/draft e `MERGEABLE`.
+
+| PR | HEAD | Base | Checks consultados |
+| --- | --- | --- | --- |
+| #85 | `fe21d89` | main | Java 16/18 e guarda aprovados |
+| #86 | `4fb7a06` | branch de #85 | Java aprovado; navegador histórico falhou |
+| #87 | `24d99fe` | branch de #86 | Java aprovado; navegador histórico falhou |
+| #88 | `20e376a` | branch de #87 | Java 16/18 e guarda aprovados |
+| #89 | `abb2406` | branch de #88 | Java 16/18, guarda e navegador aprovados |
+
+SHAs/links integrais no JSON. Correção do usuário PostgreSQL em #89 não torna
+verdes checks antigos. Outros abertos #49/#83/#84 não foram incluídos.
+
+**Simulação local:** worktree `CourtTime-integracao`, branch
+`test/cloud-integracao-20261101`, main atual + cinco merges `--no-ff` #85→#89.
+Candidato `9261bd81413d64c9d924272b6181c1701a3bbcfe`, árvore
+`0add8b5711f6373df850088e3324852fcf778ce9`, integralmente idêntica a #89.
+Com o commit cloud de QA: candidato testado `794a299cd83c30ebe01be3236bbc319ef978e591`,
+árvore `923e1a96766dff8c5e44623f3f3bb0787bfd86bb`, idêntica a `ff094c8`.
+Pais/árvores/datas dos seis merges no JSON. SHAs locais, não commits da main.
+Sem conflitos, exclusões inesperadas ou duplicação introduzida pela combinação.
+
+**Validação real em `794a299`:** cluster próprio loopback/55432, SCRAM,
+usuário sintético `courttime_cloud`; nomes reais conferidos antes das mutações:
+`courttime_cloud_test`, `courttime_e2e` e `courttime_e2e_p0p1_run32` (restore).
+
+- `./mvnw -s <settings privado do proxy> -B clean verify`: **479 testes,
+  zero falhas/erros/skips**, JAR gerado. Inclui 63 integrações PostgreSQL,
+  três jornadas HTTP e symlink aprovado; não somar esses subconjuntos aos 479.
+- `npm run test:qa`, saída **0**: **1.128 verificações**, zero FAIL/PENDING
+  (367 jornada + 49 navegação + 285 interações + 330 layout + 97 finalização).
+  Mais cinco testes Node da guarda e **44 varreduras axe/zero violações**.
+- Nova cobertura conclui remarcação: novo PDF/conferência, R$ 24,00 devidos,
+  R$ 20,00 de crédito, R$ 4,00 novos e nova aprovação; aprovação prematura
+  recusada no servidor e histórico da origem preservado.
+- Sondas adicionais SQL Injection/XSS aprovadas; PDFs oficiais de duas/três
+  páginas e ausência dos CPFs sintéticos no dump conferidos. Revisão dirigida
+  de permissões, consultas, sessões, documentos e locks: nenhum defeito novo
+  de produção confirmado. Nenhuma alteração Java/schema/regra institucional.
+- Recuperação real com `pg_dump -Fc`/`pg_restore` em outro banco vazio:
+  **sete PDFs com tamanho/SHA-256 íntegros** e quatro perfis com HTTP 200.
+  Primeiro smoke iniciou antes do servidor (conexão recusada); após `/login`, passou.
+- Aplicações e cluster encerrados; sem listeners em 18081/55432.
+
+Concorrência de aprovação, grade/bloqueio, upload, conferência, recebimento,
+ajustes, complemento, repasse e remarcação exercitada pelos testes Java listados
+no JSON. Substituição de vaga paga exercitada na jornada; não se afirma corrida
+simultânea extra de substituição/pagamento no navegador. PostgreSQL 18 local não
+instalado: conferir a CI própria do Cloud. Não houve nova auditoria integral.
+
+**Demonstração:** A #10 futura com nove participantes; B #11 aprovada para
+hoje, ainda sem presença/liberação consumida; C #7 remarcada/aprovada com crédito.
+Para B a fixture mudou artificialmente 23/11 para 01/11/2026 **somente no E2E**,
+após fluxo HTTP completo; não é ação normal do sistema. Em banca real preparar B
+no dia anterior. Três capturas selecionadas no diretório do JSON; PDFs sintéticos,
+dumps, senhas e XMLs Surefire brutos não publicados. O [roteiro ampliado](preparacao-banca/DEMONSTRACAO.md)
+permanece válido; guia novo propõe quatro minutos. Ensaio humano/projetor pendentes.
+A nuvem é temporária: reproduzir pelo guia, sem depender deste cluster.
+
+**Impacto acadêmico:** nenhuma descrição de entidade/arquitetura ficou incorreta.
+Contagens antigas de QA permanecem históricas. TCC/Sprint congelados, diagramas e
+Drive preservados; não foi necessário acessar/reconstruir material externo.
+PDF candidato intacto: `8475492fe64eb55aed671c57f62e8f78d0fc3dd753cc480b921890c4c9edd77b`.
+
+**Próxima ação exata:** revisar o PR draft Cloud sobre a branch de #89,
+conferir HEAD/CI e obter autorização do proprietário na missão de integração.
+Ordem futura, sem merges executados nesta missão:
+
+| Etapa | Verificar depois do merge autorizado, antes de seguir |
+| --- | --- |
+| #85 | Main/ancestralidade, permissões/CI; base/diff de #86. |
+| #86 | Rascunho/portaria/financeiro; base/diff de #87; não ignorar check obrigatório falho. |
+| #87 | Somente mapa documental, árvore funcional preservada; revisar #88. |
+| #88 | Documentação/hash do candidato preservados; revisar base/diff de #89. |
+| #89 | Consultas/permissões/correção PostgreSQL do navegador; testar combinação e base Cloud. |
+| Cloud | Escopo QA/docs, CI e smoke dos quatro perfis no SHA final da main. |
+
+Reavaliar a base do próximo PR a cada etapa; sem retarget antecipado, squash,
+rebase, force push ou exclusão de branches. Mudança relevante exige revalidação;
+conflito, regressão crítica ou check obrigatório falho bloqueia a etapa.
+Ressalvas humanas: revisão/autorização dos PRs, dez totais × dez alunos no termo,
+vínculos, horário-limite, excedente do crédito, retenção/LGPD e parecer do orientador.
+Programação validada nos cenários citados; integração apenas simulada. Homologação,
+TCC aprovado/submetido não comprovados por testes; main ainda não congelada.
+
+## Registro histórico — estado em 30/10/2026
+
+**PR #89 publicado em rascunho sobre #88; revisão final de código validada na CI com 479 testes por PostgreSQL 16/18 e jornada de navegador aprovada.** Código simplificado em rodadas pequenas, sem modificar a cadeia anterior. Sprint, PDFs, diagramas e apresentação congelados foram preservados. Não reiniciar a revisão acadêmica nem descartar as evidências anteriores.
 
 ## Última missão — simplificação e estabilização do software
 

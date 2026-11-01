@@ -49,6 +49,9 @@ usa a base automatizada `courttime_e2e` e não requer publicar o sistema na rede
 
 ## Pré-requisitos
 
+Para compilar, testar e preparar uma demonstração em Bash/Linux sem depender do
+Windows, consulte o [guia de desenvolvimento na nuvem](docs/desenvolvimento-cloud.md).
+
 - Java 17 (JDK), com `JAVA_HOME` apontando para sua instalação;
 - PostgreSQL 18 em execução (o 16 também funciona; a CI testa as duas versões);
 - Git.

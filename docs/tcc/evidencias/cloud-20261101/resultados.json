@@ -1,0 +1,593 @@
+{
+  "recordedAtUtc": "2026-11-01T04:56:38.718482+00:00",
+  "classification": "PRONTO COM RESSALVAS: validação técnica; integração e homologação humana pendentes",
+  "main": "4df490729734d9f45830e15be241cdb66c3f112f",
+  "initialHead89": "abb240601d0e26616942f050e6aa72e6964e296f",
+  "workBranch": "chore/cloud-finalizacao-courttime",
+  "testedQaCommit": "ff094c8698266684f68a9510cd5772ec286a3f98",
+  "integration": {
+    "baselineCandidate": "9261bd81413d64c9d924272b6181c1701a3bbcfe",
+    "baselineTree": "0add8b5711f6373df850088e3324852fcf778ce9",
+    "testedCandidate": "794a299cd83c30ebe01be3236bbc319ef978e591",
+    "testedTree": "923e1a96766dff8c5e44623f3f3bb0787bfd86bb",
+    "identicalToWorkCommit": "ff094c8698266684f68a9510cd5772ec286a3f98",
+    "localOnly": true,
+    "mergeCommits": [
+      {
+        "sha": "f5ff787e206d56836d44221505fbe2677b30fa57",
+        "parents": [
+          "4df490729734d9f45830e15be241cdb66c3f112f",
+          "fe21d898f9082acb30c9f71700fc7d7872a2ef5a"
+        ],
+        "tree": "2780b29c2fd4854c9588be7be8df4da0c1ee756d",
+        "subject": "test: simular integracao local de feat/refatoracao-permissoes",
+        "authorDate": "2026-11-01T04:44:29Z",
+        "committerDate": "2026-11-01T04:44:29Z"
+      },
+      {
+        "sha": "516fb7e6d0b9c929b2f613fb0baa3a150f26059a",
+        "parents": [
+          "f5ff787e206d56836d44221505fbe2677b30fa57",
+          "4fb7a06c8343234487bd15260c67e31a3b765aaa"
+        ],
+        "tree": "afb3a2b5cd308e5e30e2a46a4556cdfcc3434d3f",
+        "subject": "test: simular integracao local de feat/portaria-liberacao-acrescimos",
+        "authorDate": "2026-11-01T04:44:38Z",
+        "committerDate": "2026-11-01T04:44:38Z"
+      },
+      {
+        "sha": "a1ba29d14fa9d17b845208c9e04401cfbb90ef1f",
+        "parents": [
+          "516fb7e6d0b9c929b2f613fb0baa3a150f26059a",
+          "24d99feda3cd9b070af9f4ddb5e327a81d1aed27"
+        ],
+        "tree": "874683175cc6b63b38e506cb4dc6196a59f3a512",
+        "subject": "test: simular integracao local de chore/ui-v2-verificacao-portaria",
+        "authorDate": "2026-11-01T04:44:39Z",
+        "committerDate": "2026-11-01T04:44:39Z"
+      },
+      {
+        "sha": "981ec6c8619b7fc04898bb1fe7791276b19df954",
+        "parents": [
+          "a1ba29d14fa9d17b845208c9e04401cfbb90ef1f",
+          "20e376ab616f6f2f913a20ae49e645f6a8938691"
+        ],
+        "tree": "75fb3f1ed8ef80cf905b83ceb9e0b525fd29ff14",
+        "subject": "test: simular integracao local de docs/modelagem-uml-profissional",
+        "authorDate": "2026-11-01T04:44:39Z",
+        "committerDate": "2026-11-01T04:44:39Z"
+      },
+      {
+        "sha": "9261bd81413d64c9d924272b6181c1701a3bbcfe",
+        "parents": [
+          "981ec6c8619b7fc04898bb1fe7791276b19df954",
+          "abb240601d0e26616942f050e6aa72e6964e296f"
+        ],
+        "tree": "0add8b5711f6373df850088e3324852fcf778ce9",
+        "subject": "test: simular integracao local de refactor/simplificacao-final-courttime",
+        "authorDate": "2026-11-01T04:44:39Z",
+        "committerDate": "2026-11-01T04:44:39Z"
+      },
+      {
+        "sha": "794a299cd83c30ebe01be3236bbc319ef978e591",
+        "parents": [
+          "9261bd81413d64c9d924272b6181c1701a3bbcfe",
+          "ff094c8698266684f68a9510cd5772ec286a3f98"
+        ],
+        "tree": "923e1a96766dff8c5e44623f3f3bb0787bfd86bb",
+        "subject": "test: incluir ensaio completo da remarcacao no candidato local",
+        "authorDate": "2026-11-01T04:48:13Z",
+        "committerDate": "2026-11-01T04:48:13Z"
+      }
+    ]
+  },
+  "sourceObjects": {
+    "src": "5c3a0a0cf608807e6c1c7db4d98fddf00c280a35",
+    "qa": "4066fe7fc5cbc84a0a515bb6cba6263eff1ee57c",
+    "pom.xml": "7daa6e1a3b9bfcaff999ce4276d04713f5be770d",
+    ".github": "78777337c2f03e176ed247ea9f24d8a54c6bd40d"
+  },
+  "pullRequests": [
+    {
+      "number": 85,
+      "baseRefName": "main",
+      "headRefName": "feat/refatoracao-permissoes",
+      "headRefOid": "fe21d898f9082acb30c9f71700fc7d7872a2ef5a",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN",
+      "checks": {
+        "verify (PostgreSQL 16)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/39782510401/job/119837091007"
+        },
+        "guard": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/39782510404/job/119837090612"
+        },
+        "verify (PostgreSQL 18)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/39782510401/job/119837090603"
+        }
+      }
+    },
+    {
+      "number": 86,
+      "baseRefName": "feat/refatoracao-permissoes",
+      "headRefName": "feat/portaria-liberacao-acrescimos",
+      "headRefOid": "4fb7a06c8343234487bd15260c67e31a3b765aaa",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN",
+      "checks": {
+        "navegador": {
+          "conclusion": "FAILURE",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40708641252/job/122887520148"
+        },
+        "verify (PostgreSQL 16)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40708650204/job/122887552343"
+        },
+        "guard": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40708650293/job/122887554279"
+        },
+        "verify (PostgreSQL 18)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40708650204/job/122887552587"
+        },
+        "publicar-capturas": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40708641252/job/122889218922"
+        }
+      }
+    },
+    {
+      "number": 87,
+      "baseRefName": "feat/portaria-liberacao-acrescimos",
+      "headRefName": "chore/ui-v2-verificacao-portaria",
+      "headRefOid": "24d99feda3cd9b070af9f4ddb5e327a81d1aed27",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN",
+      "checks": {
+        "navegador": {
+          "conclusion": "FAILURE",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40810399422/job/123239075692"
+        },
+        "verify (PostgreSQL 16)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40810403653/job/123239089765"
+        },
+        "guard": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40810402372/job/123239085662"
+        },
+        "verify (PostgreSQL 18)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40810403653/job/123239089513"
+        },
+        "publicar-capturas": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/40810399422/job/123239924797"
+        }
+      }
+    },
+    {
+      "number": 88,
+      "baseRefName": "chore/ui-v2-verificacao-portaria",
+      "headRefName": "docs/modelagem-uml-profissional",
+      "headRefOid": "20e376ab616f6f2f913a20ae49e645f6a8938691",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN",
+      "checks": {
+        "verify (PostgreSQL 16)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41046903115/job/124033086952"
+        },
+        "guard": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41046903181/job/124033087503"
+        },
+        "verify (PostgreSQL 18)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41046903115/job/124033087342"
+        }
+      }
+    },
+    {
+      "number": 89,
+      "baseRefName": "docs/modelagem-uml-profissional",
+      "headRefName": "refactor/simplificacao-final-courttime",
+      "headRefOid": "abb240601d0e26616942f050e6aa72e6964e296f",
+      "mergeable": "MERGEABLE",
+      "isDraft": true,
+      "state": "OPEN",
+      "checks": {
+        "verify (PostgreSQL 16)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41054300203/job/124057819916"
+        },
+        "guard": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41054300189/job/124057820143"
+        },
+        "navegador": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41054292177/job/124057793504"
+        },
+        "verify (PostgreSQL 18)": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41054300203/job/124057820440"
+        },
+        "publicar-capturas": {
+          "conclusion": "SUCCESS",
+          "url": "https://github.com/arthur-amancio/CourtTime/actions/runs/41054292177/job/124059231670"
+        }
+      }
+    }
+  ],
+  "otherOpenPrsExcluded": [
+    49,
+    83,
+    84
+  ],
+  "environment": {
+    "os": "Debian 13.6 x86_64",
+    "java": "Temurin 17.0.21+9",
+    "javaHome": "selecionado pelo operador; instalação em diretório do usuário",
+    "mavenWrapper": "3.9.16",
+    "node": "22.23.4",
+    "npm": "10.9.9",
+    "python": "3.12.14",
+    "postgres": "16.15",
+    "chromium": "154.0.8037.57",
+    "playwright": "1.56.1",
+    "axeCore": "4.10.3",
+    "sudo": false,
+    "githubReadAndPush": true,
+    "downloadChecksums": [
+      {
+        "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.21%2B9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz",
+        "sha256": "8b9b611d917e3dfd8419d3566b5949226f69b052fed7e109c1368add1dfe8711"
+      },
+      {
+        "url": "https://nodejs.org/dist/v22.23.4/node-v22.23.4-linux-x64.tar.xz",
+        "sha256": "1805bcd35e6815559bd2eb97db438d3fdb0eb3a5e6a977b7c1badca76337e9ce"
+      },
+      {
+        "url": "https://ftp.postgresql.org/pub/source/v16.15/postgresql-16.15.tar.bz2",
+        "sha256": "c1575341fa7bd40f5274ea465b34390f4dc64cdd0770af327005caaeb9f6b7ed"
+      }
+    ]
+  },
+  "databaseIsolation": {
+    "host": "127.0.0.1",
+    "port": 55432,
+    "username": "courttime_cloud",
+    "authentication": "scram-sha-256",
+    "javaDatabase": "courttime_cloud_test",
+    "browserDatabase": "courttime_e2e",
+    "recoveryDatabase": "courttime_e2e_p0p1_run32",
+    "actualNamesCheckedWithPsql": true,
+    "realDataUsed": false
+  },
+  "commands": [
+    "git fetch origin",
+    "git merge --no-ff <cada branch da cadeia; apenas na worktree local>",
+    "./mvnw -s <settings privado do proxy> -B clean verify",
+    "npm ci",
+    "npm run test:qa",
+    "pg_dump -Fc e pg_restore --exit-on-error em outro banco novo",
+    "sondas HTTP adicionais descritas em ensaioComplementar; banco e marcador conferidos"
+  ],
+  "java": {
+    "classes": 49,
+    "counts": {
+      "tests": 479,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "postgresIntegrationTests": 63,
+    "httpJourneyTests": 3,
+    "concurrencyAndStorageCases": [
+      "AdministracaoUsuarioServiceTest.conflitoConcorrenteNoIndiceUnicoETraduzidoSemAuditoriaIncorreta",
+      "ReservaPostgreSqlIntegrationTest.remarcacoesSimultaneasDaMesmaCanceladaCriamUmaUnicaNovaSolicitacao",
+      "ReservaPostgreSqlIntegrationTest.concurrentOverlappingWeeklySchedulesCannotBothPersist",
+      "ReservaPostgreSqlIntegrationTest.pessimisticCourtLockAllowsOnlyOneConcurrentApprovalForSamePeriod",
+      "ContribuicaoApmPostgreSqlIntegrationTest.doisAjustesConcorrentesFormamHistoricoSerialSemPerderAlteracao",
+      "ContribuicaoApmPostgreSqlIntegrationTest.duasSecretariasConcorrentesNaoDuplicamRecebimento",
+      "DocumentoStorageLocalTest.recusaTraversalChaveArbitrariaESobrescrita",
+      "DocumentoStorageLocalTest.recusaLinkSimbolicoMesmoComChaveValida",
+      "PortariaPostgreSqlIntegrationTest.duasTentativasSimultaneasDePagamentoRegistramUmUnicoComplemento",
+      "PortariaPostgreSqlIntegrationTest.duasConfirmacoesSimultaneasDoMesmoRepasseRegistramUmaSo",
+      "ConferenciaDocumentoPostgreSqlIntegrationTest.duasSecretariasConcorrentesNaoDuplicamDecisao",
+      "DocumentoReservaPostgreSqlIntegrationTest.doisEnviosConcorrentesPermitemSomenteUmaVersaoAguardandoConferencia"
+    ]
+  },
+  "browser": {
+    "assertions": 1128,
+    "guardNodeTests": 5,
+    "reports": [
+      {
+        "file": "resultados-axe.json",
+        "sha256": "1f85d08d0dcfb9b45416fdabaeeaa53c959387b4292e21b71b499e9227a70ba9",
+        "assertions": {
+          "PASS": 0,
+          "FAIL": 0,
+          "PENDING": 0
+        },
+        "axeScans": 44,
+        "violations": 0
+      },
+      {
+        "file": "resultados-e2e.json",
+        "sha256": "56ec3f40304bf86467928886e59dcda43d6e4d654d892dc0deafa091f3aa55dc",
+        "assertions": {
+          "PASS": 367,
+          "FAIL": 0,
+          "PENDING": 0
+        }
+      },
+      {
+        "file": "resultados-finalizacao.json",
+        "sha256": "cb7da7189d5bf3a05ed1c3715437586fde42d1bad1ea7302f60d70460ebe6bf5",
+        "assertions": {
+          "PASS": 97,
+          "FAIL": 0,
+          "PENDING": 0
+        },
+        "remarcacaoChecks": [
+          {
+            "status": "PASS",
+            "name": "reserva aprovada não oferece remarcação",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação de reserva aprovada é recusada",
+            "detail": "HTTP 200"
+          },
+          {
+            "status": "PASS",
+            "name": "aluno não abre a remarcação da reserva de outra pessoa",
+            "detail": "HTTP 404"
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação respeita a antecedência mínima",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação respeita a grade atual",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação nasce como rascunho e vinculada",
+            "detail": "#7"
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação não reaproveita o PDF",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação não reaproveita contribuição",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "segunda remarcação pela tela é recusada",
+            "detail": "HTTP 200"
+          },
+          {
+            "status": "PASS",
+            "name": "segunda remarcação por envio direto é recusada",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "crédito da origem não libera aprovação sem nova documentação e contribuição",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "servidor recusa aprovação prematura da remarcação mesmo com crédito",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "novo formulário da remarcação",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação recebe documento próprio",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação calcula R$ 24,00 para doze participantes",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação aplica R$ 20,00 e identifica a origem",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação cobra somente a diferença de R$ 4,00",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "uso do crédito preserva o recebimento histórico da origem",
+            "detail": ""
+          },
+          {
+            "status": "PASS",
+            "name": "remarcação recebe nova aprovação após documento, conferência e diferença",
+            "detail": ""
+          }
+        ]
+      },
+      {
+        "file": "resultados-navegacao.json",
+        "sha256": "4389440c83141d50e4e519be462b9810c9ade9e1d39db8cb22162646b31ec539",
+        "assertions": {
+          "PASS": 49,
+          "FAIL": 0,
+          "PENDING": 0
+        }
+      },
+      {
+        "file": "resultados-redesign-v2.json",
+        "sha256": "a0e1abefce0dc47985079515c045a50a62c6b941d7f4ef48f455b2eebc087cfb",
+        "assertions": {
+          "PASS": 285,
+          "FAIL": 0,
+          "PENDING": 0
+        }
+      },
+      {
+        "file": "resultados-telas.json",
+        "sha256": "4505f457d97547738b6e2d3142a884a5860017ed850f080a56f3d7ebbbdfebee",
+        "assertions": {
+          "PASS": 330,
+          "FAIL": 0,
+          "PENDING": 0
+        }
+      }
+    ],
+    "screenshotsSelected": [
+      {
+        "file": "cloud-demo-A-nove.png",
+        "sha256": "5101beadd29ed72000859a306e6b0756dc34845a1e077eaf88458ddffe6aa177"
+      },
+      {
+        "file": "cloud-demo-B-portaria-390.png",
+        "sha256": "36b5acd7f06f6e8050f2cc241de8381d99f0efc62390ac6fabd23b4cbb0e7492"
+      },
+      {
+        "file": "cloud-remarcacao-credito-diferenca.png",
+        "sha256": "7b7853f2755b5e5282e9476e676b0b9626f7a676dedf11a8dcfff3e4b10fe67a"
+      }
+    ]
+  },
+  "pdfChecks": {
+    "final-formulario-11.pdf": {
+      "pages": 2,
+      "sha256": "43d8ca83e8a9f1cf0a840e1edd60d97a9f7959238e0fe2efef6a5e007011176e",
+      "officialTemplateFound": true
+    },
+    "final-formulario-31.pdf": {
+      "pages": 3,
+      "sha256": "5522f004c76bed8479a1513119e58632e7ce9e061f4886bafbd390c9bc3bd639",
+      "officialTemplateFound": true
+    },
+    "syntheticCpfAbsentFromDatabase": true
+  },
+  "ensaioComplementar": {
+    "sha": "794a299cd83c30ebe01be3236bbc319ef978e591",
+    "database": "courttime_e2e",
+    "ids": {
+      "xss": 9,
+      "A": 10,
+      "B": 11,
+      "C": 7
+    },
+    "results": [
+      {
+        "status": "PASS",
+        "name": "busca com payload SQL não retorna todas as contas"
+      },
+      {
+        "status": "PASS",
+        "name": "finalidade persistida mostra HTML como texto sem executar XSS"
+      },
+      {
+        "status": "PASS",
+        "name": "cenário A com nove participantes mantém upload bloqueado"
+      },
+      {
+        "status": "PASS",
+        "name": "cenário B documentado, conferido, pago e aprovado pela aplicação"
+      },
+      {
+        "status": "PASS",
+        "name": "cenário B disponível na portaria de hoje, ainda sem liberação"
+      }
+    ],
+    "datePreparation": {
+      "reservation": 11,
+      "original": "2026-11-23",
+      "effective": "2026-11-01",
+      "synthetic": true,
+      "method": "fixture SQL do banco E2E após fluxo HTTP completo; não é ação normal do sistema"
+    },
+    "manualRehearsal": "pendente do grupo; automação não mede duração humana"
+  },
+  "recovery": {
+    "databaseAndFiles": {
+      "courttime_e2e": {
+        "counts_users_reservations_documents_contributions": "7|11|7|6",
+        "documentsWithMatchingSizeAndSha256": 7
+      },
+      "courttime_e2e_p0p1_run32": {
+        "counts_users_reservations_documents_contributions": "7|11|7|6",
+        "documentsWithMatchingSizeAndSha256": 7
+      }
+    },
+    "authenticatedHttp": {
+      "database": "courttime_e2e_p0p1_run32",
+      "results": [
+        {
+          "profile": "admin",
+          "status": "PASS",
+          "path": "/admin/solicitacoes/11"
+        },
+        {
+          "profile": "alunoC",
+          "status": "PASS",
+          "path": "/solicitacoes/10/participantes"
+        },
+        {
+          "profile": "secretaria",
+          "status": "PASS",
+          "path": "/secretaria/contribuicoes/solicitacoes/7"
+        },
+        {
+          "profile": "seguranca",
+          "status": "PASS",
+          "path": "/seguranca/reservas/11"
+        }
+      ]
+    }
+  },
+  "shutdown": {
+    "18081": {
+      "listenerRemaining": false
+    },
+    "55432": {
+      "listenerRemaining": false
+    }
+  },
+  "frozenAcademicPdfSha256": "8475492fe64eb55aed671c57f62e8f78d0fc3dd753cc480b921890c4c9edd77b",
+  "resolvedEnvironmentFailures": [
+    "Maven inicialmente tentou rede direta; proxy/truststore configurados fora do Git, sem mudar POM.",
+    "Primeiro smoke da restauração começou antes de o servidor estar pronto (ERR_CONNECTION_REFUSED); após /login responder, quatro perfis passaram."
+  ],
+  "limitations": [
+    "Revisão dirigida e sondas não provam ausência de todas as vulnerabilidades.",
+    "Concorrência de recebimento/repasse/aprovação/remarcação exercitada pelos testes Java listados; não se afirma uma corrida simultânea adicional entre substituição e pagamento pelo navegador.",
+    "PostgreSQL 18 não executado localmente; consultar a CI própria do PR Cloud.",
+    "Ensaio humano cronometrado, projetor e homologação institucional pendentes.",
+    "Nenhum merge remoto, retarget, deploy ou alteração no Drive; documentos acadêmicos existentes preservados."
+  ]
+}
