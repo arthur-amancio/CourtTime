@@ -1,8 +1,6 @@
 # Sprint 4 — conferência dirigida de encerramento
 
-01/11/2026. Versão principal para revisão: **DOCX/PDF de 86 páginas**, na pasta Revisão Final.
-Prazo informado pelo proprietário: **12/11/2026 às 18h de São Paulo (21h UTC)**.
-Candidato de 82 páginas é histórico preservado; não deve ser confundido com a entrega de 86.
+03/11/2026. Versão principal: **CourtTime — Revisão Acadêmica Final — V2, DOCX/PDF de 87 páginas** no pacote final. Original de 86 páginas preservado; candidato de 82 páginas histórico. Prazo informado: **12/11/2026 às 18h de São Paulo (21h UTC)**. Pronta para revisão; submissão integral pendente.
 
 Fontes: [cronograma original do acervo](https://docs.google.com/document/d/1fJ5JLo4traaYNeCywO8oikiOrrTZr8W6/edit),
 lista de exigências fornecida nesta missão e [manual ETEC](https://drive.google.com/file/d/1gTywCwLM8aKDV47bcC60M8l03YXWlqKp/view).
@@ -30,31 +28,29 @@ Páginas abaixo são impressas; a folha física do PDF é uma unidade maior.
 | 7.3 Programação | p.72–73: stack existente, responsabilidades MVC/JPA e PDFBox. | APROVADO |
 | 7.4 Imagens | p.73–74: captura/tratamento comprovados; aplicativo original da marca não confirmado. | PENDENTE DE DECISÃO HUMANA |
 | Considerações finais | p.76: objetivos, resultados e limites, sem homologação presumida. | APROVADO para revisão humana |
-| Referências | p.77–78: 25 entradas; limites de consulta anteriores preservados. | APROVADO para parecer bibliográfico |
-| Anexos | p.79: referência ao termo original, sem reprodução integral autorizada. | PENDENTE DE DECISÃO HUMANA |
-| A — DER | p.80–82: texto, duas vistas legíveis e referência ao modelo integral de 12 entidades/26 FKs. | APROVADO |
-| B — Online | p.83: 11 enunciados literais; sem alternativas, layout e instrumento integral recuperados. | PARCIAL — fornecer original |
-| C — Impresso | p.84: texto declara ausência de exemplar/comprovação; não contém pesquisa aplicada. | INCOMPLETO — original ou dispensa |
-| D — Logo | p.85: texto declara ausência de votação comprovada; variantes não são votos. | INCOMPLETO — original ou dispensa |
+| Referências | p.77–79: 25 entradas individualmente conferidas; correções comprovadas e limites na auditoria V2. | APROVADO para parecer bibliográfico |
+| Anexos | p.80: referência ao termo original, sem reprodução integral autorizada. | PENDENTE DE DECISÃO HUMANA |
+| A — DER | p.81–83: texto, duas vistas legíveis e referência ao modelo integral de 12 entidades/26 FKs. | APROVADO |
+| B — Online | p.84: 11 enunciados literais; sem alternativas, layout e instrumento integral recuperados. | PARCIAL — fornecer original |
+| C — Impresso | p.85: texto declara ausência de exemplar/comprovação; não contém pesquisa aplicada. | INCOMPLETO — original ou dispensa |
+| D — Logo | p.86: texto declara ausência de votação comprovada; variantes não são votos. | INCOMPLETO — original ou dispensa |
 
 “APROVADO” nesta conferência significa presença e coerência verificadas; não é parecer do orientador.
 B integral, C/D, anexo e ferramenta da marca impedem declarar conformidade acadêmica integral sem decisão registrada.
 Tratamento e perguntas estão somente na [tabela única de decisões](https://drive.google.com/file/d/17cuVAuzO-Nmt6RIRG7zYsKcPbhJnNHPh/view).
 
-## Verificação editorial proporcional
+## Verificação editorial proporcional — V2
 
-Baixados novamente DOCX/PDF/PPTX/PDF: os quatro SHA-256 coincidem com os registrados em 30/10.
-Os pares abrem sem corrupção e correspondem às versões já provadas. Não houve reexportação ou nova versão da monografia/apresentação.
-Conferidos nesta missão: 86 páginas A4; nenhuma página vazia; DOCX com 34 imagens e sete quadros;
-estrutura de sumário com os tópicos IV–VII/finais; duas seções com margens de aproximadamente 2,5 cm.
-O manual exige 2,5 cm, Arial 12 e entrelinhas 1,5; não foi substituído por regras genéricas de outra instituição.
+Correções reais em 3.2, resumo/abstract, considerações finais e três referências justificaram a nova cópia. [Lista curta no índice](https://drive.google.com/file/d/1AiBBqC2hWFmEZ-dNP7HbXrKgXZxW30Ye/view); [25 referências verificadas individualmente](https://drive.google.com/file/d/1iIay_w6LkQmtLV_wusUHcTUr1h7lmli3/view). Introdução, problema, objetivos e encadeamento requisitos/modelagem/telas permaneceram coerentes com a implementação; não houve reescrita cosmética.
 
-Inspeção visual dirigida nas páginas impressas 38, 40, 41, 48, 50, 54, 73, 79–81 e 83–85:
-quadros sem fracionamento indevido observado, títulos/legendas/fontes presentes, classes/DER legíveis e pendências claramente marcadas.
-Não surgiu desformatação comprovada que justifique editar o original. A prova integral e reconciliação de sumário/listas de 29/10
-continuam válidas para os bytes idênticos; não se afirma nova leitura visual de todas as 86 páginas.
-Prova física e teste de projetor continuam pendentes. Draw Code permanece referência secundária, sem copiar conteúdo.
+- [x] DOCX editável e PDF A4 da mesma versão: 416 parágrafos de conteúdo comparados; 102 entradas de sumário/listas conferidas com páginas reais.
+- [x] 87 páginas A4, nenhuma vazia; 34 imagens originais idênticas e sete quadros preservados.
+- [x] Arial real incorporada no PDF; corpo 12 e entrelinhas 1,5 preservados, margens 2,5 cm conforme manual. Legendas/fontes mantêm seus estilos próprios. Não houve redução de corpo para caber conteúdo.
+- [x] Inspeção visual das folhas físicas 1, 7–10, 12–13, 35–37, 49–56 e 76–87, com vizinhança das alterações e vistas globais de paginação. Referências longas quebram dentro da área útil; não foi observada perda de texto. Quadros e diagramas preservados.
+- [x] 25 referências com existência/metadados/uso e limites registrados; sem novas obras ou duplicatas. Livros/norma sem íntegra acessível não foram declarados integralmente verificados.
+- [x] Apresentação PPTX/PDF de 15 slides correspondente; conteúdo visual alterado somente no slide 13, notas atualizadas. Originais preservados.
+- [x] Bytes publicados no Drive novamente baixados e comparados por SHA-256; informações em VERIFICACAO.json, bloco academicV2.
+- [ ] Instrumento integral de B fornecido; tratamento de C/D e anexo aprovado; ferramenta original da marca declarada.
+- [ ] Parecer do orientador, requisitos adicionais do enunciado, prova física e teste no projetor/ensaio humano.
 
-O manual e os documentos acadêmicos privados foram usados em cópias de trabalho fora do Git; nenhum foi republicado no repositório para contornar acesso.
-Os hashes, contagens e referências estão em `VERIFICACAO.json`. Havendo novo conteúdo aprovado, criar cópia recuperável,
-atualizar índices, exportar PDF correspondente e conferir páginas afetadas/vizinhas e paginação global.
+A versão histórica de 86 páginas permanece íntegra, com hashes anteriores no manifesto. O manual ETEC prevalece; Draw Code foi consultado como referência secundária. Não se afirma aprovação humana nem submissão. Os documentos privados continuam fora do Git.

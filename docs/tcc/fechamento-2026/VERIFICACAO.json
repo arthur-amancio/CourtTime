@@ -278,5 +278,174 @@
       "sha256": "28f0a05614ca852a3fbe4ce63564241eb757d0efec5ba74cd70403023189776d",
       "pages": 2
     }
-  ]
+  ],
+  "academicV2": {
+    "dateSaoPaulo": "2026-11-03T16:52:14.889042-03:00",
+    "workBranch": "docs/revisao-academica-v2-20261103",
+    "initialHead": "c0903d66c50183f600b6bcbfb43eb86f1778cc56",
+    "runtimeHead": "b842f35593c8624793003349aaffbb69c21926b4",
+    "mainUnchanged": "4df490729734d9f45830e15be241cdb66c3f112f",
+    "codeChanged": false,
+    "softwareSuitesRerun": false,
+    "pr91ChecksReconfirmed": [
+      "verify (PostgreSQL 16): SUCCESS",
+      "verify (PostgreSQL 18): SUCCESS",
+      "guard: SUCCESS"
+    ],
+    "classification": "PRONTA PARA REVISÃO; SUBMISSÃO INTEGRAL PENDENTE",
+    "reviewCopyTitle": "CourtTime — Revisão Acadêmica Final — V2",
+    "validation": {
+      "pages": 87,
+      "indexMatches": 102,
+      "indexMismatches": [],
+      "fonts": [
+        "Arial-BoldItalicMT",
+        "Arial-BoldMT",
+        "ArialMT"
+      ],
+      "emptyPages": [],
+      "imagesDocx": 34,
+      "tables": 7,
+      "a4Pages": 87,
+      "docxPdfParagraphsCompared": 416,
+      "unmatchedParagraphs": [],
+      "mediaUnchanged": 34,
+      "slides": 15,
+      "slidePdfTextMatched": true,
+      "visualSlideChanged": 13,
+      "softwareSuitesRerun": false
+    },
+    "referenceEntriesIndividuallyReviewed": 25,
+    "referenceDuplicatesFound": 0,
+    "referenceConsultationLimits": "Livros Pearson/Springer por catálogo/descrição; ISO por catálogo/escopo; dissertação Moreira por registro/resumo. Não declarar consulta integral dessas obras. Artigos/documentação consultados conforme matriz privada no Drive.",
+    "referenceCorrections": [
+      "Moreira: Éber/URL canônica/tipo de registro",
+      "Ferraiolo: DOI recuperado 10.1145/501978.501980",
+      "CourtTime: referência abrange b842f35 e evidências atuais"
+    ],
+    "visualPhysicalPagesInspected": [
+      1,
+      7,
+      8,
+      9,
+      10,
+      12,
+      13,
+      35,
+      36,
+      37,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+    ],
+    "visualGlobalScope": "Vistas de contato da paginação e ampliações dirigidas; prova digital não substitui prova física ou projetor.",
+    "entityFingerprintsUnchanged": 12,
+    "formInvestigation": "Sem ferramenta Google Forms exposta. Metadados da planilha reconfirmados, sem reler respostas individuais. Proprietário deve exportar instrumento do editor original, sem respostas, e confirmar recrutamento/duplicidades. Não repetir buscas idênticas.",
+    "humanDecisions": "Tabela única atualizada; impresso, votação, marca, anexo, método e regras não aprovados por inferência.",
+    "artifacts": [
+      {
+        "name": "CourtTime — Revisão Acadêmica Final — V2.docx",
+        "driveId": "14kGQxlj5dGeEu9BrwqPUPaIxC57pqFJN",
+        "sha256": "d02e1e52e59030a33828c23314902d5d99937c8e086dd2cfaa589d88577951e5",
+        "bytes": 10159095,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "CourtTime — Revisão Acadêmica Final — V2.pdf",
+        "driveId": "180TaLx-JiKf0SgdUu2MJlcBJthxXOwjt",
+        "sha256": "8615ca3ff14997c32f518ef3ee9139b5395a4493972481888b1e9be309f69801",
+        "bytes": 4268957,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "CourtTime-Apresentacao-Banca-V2.pptx",
+        "driveId": "17cjUL-nYFUOsk4RPHyikH9VrfF1eXUdF",
+        "sha256": "a316e036daff286e87749ea3e36306c8c95983b830f30fa034f0be0016e7ee4a",
+        "bytes": 756240,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "CourtTime-Apresentacao-Banca-V2.pdf",
+        "driveId": "19exVG9ocDdUw2bIm4lLNVblMnsNaaE4Q",
+        "sha256": "5f26527733bf12f80f3074744988d7ef5d104c5b7b873cb040654d847ec3552b",
+        "bytes": 710630,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "AUDITORIA-25-REFERENCIAS-V2.md",
+        "driveId": "1iIay_w6LkQmtLV_wusUHcTUr1h7lmli3",
+        "sha256": "954046a7ee5337d15965304631b49f815e463b8839de9284067b263f70a316f3",
+        "bytes": 12291,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "FICHA-ORIENTADOR.docx",
+        "driveId": "1mL-BbzektFA44BCUogaAEvOkksXa02-N",
+        "sha256": "b6cd991d15ff531cf2cb670610bcbf8f983091468ffaec826a691b0e82bf06d5",
+        "bytes": 39088,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "FICHA-ORIENTADOR.pdf",
+        "driveId": "1eF7waHjUI-aH3r24TzXDXwXvLaZC5hoc",
+        "sha256": "a0d16ff50debfb8bd0ad7b166656d3f7c6751aeaa33bdecbe08340a340c3d353",
+        "bytes": 69521,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "LEIA-PRIMEIRO.md",
+        "driveId": "1AiBBqC2hWFmEZ-dNP7HbXrKgXZxW30Ye",
+        "sha256": "f8bf2fab46a391fcee3278989e6f67cac4b796224e9ab0d1ab7c1a87ab11712a",
+        "bytes": 8264,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "CONFORMIDADE-SPRINT4.md",
+        "driveId": "10SMS8PNBP9yDROzjUDS0nnYxxIlj6KZn",
+        "sha256": "e32ad1af75aadeb3fd38acca6cb383a76b42683a695d00d9e50bf14586b6d358",
+        "bytes": 6303,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "DECISOES-E-ORIENTADOR.md",
+        "driveId": "17cuVAuzO-Nmt6RIRG7zYsKcPbhJnNHPh",
+        "sha256": "33217c3a5ccfabe0cd2ea709ab45a59641dcc5c079b27cb67f67395687688247",
+        "bytes": 12737,
+        "readbackIdentical": true,
+        "shared": false
+      }
+    ],
+    "originalAssetsPreserved": true,
+    "messagesSent": false,
+    "mergesPerformed": false,
+    "permissionsChanged": false,
+    "humanRehearsalPerformed": false,
+    "submissionPerformed": false
+  }
 }
