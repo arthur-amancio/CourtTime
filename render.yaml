@@ -1,0 +1,42 @@
+# Revisar Billing e confirmar ausencia de forma de pagamento ANTES de criar.
+# Um unico servico Free. Neon e bucket privado sao preparados separadamente.
+previews:
+  generation: "off"
+services:
+  - type: web
+    name: courttime-demo
+    runtime: docker
+    repo: https://github.com/arthur-amancio/CourtTime
+    branch: chore/render-neon-demo-gratuita
+    region: ohio
+    plan: free
+    autoDeployTrigger: "off"
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: COURTTIME_DEMO_SYNTHETIC_DATA
+        value: "true"
+      - key: COURTTIME_BOOTSTRAP_ADMIN_ENABLED
+        value: "false"
+      - key: COURTTIME_POSTGRES_TEST
+        value: "false"
+      - key: COURTTIME_DB_URL
+        sync: false
+      - key: COURTTIME_DB_USERNAME
+        sync: false
+      - key: COURTTIME_DB_PASSWORD
+        sync: false
+      - key: COURTTIME_S3_BUCKET
+        sync: false
+      - key: AWS_ENDPOINT_URL_S3
+        sync: false
+      - key: AWS_REGION
+        value: us-east-2
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false

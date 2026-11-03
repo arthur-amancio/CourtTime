@@ -96,7 +96,25 @@ jobs:
             if ($saida.Contains('senha-ficticia-somente-na-ci')) {
               throw 'O verificador expôs o valor da senha.'
             }
+            # A senha acima e deliberadamente ficticia: esta etapa valida a
+            # leitura/redacao, nao a autenticacao no servidor da CI.
+            if ($LASTEXITCODE -ne 1 -or $saida -notmatch '\[FALHA\]\s+Conexao PostgreSQL') {
+              throw 'A conexao com credenciais ficticias deveria ser recusada.'
+            }
+            $global:LASTEXITCODE = 0
             Write-Host 'Leitura real de URL e senha ficticia validada, sem exposicao da senha.'
+
+            @(
+              'spring.datasource.url=jdbc:postgresql://localhost:5432/courttime_test'
+              'spring.datasource.username=courttime'
+              # Credencial do servico PostgreSQL descartavel deste workflow.
+              'spring.datasource.password=courttime_test'
+            ) | Set-Content -LiteralPath $arquivo -Encoding utf8
+            $saida = (& pwsh -NoProfile -File scripts/Verificar-Ambiente-CourtTime.ps1 -BancoEsperado courttime_test 2>&1 | Out-String)
+            if ($LASTEXITCODE -ne 0 -or $saida -notmatch '\[ok\]\s+Banco realmente conectado') {
+              throw 'A consulta somente leitura nao confirmou o banco descartavel da CI.'
+            }
+            Write-Host 'Servidor, banco conectado e permissoes conferidos sem escrita.'
           }
           finally {
             Remove-Item -LiteralPath $arquivo -Force -ErrorAction SilentlyContinue

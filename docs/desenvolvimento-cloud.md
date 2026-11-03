@@ -162,3 +162,30 @@ Conferir o encerramento dos processos e fechar a sessão reservada. Preservar
 somente evidências revisadas, sem credenciais; não publicar o cluster/PDFs.
 O ambiente temporário do Codex não é hospedagem permanente. Nenhum deploy
 ou acesso público é necessário para este procedimento.
+
+## Verificar o novo storage S3 sem atingir a demonstração
+
+A hospedagem HTTPS está no [guia próprio](deploy-gratuito.md). Para a regressão
+do protocolo, foi usado Moto `5.1.16` com servidor S3 HTTPS local e bucket
+privado `courttime-s3-test`; ele é somente um emulador de QA, não infraestrutura
+da aplicação. Criar esse bucket fora da suíte, bloquear acesso público e usar
+credenciais exclusivamente sintéticas. O certificado deve conter localhost e
+ser confiado em um truststore de laboratório separado, sem desabilitar TLS.
+
+Configurar `AWS_ENDPOINT_URL_S3=https://localhost:<porta>`, `AWS_REGION`,
+`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `COURTTIME_S3_TEST=true` e
+`COURTTIME_S3_TEST_BUCKET=courttime-s3-test` somente nessa sessão. Passar o
+truststore ao processo Java (`JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStore=<arquivo>`).
+Então executar o Wrapper com `-Dtest=DocumentoStorageS3IntegrationTest test`.
+São três testes de protocolo: recuperar os mesmos bytes após reabrir o cliente
+e recusar GET anônimo; impedir sobrescrita concorrente; remover somente o objeto
+descartável criado pelo teste. Cada teste usa UUID novo. A guarda recusa endpoint
+fora de localhost/127.0.0.1 ou bucket diferente antes de escrever.
+
+Sem essa configuração, somente esses três testes opcionais são ignorados;
+isso não comprova aprovação do S3 real. A CI PostgreSQL continua independente.
+Para exercitar toda a jornada no novo backend, usar a base E2E descartável acima
+com `COURTTIME_DOCUMENT_STORAGE=s3` e `COURTTIME_S3_BUCKET=courttime-s3-test`.
+Manter todas as travas E2E e o truststore local. Nunca apontar essas suítes para
+o Neon/bucket publicados. O provedor real exige conferência separada de TLS,
+política privada, escrita condicional e persistência, com PDF sintético avulso.

@@ -128,6 +128,28 @@ quando voce realmente quiser comecar de novo.
 
 ### Problemas frequentes
 
+Para uso pela internet, seguir [deploy gratuito](deploy-gratuito.md): o computador
+da escola precisa somente de navegador/rede quando houver URL HTTPS validada.
+Nao alterar a instalacao PostgreSQL institucional para contornar o erro sem log.
+
+Na raiz do checkout, o diagnostico abaixo e **somente leitura**, nao exige
+administrador e nao modifica PostgreSQL, banco ou configuracao:
+
+```powershell
+.\scripts\Verificar-Ambiente-CourtTime.ps1
+.\scripts\Verificar-Ambiente-CourtTime.ps1 -Porta 8080 -LogInicializacao .\inicio-privado.log
+```
+
+Ele confere Java/JAVA_HOME, Wrapper, configuracao, porta HTTP e, quando `psql`
+estiver disponivel, consulta versao **do servidor**, banco/usuario realmente
+conectados e permissoes CONNECT/USAGE/CREATE. Nunca imprime a senha. Cliente sem
+suporte SSL pode falhar ao consultar um banco TLS mesmo que a aplicacao Java
+consiga conectar; distinguir os clientes. Versao fora de 16/18 e um alerta de
+compatibilidade, nao uma causa comprovada. O parametro de log classifica as
+ultimas 250 linhas sem reproduzi-las; manter o arquivo bruto privado. Configuracao
+com `SPRING_*` sobrepoe arquivo local; este sobrepoe placeholders `COURTTIME_*`.
+O script nao instala ferramentas nem atualiza o servidor da escola.
+
 - Erro de conexao: confira `courttime_demo`, o servico PostgreSQL, usuario e
   senha em `application-local.properties`.
 - O bootstrap administrativo antigo reclama de contas existentes: remova

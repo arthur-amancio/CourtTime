@@ -1,0 +1,10 @@
+# Somente fontes necessários ao build; nenhum arquivo local de configuração.
+*
+!.mvn/
+!.mvn/**
+!mvnw
+!pom.xml
+!src/
+!src/**
+!Dockerfile
+!.dockerignore
