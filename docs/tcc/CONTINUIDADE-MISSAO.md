@@ -1,5 +1,17 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
+## Pesquisa original incorporada — 03/11/2026
+
+**Principal atual: [Sprint 4 — Pesquisa Integrada — V2, PDF de 98 páginas](https://drive.google.com/file/d/1zJAC9YMYM-eLpK7HcGS4oJ9g9aDwwKLc/view), [DOCX editável](https://drive.google.com/file/d/1bFjq7qI2_-O6lCxqlCxbGhjjxCPAJYQo/view), na [subpasta de revisão](https://drive.google.com/drive/folders/1xTJv3xpDWK0PL5dHMPkqj6PS0gOpxn57).** Base original de 86 páginas preservada; correções pontuais comprovadas da revisão anterior de 87 páginas reaproveitadas. Não confundir as duas revisões denominadas V2.
+
+Branch `docs/pesquisa-original-integrada-20261103`, entrada #92 `07036b2244b448be89953d528e6dcdbe7a2fd4e6`; main `4df490729734d9f45830e15be241cdb66c3f112f` intacta. Sem código Java modificado, sem suíte Java/Maven/Playwright ou integração repetidos. O commit da missão é somente documental; não atribuir checks históricos a um novo SHA.
+
+Forms público fornecido e conferido sem resposta enviada: apresentação, 11 perguntas, alternativas, tipos, obrigatoriedade, escala e ordem. Correspondência dos 11 cabeçalhos verificada. Planilha: aba Respostas ao formulário 1, A2:L31; 28 registros de 06–24/10, cauda A30:A129 vazia. Contagens por alternativa, inclusive opções zero, com denominador 28. Q4/Q7 segmentadas pelas opções originais, preservando vírgula interna. Seis indicadores confirmados: 26/28, 25/28, 24/28, 20/28, 27/28 e 24/28 para notas 4/5. Síntese de dez campos abertos preenchidos, sem citações individuais; nenhuma pessoa única/representatividade/causalidade presumida.
+
+Pesquisa em 3.2, pp.37–43; Tabela 1 em duas partes nas pp.38–39, 41 alternativas; Figuras 12–17 nas pp.40–42; **B completo nas pp.92–95**. Sete quadros e 34 imagens originais preservados; seis gráficos novos, total 40 figuras; 25 referências. DOCX/PDF: 502 parágrafos correspondentes e 114 entradas de índices reconciliadas. 98 páginas A4 inspecionadas visualmente em pranchas e conteúdo novo ampliado. Publicação privada e comparação de hashes por download; [manifesto](https://drive.google.com/file/d/1j3Y-vIMS2lSdCwW9mZGBO3DllmkVMmuY/view). Originais, dados individuais e comentários não publicados no Git.
+
+**Próxima ação exata:** encaminhar esta versão ao orientador após conferir os acessos privados; obter descrição de recrutamento/duplicidades se houver, parecer de método e tratamento de C/D/anexo/marca/regras. Não voltar a procurar o Forms como ausente. C/D não foram resolvidos pela pesquisa online. A apresentação anterior foi preservada; alinhar notas de paginação e B antes do ensaio. Submissão integral ainda depende de pareceres reais; prazo 12/11/2026 às 18h São Paulo. Sem merge, deploy, envio de mensagem ou alteração de permissões. HEAD final recuperável com `git fetch origin` e `git rev-parse origin/docs/pesquisa-original-integrada-20261103`; não há SHA de futura main.
+
 ## Revisão acadêmica V2 — 03/11/2026
 
 Branch `docs/revisao-academica-v2-20261103`; entrada #91 `c0903d66c50183f600b6bcbfb43eb86f1778cc56` confirmada com fetch/API. #91 aberto/MERGEABLE, checks Java 16/18 e guard aprovados. Main permanece `4df490729734d9f45830e15be241cdb66c3f112f`. Código funcional b842f35 preservado; não repetidos Maven, Playwright ou simulação. As 12 entidades têm os mesmos hashes do DER documentado.
