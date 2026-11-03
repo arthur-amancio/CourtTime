@@ -1,5 +1,21 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
+## Revisão acadêmica V2 — 03/11/2026
+
+Branch `docs/revisao-academica-v2-20261103`; entrada #91 `c0903d66c50183f600b6bcbfb43eb86f1778cc56` confirmada com fetch/API. #91 aberto/MERGEABLE, checks Java 16/18 e guard aprovados. Main permanece `4df490729734d9f45830e15be241cdb66c3f112f`. Código funcional b842f35 preservado; não repetidos Maven, Playwright ou simulação. As 12 entidades têm os mesmos hashes do DER documentado.
+
+**Principal: [CourtTime — Revisão Acadêmica Final — V2, PDF de 87 páginas](https://drive.google.com/file/d/180TaLx-JiKf0SgdUu2MJlcBJthxXOwjt/view), [DOCX editável](https://drive.google.com/file/d/14kGQxlj5dGeEu9BrwqPUPaIxC57pqFJN/view). PRONTA PARA REVISÃO; SUBMISSÃO INTEGRAL PENDENTE.** Original de 86 páginas intacto. Corrigidos limites metodológicos (p.35), resumo/abstract e conclusão (p.76), nome/endereço de Moreira e metadados verificáveis das referências (p.77–79). [25 entradas individualmente conferidas](https://drive.google.com/file/d/1iIay_w6LkQmtLV_wusUHcTUr1h7lmli3/view), com consulta parcial explicitada para livros/norma e dissertação.
+
+102 entradas de sumário/listas reconciliadas; 416 parágrafos DOCX/PDF correspondem. 87 páginas A4 sem vazias, Arial incorporada, margens/estilos preservados, 34 imagens originais idênticas e sete quadros. Inspeção visual das alterações/vizinhança, quadros/diagramas e paginação global. Apresentação de 15 slides: [PPTX V2](https://drive.google.com/file/d/17cjUL-nYFUOsk4RPHyikH9VrfF1eXUdF/view) e [PDF correspondente](https://drive.google.com/file/d/19exVG9ocDdUw2bIm4lLNVblMnsNaaE4Q/view); somente slide 13 com alteração visual, notas alinhadas à V2. Ficha do professor, índice, checklist, tabela única e mensagens não enviadas atualizados nos mesmos IDs. Hashes/leituras de retorno em [VERIFICACAO.json](fechamento-2026/VERIFICACAO.json), bloco academicV2.
+
+Ambiente editorial: Linux, Python/python-docx/PyMuPDF e LibreOffice; Arial real preparada no usuário, sem dependências novas no projeto. Arquivos privados publicados somente na pasta autorizada do Drive e baixados novamente com bytes idênticos. Nenhum documento acadêmico binário foi incluído no Git; índice/checklist/decisões/manifesto são as fontes já versionadas. Nenhuma permissão alterada.
+
+Forms: sem ferramenta de acesso ao original; somente metadados da planilha reconfirmados, sem reler respostas individuais. Ação exata para o criador exportar o instrumento original sem respostas está na tabela de decisões. Nenhuma nova busca idêntica, instrumento antigo reconstruído, coleta, dispensa, parecer ou assinatura inventados. Permanecem B integral, confirmação sobre papel/votação, ferramenta da marca, autorização do anexo, método e regras institucionais. Ensaio humano/projetor pendentes.
+
+**Próxima ação exata:** integrante conferir acesso do professor/grupo (arquivos privados), fornecer Forms/declarações até 04/11 às 18h como prazo interno sugerido e encaminhar V2/ficha ao Prof. André. Registrar parecer real e só então incorporar correções; não repetir auditorias e não presumir dispensa de C/D. Prazo da Sprint: 12/11/2026, 18h São Paulo. Integração #85→#90→#91→PR desta revisão exige autorização separada; main não congelada, nenhum merge/deploy/submissão executado.
+
+HEAD final: commit que contém este checkpoint; recuperar com `git fetch origin` e `git rev-parse origin/docs/revisao-academica-v2-20261103`. O PR draft da branch identifica SHA publicado e CI própria; não transferir resultados históricos automaticamente.
+
 ## Fechamento final — 01/11/2026
 
 **PRONTO COM RESSALVAS. INTEGRAÇÃO TECNICAMENTE PREPARADA — AGUARDANDO AUTORIZAÇÃO.**
