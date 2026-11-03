@@ -447,5 +447,200 @@
     "permissionsChanged": false,
     "humanRehearsalPerformed": false,
     "submissionPerformed": false
+  },
+  "researchIntegratedV2": {
+    "version": "CourtTime — Sprint 4 — Pesquisa Integrada — V2",
+    "dateSaoPaulo": "2026-11-03T17:27:35.959578-03:00",
+    "folder": "https://drive.google.com/drive/folders/1xTJv3xpDWK0PL5dHMPkqj6PS0gOpxn57",
+    "basedOn86PageOriginal": true,
+    "previous87PageReviewCorrectionsRetained": true,
+    "forms": "https://docs.google.com/forms/d/e/1FAIpQLSfiu2aRoqKRyApm_bstzXIESzZDVV-ImDSTVa7LelT0C6Vs5g/viewform",
+    "sheet": "https://docs.google.com/spreadsheets/d/1V4K0IL2G6pDX8ucngQMTeUiusBJW98FhKE3AxXvF4OY/edit",
+    "sheetId": 777993249,
+    "sheetName": "Respostas ao formulário 1",
+    "headerRange": "A1:L1",
+    "dataRange": "A2:L31",
+    "timestampTailCheckedEmpty": "A30:A129",
+    "n": 28,
+    "period": "06/10/2026–24/10/2026",
+    "formAccess": "Public view via GET and public page data. No response submitted. Version history of form not audited.",
+    "validation": {
+      "pages": 98,
+      "a4Pages": 98,
+      "emptyPages": [],
+      "docxPdfParagraphsCompared": 502,
+      "unmatchedParagraphs": [],
+      "indicesMatched": 114,
+      "figures": 40,
+      "originalImagesUnchanged": 34,
+      "newChartsEmbeddedByteIdentical": 6,
+      "originalQuadros": 7,
+      "statisticalTables": 1,
+      "tableParts": 2,
+      "tableOptionsCompared": 41,
+      "questionsFullyTranscribed": 11,
+      "closedQuestionDenominator": 28,
+      "fonts": [
+        "Arial-BoldItalicMT",
+        "Arial-BoldMT",
+        "ArialMT"
+      ],
+      "printedNumberingContinuousFromPhysicalPage": 16,
+      "locationsPhysical": {
+        "3.2 Questionário de opinião sobre o uso da quadra": [
+          38
+        ],
+        "3.2.1 Instrumento e tratamento dos dados": [
+          38
+        ],
+        "3.2.3 Necessidades, requisitos e limites": [
+          43
+        ],
+        "APÊNDICE B — QUESTIONÁRIO ONLINE": [
+          93
+        ],
+        "APÊNDICE C – Questionário Impresso": [
+          97
+        ],
+        "APÊNDICE D – Enquete para a Escolha da Logo": [
+          98
+        ]
+      },
+      "originalBaseSha256": "37c3fcff5600e148791fbce98c4145190fe222d034361e31c5f0f784b15c526e",
+      "softwareChanged": false,
+      "javaSuitesRerun": false,
+      "visualInspectionStatus": "98 páginas inspecionadas em pranchas globais; ampliações das novas tabelas, seis gráficos e quatro páginas do Apêndice B. Sem corte ou sobreposição material observado. Não substitui parecer do orientador/prova física.",
+      "sheetHeadersMatchFormOrder": true,
+      "respondentRowsPublished": false,
+      "individualCommentsPublished": false
+    },
+    "keyCounts": {
+      "consulta": 26,
+      "solicitacao": 25,
+      "celular": 24,
+      "dificuldadeHorarios": 20,
+      "informacaoHorarios": 27,
+      "notas4ou5": 24
+    },
+    "statisticalMethod": "Alternative-level n/28; multi-select exact-option parsing with unique decomposition and independent matching. Comma inside payment option preserved. One-decimal percentages. No representativeness, unique-person, causality or usability-test claim.",
+    "artifacts": [
+      {
+        "name": "CourtTime — Sprint 4 — Pesquisa Integrada — V2.docx",
+        "id": "1bFjq7qI2_-O6lCxqlCxbGhjjxCPAJYQo",
+        "url": "https://drive.google.com/file/d/1bFjq7qI2_-O6lCxqlCxbGhjjxCPAJYQo/view",
+        "sha256": "9441d9e64a6d8c29a31cb0c7c341a43dc29946f7c70e41babf376bf6f29bb730",
+        "bytes": 11038488,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "CourtTime — Sprint 4 — Pesquisa Integrada — V2.pdf",
+        "id": "1zJAC9YMYM-eLpK7HcGS4oJ9g9aDwwKLc",
+        "url": "https://drive.google.com/file/d/1zJAC9YMYM-eLpK7HcGS4oJ9g9aDwwKLc/view",
+        "sha256": "fb2b13bc8bacf50a66d441fb123e9c1412b1b7f159f7888445fd9561513e40e9",
+        "bytes": 5070435,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "figura-12-q05.png",
+        "id": "1T8FpYvY-NZDzBPRzjCqa8-PpZcZpGRzo",
+        "url": "https://drive.google.com/file/d/1T8FpYvY-NZDzBPRzjCqa8-PpZcZpGRzo/view",
+        "sha256": "2c67b660ce656c77420488274d5d425c39e840eac94e47667a20d1afb4efa7e8",
+        "bytes": 113502,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "figura-13-q06.png",
+        "id": "1oIJbX6wCmvUSSo44KgPCI1uHjRa4-omK",
+        "url": "https://drive.google.com/file/d/1oIJbX6wCmvUSSo44KgPCI1uHjRa4-omK/view",
+        "sha256": "d5abe17a561197186bc3105d10a64203a530c346927dc770411a3be400a9c6ef",
+        "bytes": 134498,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "figura-14-q04.png",
+        "id": "1fk0spcKlz5Bttt4Ak05sOM_QHJhBc8Vl",
+        "url": "https://drive.google.com/file/d/1fk0spcKlz5Bttt4Ak05sOM_QHJhBc8Vl/view",
+        "sha256": "f7e282546d367e69ad973a3fad6bcd34dc8e33cb9b72172554f4fefdb2a4b5ce",
+        "bytes": 268527,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "figura-15-q07.png",
+        "id": "1W1mMF194pffd4YZbNxdAUJX6FNJo6RIm",
+        "url": "https://drive.google.com/file/d/1W1mMF194pffd4YZbNxdAUJX6FNJo6RIm/view",
+        "sha256": "13bed6924da319f06a04c14be726190e15e0719f00f7de827b0898a13ef2269f",
+        "bytes": 258979,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "figura-16-q09.png",
+        "id": "1iboJ_iJ1ztXzEmslhsQjiac9arJo4zL2",
+        "url": "https://drive.google.com/file/d/1iboJ_iJ1ztXzEmslhsQjiac9arJo4zL2/view",
+        "sha256": "5f0b2b2e1c424a34369625e972e4613e59ffead4b375061740deddab982fc1bd",
+        "bytes": 145287,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "figura-17-q10.png",
+        "id": "1-KjScHqz7GFDJrBjb82NNtCRHiWujcb_",
+        "url": "https://drive.google.com/file/d/1-KjScHqz7GFDJrBjb82NNtCRHiWujcb_/view",
+        "sha256": "3c3c2ceef3850face8f80334d79c84c77bc52ae2767d6009e2e546c303891cf6",
+        "bytes": 145829,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "resultados-agregados.json",
+        "id": "16_SlcnpaT9glT2lHb4dxsb-Z__qkSNTW",
+        "url": "https://drive.google.com/file/d/16_SlcnpaT9glT2lHb4dxsb-Z__qkSNTW/view",
+        "sha256": "a3da63bff0263c930e7df21c8ae75a26af75b404baa9fc344041065fc3b625e1",
+        "bytes": 8576,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "FICHA-ORIENTADOR-PESQUISA-INTEGRADA-V2.docx",
+        "id": "13HpI_OZHbZ3ztIp9sK-5h8Ifk0K9fhRA",
+        "url": "https://drive.google.com/file/d/13HpI_OZHbZ3ztIp9sK-5h8Ifk0K9fhRA/view",
+        "sha256": "05e9b24afee00de6b95f817fb381243b23cdc8a4096aa06387cee323722e13cf",
+        "bytes": 39122,
+        "readbackIdentical": true,
+        "shared": false
+      },
+      {
+        "name": "FICHA-ORIENTADOR-PESQUISA-INTEGRADA-V2.pdf",
+        "id": "1DYVkCeMLyvFY4Z0Z9M-wRQwcWYeU4az5",
+        "url": "https://drive.google.com/file/d/1DYVkCeMLyvFY4Z0Z9M-wRQwcWYeU4az5/view",
+        "sha256": "52ba78793d2d147bfb2f494b852cbc5ccc3512b59ddbe9d8197ff093b0663d0f",
+        "bytes": 69962,
+        "readbackIdentical": true,
+        "shared": false
+      }
+    ],
+    "pending": [
+      "Confirmação de recrutamento/universo e controle de duplicidades, se documentados",
+      "Apêndice C: aplicação impressa ou decisão do orientador",
+      "Apêndice D: enquete real ou decisão do orientador",
+      "Ferramenta da marca",
+      "Autorização do anexo e regras institucionais",
+      "Parecer do orientador e ensaio humano"
+    ],
+    "permissionsChanged": false,
+    "javaSuitesRerun": false,
+    "mainChanged": false,
+    "responsesSubmitted": false,
+    "individualCommentsPublished": false,
+    "submissionPerformed": false,
+    "workBranch": "docs/pesquisa-original-integrada-20261103",
+    "initialHead": "07036b2244b448be89953d528e6dcdbe7a2fd4e6",
+    "main": "4df490729734d9f45830e15be241cdb66c3f112f",
+    "manifestDriveId": "1j3Y-vIMS2lSdCwW9mZGBO3DllmkVMmuY"
   }
 }
