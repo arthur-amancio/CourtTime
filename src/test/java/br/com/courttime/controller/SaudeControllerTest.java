@@ -3,6 +3,8 @@ package br.com.courttime.controller;
 import br.com.courttime.config.SecurityConfig;
 import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.availability.ApplicationAvailability;
 import org.springframework.boot.availability.ReadinessState;
@@ -49,5 +51,13 @@ class SaudeControllerTest {
         mvc.perform(post("/login").secure(true).param("email", "nao-existe@exemplo.invalid"))
                 .andExpect(status().isForbidden());
         mvc.perform(get("/admin/usuarios").secure(true)).andExpect(status().is3xxRedirection());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {10000, 18084, 8080})
+    void portaHttpInternaRedirecionaParaHttpsPublicoSemCiclo(int porta) throws Exception {
+        mvc.perform(get("http://localhost:" + porta + "/login?origem=demo"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("https://localhost/login?origem=demo"));
     }
 }
