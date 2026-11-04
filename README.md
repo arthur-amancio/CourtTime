@@ -51,6 +51,13 @@ usa a base automatizada `courttime_e2e` e não requer publicar o sistema na rede
 
 Para compilar, testar e preparar uma demonstração em Bash/Linux sem depender do
 Windows, consulte o [guia de desenvolvimento na nuvem](docs/desenvolvimento-cloud.md).
+Para demonstração HTTPS com Render/Neon Free, consulte o
+[guia de implantação gratuita](docs/deploy-gratuito.md), incluindo os bloqueios
+de custo, banco isolado e armazenamento privado de PDFs.
+
+Demonstração acadêmica com dados fictícios:
+[courttime-demo-k7g9.onrender.com](https://courttime-demo-k7g9.onrender.com).
+O guia registra a versão publicada, as limitações Free e a preparação dos perfis.
 
 - Java 17 (JDK), com `JAVA_HOME` apontando para sua instalação;
 - PostgreSQL 18 em execução (o 16 também funciona; a CI testa as duas versões);

@@ -314,3 +314,58 @@ P1: dados reais de banca/aprovação; validar a formulação de hipótese e mét
 P2: glossário; aperfeiçoamento de colunas/continuações; prova física das menores cardinalidades. Astah05/06/09A somente se forem novamente selecionados para a versão final.
 
 A próxima sessão deve incorporar o retorno real do orientador e dos autores na cópia de trabalho, sem sobrescrever o consolidado oficial. Começar pela checklist de ENTREGA-ACADEMICA.md, não por repetir investigação de código. Se houver edição, recalcular os 103 títulos com indices-finais.json/paginar.py, renderizar novamente e reinspecionar as páginas. Preservar o candidato atual como versão recuperável.
+
+## Demonstração HTTPS gratuita — 04/11/2026
+
+**DEMONSTRAÇÃO ONLINE VALIDADA; integração real ainda não executada.**
+URL: https://courttime-demo-k7g9.onrender.com. [PR draft #94](https://github.com/arthur-amancio/CourtTime/pull/94),
+branch `chore/render-neon-demo-gratuita`, entrada #91 `c0903d66c50183f600b6bcbfb43eb86f1778cc56`.
+Runtime publicado e reimplantado: `3cdfccc8539d7e09ebaeb7626719b5f727564374`.
+HEAD de encerramento é o commit documental que contém este registro; recuperar
+com `git fetch origin` e `git rev-parse origin/chore/render-neon-demo-gratuita`.
+Arquivos de execução permanecem idênticos ao runtime testado. Main continua
+`4df490729734d9f45830e15be241cdb66c3f112f`; nenhum merge, force push ou exclusão de branch.
+
+Render `srv-dblr3k0m7kps73c2k8jg`, workspace `tea-d6sla3h5pdvs73dtbl7g`: proprietário
+confirmou workspace e ausência de pagamento; Free/Ohio, auto-deploy `no`, `/healthz`
+confirmados. Neon Free `autumn-silence-82807933`, branch `br-green-frog-beqgq6yr`,
+PostgreSQL 16.15, banco `courttime_demo`, bucket privado `courttime-documentos`.
+Somente dados fictícios, sem cartão, upgrade, disco pago ou domínio contratado.
+Credenciais fortes distintas entregues em ficha privada da tarefa, nunca no Git.
+
+Implementados Docker/JVM 17, perfil HTTPS seguro, pool três, schema manual/validate,
+adapter S3 preservando DocumentoStorage/local e diagnóstico Windows somente leitura.
+Corrigido ciclo HTTPS em portas internas; três regressões falharam antes e passaram
+depois. **515 testes Java executados, zero falhas, três S3 opt-in ignorados nessa
+suíte**; CI 16/18 e build Docker aprovados em `3cdfccc`. Protocolo S3 local: três
+casos; Neon real: sete verificações. Ensaio com JAR corrigido/512 MiB/0,1 CPU:
+44 verificações, sem OOM, pico observado 276 MiB. Serviço publicado: 23 verificações
+antes e 12 depois de reimplantar o mesmo SHA; PDF/hash e contagens preservados.
+Mobile 390 px e axe sem violações na tela conferida. Jornada completa anterior
+1.128/44 axe em `85ebf93`, sem atribuir essa execução integral ao SHA posterior.
+
+Dois cenários públicos: #1 rascunho com nove pessoas; #2 aprovada para **05/11/2026,
+09:00–10:00**, dez pessoas/PDF/contribuição fictícia. Portaria recusa liberação fora
+da data. Nenhuma data foi ajustada por SQL no Neon. Conferência e contribuição
+simuladas não são validação gov.br nem recebimento real. Guia, comandos, limitações,
+IDs de deploy, hashes e escopos: [deploy gratuito](../../docs/deploy-gratuito.md) e
+[manifesto](../../docs/deploy-gratuito-evidencias.json).
+
+Ambiente reiniciado descartou `/tmp`; ferramentas restauradas com hashes oficiais e
+checkout limpo recuperado pelo GitHub. Manter fontes/objetos Git no checkout e
+publicar checkpoints; usar `/tmp` apenas para caches recuperáveis. Primeira suíte
+invalidada por disco cheio foi repetida após corrigir espaço. Nenhuma dependência
+foi alterada para contornar rede. Falha local da ETEC continua indeterminada sem
+log; o diagnóstico não foi executado na máquina Windows institucional.
+Ferramentas do ensaio: JDK 17.0.21, Wrapper 3.9.16, Node 22.23.4, Python 3.12,
+PostgreSQL 16.15, Playwright 1.56.1, Chromium 154 e Docker. O JRE da imagem é Java 17.
+
+As 12 entidades/relacionamentos não mudaram. Revisões acadêmicas #92/#93 preservadas;
+o Forms original/Apêndice B foram tratados no #93, não reabrir a pendência histórica.
+Nenhuma monografia congelada ou arquivo do Drive foi alterado nesta implantação.
+
+**Próxima ação exata:** guardar a ficha privada, ensaiar com o grupo e preparar a
+reserva pela aplicação para a data real da banca. Monitorar limites Free, sem
+keep-alive/upgrade. Integração #85→#86→#87→#88→#89→#90→#91, revisões #92/#93 e #94
+continua dependente da autorização separada do proprietário. Homologação ETEC,
+parecer/submissão do TCC e ensaio humano permanecem etapas distintas.

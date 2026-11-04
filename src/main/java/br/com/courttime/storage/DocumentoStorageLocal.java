@@ -1,6 +1,7 @@
 package br.com.courttime.storage;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermissions;
 
 @Component
+@ConditionalOnProperty(name = "courttime.documentos.storage", havingValue = "local", matchIfMissing = true)
 public class DocumentoStorageLocal implements DocumentoStorage {
 
     private final Path diretorio;
