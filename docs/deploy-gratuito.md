@@ -1,8 +1,50 @@
 # Demonstração HTTPS: Render Free + Neon Free
 
 Uso acadêmico com dados inteiramente fictícios. Não é implantação institucional.
-O [checkpoint](tcc/CONTINUIDADE-MISSAO.md) registra o que foi efetivamente
-provisionado/testado; este guia não significa que exista uma aplicação publicada.
+O [checkpoint](tcc/CONTINUIDADE-MISSAO.md) e o
+[manifesto de evidências](deploy-gratuito-evidencias.json) identificam a versão
+efetivamente publicada e o escopo das verificações.
+
+## Implantação conferida em 04/11/2026
+
+**Acesso: https://courttime-demo-k7g9.onrender.com** — Render Free em Ohio,
+Neon Free/PostgreSQL 16.15 e bucket privado. Commit em execução:
+`3cdfccc8539d7e09ebaeb7626719b5f727564374`, do [PR draft #94](https://github.com/arthur-amancio/CourtTime/pull/94),
+baseado no #91. Main e PRs anteriores permanecem sem merge. Reutilizar os
+recursos identificados no manifesto nas próximas operações.
+
+O proprietário confirmou o workspace e a ausência de pagamento antes da criação;
+`plan=free`, deploy automático desligado e `/healthz` foram conferidos pela API.
+O proprietário definiu a sonda no Dashboard porque o conector não permite editá-la.
+Dois deploys `live` do mesmo commit, logins dos quatro perfis, hashes do PDF,
+permissões, CSRF e persistência foram conferidos. Foram 23 verificações específicas
+antes e 12 depois da reimplantação; uma varredura axe na tela mobile sem violações.
+As 1.128 verificações completas/44 axe pertencem ao commit anterior `85ebf93`;
+o ajuste posterior de HTTPS foi revalidado com regressão e ensaios próprios.
+
+Dados disponíveis, todos fictícios: quatro contas com senhas distintas, uma
+quadra/grade, rascunho A **#1 com nove participantes** e reserva B **#2 aprovada
+para 05/11/2026, 09:00–10:00**, com dez participantes, PDF sintético e contribuição
+simulada de R$ 20,00. A conferência simulada não representa assinatura gov.br
+válida nem recebimento real. Na portaria publicada foram conferidos a consulta
+e o bloqueio fora da data; liberação, adicionais, substituição e remarcação
+completa foram exercitados na base isolada. Preparar outra reserva pelo fluxo
+normal para demonstrar em outra data; a base E2E consumida não é o cenário público.
+
+As credenciais estão na **ficha privada entregue nesta tarefa**, fora do Git.
+Guardar essa ficha para a continuidade independente do ambiente temporário.
+Medição local: pico observado de 276 MiB sob limite 512 MiB/0,1 CPU, sem OOM,
+incluindo PDF no Neon e reinício. Na API Render, maior amostra observada de
+aproximadamente 293 MiB/512 MiB; `cpu_limit` retornou 0,15 CPU nesse período.
+Essas amostras descrevem o ensaio, sem garantia de capacidade para carga pública.
+O banco `courttime_demo` tinha aproximadamente 8,1 MiB após a demonstração.
+
+O novo teste detectou ciclo HTTP em portas internas não padronizadas. O mapeamento
+para HTTPS público em 443 corrigiu três casos de regressão; health check HTTP
+interno e desenvolvimento local continuam funcionando. A CI com PostgreSQL 16/18 e a imagem
+Docker passaram no commit em execução: 515 testes Java executados, zero falhas;
+três testes opcionais de emulador S3 ignorados nessa suíte. O protocolo S3 foi
+conferido separadamente no emulador e no Neon real, conforme o manifesto.
 
 ## Limite obrigatório: R$ 0
 
@@ -164,6 +206,10 @@ reserva pelo fluxo normal, sem limpar a base para repetir a cena.
 Para backup manual, guardar `pg_dump -Fc` e os objetos referenciados em destino
 privado, com SHA/hash. Restaurar em destinos novos e conferir ambos antes de
 usar. Não configurar snapshots faturáveis nem confiar no disco do Render.
+PostgreSQL e S3 são recursos distintos: a compensação existente remove o objeto
+novo em rollback após upload concluído. Um timeout depois de gravar pode deixar
+objeto sem metadados; conferir referências e hashes antes de qualquer limpeza
+controlada, sem criar rotina automática de exclusão.
 Encerrar sessões após a banca; suspensão manual do serviço é opção operacional,
 sem excluir projeto/bucket automaticamente ou trocar planos/permissões.
 

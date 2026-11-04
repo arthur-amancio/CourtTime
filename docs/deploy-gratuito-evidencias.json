@@ -1,0 +1,160 @@
+{
+  "checkedAt": "2026-11-04T23:05:27.799216+00:00",
+  "classification": "DEMONSTRACAO_ONLINE_VALIDADA; MERGES_NAO_EXECUTADOS",
+  "pullRequest": "https://github.com/arthur-amancio/CourtTime/pull/94",
+  "branch": "chore/render-neon-demo-gratuita",
+  "baseCommit": "c0903d66c50183f600b6bcbfb43eb86f1778cc56",
+  "runtimeCommit": "3cdfccc8539d7e09ebaeb7626719b5f727564374",
+  "runtimeSrcMainTree": "b006aa39bb808283e5679738b4b555305242a16f",
+  "main": "4df490729734d9f45830e15be241cdb66c3f112f",
+  "render": {
+    "url": "https://courttime-demo-k7g9.onrender.com",
+    "workspaceId": "tea-d6sla3h5pdvs73dtbl7g",
+    "serviceId": "srv-dblr3k0m7kps73c2k8jg",
+    "plan": "free",
+    "region": "ohio",
+    "autoDeploy": "no",
+    "healthCheckPath": "/healthz",
+    "paymentMethod": "proprietario confirmou ausencia antes da criacao; campo nao auditavel pelo conector",
+    "deployments": [
+      {
+        "id": "dep-dblr3k8m7kps73c2k9vg",
+        "status": "live"
+      },
+      {
+        "id": "dep-dblrgit9el5s73einb80",
+        "status": "live",
+        "purpose": "reimplantacao do mesmo commit para conferir persistencia"
+      }
+    ],
+    "metricsObserved": {
+      "memory_usage": {
+        "samples": 34,
+        "min": 2637824,
+        "max": 306896900,
+        "unit": "bytes"
+      },
+      "memory_limit": {
+        "samples": 32,
+        "min": 536870900,
+        "max": 536870900,
+        "unit": "bytes"
+      },
+      "cpu_limit": {
+        "samples": 32,
+        "min": 0.15,
+        "max": 0.15,
+        "unit": "cpu"
+      }
+    }
+  },
+  "neon": {
+    "projectId": "autumn-silence-82807933",
+    "branchId": "br-green-frog-beqgq6yr",
+    "plan": "free",
+    "postgresql": "16.15",
+    "database": "courttime_demo",
+    "bucket": "courttime-documentos",
+    "bucketAccess": "private",
+    "jdbc": "sslmode=verify-full; DefaultJavaSSLFactory",
+    "poolMax": 3,
+    "ddlAuto": "validate",
+    "autoSuspendObservedSeconds": 302,
+    "snapshotAfterRedeploy": {
+      "users": 4,
+      "reservations": 2,
+      "participants": 19,
+      "documents": 1,
+      "contributions": 1,
+      "approved": 1,
+      "drafts": 1,
+      "released": 0,
+      "databaseSizeBytes": 8511488,
+      "referencedDocumentBytes": 14269
+    }
+  },
+  "java": {
+    "jdkLocal": "Temurin 17.0.21",
+    "declared": 518,
+    "executed": 515,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "skipReason": "DocumentoStorageS3IntegrationTest opt-in, exige emulador HTTPS loopback; nunca apontar para Neon",
+    "httpsRegression": {
+      "beforeFixFailures": 3,
+      "afterFixFailures": 0,
+      "casesAfterFix": 6
+    },
+    "ciCommit": "3cdfccc8539d7e09ebaeb7626719b5f727564374",
+    "ciRun": "https://github.com/arthur-amancio/CourtTime/actions/runs/41919681602",
+    "ciPostgres16": "SUCCESS",
+    "ciPostgres18": "SUCCESS",
+    "ciDocker": "SUCCESS"
+  },
+  "browserFull": {
+    "commit": "85ebf93ba4f9cc8738e89d7d2f563a380436706e",
+    "checks": 1128,
+    "axeScans": 44,
+    "axeViolations": 0,
+    "storage": "emulador S3 HTTPS, PostgreSQL isolado",
+    "scopeNote": "Nao atribuir esta suite integral ao commit final. Ajuste posterior de HTTPS revalidado separadamente; servicos, entidades, templates e adapter S3 permaneceram iguais."
+  },
+  "s3Protocol": {
+    "localEmulatorCasesPassed": 3,
+    "realProviderChecksPassed": 7,
+    "anonymousObjectGet": 403,
+    "duplicateConditionalPut": 412,
+    "controlledDelete": 204,
+    "removedObjectGet": 404,
+    "onlyKnownQaOrphanRemoved": true,
+    "applicationDocumentsRemoved": 0
+  },
+  "lab": {
+    "checks": 44,
+    "failures": 0,
+    "memoryLimitMiB": 512,
+    "cpuLimit": 0.1,
+    "peakObservedMiB": 276,
+    "oomKilled": false
+  },
+  "publicBefore": {
+    "checks": 23,
+    "failures": 0
+  },
+  "publicAfter": {
+    "checks": 12,
+    "failures": 0
+  },
+  "publicAxe": {
+    "page": "/solicitacoes",
+    "viewportWidth": 390,
+    "violations": 0
+  },
+  "demo": {
+    "A": 1,
+    "B": 2,
+    "dataUso": "2026-11-05",
+    "documentoId": 1,
+    "documentoSha256": "cb51927cb9a5b7945785caf11d138853d197e3fd4ffbec56821d3f83c5469fd5"
+  },
+  "entities": {
+    "count": 12,
+    "unchangedFromBase91": true
+  },
+  "evidenceHashes": {
+    "maven-verify-final.log": "e661b30de4bdd3f9c00fc68eb2cf3324976c930c5c805626324c5c2a2f1af774",
+    "https-port-red.log": "5aedc1bf0a759dbc2a2de86cd93979452e67689ae74724425378b6325b6e59eb",
+    "https-port-green.log": "d34a08a00850240af07c61b1179582623093b896f4369ebabb215a92fd816c97",
+    "http-memory-results.json": "f1de7e0dce722d3c8181d645e99e2e81a66077c429727967d1b9644d4e74c1ef",
+    "public-browser-results.json": "d8e30c09096d0d9797dacd0e61320e858738ff3d8274f4e6d803a4c6323f34f8",
+    "public-after-redeploy-results.json": "75a89125e732271bc3a3b2543feff0f18841daeb3ae7ac529098d3e7efd7a9d4"
+  },
+  "limitations": [
+    "Somente dados ficticios; conferencia gov.br e contribuicao foram simuladas, sem assinatura ou recebimento reais.",
+    "Portaria publicada: consulta e recusa de liberacao fora da data. Liberacao, adicionais, substituicao e remarcacao completa foram exercitados na base E2E isolada.",
+    "Plano Free pode dormir/suspender por limites. Sem cartao, upgrade, disco pago, dominio contratado ou uso de snapshots pagos.",
+    "Erro local da ETEC depende do log real; diagnostico PowerShell somente leitura validado em Linux/CI, sem execucao na maquina Windows da escola.",
+    "Documentos academicos congelados e PRs 92/93 preservados. Demonstracao automatizada nao e ensaio humano, homologacao institucional ou aprovacao do TCC."
+  ]
+}
