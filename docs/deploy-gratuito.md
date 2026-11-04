@@ -120,6 +120,11 @@ Não expor diretamente a porta interna nem adicionar outro proxy público.
 Memória: heap até 45% do limite, Serial GC, metaspace 128 MB, code cache 32 MB,
 direct memory 16 MB, threads HTTP máximas 16. Esses limites não garantem capacidade
 para tráfego público intenso; medir inicialização, PDF e navegação no plano real.
+A JVM limita a compilação JIT ao nível 1 para reduzir trabalho de inicialização
+em 0,1 CPU. A sonda Docker tolera até dez minutos de início; a sonda HTTP do
+Render deve continuar apontando para `/healthz`, que só aceita após readiness.
+Abrir a demonstração com dez minutos de antecedência e conferir a sonda/login;
+o tempo de despertar do plano gratuito não é garantia de disponibilidade.
 
 ## 4. Validar a demonstração publicada
 

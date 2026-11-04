@@ -22,9 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends fontconfig font
 COPY --from=build /build/target/courttime-0.0.1-SNAPSHOT.jar /app/courttime.jar
 ENV SPRING_PROFILES_ACTIVE=render \
     HOME=/home/courttime \
-    JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=45.0 -XX:+UseSerialGC -Xss512k -XX:MaxMetaspaceSize=128m -XX:ReservedCodeCacheSize=32m -XX:MaxDirectMemorySize=16m"
+    JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=45.0 -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -Xss512k -XX:MaxMetaspaceSize=128m -XX:ReservedCodeCacheSize=32m -XX:MaxDirectMemorySize=16m"
 USER 10001:10001
 EXPOSE 8080
-HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=600s --retries=3 \
     CMD curl --fail --silent --max-time 4 "http://127.0.0.1:${PORT:-8080}/healthz" || exit 1
 ENTRYPOINT ["java", "-jar", "/app/courttime.jar"]

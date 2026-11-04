@@ -249,3 +249,22 @@ jobs:
             exit 1
           fi
           echo "Seed validado: isolado, repetivel e restrito a courttime_demo."
+
+  container:
+    name: Docker Java 17 (512 MB)
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Construir a imagem de demonstracao
+        run: docker build --tag courttime-ci .
+      - name: Conferir usuario e limites JVM da imagem real
+        run: |
+          docker image inspect courttime-ci | python3 -c '
+          import json, sys
+          image = json.load(sys.stdin)[0]
+          assert image["Config"]["User"] == "10001:10001"
+          print("Imagem sem root; tamanho em bytes:", image["Size"])
+          '
+          docker run --rm --memory=512m --memory-swap=512m \
+            --entrypoint java courttime-ci -XshowSettings:vm -version
