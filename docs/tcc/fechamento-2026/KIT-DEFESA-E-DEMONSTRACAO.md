@@ -87,7 +87,7 @@ Ao terminar, sair das quatro contas e fechar contextos e ficha privada. Não enc
 
 Usar os 15 slides existentes. Versão de 12 minutos, **oito de fala e quatro de demonstração**, sujeita ao tempo oficial:
 
-Após o [redesign visual dos 15 slides](REDESIGN-APRESENTACAO.md), a distribuição abaixo corresponde às notas do PPTX principal. As versões PDF/DOCX anteriores deste kit preservam a proposta anterior; para a divisão atual, seguir as notas do PowerPoint e esta tabela.
+Notas reais conferidas: **480 s de exposição + 240 s de demonstração = 720 s (12 minutos)**. Cada integrante tem 120 s de exposição e aproximadamente 60 s de demonstração/apoio. A distribuição abaixo e o PDF do kit foram sincronizados nos mesmos IDs com o [PowerPoint principal](https://drive.google.com/file/d/17cjUL-nYFUOsk4RPHyikH9VrfF1eXUdF/view). Não representa ensaio humano nem tempo oficial confirmado.
 
 | Integrante | Dois minutos de fala | Um minuto na demonstração/apoio |
 | --- | --- | --- |

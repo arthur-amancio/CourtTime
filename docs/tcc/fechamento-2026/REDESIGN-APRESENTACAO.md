@@ -74,3 +74,31 @@ Pendências institucionais permanecem explícitas nas notas: dez alunos versus d
 | Prancha PDF | `c359b9b34e1ed11b55269c9a7f16916e381978ad3289780eb81288090dda7412` |
 
 Monografia consultada, 98 páginas: SHA-256 `fb2b13bc8bacf50a66d441fb123e9c1412b1b7f159f7888445fd9561513e40e9`; nenhuma substituição realizada.
+
+## Sincronização final do Drive — 05/11/2026
+
+Continuação documental de #95/#96, com base em `c9d2ce1`. O índice do Drive ainda descrevia a apresentação anterior; o kit Markdown/PDF ainda atribuía 6–10 a Carlos e 11–12 a Gustavo. Foram atualizados **os três arquivos existentes**, sem cópias ou novos IDs:
+
+- Índice `1AiBBqC2hWFmEZ-dNP7HbXrKgXZxW30Ye`: links do redesign/prancha, divisão real, pendências conferidas e relação objetiva de futuras seções afetadas pelo PR #97.
+- Kit Markdown `1nI6F5Hd36XWo0O1KTz0qFTOM1jBI5bQc`: distribuição corrigida e confirmação dos 480 + 240 = 720 segundos, sujeita ao professor/ensaio.
+- Kit PDF `1K7H_50nponnsetXpShirJC2JsgcMyYVC`: somente as células de Carlos e Gustavo corrigidas. Seis páginas preservadas; nenhuma palavra fora das duas células perdida, e as outras cinco páginas renderizam pixel a pixel iguais ao PDF anterior.
+
+Notas reais do PPTX conferidas: Arthur 1–5 = 120 s, Carlos 6–9 = 120 s, Gustavo 10–12 = 120 s, Heitor 13–15 = 120 s; demonstração = 240 s. Os 231 textos nativos continuam presentes no PDF. PPTX/PDF não foram editados nem redesenhados nesta sincronização; seus hashes permanecem os do quadro anterior.
+
+As duas fichas antigas de 87 páginas foram movidas da raiz para o histórico existente e identificadas como históricas, mantendo IDs, bytes/tamanhos e permissões: DOCX `1mL-BbzektFA44BCUogaAEvOkksXa02-N`, PDF `1eF7waHjUI-aH3r24TzXDXwXvLaZC5hoc`. A ficha atual de 98 páginas permanece na pasta da pesquisa, com link no índice. A raiz conserva um único par principal de monografia e apresentação, a prancha, kit, índice, evidências e histórico. Não houve exclusão nem nova pasta.
+
+O PR #97 estava aberto no SHA `345340d380258415652f2bb940aa0170bfb84141`; a documentação da própria candidata registra **não publicado**. A nova entidade de bloqueio semanal só integra a candidata de 13 entidades. O índice relaciona IV (4.1–4.6), V (5.1–5.5), VI (6.1.2/6.1.4), VII (7.3/7.5–7.7), Apêndice A, resumo/conclusão e índices para eventual revisão após decisão da equipe/orientador. Nenhuma mudança na monografia, DER, versão publicada, código, banco ou infraestrutura.
+
+Pendências mantidas: parecer real, C/D, autorização do anexo, regras institucionais, ensaio presencial e acesso autorizado do professor. Ficha atual e tabela de decisões não contêm aprovação/assinatura preenchida; metadados da pasta e dos principais arquivos continuam privados e somente com o proprietário. Não foram enviadas mensagens nem alteradas permissões.
+
+Validação: os três arquivos modificados foram novamente lidos e baixados, comparados byte a byte/SHA-256 ao resultado local; revisões anteriores recuperadas antes e após a escrita. Pasta/IDs/permissões verificados por metadados e listagem. DOCX/PDF da monografia e PPTX/PDF novamente baixados depois da sincronização, com hashes idênticos aos iniciais; monografia continua com 98 páginas. Sem testes Java/Playwright por alteração exclusivamente documental; `git diff --check` aprovado.
+
+| Arquivo atualizado no Drive | SHA-256 após novo download |
+| --- | --- |
+| Índice | `fd14905de00d8e167aaba14bbfd2527adc52136be43aaf14cfc13944560d80ad` |
+| Kit Markdown | `6b19dee4c7b2cc19c71e150518db1352721647521c08967d56cf9055089804b1` |
+| Kit PDF | `b9e78469033ceb183a64fdb5471e868689652c9a54d2f84fb6705f9689be1292` |
+
+Monografia DOCX preservada: `9441d9e64a6d8c29a31cb0c7c341a43dc29946f7c70e41babf376bf6f29bb730`. O PDF preserva o hash já registrado acima.
+
+**Impedimento específico:** a leitura da revisão de `VERIFICACAO.json` no Drive (`1jdi6MXIPSOxULADqJEdJWx1bkBRoX40W`) falhou com `GoogleDriveInvalidRequestError: No supported mimetype returned for revision`. O conector lista suas revisões, mas não conseguiu recuperá-las. Conforme a instrução do usuário, esse manifesto histórico foi mantido intacto e não foi criada cópia substituta. Essa limitação não afetou a recuperação nem a atualização do índice e dos dois formatos do kit.
