@@ -24,7 +24,9 @@ function sql(query) {
 assert.equal(sql('SELECT current_database()'), process.env.COURTTIME_E2E_DATABASE_NAME);
 const jornada = JSON.parse(fs.readFileSync(path.join(config.evidencias, 'resultados-e2e.json')));
 assert.equal(jornada.sha, config.targetSha, 'A jornada deve pertencer ao mesmo candidato.');
-const inicio = adicionarDias(jornada.dates.requestDate, 140);
+// Reservar outro intervalo sintético em uma repetição, sem limpar dados já consumidos.
+const sequencia = Number(sql('SELECT count(*) FROM bloqueios_semanais_quadra'));
+const inicio = adicionarDias(jornada.dates.requestDate, 140 + 35 * sequencia);
 const fim = adicionarDias(inicio, 21);
 const fields = { diaSemana: 'SEGUNDA', horarioInicio: '08:30', horarioFim: '09:30',
   vigenciaInicio: inicio, vigenciaFim: fim, motivo: 'Aula de Educação Física <script>window.invasao=1</script>' };
@@ -131,6 +133,10 @@ function adicionarDias(iso, dias) {
         await admin.goto(config.baseUrl + pagina);
         check(await admin.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
           `${nome} sem overflow global em ${viewport.width}px`);
+        if (nome === 'lista') {
+          check(await admin.locator('tr').filter({ hasText: fields.motivo }).locator('[data-label="Motivo"]')
+            .evaluate(el => el.scrollWidth <= el.clientWidth + 1), `motivo longo legível dentro da célula em ${viewport.width}px`);
+        }
         await admin.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
         const auditoria = await admin.evaluate(async () => (await axe.run()).violations);
         scans.push({ pagina, width: viewport.width, violations: auditoria.map(v => ({ id: v.id, impact: v.impact })) });

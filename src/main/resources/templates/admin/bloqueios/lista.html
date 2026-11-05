@@ -89,7 +89,7 @@
                         <th scope="row" data-label="Dia" th:text="${regra.diaSemana.descricao}">Segunda-feira</th>
                         <td data-label="Período" th:text="|${#temporals.format(regra.horarioInicio, 'HH:mm')} – ${#temporals.format(regra.horarioFim, 'HH:mm')}|">08:00 – 10:00</td>
                         <td data-label="Vigência" th:text="|${#temporals.format(regra.vigenciaInicio, 'dd/MM/yyyy')} a ${#temporals.format(regra.vigenciaFim, 'dd/MM/yyyy')}|">02/11/2026 a 18/12/2026</td>
-                        <td data-label="Motivo" th:text="${regra.motivo}">Aula de Educação Física</td>
+                        <td class="celula-quebra" data-label="Motivo" th:text="${regra.motivo}">Aula de Educação Física</td>
                         <td data-label="Estado"><span class="badge" th:text="${regra.ativo ? 'Ativo' : 'Inativo'}">Ativo</span></td>
                         <td data-label="Ação" class="acoes-celula">
                             <form th:if="${regra.ativo}" th:action="@{/admin/bloqueios/semanais/{id}/desativar(id=${regra.id})}" method="post" onsubmit="return confirm('Desativar esta regra semanal inteira?')">
