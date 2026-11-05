@@ -1,3 +1,43 @@
+# Atualização vigente — 05/11/2026
+
+**PRONTO COM RESSALVAS. INTEGRAÇÃO TECNICAMENTE PREPARADA — AGUARDANDO AUTORIZAÇÃO.**
+Deploy #94 aceito como funcionalmente validado com as ressalvas documentadas. Nenhuma nova
+auditoria genérica, suíte Java, implantação ou merge foi realizada nesta revisão acadêmica.
+
+| PR | Base | HEAD remoto reconfirmado | Estado/checks |
+| --- | --- | --- | --- |
+| #92 | #91 | 07036b2244b448be89953d528e6dcdbe7a2fd4e6 | Aberto/draft/MERGEABLE; Java PG16/18 e guard aprovados nesse HEAD. |
+| #93 | #92 | 273e83c5172921ee36292cfc9c94e48e151cb90b | Aberto/draft/MERGEABLE; HEAD documental, sem checks próprios. |
+| #94 | #91 | fd5385687fdc49cc815725bc039656900b697f71 | Aberto/draft/MERGEABLE; HEAD documental, sem checks próprios. Runtime 3cdfccc: CI PG16/18 e Docker aprovada. |
+
+Main: `4df490729734d9f45830e15be241cdb66c3f112f`. #91 é ancestral de #92 e #94;
+#92 é ancestral de #93; #93 e #94 são ramificações, não uma cadeia linear.
+#91→#93 altera apenas cinco arquivos documentais; nenhum `src/`, `qa/`, `pom.xml` ou workflow.
+`git merge-tree --write-tree origin/docs/pesquisa-original-integrada-20261103 origin/chore/render-neon-demo-gratuita`
+retornou `151e5968dab39aff7a34475a9c0b7974d2b13110`, sem conflito; árvore idêntica à conferência
+anterior. Esse objeto é árvore local, **não commit de merge nem SHA de futura main**.
+O diff da árvore resultante contra #94 contém somente a revisão acadêmica esperada.
+
+**Integração futura:** após autorização específica, atualizar refs e conferir SHAs/proteções;
+para cada PR #85→#86→#87→#88→#89→#90→#91→#92→#93→#94 e revisão documental final:
+confirmar que a base anterior já está na main, ajustar a base do próximo PR à main somente
+na missão autorizada e integrar por merge commit (sem squash/rebase/force push).
+Após cada etapa, conferir ancestralidade, diff esperado e checks exigidos; após a última,
+conferir código/árvore contra o candidato aprovado e realizar validação integrada proporcional
+ao resultado. Parar antes de qualquer merge se houver conflito, checks obrigatórios falhos,
+SHA novo sem revisão, arquivo ausente, regressão crítica ou proteção não atendida.
+Não reaplicar patches acadêmicos por cherry-pick sobre o #94 nem duplicar funcionalidades.
+Nenhuma base remota foi alterada nesta missão.
+
+**Acadêmico:** monografia principal de 98 páginas preservada por hash; B completo;
+slides/kit atualizados. Professor, anexo/C/D, regras institucionais e ensaio presencial
+continuam humanos. Não confundir implementação validada com homologação, integração executada,
+ensaio realizado, TCC aprovado ou submetido.
+
+---
+
+## Histórico de 01/11 — preservado
+
 # CourtTime — decisão técnica de encerramento
 
 01/11/2026. **PRONTO COM RESSALVAS. INTEGRAÇÃO TECNICAMENTE PREPARADA — AGUARDANDO AUTORIZAÇÃO.**

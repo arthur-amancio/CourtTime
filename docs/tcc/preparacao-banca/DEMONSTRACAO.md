@@ -1,3 +1,21 @@
+# CourtTime — demonstração vigente em 05/11/2026
+
+**Endereço:** https://courttime-demo-k7g9.onrender.com . Deploy #94 aceito como funcionalmente validado,
+com dados sintéticos e ressalvas; nenhuma nova implantação/teste foi executada nesta edição acadêmica.
+
+O [kit atualizado de estudo e demonstração](../fechamento-2026/KIT-DEFESA-E-DEMONSTRACAO.md)
+é o roteiro vigente: contém os 240 segundos, quatro perfis, contingências e preparação pela interface.
+**#2 só vale em 05/11/2026, 09h–10h (São Paulo).** Para outra data D, criar uma nova solicitação
+e concluir o PDF até D−1, regularizar contribuição/conferência e aprovação; no dia D usar a
+Segurança no período preparado. Sem antecedência válida, usar evidência identificada e preparar
+outra data futura. Não alterar SQL/relógio nem executar fixtures E2E no Neon público.
+
+O procedimento abaixo é **histórico/local**, de 29/10, e continua disponível para estudo dos fluxos.
+As senhas propostas e comandos de bootstrap/fixtures não se aplicam ao serviço Render existente.
+Não recriar infraestrutura ou restaurar a base pública para repetir a cena.
+
+---
+
 # CourtTime — demonstração funcional para a banca
 
 **Preparado em:** 29/10/2026. **Estado:** roteiro e dados propostos, baseados nos fluxos já implementados e testados. Nesta missão não foram iniciados uma nova instância, um banco ou uma nova execução de navegador. O ensaio deve registrar versão, data, identificadores das reservas e resultado observado antes da apresentação.
