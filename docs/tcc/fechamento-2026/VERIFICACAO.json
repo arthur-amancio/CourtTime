@@ -642,5 +642,109 @@
     "initialHead": "07036b2244b448be89953d528e6dcdbe7a2fd4e6",
     "main": "4df490729734d9f45830e15be241cdb66c3f112f",
     "manifestDriveId": "1j3Y-vIMS2lSdCwW9mZGBO3DllmkVMmuY"
+  },
+  "finalReview20261105": {
+    "date": "2026-11-05",
+    "branch": "docs/defesa-final-20261105",
+    "initialHead": "273e83c5172921ee36292cfc9c94e48e151cb90b",
+    "main": "4df490729734d9f45830e15be241cdb66c3f112f",
+    "mainMonograph": {
+      "pages": 98,
+      "docxDriveId": "1bFjq7qI2_-O6lCxqlCxbGhjjxCPAJYQo",
+      "pdfDriveId": "1zJAC9YMYM-eLpK7HcGS4oJ9g9aDwwKLc",
+      "contentChanged": false,
+      "readbackHashesUnchanged": true,
+      "mainPairCount": 1,
+      "parent": "1NfD2GXq_axKT-LhTC83ZUFgAF9Yh50Zs",
+      "review": "Reutilizada validação da mesma versão; conferência dirigida de pesquisa, gráficos/B e páginas iniciais; sem defeito comprovado. 98 páginas sem vazias."
+    },
+    "presentation": {
+      "slides": 15,
+      "visualChanged": [
+        5,
+        8,
+        12,
+        13,
+        14
+      ],
+      "allNotesReviewed": true,
+      "allSlidesVisuallyInspected": true,
+      "allParagraphsAndCellsMatchPdf": true,
+      "obsolete87PageAndMissingFormsClaimsRemoved": true,
+      "previousPptxBackup": "1mYZAajmtf1uYLXJjy83xMiuBjLLlZSTa",
+      "previousPdfBackup": "1EoNIhmp1tipb9cKilNY0bfjMRMK39cK0"
+    },
+    "studyKit": {
+      "pages": 6,
+      "allPagesVisuallyInspected": true,
+      "speakingSplitProposedOnly": true,
+      "existing48QuestionsAnd3MocksPreserved": true
+    },
+    "artifacts": [
+      {
+        "name": "slidesEditaveis",
+        "driveId": "17cjUL-nYFUOsk4RPHyikH9VrfF1eXUdF",
+        "sha256": "122072782eb8d5e2bd0d9bd5abeeb3cde48c308972c8ae894f319d86fa237a64",
+        "bytes": 756406,
+        "readbackIdentical": true
+      },
+      {
+        "name": "slidesPdf",
+        "driveId": "19exVG9ocDdUw2bIm4lLNVblMnsNaaE4Q",
+        "sha256": "14be6b753ab70a20ccf389bf98ef4182ef3406638e81c0861ab3a64b8c9b1868",
+        "bytes": 510426,
+        "readbackIdentical": true
+      },
+      {
+        "name": "kitPdf",
+        "driveId": "1K7H_50nponnsetXpShirJC2JsgcMyYVC",
+        "sha256": "a414778399d29278a625186b85a3e0b233c3132fce134049898c1fc261fa1cb4",
+        "bytes": 141428,
+        "readbackIdentical": true
+      }
+    ],
+    "historyFolder": "1n8LfcQ2Elycd9Gy0wSmAszYaR9QJFfHK",
+    "compatibility": {
+      "pr92": "07036b2244b448be89953d528e6dcdbe7a2fd4e6",
+      "pr93": "273e83c5172921ee36292cfc9c94e48e151cb90b",
+      "pr94": "fd5385687fdc49cc815725bc039656900b697f71",
+      "base92": "docs/fechamento-final-tcc-20261101",
+      "base93": "docs/revisao-academica-v2-20261103",
+      "base94": "docs/fechamento-final-tcc-20261101",
+      "mergeTree93And94": "151e5968dab39aff7a34475a9c0b7974d2b13110",
+      "sameAsPrevious": true,
+      "conflicts": false,
+      "unexpectedFiles": false,
+      "mergePerformed": false,
+      "remoteBasesChanged": false,
+      "pr92Checks": "SUCCESS PG16/18 and guard",
+      "pr93HeadChecks": [],
+      "pr94HeadChecks": [],
+      "runtimeCICommit": "3cdfccc8539d7e09ebaeb7626719b5f727564374",
+      "runtimeCI": "https://github.com/arthur-amancio/CourtTime/actions/runs/41919681602",
+      "runtimeCIResult": "SUCCESS PG16/18 and Docker; reconfirmed read-only"
+    },
+    "demo": {
+      "url": "https://courttime-demo-k7g9.onrender.com",
+      "acceptedAsValidatedWithCaveats": true,
+      "reservation2ValidOnly": "2026-11-05 09:00–10:00 America/Sao_Paulo",
+      "newDateProcedure": "Create a new future reservation in the UI and finish documents by D-1, simulated conference/contribution and approval, then Security on actual D; no SQL/date change or E2E seeds."
+    },
+    "remainingHumanDecisions": [
+      "Parecer do professor sobre monografia/método e declarações dos autores",
+      "Anexo/autorização e Apêndices C/D",
+      "Regras institucionais divergentes",
+      "Ensaio presencial, tempo oficial e projeção"
+    ],
+    "softwareChanged": false,
+    "javaSuitesRerun": false,
+    "deployRecreated": false,
+    "mergesPerformed": false,
+    "permissionsChanged": false,
+    "humanRehearsalPerformed": false,
+    "messagesSent": false,
+    "institutionalApprovalClaimed": false,
+    "submissionPerformed": false,
+    "nextAction": "Grupo estudar os slides/kit, obter parecer e decisões até 09/11; preparar nova reserva até D-1 e ensaiar presencialmente até 10/11. Integração somente em missão separada autorizada."
   }
 }

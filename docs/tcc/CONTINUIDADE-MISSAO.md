@@ -1,5 +1,34 @@
 # RETOMADA DA MISSÃO — LEIA PRIMEIRO
 
+## Revisão final, apresentação e estudo — 05/11/2026
+
+Branch `docs/defesa-final-20261105`, base #93 `273e83c5172921ee36292cfc9c94e48e151cb90b`;
+HEAD publicado recuperável por `git fetch origin` e `git rev-parse origin/docs/defesa-final-20261105`.
+Main `4df490729734d9f45830e15be241cdb66c3f112f` intacta. Sem merge/deploy/código novo ou suítes Java repetidas.
+
+[Monografia principal DOCX](https://drive.google.com/file/d/1bFjq7qI2_-O6lCxqlCxbGhjjxCPAJYQo/view) e
+[PDF de 98 páginas](https://drive.google.com/file/d/1zJAC9YMYM-eLpK7HcGS4oJ9g9aDwwKLc/view): bytes e hashes preservados,
+B completo, sem defeito novo comprovado. Um único par identificado como principal na raiz do pacote;
+87 páginas e slides anteriores no histórico, sem exclusão/permissões alteradas.
+[Apresentação final PPTX](https://drive.google.com/file/d/17cjUL-nYFUOsk4RPHyikH9VrfF1eXUdF/view) /
+[PDF](https://drive.google.com/file/d/19exVG9ocDdUw2bIm4lLNVblMnsNaaE4Q/view): 15 slides, pesquisa/B/98 páginas/Render-Neon,
+notas corrigidas, conteúdo PPTX/PDF correspondente e todos os slides inspecionados.
+[Kit de estudo e demo](https://drive.google.com/file/d/1K7H_50nponnsetXpShirJC2JsgcMyYVC/view): seis páginas, divisão proposta
+entre Arthur/Carlos/Gustavo/Heitor, arquitetura, regras, pesquisa, hospedagem, réplicas e 240 segundos.
+Downloads/SHA-256 e links em `fechamento-2026/VERIFICACAO.json`, bloco `finalReview20261105`.
+
+#92 `07036b2`, #93 `273e83c`, #94 `fd53856` reconfirmados; #94 parte de #91, em paralelo ao ramo #92→#93.
+Árvore `merge-tree` #93+#94 `151e5968dab39aff7a34475a9c0b7974d2b13110` inalterada/sem conflitos; só diferenças acadêmicas esperadas.
+CI runtime #94 `3cdfccc` PG16/18 e Docker reconfirmada; HEADs documentais #93/#94 sem checks próprios.
+Deploy aceito como validado com ressalvas: https://courttime-demo-k7g9.onrender.com . #2 só vale em 05/11, 09h–10h São Paulo.
+Para outra data D, preparar NOVA reserva pela interface até D−1, sem SQL/relógio/seed E2E.
+
+**Retomada exata:** grupo estudar agora; obter parecer do professor, tratamento de anexo/C/D e regras institucionais,
+e ensaiar presencialmente com nova reserva preparada/contingência. Índice do pacote e tabela única atualizados.
+Não procurar novamente Forms, reescrever monografia, recriar deploy ou repetir auditorias. Não houve homologação,
+ensaio humano ou submissão. Integração tecnicamente preparada, aguardando autorização separada do proprietário.
+
+
 ## Pesquisa original incorporada — 03/11/2026
 
 **Principal atual: [Sprint 4 — Pesquisa Integrada — V2, PDF de 98 páginas](https://drive.google.com/file/d/1zJAC9YMYM-eLpK7HcGS4oJ9g9aDwwKLc/view), [DOCX editável](https://drive.google.com/file/d/1bFjq7qI2_-O6lCxqlCxbGhjjxCPAJYQo/view), na [subpasta de revisão](https://drive.google.com/drive/folders/1xTJv3xpDWK0PL5dHMPkqj6PS0gOpxn57).** Base original de 86 páginas preservada; correções pontuais comprovadas da revisão anterior de 87 páginas reaproveitadas. Não confundir as duas revisões denominadas V2.

@@ -1,11 +1,11 @@
 # CourtTime — Pacote Final para Revisão e Entrega — 2026
 
-**Versão de organização: 03/11/2026 — Pesquisa Integrada V2.** [Pasta única do pacote](https://drive.google.com/drive/folders/1NfD2GXq_axKT-LhTC83ZUFgAF9Yh50Zs).
-Este índice referencia a revisão V2 e preserva os originais; não duplica o acervo de diagramas.
+**Versão de organização: 05/11/2026 — revisão final e estudo.** [Pasta única do pacote](https://drive.google.com/drive/folders/1NfD2GXq_axKT-LhTC83ZUFgAF9Yh50Zs).
+Um único par DOCX/PDF está identificado como **MONOGRAFIA PRINCIPAL**, na raiz do pacote. Os bytes da V2 de 98 páginas foram preservados; nenhuma nova versão da monografia foi necessária. A revisão de 87 páginas e os slides anteriores estão no [histórico](https://drive.google.com/drive/folders/1n8LfcQ2Elycd9Gy0wSmAszYaR9QJFfHK). Os originais de 86 páginas continuam na pasta da Sprint. Nenhum arquivo foi excluído ou permissão alterada.
 **Principal para revisão acadêmica:** **CourtTime — Sprint 4 — Pesquisa Integrada — V2, 98 páginas**.
 **Pronta para revisão; não apta à submissão integral enquanto as pendências não forem resolvidas.**
 Originais de 86 páginas e candidato anterior de 82 páginas preservados.
-**Software:** #90, `b842f35593c8624793003349aaffbb69c21926b4`, validado; integração ainda não executada.
+**Demonstração:** https://courttime-demo-k7g9.onrender.com — PR #94, runtime `3cdfccc8539d7e09ebaeb7626719b5f727564374`, funcionalmente validado com ressalvas já documentadas. Render/Neon gratuitos, exclusivamente dados sintéticos; sem homologação institucional. Integração continua não executada.
 
 ## O que abrir
 
@@ -16,18 +16,18 @@ Originais de 86 páginas e candidato anterior de 82 páginas preservados.
 | 3. Checklist Sprint | [Checklist publicada](https://drive.google.com/file/d/1zYEeqWhejEmxtJHvs2_yHFjzIC6W_vRZ/view) + [conferência atual](https://drive.google.com/file/d/10SMS8PNBP9yDROzjUDS0nnYxxIlj6KZn/view). |
 | 4. Diagramas finais | [Acervo editável](https://drive.google.com/drive/folders/1pPPMphlpfG59cXeLKQTZ1yGvX8_onNqM) e [recursos efetivamente usados](https://drive.google.com/file/d/1E1UP0M-1HtjPlrLvSXDse37oU2_TqPp2/view). Não copiar todas as exportações. |
 | 5. Apêndices/anexos comprovados | [A — DER](https://drive.google.com/file/d/1pLWtVJ1CGnpY--qLPbV2Ue2XuJZn9OrH/view); [B integral, pp.92–95](https://drive.google.com/file/d/1zJAC9YMYM-eLpK7HcGS4oJ9g9aDwwKLc/view). Original do Forms conferido; C/D e autorização do anexo permanecem pendentes. |
-| 6. PowerPoint | [PPTX de 15 slides](https://drive.google.com/file/d/17cjUL-nYFUOsk4RPHyikH9VrfF1eXUdF/view), revisão anterior preservada; notas sobre 87 páginas/B pendente precisam ser alinhadas à Pesquisa Integrada antes do ensaio. Evidências de software b842f35 continuam identificadas. |
+| 6. PowerPoint | [PPTX final V3 — 15 slides](https://drive.google.com/file/d/17cjUL-nYFUOsk4RPHyikH9VrfF1eXUdF/view), pesquisa original, B concluído, 98 páginas e Render/Neon. Notas e evidências atualizadas por versão; anterior preservado no histórico. |
 | 7. PDF da apresentação | [15 páginas correspondentes](https://drive.google.com/file/d/19exVG9ocDdUw2bIm4lLNVblMnsNaaE4Q/view). |
 | 8. Guia de estudos | [PDF de 13 páginas](https://drive.google.com/file/d/1Bs6tSDhpvbeVxDwhpWfsZCrsHNsZ4LHo/view); [DOCX](https://docs.google.com/document/d/1aDX9v8q2DF0LnzB2RWGlhpciEm69KnoH/edit). Preservar 48 perguntas existentes. |
 | 9. Simulados | [Três simulados](https://drive.google.com/file/d/1Wix_1YVNMSWLivFZesfwWLJS4XRT2x1F/view), [gabarito separado](https://drive.google.com/file/d/1oCIm5DEIQSmbvWoOw1YmlwqSTYM9oQ5h/view). Responder antes de abrir o gabarito. |
-| 10. Defesa e demonstração | [Kit atual com 240 s, contingências e réplicas](https://drive.google.com/file/d/1nI6F5Hd36XWo0O1KTz0qFTOM1jBI5bQc/view); [roteiros anteriores](https://drive.google.com/file/d/1TJg6xDhvqbXgo-ebW2uB87B6LrFI6dFF/view). |
-| 11. Execução do CourtTime | [Guia cloud no SHA validado](https://github.com/arthur-amancio/CourtTime/blob/b842f35593c8624793003349aaffbb69c21926b4/docs/desenvolvimento-cloud.md), sem dependência do Windows. |
+| 10. Defesa e demonstração | [Kit final PDF — seis páginas](https://drive.google.com/file/d/1K7H_50nponnsetXpShirJC2JsgcMyYVC/view), [texto editável com 240 s, falas, arquitetura, pesquisa, hospedagem e réplicas](https://drive.google.com/file/d/1nI6F5Hd36XWo0O1KTz0qFTOM1jBI5bQc/view); [roteiros anteriores](https://drive.google.com/file/d/1TJg6xDhvqbXgo-ebW2uB87B6LrFI6dFF/view). |
+| 11. Execução do CourtTime | [Demo online](https://courttime-demo-k7g9.onrender.com) e [guia Render/Neon](https://github.com/arthur-amancio/CourtTime/blob/fd5385687fdc49cc815725bc039656900b697f71/docs/deploy-gratuito.md). Na escola bastam navegador e internet; abrir dez minutos antes. Guia cloud/local anterior permanece como alternativa previamente ensaiada. |
 | 12. Orientador e decisões | [Tabela única, propostas e mensagem não enviada](https://drive.google.com/file/d/17cuVAuzO-Nmt6RIRG7zYsKcPbhJnNHPh/view); ficha [DOCX](https://drive.google.com/file/d/13HpI_OZHbZ3ztIp9sK-5h8Ifk0K9fhRA/view) / [PDF de duas páginas](https://drive.google.com/file/d/1DYVkCeMLyvFY4Z0Z9M-wRQwcWYeU4az5/view), sem parecer/assinatura preenchidos. |
 | Integração futura | [Diagnóstico dos 12 critérios e checklist por PR](https://drive.google.com/file/d/1xo7HMP-tMSCYxaQDQxDFzr-2ySg1-RSp/view). |
 
 ## Pesquisa original incorporada — versão principal
 
-[Subpasta de revisão](https://drive.google.com/drive/folders/1xTJv3xpDWK0PL5dHMPkqj6PS0gOpxn57): DOCX/PDF de 98 páginas, seis PNGs efetivamente usados, resultados agregados e manifesto de integridade. Base: original de 86 páginas, com as correções pontuais comprovadas da revisão anterior preservadas.
+[Fontes e gráficos da pesquisa](https://drive.google.com/drive/folders/1xTJv3xpDWK0PL5dHMPkqj6PS0gOpxn57): seis PNGs efetivamente usados, resultados agregados, ficha atual do professor e manifesto de integridade. O DOCX/PDF de 98 páginas foi movido à raiz do pacote, preservando IDs, links e hashes. Base: original de 86 páginas, com as correções pontuais comprovadas da revisão anterior preservadas.
 
 - Seção 3.2, pp.37–43: instrumento, período de 06 a 24/10, 28 registros, tabela completa das dez questões fechadas, análise e limitações.
 - Tabela 1, pp.38–39: 41 alternativas, inclusive zeros; percentuais de 28 registros. Continuação identificada conforme o manual ETEC. Os sete quadros anteriores permanecem com sua numeração.
@@ -39,35 +39,37 @@ Cálculos destacados: 26/28 (92,9%) para consulta; 25/28 (89,3%) para solicitaç
 
 A [conferência bibliográfica anterior](https://drive.google.com/file/d/1iIay_w6LkQmtLV_wusUHcTUr1h7lmli3/view) refere-se à revisão acadêmica de 87 páginas. Nesta versão, a referência da pesquisa foi ampliada para Forms/Sheets; as correções anteriores de Moreira, Ferraiolo e software foram preservadas, sem repetir auditoria das outras fontes. A pendência histórica do Forms nesse material anterior foi superada pela fonte agora fornecida.
 
-**Revisão acadêmica anterior preservada:** [DOCX de 87 páginas](https://drive.google.com/file/d/14kGQxlj5dGeEu9BrwqPUPaIxC57pqFJN/view) / [PDF](https://drive.google.com/file/d/180TaLx-JiKf0SgdUu2MJlcBJthxXOwjt/view). Não confundir os dois arquivos denominados V2: a principal atual é **Pesquisa Integrada**, na subpasta acima.
+**Revisão acadêmica anterior preservada:** [DOCX de 87 páginas](https://drive.google.com/file/d/14kGQxlj5dGeEu9BrwqPUPaIxC57pqFJN/view) / [PDF](https://drive.google.com/file/d/180TaLx-JiKf0SgdUu2MJlcBJthxXOwjt/view). Não confundir os dois arquivos denominados V2: a principal atual é **Pesquisa Integrada**, na raiz do pacote, com o prefixo MONOGRAFIA PRINCIPAL.
 
 **Originais preservados:** [DOCX de 86 páginas](https://drive.google.com/file/d/1rCi1j2CdBspSUT_i7bm8_gJCRkCrLPNu/view), [PDF de 86 páginas](https://drive.google.com/file/d/1wl_qpCUk0lLY8KFp94SPx937Lj3HGLS0/view), [PPTX anterior](https://drive.google.com/file/d/1xgeiekwHLQeEhb9tHoZ4QctGJLcbnmTQ/view), [PDF dos slides anterior](https://drive.google.com/file/d/1iuWy1E5M7hWkKriLB8KLDtcuqdyS4mW_/view). O histórico técnico datado do capítulo VII permanece identificado por versão; a conclusão registra a evidência posterior.
 
 A pasta e os arquivos novos estão **privados**; nenhum acesso foi concedido automaticamente. Um integrante deve testar o acesso na conta do professor e do grupo e providenciar o compartilhamento pelo procedimento autorizado, antes de enviar as mensagens prontas. Nenhuma resposta individual foi relida ou publicada.
 
-## Situação e próximas ações necessárias
+## O que o grupo faz agora
 
-**Software: PRONTO COM RESSALVAS. INTEGRAÇÃO TECNICAMENTE PREPARADA — AGUARDANDO AUTORIZAÇÃO.**
-Código funcional b842f35 preservado; CI da revisão documental anterior #92/07036b2 aprovada. Nenhuma suíte Java foi executada nesta missão de pesquisa; não transferir aprovação ao novo SHA documental.
-**Sprint: pronta para revisão, pendente para submissão integral.** C/D não são pesquisas comprovadas;
-nenhuma dispensa foi inventada. Professor e instituição decidem os itens da tabela única.
-**Demonstração: roteiro preparado e automação comprovada; ensaio humano/projetor ainda pendentes.**
+1. Estudar os 15 slides e o kit de seis páginas, aproveitando as 48 perguntas e os três simulados.
+2. Obter parecer do Prof. André sobre monografia/método, anexo e tratamento de C/D; confirmar
+   as regras institucionais divergentes. Não inventar dispensa, pesquisa impressa ou votação.
+3. Ensaiar presencialmente falas, projeção e demonstração de quatro minutos. **#2 só vale para
+   05/11/2026, 09h–10h, São Paulo**; para a nova data D preparar outra reserva pela interface até D−1,
+   conforme o kit. Nenhum SQL/relógio deve ser alterado para simular a jornada.
 
-1. **Até 04/11, sugestão interna:** autores confirmarem recrutamento/controle de duplicidades, declaração sobre papel/votação e ferramenta da marca.
-2. **Até 06/11, sugestão interna:** professor/ETEC responderem às questões da tabela e registrar parecer.
-3. **Até 09/11, sugestão interna:** se houver correção aprovada, gerar cópia recuperável, atualizar índices e PDF, conferir páginas afetadas.
-4. **Até 10/11, sugestão interna:** ensaiar as quatro falas e demonstração, preparar B no dia anterior e testar projetor/contingência.
-5. **12/11, às 16h, sugestão interna:** conferência da versão e dos acessos, antes do prazo oficial de **18h de São Paulo**.
+Prazo de entrega: **12/11/2026, 18h de São Paulo**, sem confundir com data/tempo oficial da defesa.
+Sugestões internas: decisões do professor/instituição até 09/11; ensaio e acesso dos integrantes
+até 10/11; conferência final de submissão em 11/11. Nenhum parecer/ensaio/submissão foi marcado concluído.
 
-## Checklist de envio pelo integrante responsável
+**PRs #92/#93/#94 compatíveis na consulta de 05/11.** #92 parte de #91; #93 parte de #92;
+#94 também parte de #91. A comparação local `merge-tree` #93+#94 produziu sem conflitos a árvore
+`151e5968dab39aff7a34475a9c0b7974d2b13110`, idêntica à evidência anterior. Nenhum merge executado.
+HEADs: #92 `07036b2`, #93 `273e83c`, #94 `fd53856`; main `4df4907` intacta.
+INTEGRAÇÃO TECNICAMENTE PREPARADA — AGUARDANDO AUTORIZAÇÃO.
+Na missão autorizada, integrar preservando commits na ordem #85→#86→#87→#88→#89→#90→#91→#92→#93→#94
+e depois o PR documental desta revisão. Atualizar referências e bases apenas nessa missão,
+parando em conflito, SHA divergente, perda de arquivo, falha obrigatória ou alteração inesperada.
+Checks verdes pertencem aos SHAs registrados; #93/#94 têm HEADs documentais sem checks próprios.
 
-- [ ] Parecer e tratamento dos itens incompletos registrados; nenhuma pendência escondida por título vazio.
-- [ ] DOCX/PDF principal da mesma versão; revisões posteriores identificadas e anteriores preservadas.
-- [ ] PPTX/PDF correspondentes; tempo oficial confirmado e roteiro ensaiado.
-- [ ] Links testados na conta do destinatário por integrante autorizado; este pacote não concede acesso automaticamente.
-- [ ] Sem senhas, dumps, respostas individuais ou arquivos sintéticos confundidos com documentos assinados reais.
-- [ ] Arquivos finais exigidos pela plataforma anexados, abertura conferida e comprovante de envio guardado privadamente.
-
-**Submissão não realizada.** Não é necessário aguardar deploy para emitir parecer acadêmico, nem a aprovação acadêmica autoriza merge.
-Para integrar, falta autorização separada do proprietário na sequência #85→#90→#91 e eventual PR documental desta revisão, observando proteções/revisões.
-Nenhum merge, deploy, mensagem, convite ou alteração de permissão foi executado nesta missão.
+**Validação desta revisão:** downloads da monografia com hashes idênticos aos conferidos; 98 páginas
+e nenhuma vazia; revisão dirigida sem defeito comprovado. Apresentação exportada e 15 slides
+inspecionados, com todos os parágrafos/células correspondentes entre PPTX e PDF e notas antigas removidas.
+Kit final de seis páginas inspecionado. Publicações verificadas por novo download/SHA-256.
+Sem mudanças no software, novas suítes Java, deploy, merge, envio de mensagem ou permissões.
