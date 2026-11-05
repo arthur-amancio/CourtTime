@@ -722,7 +722,14 @@
       "pr94HeadChecks": [],
       "runtimeCICommit": "3cdfccc8539d7e09ebaeb7626719b5f727564374",
       "runtimeCI": "https://github.com/arthur-amancio/CourtTime/actions/runs/41919681602",
-      "runtimeCIResult": "SUCCESS PG16/18 and Docker; reconfirmed read-only"
+      "runtimeCIResult": "SUCCESS PG16/18 and Docker; reconfirmed read-only",
+      "newDocumentaryBranchSnapshot": {
+        "head": "5029331691cb9db4c60da0d0b4e36106b86c6357",
+        "readOnlyTreeWithPr94": "c3c6dc8ea991ff6890041284308945f1b5556276",
+        "conflicts": false,
+        "runtimeDiffAgainstPr94": [],
+        "note": "Árvore local, não commit de merge; este registro posterior altera apenas metadados documentais."
+      }
     },
     "demo": {
       "url": "https://courttime-demo-k7g9.onrender.com",
@@ -745,6 +752,8 @@
     "messagesSent": false,
     "institutionalApprovalClaimed": false,
     "submissionPerformed": false,
-    "nextAction": "Grupo estudar os slides/kit, obter parecer e decisões até 09/11; preparar nova reserva até D-1 e ensaiar presencialmente até 10/11. Integração somente em missão separada autorizada."
+    "nextAction": "Grupo estudar os slides/kit, obter parecer e decisões até 09/11; preparar nova reserva até D-1 e ensaiar presencialmente até 10/11. Integração somente em missão separada autorizada.",
+    "pullRequest": "https://github.com/arthur-amancio/CourtTime/pull/95",
+    "documentaryContentCommit": "5029331691cb9db4c60da0d0b4e36106b86c6357"
   }
 }

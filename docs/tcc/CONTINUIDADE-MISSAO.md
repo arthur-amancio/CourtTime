@@ -2,6 +2,7 @@
 
 ## Revisão final, apresentação e estudo — 05/11/2026
 
+[PR #95 em rascunho](https://github.com/arthur-amancio/CourtTime/pull/95), commit da entrega `5029331691cb9db4c60da0d0b4e36106b86c6357`.
 Branch `docs/defesa-final-20261105`, base #93 `273e83c5172921ee36292cfc9c94e48e151cb90b`;
 HEAD publicado recuperável por `git fetch origin` e `git rev-parse origin/docs/defesa-final-20261105`.
 Main `4df490729734d9f45830e15be241cdb66c3f112f` intacta. Sem merge/deploy/código novo ou suítes Java repetidas.

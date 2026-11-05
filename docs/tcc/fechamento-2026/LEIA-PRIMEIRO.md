@@ -64,7 +64,7 @@ até 10/11; conferência final de submissão em 11/11. Nenhum parecer/ensaio/sub
 HEADs: #92 `07036b2`, #93 `273e83c`, #94 `fd53856`; main `4df4907` intacta.
 INTEGRAÇÃO TECNICAMENTE PREPARADA — AGUARDANDO AUTORIZAÇÃO.
 Na missão autorizada, integrar preservando commits na ordem #85→#86→#87→#88→#89→#90→#91→#92→#93→#94
-e depois o PR documental desta revisão. Atualizar referências e bases apenas nessa missão,
+e depois o [PR #95 documental desta revisão](https://github.com/arthur-amancio/CourtTime/pull/95). Atualizar referências e bases apenas nessa missão,
 parando em conflito, SHA divergente, perda de arquivo, falha obrigatória ou alteração inesperada.
 Checks verdes pertencem aos SHAs registrados; #93/#94 têm HEADs documentais sem checks próprios.
 
