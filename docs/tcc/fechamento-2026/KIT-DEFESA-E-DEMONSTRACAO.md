@@ -87,11 +87,13 @@ Ao terminar, sair das quatro contas e fechar contextos e ficha privada. Não enc
 
 Usar os 15 slides existentes. Versão de 12 minutos, **oito de fala e quatro de demonstração**, sujeita ao tempo oficial:
 
+Após o [redesign visual dos 15 slides](REDESIGN-APRESENTACAO.md), a distribuição abaixo corresponde às notas do PPTX principal. As versões PDF/DOCX anteriores deste kit preservam a proposta anterior; para a divisão atual, seguir as notas do PowerPoint e esta tabela.
+
 | Integrante | Dois minutos de fala | Um minuto na demonstração/apoio |
 | --- | --- | --- |
 | Arthur | Slides 1–5: problema, objetivos e pesquisa (instrumento, resultados e limites). | 0:00–1:00: aluno/calendário e encaminhamento ao décimo. |
-| Carlos | Slides 6–10: perfis/requisitos, stack, arquitetura MVC, UML e DER. | 1:00–2:00: documentos/Secretaria; auxiliar troca de contexto. |
-| Gustavo | Slides 11–12: jornada, código, transações/segurança e operação da demonstração. | 2:00–3:00: Administração e início da portaria. |
+| Carlos | Slides 6–9: perfis, regras, tecnologias e arquitetura MVC. | 1:00–2:00: documentos/Secretaria; auxiliar troca de contexto. |
+| Gustavo | Slides 10–12: recorte do DER, telas reais e transição para a demonstração. | 2:00–3:00: Administração e início da portaria. |
 | Heitor | Slides 13–15: testes, hospedagem/ressalvas, conclusão e agradecimentos. | 3:00–4:00: portaria/encerramento; controle de tempo. |
 
 As transições de perfil do roteiro prevalecem sobre a troca exata de operador: ensaiar sem interromper a explicação.
