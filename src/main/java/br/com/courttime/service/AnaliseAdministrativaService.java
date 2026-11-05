@@ -20,6 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Monta consultas da Administração com os requisitos da análise e downloads privados. Consultar
+ * um resumo não aprova a reserva: a decisão pertence a ReservaService.
+ */
 @Service
 public class AnaliseAdministrativaService {
 

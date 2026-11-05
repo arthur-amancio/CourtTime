@@ -26,6 +26,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * Pedido de uso ligado ao aluno e à quadra, com decisões e remarcação de origem. Rascunho é
+ * independente do status interno; pagamento, aprovação e liberação são etapas distintas.
+ */
 @Entity
 @Table(name = "reservas", indexes = {
         @Index(name = "idx_reservas_quadra_data_status",

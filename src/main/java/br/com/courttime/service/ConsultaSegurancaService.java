@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Entrega à Segurança somente reservas aprovadas atuais/futuras e os dados necessários à
+ * entrada. Presença é alterada no dia da reserva, sob trava, sem reabrir conferência liberada.
+ */
 @Service
 public class ConsultaSegurancaService {
 

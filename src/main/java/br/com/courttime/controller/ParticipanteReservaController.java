@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Recebe alterações da lista do próprio aluno. O serviço protege a propriedade, o mínimo de dez
+ * e o bloqueio da lista após envio documental.
+ */
 @Controller
 @RequestMapping("/solicitacoes/{reservaId}/participantes")
 public class ParticipanteReservaController {

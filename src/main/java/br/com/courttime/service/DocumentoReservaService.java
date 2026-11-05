@@ -27,6 +27,11 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Versiona PDFs privados sem alterar os bytes enviados. Trava a reserva, verifica
+ * proprietário/prazo e registra hash; armazenamento de arquivo exige compensação própria em
+ * rollback SQL.
+ */
 @Service
 public class DocumentoReservaService {
 
@@ -68,6 +73,11 @@ public class DocumentoReservaService {
         return envioEstaPermitido(reserva);
     }
 
+    /**
+     * Valida o PDF e o prazo antes de salvar uma nova versão. A trava da reserva serializa
+     * envios/lista; a remoção compensatória do objeto novo trata rollback após armazenamento
+     * concluído.
+     */
     @Transactional
     public DocumentoReserva enviar(
             Long reservaId,
@@ -158,6 +168,10 @@ public class DocumentoReservaService {
                 == ResultadoConferenciaDocumento.DEVOLVIDO_CORRECAO;
     }
 
+    /**
+     * Autoriza pelo proprietário e pelo vínculo do documento à reserva antes de ler os bytes
+     * privados. Ter o ID ou a chave do arquivo não concede acesso.
+     */
     @Transactional(readOnly = true)
     public DownloadDocumento baixar(
             Long reservaId, Long documentoId, Usuario solicitante) {

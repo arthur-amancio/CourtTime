@@ -6,6 +6,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * Garante a quadra inicial da aplicação sem criar horários oficiais. O funcionamento deve ser
+ * configurado pelo administrador.
+ */
 @Component
 public class QuadraInitializer implements ApplicationRunner {
 

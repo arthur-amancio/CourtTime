@@ -169,6 +169,10 @@ public class PortariaService {
         return pagamentoRepository.listarAguardandoRepasse(LocalPagamento.PORTARIA);
     }
 
+    /**
+     * Registra a confirmação da Secretaria sobre um recebimento na portaria. Mantém o
+     * lançamento original e impede confirmação duplicada.
+     */
     @Transactional
     public void confirmarRepasse(Long pagamentoId, Usuario secretaria) {
         Permissao.exigir(secretaria, Perfil.SECRETARIA);

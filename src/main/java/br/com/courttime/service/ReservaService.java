@@ -28,6 +28,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Coordena rascunho, análise, cancelamento institucional e remarcação. A aprovação é uma
+ * decisão transacional e revalida documentos, contribuição e disponibilidade sob a trava da
+ * quadra.
+ */
 @Service
 public class ReservaService {
 
@@ -58,6 +63,10 @@ public class ReservaService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    /**
+     * Salva um rascunho para data futura disponível. A solicitação não ocupa uma vaga aprovada;
+     * a disponibilidade será conferida novamente na decisão administrativa.
+     */
     @Transactional
     public Reserva criarSolicitacao(
             Usuario solicitante,
@@ -100,6 +109,10 @@ public class ReservaService {
         return reservaRepository.findBySolicitanteOrderByCriadaEmDesc(solicitante);
     }
 
+    /**
+     * Restringe a consulta ao proprietário persistido. O chamador não pode obter a solicitação
+     * apenas trocando o ID recebido na URL.
+     */
     @Transactional(readOnly = true)
     public Reserva obterSolicitacaoDoUsuario(Long reservaId, Usuario solicitante) {
         Permissao.exigir(solicitante, Perfil.ALUNO);
@@ -173,6 +186,10 @@ public class ReservaService {
         return reservaRepository.obterReservaRemarcada(solicitacao.getId(), solicitante);
     }
 
+    /**
+     * Trava primeiro a reserva e depois a quadra. Revalida elegibilidade e disponibilidade
+     * dentro da mesma transação para serializar aprovações e novos bloqueios.
+     */
     @Transactional
     public Reserva aprovar(Long reservaId, Usuario administrador) {
         Usuario administradorAtual = obterAdministradorAtual(administrador);
@@ -221,6 +238,10 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
+    /**
+     * Registra o cancelamento e o motivo sem apagar a reserva. Uma remarcação elegível terá
+     * nova documentação e decisão; avisar o aluno é uma ação externa ao sistema.
+     */
     @Transactional
     public Reserva cancelarInstitucionalmente(
             Long reservaId, Usuario administrador, String motivo) {

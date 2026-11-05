@@ -18,6 +18,10 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * Indisponibilidade pontual de uma única data. A desativação preserva o registro e não
+ * interfere nas regras semanais recorrentes.
+ */
 @Entity
 @Table(name = "bloqueios_quadra", indexes = {
         @Index(name = "idx_bloqueios_quadra_data", columnList = "quadra_id, data")

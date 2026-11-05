@@ -7,6 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Identifica a quadra e seu estado operacional. Seu registro também serve de ponto comum de
+ * lock para aprovações e mudanças de indisponibilidade.
+ */
 @Entity
 @Table(name = "quadras")
 public class Quadra {

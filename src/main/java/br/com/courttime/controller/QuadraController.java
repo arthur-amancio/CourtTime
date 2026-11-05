@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
+/**
+ * Consulta compartilhada da quadra e de sua grade diária. A disponibilidade exibida orienta a
+ * escolha, mas é revalidada na solicitação e na aprovação.
+ */
 @Controller
 public class QuadraController {
 

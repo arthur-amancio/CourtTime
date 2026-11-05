@@ -9,6 +9,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Carrega a conta persistida para autenticação por sessão. A autorização por perfil e por
+ * proprietário continua sendo verificada nas rotas e nos serviços.
+ */
 @Service
 public class UsuarioDetailsService implements UserDetailsService {
 

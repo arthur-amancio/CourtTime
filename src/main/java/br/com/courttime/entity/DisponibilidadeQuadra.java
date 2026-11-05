@@ -16,6 +16,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
 
+/**
+ * Intervalo de funcionamento em um dia da semana. Define a grade de horas ofertadas; não é uma
+ * autorização de reserva nem um bloqueio.
+ */
 @Entity
 @Table(name = "disponibilidades_quadra")
 public class DisponibilidadeQuadra {

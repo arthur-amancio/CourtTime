@@ -13,6 +13,10 @@ import java.util.Locale;
 import java.util.stream.Stream;
 import java.util.regex.Pattern;
 
+/**
+ * Provisionamento administrativo inicial com autorização explícita de ambiente. Não é cadastro
+ * público, reset de senha ou seed a executar no Render existente.
+ */
 @Component
 public class DevUsuarioInitializer implements ApplicationRunner {
 

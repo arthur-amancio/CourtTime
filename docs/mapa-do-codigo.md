@@ -1,6 +1,6 @@
 # Mapa do código do CourtTime
 
-Uma página para explicar o código na banca. Cada parte cabe em uma frase.
+Guia para explicar o código e localizar alterações. A candidata de bloqueios semanais parte do PR #94; não foi publicada no Render. Nesta candidata há 13 entidades; o runtime publicado e a monografia preservada continuam com 12.
 
 ## As camadas (de fora para dentro)
 
@@ -40,12 +40,13 @@ A situação mostrada ao aluno em cada etapa vem do `SituacaoSolicitacaoService`
 |---|---|---|
 | Mínimo de 10 participantes no total, contando Aluno e Outro | `ParticipanteReservaService` | `MINIMO_DE_PARTICIPANTES` |
 | 1 dia de antecedência | `CalendarioDisponibilidadeService` | `DIAS_MINIMOS_DE_ANTECEDENCIA` |
+| Bloqueio semanal dentro de vigência | `BloqueioSemanalQuadra`, `AdministracaoQuadraService` e `CalendarioDisponibilidadeService` | `ocorreEm`, `cadastrarBloqueioSemanal`, `obterBloqueios`; sem materializar ocorrências |
 | Duas reservas no mesmo horário não são aprovadas | `ReservaService.aprovar` | trava da quadra e `periodoEstaDisponivel` |
 | R01 — documento até o dia anterior | `DocumentoReservaService` | `prazoFinalDeEnvio` |
 | R02 — mais de 30 participantes | `FormularioReservaPdf` | páginas extras do PDF |
 | R03 — R$ 2,00 por participante | `ContribuicaoApmService` | `calcularValorDevido` |
 | R04 — crédito na remarcação | `ContribuicaoApmService` e `ReservaService.criarRemarcacao` | `creditoAplicado` |
-| R06 — documentos não são apagados | `DocumentoReservaService` e `DocumentoStorageLocal` | `remover` só apaga o arquivo de um envio que falhou |
+| R06 — documentos não são apagados | `DocumentoReservaService` e `DocumentoStorage` (local ou S3 privado no Render) | `remover` só apaga o arquivo de um envio que falhou |
 | R07 — assinatura gov.br conferida pela secretaria | `ConferenciaDocumentoService` | confirmação obrigatória |
 | R08 — presença na portaria | `ConsultaSegurancaService` | `registrarPresencas` |
 | R09 — vínculo da categoria Outro | `ParticipanteReservaService` e `VinculoParticipante` | `preencher` |
@@ -68,3 +69,19 @@ O CourtTime aplica o mínimo total por decisão atual do grupo. O formulário of
 - **Testes de controller** (`.../controller`): rotas, perfis, CSRF e mensagens, com `MockMvc`.
 - **Testes no PostgreSQL** (`*PostgreSqlIntegrationTest`): só rodam num banco com "test" no nome. O `courttime_demo` é recusado.
 - **Navegador real** (`qa/playwright`): a jornada dos quatro perfis, as capturas e a acessibilidade, num banco descartável no GitHub Actions.
+
+## Manutenção por funcionalidade
+
+| Alterar | Ponto de entrada e cuidado | Verificar |
+| --- | --- | --- |
+| Rascunho/lista | `SolicitacaoReservaController`, `ParticipanteReservaService`; preservar propriedade e revisão documental | `ReservaServiceTest`, `ParticipanteReservaServiceTest`, integrações equivalentes |
+| PDFs/conferência | `DocumentoReservaService`, `FormularioOficialService`, `ConferenciaDocumentoService`; não confundir hash/assinatura nem expor storage | Testes de documentos/conferência e acesso por perfil |
+| Contribuição/crédito | `ContribuicaoApmService`; registro presencial e crédito vinculado à origem | `ContribuicaoApmServiceTest`, PostgreSQL financeiro |
+| Portaria | `ConsultaSegurancaService`, `PortariaService`; dia, lock e estado liberado | `PortariaServiceTest`, `PresencaPostgreSqlIntegrationTest`, `PortariaPostgreSqlIntegrationTest` |
+| Sessão/permissões | `SecurityConfig`, `RevalidacaoSessaoUsuarioFilter`, `Permissao`; rota + serviço + proprietário | Testes de controller, filtro, usuários e navegação dos quatro perfis |
+| Grade/bloqueios | `AdminQuadraController`, `AdministracaoQuadraService`, calendário; lock da quadra compartilhado com aprovação | Calendário/Administração/Reserva unitários e PostgreSQL; `npm run test:bloqueios-semanais` após jornada |
+| Ambiente publicado | Perfil Render, `ConfiguracaoRender`, `DocumentoS3Config`; validate e credenciais externas | Testes de configuração/storage + migração isolada antes de autorização de deploy |
+
+A migração, os limites da recorrência, o impacto na modelagem e o procedimento de publicação
+estão em [bloqueios-semanais.md](bloqueios-semanais.md). Alterações apenas de JavaDoc não mudam
+regras. Não comentar acessores nem substituir testes por explicações.

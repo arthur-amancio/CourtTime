@@ -119,3 +119,13 @@ banco é o administrador de bootstrap** e comprova no navegador o marcador da
 instância efêmera antes da primeira mutação. Em seguida roda guarda, jornada,
 navegação, interações da V2, axe-core e capturas. As evidências ficam como
 artefato da execução por 14 dias. Nada é gravado no repositório.
+
+## Bloqueios semanais
+
+`npm run test:bloqueios-semanais` roda depois de `test:jornada` e das sondas de finalização,
+no mesmo banco E2E e candidato. Reutiliza os quatro perfis e a grade sintética. O script
+confere banco conectado/marcador antes de mutações; escreve somente pelas rotas da aplicação.
+Verifica vigência, dias/horários adjacentes, conflito com aprovada, CSRF/perfis, escape do motivo,
+desativação e coexistência pontual. Produz `resultados-bloqueios-semanais.json` e quatro capturas
+com quatro varreduras axe (lista/formulário em 1440/390 px). Já integra `test:qa` e a CI de navegador.
+Não apontar para Render/Neon, não remover as proteções ou adaptar o script para dados reais.

@@ -24,6 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Transporta uploads e downloads privados do aluno. Acesso, prazo, versão e integridade são
+ * responsabilidades de DocumentoReservaService.
+ */
 @Controller
 @RequestMapping("/solicitacoes/{reservaId}/documentos")
 public class DocumentoReservaController {

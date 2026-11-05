@@ -15,6 +15,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.net.URI;
 
+/**
+ * Recusa iniciar a demonstração Render com configuração insegura ou schema automático. Exige
+ * validate, armazenamento S3 privado e dados sintéticos confirmados; não aplica migrações.
+ */
 @Configuration(proxyBeanMethods = false)
 @Profile("render")
 @Order(Ordered.HIGHEST_PRECEDENCE)

@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Expõe registros presenciais, ajustes e repasses à Secretaria. Não recebe dinheiro pela
+ * internet nem permite definir livremente o valor devido.
+ */
 @Controller
 @RequestMapping("/secretaria/contribuicoes")
 public class SecretariaContribuicaoController {

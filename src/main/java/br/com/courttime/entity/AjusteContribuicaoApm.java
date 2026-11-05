@@ -20,6 +20,10 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+/**
+ * Histórico de correção financeira justificada, com valores/observações anteriores e novos.
+ * Preserva quem alterou o registro e quando, sem apagar o lançamento original.
+ */
 @Entity
 @Table(name = "ajustes_contribuicao_apm", indexes = @Index(
         name = "idx_ajustes_contribuicao_apm_historico",

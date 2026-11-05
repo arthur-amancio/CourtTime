@@ -23,6 +23,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Interface da portaria: lista autorizada, presença, adicionais e liberação. A Segurança não
+ * acessa PDFs; as mutações dependem da data e do estado da reserva.
+ */
 @Controller
 @RequestMapping("/seguranca/reservas")
 public class SegurancaReservaController {

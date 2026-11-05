@@ -14,12 +14,20 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Consultas de reservas por proprietário, status e data. Métodos ForUpdate são usados nas
+ * decisões concorrentes; leituras para listagem não substituem essas travas.
+ */
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findBySolicitanteOrderByCriadaEmDesc(Usuario solicitante);
 
     Optional<Reserva> findByIdAndSolicitante(Long id, Usuario solicitante);
 
+    /**
+     * Trava a reserva do proprietário para serializar lista, PDF e remarcação; a propriedade
+     * faz parte da consulta, não apenas da tela.
+     */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             select r from Reserva r
@@ -108,6 +116,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             @Param("status") StatusReserva status,
             @Param("dataAtual") LocalDate dataAtual);
 
+    /**
+     * Carrega e trava a reserva para uma decisão. A aprovação também adquire a trava da quadra
+     * antes da reconsulta de conflitos.
+     */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             select r from Reserva r

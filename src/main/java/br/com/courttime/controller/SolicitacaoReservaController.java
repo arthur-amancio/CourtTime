@@ -28,6 +28,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Conduz o aluno da escolha de um horário disponível ao rascunho. A identidade vem da sessão; o
+ * formulário não escolhe o dono da solicitação.
+ */
 @Controller
 @RequestMapping("/solicitacoes")
 public class SolicitacaoReservaController {
