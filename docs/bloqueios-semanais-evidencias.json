@@ -201,5 +201,102 @@
   "mergesPerformed": false,
   "permissionsChanged": false,
   "paidServicesEnabled": false,
-  "nextAction": "Revisar PR #97 e migração; obter autorização separada para integração e, depois, para migração/deploy. Executar o procedimento do guia e só marcar publicado após validação real no Render."
+  "nextAction": "Revisar PR #97 e migração; obter autorização separada para integração e, depois, para migração/deploy. Executar o procedimento do guia e só marcar publicado após validação real no Render.",
+  "stabilizationReview": {
+    "reviewedHead": "345340d380258415652f2bb940aa0170bfb84141",
+    "date": "2026-11-05",
+    "result": "SEM_DEFEITO_FUNCIONAL_CONFIRMADO — PRONTO PARA REVISAO/INTEGRACAO FUTURA CONDICIONADA",
+    "runtimeCodeChanged": false,
+    "sqlChanged": false,
+    "javaDocChanged": false,
+    "testSuitesRerun": false,
+    "reasonNoRerun": "src/main, src/test e SQL são idênticos aos hashes registrados. Somente documentação revisada; CI dos SHAs de código reconfirmada por leitura da API, sem disparar workflows.",
+    "reviewFindings": [
+      {
+        "subject": "Recorrência",
+        "result": "Dia, ativo, vigência inclusiva e intervalos semiabertos coerentes entre entidade, consulta e sobreposição; sem registros por ocorrência."
+      },
+      {
+        "subject": "Solicitação/remarcação",
+        "result": "criarRemarcacao chama criarSolicitacao na transação; ambos usam periodoEstaDisponivel. Pendência não ocupa vaga e é revalidada na aprovação."
+      },
+      {
+        "subject": "Concorrência",
+        "result": "Aprovação adquire reserva e quadra; cadastro/desativação adquire quadra. Cadastro consulta aprovadas depois do lock, sem adquirir lock de reserva em ordem inversa."
+      },
+      {
+        "subject": "Pontuais e regras sobrepostas",
+        "result": "União dos intervalos preservada; desativar uma regra não desativa outra nem o pontual. Duplicatas/sobreposições não foram proibidas por requisito novo."
+      },
+      {
+        "subject": "Consultas/duplicações",
+        "result": "Uma consulta semanal por data e reutilização da consulta de aprovadas; sem N+1 de ocorrências. Validações de formulário, serviço, entidade e SQL protegem fronteiras distintas. Nenhum gargalo ou simplificação funcional vantajosa foi comprovado."
+      },
+      {
+        "subject": "SQL e recuperação",
+        "result": "Script aditivo transacional, confirmação explícita do banco, checks/FK e timeouts mantidos. Recuperação detalhada para COMMIT incerto, JAR com falha, regras ativas e restauração em destinos novos; sem DOWN destrutivo."
+      },
+      {
+        "subject": "JavaDocs/mapa",
+        "result": "JavaDocs principais conferidos contra implementação, sem necessidade de alteração. Corrigida no mapa a afirmação de que todos os records apenas transportam dados; crédito/indicadores possuem cálculos derivados. Pré-requisito da finalização para o teste semanal explicitado."
+      }
+    ],
+    "sourceProof": {
+      "srcMain": "a5fc7dae369aeb9066319ea2f1250e4f1e4dff8a",
+      "srcTest": "7a7779589cad22d8ea324775870e897d620e82f6",
+      "sqlSha256": "71db8d5c4ac55481c7410b32f20dea3c744f80b482f9749411fb3eae9e9bac26"
+    },
+    "academicCompatibility": {
+      "method": "git fetch + git merge-tree --write-tree, apenas árvores locais, sem commit de merge",
+      "candidate": "345340d380258415652f2bb940aa0170bfb84141",
+      "prs": [
+        {
+          "number": 92,
+          "head": "07036b2244b448be89953d528e6dcdbe7a2fd4e6",
+          "tree": "01d7ccd945fea4b4115dc3214e150890588f63e3",
+          "conflicts": false
+        },
+        {
+          "number": 93,
+          "head": "273e83c5172921ee36292cfc9c94e48e151cb90b",
+          "tree": "f85bbbc2b2cfd874667dc71e087af03ba43e6b7d",
+          "conflicts": false
+        },
+        {
+          "number": 95,
+          "head": "faa1c8cdadc4664b1ba291009a8a93c9c406ac27",
+          "tree": "7ed5554c159968244fad35a6c7666f73879673f7",
+          "conflicts": false
+        },
+        {
+          "number": 96,
+          "head": "c9d2ce15aa579f648e6b48f5d49a9101d7e1f00d",
+          "tree": "7f17c5686a63d8531f4d3efd9ec0f8da6100fbee",
+          "conflicts": false
+        }
+      ]
+    },
+    "ciReconfirmed": {
+      "javaCommit": "0e778a2a3c48c9a0389daf53d031b80b9c12c814",
+      "javaRun": 41966950741,
+      "postgres16": "SUCCESS",
+      "postgres18": "SUCCESS",
+      "docker": "SUCCESS",
+      "browserCommit": "e813b20b255c5f3fa73629713dcec77880d2ab80",
+      "browserRun": 41967193341,
+      "browser": "SUCCESS",
+      "head345Checks": []
+    },
+    "checklist": "docs/bloqueios-semanais.md#integração",
+    "recoveryGate": "Qualquer regra com ativo=true bloqueia retorno ao runtime #94; zero regras ativas não dispensa ensaio/schema/dados/PDFs/autorização.",
+    "mainChanged": false,
+    "remoteBasesChanged": false,
+    "mergesPerformed": false,
+    "onlineMigrationPerformed": false,
+    "deployPerformed": false,
+    "driveAccessed": false,
+    "candidateEntities": 13,
+    "publishedAndMonographEntities": 12,
+    "nextAction": "Revisar o mesmo PR #97. Integração e operação online só em missão autorizada; seguir checklist e gates de recuperação, sem desativar regras para forçar rollback."
+  }
 }

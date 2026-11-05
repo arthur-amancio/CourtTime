@@ -8,12 +8,16 @@ Guia para explicar o código e localizar alterações. A candidata de bloqueios 
 |---|---|---|---|
 | Telas | `templates/` | HTML com Thymeleaf. Mostra dados e envia formulários. Não decide regras. | `solicitacoes/formulario.html` |
 | Controllers | `controller/` | Recebem a requisição, chamam um serviço e escolhem a tela ou o redirecionamento. | `SolicitacaoReservaController` |
-| Serviços | `service/` | **Onde ficam as regras.** Validam, calculam e gravam. | `ReservaService`, `PortariaService` |
+| Serviços | `service/` | Coordenam as regras, permissões e transações; usam cálculos derivados para preparar os resultados. | `ReservaService`, `PortariaService` |
 | Entidades | `entity/` | As tabelas do banco como classes Java (JPA). | `Reserva`, `ParticipanteReserva` |
 | Repositórios | `repository/` | Consultas ao PostgreSQL (Spring Data JPA). | `ReservaRepository` |
 | Segurança | `security/` + `config/SecurityConfig` | Login por sessão, perfil de cada rota e verificação de perfil nos serviços. | `Permissao.exigir(usuario, Perfil.SECRETARIA)` |
 
-Os `record` da pasta `service` (como `ResumoPortaria` e `DetalheReservaAutorizada`) não têm regra: só levam os dados prontos para a tela.
+Os `record` da pasta `service` agrupam dados, mas alguns também calculam valores derivados:
+`ResumoPortaria.minimoAtingido` compara presenças com o mínimo; `ContribuicaoPendente`
+calcula crédito aplicado, diferença e excedente. Esses cálculos não gravam no banco.
+Permissões, locks e mudanças persistentes continuam nos serviços. Ao alterar uma conta
+financeira ou um indicador, conferir também o `record` que produz o valor exibido.
 
 ## Quem pode o quê (três verificações)
 
@@ -60,7 +64,7 @@ O CourtTime aplica o mínimo total por decisão atual do grupo. O formulário of
 1. **Tela.** A segurança preenche "Acrescentar pessoa" em `seguranca/reservas/detalhe.html`.
 2. **Controller.** `SegurancaReservaController.acrescentarPessoa` recebe o formulário e chama o serviço.
 3. **Serviço.** `PortariaService.acrescentarPessoa` confere o perfil, se a reserva está aprovada e se é o dia dela, e usa as mesmas validações do cadastro do aluno.
-4. **Conta.** `PortariaService.resumir` calcula: valor = R$ 2,00 × (presentes − pagos), nunca negativo. Por isso trocar pessoas não cobra nada.
+4. **Conta.** `PortariaService.resumir` usa `calcularPessoasAPagar`: `max(0, presentes − (pessoas da lista documental + adicionais já pagos))`. Multiplica o resultado por R$ 2,00. Uma substituição dentro dessa capacidade paga, antes da liberação, não gera novo complemento; o recebimento anterior permanece no histórico.
 5. **Teste.** `PortariaServiceTest` tem um teste para cada caso: troca, acréscimo, falta, liberação e pagamento.
 
 ## Testes
@@ -79,9 +83,49 @@ O CourtTime aplica o mínimo total por decisão atual do grupo. O formulário of
 | Contribuição/crédito | `ContribuicaoApmService`; registro presencial e crédito vinculado à origem | `ContribuicaoApmServiceTest`, PostgreSQL financeiro |
 | Portaria | `ConsultaSegurancaService`, `PortariaService`; dia, lock e estado liberado | `PortariaServiceTest`, `PresencaPostgreSqlIntegrationTest`, `PortariaPostgreSqlIntegrationTest` |
 | Sessão/permissões | `SecurityConfig`, `RevalidacaoSessaoUsuarioFilter`, `Permissao`; rota + serviço + proprietário | Testes de controller, filtro, usuários e navegação dos quatro perfis |
-| Grade/bloqueios | `AdminQuadraController`, `AdministracaoQuadraService`, calendário; lock da quadra compartilhado com aprovação | Calendário/Administração/Reserva unitários e PostgreSQL; `npm run test:bloqueios-semanais` após jornada |
+| Grade/bloqueios | `AdminQuadraController`, `AdministracaoQuadraService`, calendário; lock da quadra compartilhado com aprovação | Calendário/Administração/Reserva unitários e PostgreSQL; navegador semanal após jornada **e finalização**, no mesmo candidato/base E2E |
 | Ambiente publicado | Perfil Render, `ConfiguracaoRender`, `DocumentoS3Config`; validate e credenciais externas | Testes de configuração/storage + migração isolada antes de autorização de deploy |
 
 A migração, os limites da recorrência, o impacto na modelagem e o procedimento de publicação
 estão em [bloqueios-semanais.md](bloqueios-semanais.md). Alterações apenas de JavaDoc não mudam
 regras. Não comentar acessores nem substituir testes por explicações.
+
+## Localizar e verificar uma alteração
+
+Os nomes da tabela correspondem aos arquivos em `src/main/java/br/com/courttime/`:
+controller em `controller/`, formulário em `controller/form/`, regra em `service/`,
+entidade em `entity/` e consulta em `repository/`. Os testes Java repetem o pacote
+em `src/test/java/`; procure o nome da classe seguido de `Test` ou `PostgreSqlIntegrationTest`.
+
+Para bloqueios, começar por [AdminQuadraController](../src/main/java/br/com/courttime/controller/AdminQuadraController.java),
+seguir para [AdministracaoQuadraService](../src/main/java/br/com/courttime/service/AdministracaoQuadraService.java)
+e [CalendarioDisponibilidadeService](../src/main/java/br/com/courttime/service/CalendarioDisponibilidadeService.java).
+O primeiro recebe dados; o segundo grava sob lock; o terceiro calcula a disponibilidade.
+Formulário e entidade repetem validações de fronteira de propósito: esconder um campo na tela
+não protege uma chamada direta ao serviço ou uma gravação JPA.
+
+| Mudança feita | Casos que devem continuar corretos | Testes mínimos afetados |
+| --- | --- | --- |
+| Dia/vigência/intervalo | Primeiro e último dia inclusivos, dia diferente, meia-noite recusada, minutos e períodos adjacentes | `BloqueioSemanalQuadraTest`, `AdministracaoQuadraServiceTest`, `CalendarioDisponibilidadeServiceTest` |
+| Solicitação/remarcação/aprovação | Rascunho não ocupa vaga; remarcação passa pela criação comum; aprovação revalida sob lock | `ReservaServiceTest`, `ReservaPostgreSqlIntegrationTest` |
+| Cadastro/desativação | Aprovada impede regra conflitante; desativar uma regra não remove outra nem o pontual | `AdministracaoQuadraPostgreSqlIntegrationTest` |
+| Permissões ou formulário | POST direto, CSRF ausente, perfil diferente, campos inválidos e motivo escapado | `AdminQuadraControllerTest`, `test:bloqueios-semanais` |
+| SQL/modelo persistente | Schema anterior restaurado, dados preservados e novo JAR com `ddl-auto=validate` | Ensaio isolado descrito no guia; não usar `update` como prova da migração |
+
+Exemplo para a primeira linha e o formulário, sem integração com banco:
+
+```bash
+./mvnw -Dtest=BloqueioSemanalQuadraTest,AdministracaoQuadraServiceTest,CalendarioDisponibilidadeServiceTest,AdminQuadraControllerTest test
+```
+
+Para as integrações, configurar um banco descartável com `test` no nome pelo
+[guia cloud](desenvolvimento-cloud.md), **conferir o banco realmente conectado** e só então
+habilitar `COURTTIME_POSTGRES_TEST=true`. Os testes apagam os dados dessa base.
+Para navegador, preferir `npm run test:qa` em outro banco E2E novo com as proteções do guia;
+o teste semanal depende dos perfis/grade da jornada e da reserva aprovada da finalização.
+Executá-lo sozinho em uma base apenas inicializada não substitui essa preparação.
+
+Não remover locks ou unificar validações só porque os trechos parecem semelhantes:
+o formulário, o serviço, a entidade e o banco protegem entradas diferentes.
+Sem alteração de código e com as mesmas árvores/SHAs validados, revisar a evidência existente
+evita repetir a suíte sem motivo; isso não transfere aprovação para código novo.

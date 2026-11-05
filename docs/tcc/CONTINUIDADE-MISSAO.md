@@ -400,3 +400,27 @@ Candidata tem 13 entidades; monografia de 98 páginas, diagramas, pesquisa/B e s
 #93/#95/#96 compatíveis em merge-tree somente leitura; #96 apareceu durante a tarefa e é documental.
 **Próxima ação exata:** revisar #97 e SQL; manter a versão online atual. Integração e aplicação no Neon/deploy
 exigem autorização separada e o procedimento do guia. A funcionalidade está implementada/validada, NÃO publicada.
+
+
+## Estabilização do PR #97 — 05/11/2026
+
+Revisado o HEAD remoto `345340d380258415652f2bb940aa0170bfb84141`, na mesma branch
+`feat/bloqueios-semanais-didatico`, base #94; [PR #97 draft](https://github.com/arthur-amancio/CourtTime/pull/97).
+**Nenhum defeito funcional confirmado e nenhuma alteração de Java, SQL, testes ou dependências.**
+Recorrência, união com pontuais, solicitação/remarcação, revalidação na aprovação, locks e JavaDocs
+conferidos. Não foi feita refatoração sem benefício comprovado. Corrigida a descrição dos records
+no mapa e explicitada a dependência da finalização no teste de navegador semanal.
+
+Checklist específico de integração, migração, deploy e recuperação no [guia](../bloqueios-semanais.md).
+Retorno ao #94 bloqueado enquanto houver regras semanais ativas; manter tabela/histórico,
+não desativar regras para contornar o bloqueio nem sobrescrever o banco com dump antigo.
+
+Árvores `src/main`/`src/test` e hash SQL iguais aos da validação anterior. Não repetidas suítes:
+550 Java executados/553 declarados (três opcionais S3 ignorados), CI PG16/18 e Docker, 1176
+verificações de navegador/48 axe são evidências dos SHAs registrados, reconfirmadas na API,
+não novas execuções nem checks do HEAD documental. Dados da revisão no bloco
+`stabilizationReview` de [bloqueios-semanais-evidencias.json](../bloqueios-semanais-evidencias.json).
+#92/#93/#95/#96 reconfirmados e compatíveis em merge-tree somente leitura. Main `4df4907` intacta.
+Candidata permanece com 13 entidades; runtime publicado e monografia com 12. Sem acesso ao Drive,
+modificação acadêmica, merge, migração online, deploy ou serviço pago.
+**Retomada:** revisar #97 e o checklist; aguardar autorização separada para integração/operação online.
