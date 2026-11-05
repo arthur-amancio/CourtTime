@@ -23,7 +23,8 @@ concurrency:
 
 jobs:
   navegador:
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1 não oferece Chromium para o ubuntu-latest atual (26.04).
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
 
     services:

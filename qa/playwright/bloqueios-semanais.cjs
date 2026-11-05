@@ -29,7 +29,7 @@ const sequencia = Number(sql('SELECT count(*) FROM bloqueios_semanais_quadra'));
 const inicio = adicionarDias(jornada.dates.requestDate, 140 + 35 * sequencia);
 const fim = adicionarDias(inicio, 21);
 const fields = { diaSemana: 'SEGUNDA', horarioInicio: '08:30', horarioFim: '09:30',
-  vigenciaInicio: inicio, vigenciaFim: fim, motivo: 'Aula de Educação Física <script>window.invasao=1</script>' };
+  vigenciaInicio: inicio, vigenciaFim: fim, motivo: `Aula de Educação Física ${sequencia} <script>window.invasao=1</script>` };
 function adicionarDias(iso, dias) {
   const data = new Date(`${iso}T12:00:00Z`);
   data.setUTCDate(data.getUTCDate() + dias);
