@@ -1,12 +1,14 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.BloqueioQuadra;
+import br.com.courttime.entity.BloqueioSemanalQuadra;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+/** Calcula a disponibilidade diária usada tanto pela tela quanto pelas decisões de reserva. */
 @Service
 public class CalendarioDisponibilidadeService {
 
@@ -41,14 +44,17 @@ public class CalendarioDisponibilidadeService {
     private final DisponibilidadeQuadraRepository disponibilidadeQuadraRepository;
     private final BloqueioQuadraRepository bloqueioQuadraRepository;
     private final ReservaRepository reservaRepository;
+    private final BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
 
     public CalendarioDisponibilidadeService(
             DisponibilidadeQuadraRepository disponibilidadeQuadraRepository,
             BloqueioQuadraRepository bloqueioQuadraRepository,
-            ReservaRepository reservaRepository) {
+            ReservaRepository reservaRepository,
+            BloqueioSemanalQuadraRepository bloqueioSemanalRepository) {
         this.disponibilidadeQuadraRepository = disponibilidadeQuadraRepository;
         this.bloqueioQuadraRepository = bloqueioQuadraRepository;
         this.reservaRepository = reservaRepository;
+        this.bloqueioSemanalRepository = bloqueioSemanalRepository;
     }
 
     public LocalDate obterDataAtual() {
@@ -63,6 +69,7 @@ public class CalendarioDisponibilidadeService {
         return obterDataAtual().plusDays(DIAS_MINIMOS_DE_ANTECEDENCIA);
     }
 
+    /** Divide a grade em horas e marca bloqueios antes de apresentar períodos disponíveis. */
     @Transactional(readOnly = true)
     public ConsultaDisponibilidade consultar(Quadra quadra, LocalDate data) {
         Objects.requireNonNull(quadra, "A quadra é obrigatória");
@@ -78,9 +85,7 @@ public class CalendarioDisponibilidadeService {
         }
         disponibilidades.forEach(this::validarDisponibilidade);
 
-        List<BloqueioQuadra> bloqueios = bloqueioQuadraRepository
-                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, data);
-        bloqueios.forEach(this::validarBloqueio);
+        List<PeriodoBloqueado> bloqueios = obterBloqueios(quadra, data);
         List<Reserva> reservasAprovadas = obterReservasAprovadas(quadra, data);
         reservasAprovadas.forEach(this::validarReserva);
 
@@ -109,6 +114,10 @@ public class CalendarioDisponibilidadeService {
         return Set.copyOf(dias);
     }
 
+    /**
+     * Revalida grade, bloqueios e reservas aprovadas no servidor. A aprovação chama
+     * este método dentro da transação que já detém a trava da quadra.
+     */
     @Transactional(readOnly = true)
     public boolean periodoEstaDisponivel(
             Quadra quadra, LocalDate data, LocalTime horarioInicio, LocalTime horarioFim) {
@@ -131,15 +140,13 @@ public class CalendarioDisponibilidadeService {
             return false;
         }
 
-        List<BloqueioQuadra> bloqueios = bloqueioQuadraRepository
-                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, data);
-        bloqueios.forEach(this::validarBloqueio);
+        List<PeriodoBloqueado> bloqueios = obterBloqueios(quadra, data);
         boolean semBloqueio = bloqueios.stream()
-                .noneMatch(bloqueio -> periodosConflitam(
+                .noneMatch(bloqueio -> periodosSobrepostos(
                         horarioInicio,
                         horarioFim,
-                        bloqueio.getHorarioInicio(),
-                        bloqueio.getHorarioFim()));
+                        bloqueio.inicio(),
+                        bloqueio.fim()));
 
         if (!semBloqueio) {
             return false;
@@ -148,7 +155,7 @@ public class CalendarioDisponibilidadeService {
         List<Reserva> reservasAprovadas = obterReservasAprovadas(quadra, data);
         reservasAprovadas.forEach(this::validarReserva);
         return reservasAprovadas.stream()
-                .noneMatch(reserva -> periodosConflitam(
+                .noneMatch(reserva -> periodosSobrepostos(
                         horarioInicio,
                         horarioFim,
                         reserva.getHorarioInicio(),
@@ -170,6 +177,26 @@ public class CalendarioDisponibilidadeService {
         return deslocamentoDesdeAbertura.toNanos() % DURACAO_AGENDAMENTO.toNanos() == 0;
     }
 
+    /** Une indisponibilidades pontuais e semanais somente para a data consultada. */
+    private List<PeriodoBloqueado> obterBloqueios(Quadra quadra, LocalDate data) {
+        List<PeriodoBloqueado> periodos = new ArrayList<>();
+        for (BloqueioQuadra bloqueio : bloqueioQuadraRepository
+                .findByQuadraAndDataAndAtivoTrueOrderByHorarioInicio(quadra, data)) {
+            validarBloqueio(bloqueio);
+            periodos.add(new PeriodoBloqueado(bloqueio.getHorarioInicio(), bloqueio.getHorarioFim()));
+        }
+        for (BloqueioSemanalQuadra regra : bloqueioSemanalRepository.listarAtivosNaData(
+                quadra, DiaSemana.from(data.getDayOfWeek()), data)) {
+            if (!regra.isIntervaloValido() || !regra.isVigenciaValida()) {
+                throw new IllegalStateException("Existe um bloqueio semanal inválido cadastrado");
+            }
+            periodos.add(new PeriodoBloqueado(regra.getHorarioInicio(), regra.getHorarioFim()));
+        }
+        return periodos;
+    }
+
+    private record PeriodoBloqueado(LocalTime inicio, LocalTime fim) { }
+
     private List<DisponibilidadeQuadra> obterDisponibilidadesDoDia(Quadra quadra, LocalDate data) {
         DiaSemana diaSemana = DiaSemana.from(data.getDayOfWeek());
         return disponibilidadeQuadraRepository
@@ -178,7 +205,7 @@ public class CalendarioDisponibilidadeService {
 
     private void adicionarHorarios(
             DisponibilidadeQuadra disponibilidade,
-            List<BloqueioQuadra> bloqueios,
+            List<PeriodoBloqueado> bloqueios,
             List<Reserva> reservasAprovadas,
             TreeMap<LocalTime, HorarioDisponibilidade> horarios) {
         LocalTime inicio = disponibilidade.getHorarioInicio();
@@ -199,20 +226,20 @@ public class CalendarioDisponibilidadeService {
     private SituacaoHorario obterSituacao(
             LocalTime horarioInicio,
             LocalTime horarioFim,
-            List<BloqueioQuadra> bloqueios,
+            List<PeriodoBloqueado> bloqueios,
             List<Reserva> reservasAprovadas) {
         boolean bloqueado = bloqueios.stream()
-                .anyMatch(bloqueio -> periodosConflitam(
+                .anyMatch(bloqueio -> periodosSobrepostos(
                         horarioInicio,
                         horarioFim,
-                        bloqueio.getHorarioInicio(),
-                        bloqueio.getHorarioFim()));
+                        bloqueio.inicio(),
+                        bloqueio.fim()));
         if (bloqueado) {
             return SituacaoHorario.BLOQUEADO;
         }
 
         boolean reservado = reservasAprovadas.stream()
-                .anyMatch(reserva -> periodosConflitam(
+                .anyMatch(reserva -> periodosSobrepostos(
                         horarioInicio,
                         horarioFim,
                         reserva.getHorarioInicio(),
@@ -230,7 +257,8 @@ public class CalendarioDisponibilidadeService {
         return atual.isDisponivel() ? novoHorario : atual;
     }
 
-    private boolean periodosConflitam(
+    /** Intervalos adjacentes não conflitam: o fim de cada período é exclusivo. */
+    static boolean periodosSobrepostos(
             LocalTime inicioA, LocalTime fimA, LocalTime inicioB, LocalTime fimB) {
         return inicioA.isBefore(fimB) && inicioB.isBefore(fimA);
     }

@@ -269,6 +269,72 @@ class AdminQuadraControllerTest {
                 .andExpect(redirectedUrl("/admin/horarios"));
     }
 
+    @Test
+    void administradorConsultaFormularioSemanalECadastraComCsrf() throws Exception {
+        mockMvc.perform(get("/admin/bloqueios/semanais/novo")
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Início da vigência")));
+        mockMvc.perform(post("/admin/bloqueios/semanais").with(csrf())
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("diaSemana", "SEGUNDA").param("horarioInicio", "08:00")
+                        .param("horarioFim", "10:00").param("vigenciaInicio", "2030-10-21")
+                        .param("vigenciaFim", "2030-12-18").param("motivo", "Aula"))
+                .andExpect(redirectedUrl("/admin/bloqueios"));
+        verify(administracaoService).cadastrarBloqueioSemanal(administrador, DiaSemana.SEGUNDA,
+                LocalTime.of(8, 0), LocalTime.of(10, 0), LocalDate.of(2030, 10, 21),
+                LocalDate.of(2030, 12, 18), "Aula");
+    }
+
+    @Test
+    void formularioSemanalInvalidoNaoChamaServico() throws Exception {
+        mockMvc.perform(post("/admin/bloqueios/semanais").with(csrf())
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("diaSemana", "DIA_INEXISTENTE").param("horarioInicio", "10:00")
+                        .param("horarioFim", "08:00").param("vigenciaInicio", "2030-12-18")
+                        .param("vigenciaFim", "2030-10-21").param("motivo", ""))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Revise os dados informados")));
+        verifyNoInteractions(administracaoService);
+    }
+
+    @Test
+    void servidorApresentaConflitoSemPerderCamposDoFormulario() throws Exception {
+        org.mockito.Mockito.when(administracaoService.cadastrarBloqueioSemanal(
+                org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(),
+                org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(),
+                org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(),
+                org.mockito.ArgumentMatchers.any())).thenThrow(new IllegalStateException("Atinge reserva aprovada"));
+        mockMvc.perform(post("/admin/bloqueios/semanais").with(csrf())
+                        .with(user(administrador.getEmail()).roles("ADMINISTRADOR"))
+                        .param("diaSemana", "SEGUNDA").param("horarioInicio", "08:00")
+                        .param("horarioFim", "10:00").param("vigenciaInicio", "2030-10-21")
+                        .param("vigenciaFim", "2030-12-18").param("motivo", "Aula"))
+                .andExpect(status().isOk()).andExpect(content().string(containsString("Atinge reserva aprovada")))
+                .andExpect(content().string(containsString("Aula")));
+    }
+
+    @Test
+    void cadastrarEDesativarSemanalSemCsrfSaoRecusados() throws Exception {
+        for (String rota : List.of("/admin/bloqueios/semanais", "/admin/bloqueios/semanais/1/desativar")) {
+            mockMvc.perform(post(rota).with(user(administrador.getEmail()).roles("ADMINISTRADOR")))
+                    .andExpect(status().isForbidden());
+        }
+        verifyNoInteractions(administracaoService);
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"ALUNO", "SECRETARIA", "SEGURANCA"})
+    void rotasSemanaisExigemPerfilAdministrativo(String perfil) throws Exception {
+        mockMvc.perform(get("/admin/bloqueios/semanais/novo")
+                        .with(user("outro@escola.test").roles(perfil))).andExpect(status().isForbidden());
+        for (String rota : List.of("/admin/bloqueios/semanais", "/admin/bloqueios/semanais/1/desativar")) {
+            mockMvc.perform(post(rota).with(csrf()).with(user("outro@escola.test").roles(perfil)))
+                    .andExpect(status().isForbidden());
+        }
+        verifyNoInteractions(administracaoService);
+    }
+
     private void prepararAdministradorAutenticado() {
         when(usuarioRepository.findByEmailIgnoreCase(administrador.getEmail()))
                 .thenReturn(Optional.of(administrador));

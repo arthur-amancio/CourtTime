@@ -7,6 +7,7 @@ import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,12 +44,15 @@ class CalendarioDisponibilidadeServiceTest {
     private ReservaRepository reservaRepository;
 
     private CalendarioDisponibilidadeService service;
+    @Mock
+    private BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
+
     private Quadra quadra;
 
     @BeforeEach
     void setUp() {
         service = new CalendarioDisponibilidadeService(
-                disponibilidadeQuadraRepository, bloqueioQuadraRepository, reservaRepository);
+                disponibilidadeQuadraRepository, bloqueioQuadraRepository, reservaRepository, bloqueioSemanalRepository);
         quadra = new Quadra();
         quadra.setAtiva(true);
     }
@@ -306,6 +310,39 @@ class CalendarioDisponibilidadeServiceTest {
 
         assertThrows(IllegalStateException.class,
                 () -> service.consultar(quadra, SEGUNDA_FEIRA));
+    }
+
+    @Test
+    void bloqueioSemanalParcialBloqueiaHorasSobrepostasMasPermiteHorarioAdjacente() {
+        prepararConsulta(disponibilidade(8, 0, 11, 0), List.of());
+        var regra = new br.com.courttime.entity.BloqueioSemanalQuadra();
+        regra.setDiaSemana(DiaSemana.SEGUNDA);
+        regra.setVigenciaInicio(SEGUNDA_FEIRA);
+        regra.setVigenciaFim(SEGUNDA_FEIRA.plusWeeks(2));
+        regra.setHorarioInicio(LocalTime.of(8, 30));
+        regra.setHorarioFim(LocalTime.of(9, 30));
+        when(bloqueioSemanalRepository.listarAtivosNaData(quadra, DiaSemana.SEGUNDA, SEGUNDA_FEIRA))
+                .thenReturn(List.of(regra));
+
+        var consulta = service.consultar(quadra, SEGUNDA_FEIRA);
+
+        assertEquals(List.of(SituacaoHorario.BLOQUEADO, SituacaoHorario.BLOQUEADO,
+                SituacaoHorario.DISPONIVEL), consulta.horarios().stream()
+                .map(HorarioDisponibilidade::situacao).toList());
+        assertFalse(service.periodoEstaDisponivel(quadra, SEGUNDA_FEIRA,
+                LocalTime.of(9, 0), LocalTime.of(10, 0)));
+        assertTrue(service.periodoEstaDisponivel(quadra, SEGUNDA_FEIRA,
+                LocalTime.of(10, 0), LocalTime.of(11, 0)));
+    }
+
+    @Test
+    void consultaRecusaRegraSemanalComIntervaloInvalido() {
+        // A recusa evita apresentar como livre um cadastro corrompido.
+        when(disponibilidadeQuadraRepository.findByQuadraAndDiaSemanaAndAtivaTrueOrderByHorarioInicio(
+                quadra, DiaSemana.SEGUNDA)).thenReturn(List.of(disponibilidade(8, 0, 10, 0)));
+        when(bloqueioSemanalRepository.listarAtivosNaData(quadra, DiaSemana.SEGUNDA, SEGUNDA_FEIRA))
+                .thenReturn(List.of(new br.com.courttime.entity.BloqueioSemanalQuadra()));
+        assertThrows(IllegalStateException.class, () -> service.consultar(quadra, SEGUNDA_FEIRA));
     }
 
     private void prepararConsulta(

@@ -1,6 +1,7 @@
 package br.com.courttime.controller;
 
 import br.com.courttime.controller.form.BloqueioQuadraForm;
+import br.com.courttime.controller.form.BloqueioSemanalQuadraForm;
 import br.com.courttime.controller.form.HorarioSemanalForm;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/** Recebe formulários administrativos; validação de domínio e locks ficam no serviço. */
 @Controller
 @RequestMapping("/admin")
 public class AdminQuadraController {
@@ -142,6 +144,7 @@ public class AdminQuadraController {
         model.addAttribute(
                 "bloqueios",
                 administracaoService.listarBloqueiosFuturos(administrador));
+        model.addAttribute("bloqueiosSemanais", administracaoService.listarBloqueiosSemanais(administrador));
         return "admin/bloqueios/lista";
     }
 
@@ -194,6 +197,48 @@ public class AdminQuadraController {
         return "redirect:/admin/bloqueios";
     }
 
+
+    @GetMapping("/bloqueios/semanais/novo")
+    public String novoBloqueioSemanal(Model model) {
+        BloqueioSemanalQuadraForm form = new BloqueioSemanalQuadraForm();
+        form.setVigenciaInicio(calendarioService.obterDataAtual());
+        model.addAttribute("form", form);
+        model.addAttribute("diasSemana", DiaSemana.values());
+        return "admin/bloqueios/semanal-formulario";
+    }
+
+    /** Preserva os valores e apresenta as recusas do serviço no próprio formulário. */
+    @PostMapping("/bloqueios/semanais")
+    public String cadastrarBloqueioSemanal(
+            @Valid @ModelAttribute("form") BloqueioSemanalQuadraForm form,
+            BindingResult bindingResult, @UsuarioAtual Usuario administrador,
+            Model model, RedirectAttributes redirectAttributes) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                administracaoService.cadastrarBloqueioSemanal(administrador, form.getDiaSemana(),
+                        form.getHorarioInicio(), form.getHorarioFim(), form.getVigenciaInicio(),
+                        form.getVigenciaFim(), form.getMotivo());
+                redirectAttributes.addFlashAttribute("mensagemSucesso", "Bloqueio semanal cadastrado com sucesso.");
+                return "redirect:/admin/bloqueios";
+            } catch (IllegalArgumentException | IllegalStateException exception) {
+                bindingResult.reject("bloqueioSemanal.invalido", exception.getMessage());
+            }
+        }
+        model.addAttribute("diasSemana", DiaSemana.values());
+        return "admin/bloqueios/semanal-formulario";
+    }
+
+    @PostMapping("/bloqueios/semanais/{id}/desativar")
+    public String desativarBloqueioSemanal(@PathVariable Long id, @UsuarioAtual Usuario administrador,
+            RedirectAttributes redirectAttributes) {
+        try {
+            administracaoService.desativarBloqueioSemanal(id, administrador);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Bloqueio semanal desativado.");
+        } catch (IllegalArgumentException | IllegalStateException exception) {
+            redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
+        }
+        return "redirect:/admin/bloqueios";
+    }
 
     private void prepararFormularioHorario(Model model, Long horarioId) {
         model.addAttribute("diasSemana", DiaSemana.values());

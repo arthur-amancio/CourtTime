@@ -26,6 +26,7 @@ import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.support.BancoDeTeste;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -54,6 +55,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @EnabledIfEnvironmentVariable(named = "COURTTIME_POSTGRES_TEST", matches = "true")
 class ReservaPostgreSqlIntegrationTest {
+
+    @Autowired
+    private BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
 
     private static final LocalDate DATA = LocalDate.now(CalendarioDisponibilidadeService.FUSO_HORARIO)
             .plusDays(7);
@@ -122,6 +126,7 @@ class ReservaPostgreSqlIntegrationTest {
         bloqueioQuadraRepository.deleteAllInBatch();
         disponibilidadeQuadraRepository.deleteAllInBatch();
         usuarioRepository.deleteAllInBatch();
+        bloqueioSemanalRepository.deleteAllInBatch();
         quadraRepository.deleteAllInBatch();
 
         quadra = novaQuadra();
@@ -389,6 +394,37 @@ class ReservaPostgreSqlIntegrationTest {
 
         assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
         assertEquals(1L, disponibilidadeQuadraRepository.count());
+    }
+
+
+    @Test
+    void solicitacaoEAprovacaoRevalidamBloqueioSemanal() {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        administracaoQuadraService.cadastrarBloqueioSemanal(administrador,
+                DiaSemana.from(DATA.getDayOfWeek()), INICIO, FIM, DATA, DATA.plusWeeks(4), "Aula");
+        assertThrows(IllegalStateException.class, () -> reservaService.criarSolicitacao(
+                aluno, quadra, DATA, INICIO, FIM, "Tentativa em horário bloqueado"));
+        assertThrows(IllegalStateException.class, () -> reservaService.aprovar(pendente.getId(), administrador));
+        assertEquals(StatusReserva.PENDENTE_ANALISE, reservaRepository.findById(pendente.getId()).orElseThrow().getStatus());
+        assertEquals(1, bloqueioSemanalRepository.count());
+    }
+
+    @Test
+    void aprovacaoERegraSemanalConcorrentesNaoPodemPersistirJuntas() throws Exception {
+        Reserva pendente = reservaPendente(aluno, INICIO, FIM);
+        List<Boolean> resultados = executarConcorrentemente(() -> tentarAprovar(pendente.getId()), () -> {
+            Usuario admin = usuarioRepository.findById(administrador.getId()).orElseThrow();
+            try {
+                administracaoQuadraService.cadastrarBloqueioSemanal(admin,
+                        DiaSemana.from(DATA.getDayOfWeek()), INICIO, FIM, DATA, DATA.plusWeeks(4), "Aula concorrente");
+                return true;
+            } catch (IllegalStateException conflitoEsperado) {
+                return false;
+            }
+        });
+        assertEquals(1L, resultados.stream().filter(Boolean::booleanValue).count());
+        boolean aprovada = reservaRepository.findById(pendente.getId()).orElseThrow().getStatus() == StatusReserva.APROVADA;
+        assertTrue(aprovada ^ (bloqueioSemanalRepository.count() == 1));
     }
 
     private Callable<Boolean> tentativaDeAprovacao(

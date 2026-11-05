@@ -9,6 +9,7 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -53,6 +54,9 @@ class AdministracaoQuadraServiceTest {
     private CalendarioDisponibilidadeService calendarioService;
 
     private AdministracaoQuadraService service;
+    @Mock
+    private BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
+
     private Quadra quadra;
     private Usuario administrador;
 
@@ -64,7 +68,7 @@ class AdministracaoQuadraServiceTest {
                 disponibilidadeRepository,
                 bloqueioRepository,
                 reservaRepository,
-                calendarioService);
+                calendarioService, bloqueioSemanalRepository);
         quadra = new Quadra();
         quadra.setId(1L);
         quadra.setNome("Quadra");
@@ -304,6 +308,99 @@ class AdministracaoQuadraServiceTest {
                 LocalTime.of(8, 0),
                 LocalTime.of(10, 0)));
         verify(quadraRepository, never()).findByIdForUpdate(any());
+    }
+
+    @Test
+    void cadastraUmaRegraComInicioPassadoMasOcorrenciasFuturas() {
+        prepararBloqueioDaQuadra();
+        when(calendarioService.obterDataAtual()).thenReturn(HOJE);
+        when(bloqueioSemanalRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        var regra = service.cadastrarBloqueioSemanal(administrador, DiaSemana.SEGUNDA,
+                LocalTime.of(8, 0), LocalTime.of(10, 0), HOJE.minusWeeks(1), DATA_FUTURA,
+                "  Aula de Educação Física  ");
+        assertEquals("Aula de Educação Física", regra.getMotivo());
+        assertTrue(regra.isAtivo());
+        assertEquals(quadra, regra.getQuadra());
+        verify(quadraRepository).findByIdForUpdate(quadra.getId());
+        verify(bloqueioSemanalRepository).save(regra);
+        verify(bloqueioRepository, never()).save(any());
+    }
+
+    @Test
+    void naoCadastraRegraQueAtingeReservaAprovadaDentroDaVigencia() {
+        prepararBloqueioDaQuadra();
+        when(calendarioService.obterDataAtual()).thenReturn(HOJE);
+        when(reservaRepository.findByQuadraAndStatusAndDataUtilizacaoGreaterThanEqualOrderByDataUtilizacaoAscHorarioInicioAsc(
+                quadra, StatusReserva.APROVADA, HOJE)).thenReturn(List.of(reservaAprovada(8, 30, 9, 30)));
+        assertThrows(IllegalStateException.class, () -> service.cadastrarBloqueioSemanal(
+                administrador, DiaSemana.SEGUNDA, LocalTime.of(8, 0), LocalTime.of(10, 0),
+                HOJE, DATA_FUTURA, "Aula"));
+        verify(bloqueioSemanalRepository, never()).save(any());
+    }
+
+    @Test
+    void reservaAprovadaEmOutroDiaOuHorarioAdjacenteNaoImpedeRegra() {
+        prepararBloqueioDaQuadra();
+        when(calendarioService.obterDataAtual()).thenReturn(HOJE);
+        when(reservaRepository.findByQuadraAndStatusAndDataUtilizacaoGreaterThanEqualOrderByDataUtilizacaoAscHorarioInicioAsc(
+                quadra, StatusReserva.APROVADA, HOJE)).thenReturn(List.of(reservaAprovada(10, 0, 11, 0)));
+        service.cadastrarBloqueioSemanal(administrador, DiaSemana.SEGUNDA,
+                LocalTime.of(8, 0), LocalTime.of(10, 0), HOJE, DATA_FUTURA, "Aula");
+        verify(bloqueioSemanalRepository).save(any());
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({
+            "2026-10-20,2026-10-19", "2026-10-01,2026-10-15", "2026-10-16,2026-10-18"})
+    void recusaVigenciaInvertidaVencidaOuSemOcorrencia(String inicio, String fim) {
+        // A primeira linha falha antes de consultar a data; não exige stub desnecessário.
+        org.mockito.Mockito.lenient().when(calendarioService.obterDataAtual()).thenReturn(HOJE);
+        assertThrows(IllegalArgumentException.class, () -> service.cadastrarBloqueioSemanal(
+                administrador, DiaSemana.SEGUNDA, LocalTime.of(8, 0), LocalTime.of(10, 0),
+                LocalDate.parse(inicio), LocalDate.parse(fim), "Aula"));
+        verify(quadraRepository, never()).findByIdForUpdate(any());
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({"08:00,08:00", "10:00,08:00", "23:00,01:00"})
+    void recusaIntervaloSemDuracaoOuQueAtravessaMeiaNoite(String inicio, String fim) {
+        assertThrows(IllegalArgumentException.class, () -> service.cadastrarBloqueioSemanal(
+                administrador, DiaSemana.SEGUNDA, LocalTime.parse(inicio), LocalTime.parse(fim),
+                HOJE, DATA_FUTURA, "Aula"));
+        verify(quadraRepository, never()).findByIdForUpdate(any());
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.EnumSource(value = Perfil.class, names = {"ALUNO", "SECRETARIA", "SEGURANCA"})
+    void apenasAdministradorPodeConsultarCadastrarOuDesativarRecorrencia(Perfil perfil) {
+        var outro = usuario(11L, perfil, true);
+        assertThrows(AccessDeniedException.class, () -> service.listarBloqueiosSemanais(outro));
+        assertThrows(AccessDeniedException.class, () -> service.cadastrarBloqueioSemanal(outro,
+                DiaSemana.SEGUNDA, LocalTime.of(8, 0), LocalTime.of(10, 0), HOJE, DATA_FUTURA, "Aula"));
+        assertThrows(AccessDeniedException.class, () -> service.desativarBloqueioSemanal(1L, outro));
+        verify(quadraRepository, never()).findByIdForUpdate(any());
+    }
+
+    @Test
+    void administradorInativoOuSemIdentidadePersistidaNaoCriaRegra() {
+        administrador.setAtivo(false);
+        assertThrows(AccessDeniedException.class, () -> service.listarBloqueiosSemanais(administrador));
+        administrador.setAtivo(true);
+        administrador.setId(null);
+        assertThrows(AccessDeniedException.class, () -> service.listarBloqueiosSemanais(administrador));
+    }
+
+    @Test
+    void desativacaoPreservaRegraERecusaIdDeOutraQuadra() {
+        prepararBloqueioDaQuadra();
+        var regra = new br.com.courttime.entity.BloqueioSemanalQuadra();
+        regra.setQuadra(quadra);
+        when(bloqueioSemanalRepository.findById(30L)).thenReturn(Optional.of(regra));
+        service.desativarBloqueioSemanal(30L, administrador);
+        assertFalse(regra.isAtivo());
+        verify(bloqueioSemanalRepository).save(regra);
+        var outraQuadra = new Quadra(); outraQuadra.setId(99L); regra.setQuadra(outraQuadra);
+        assertThrows(IllegalArgumentException.class, () -> service.desativarBloqueioSemanal(30L, administrador));
     }
 
     private void prepararBloqueioDaQuadra() {
