@@ -369,3 +369,34 @@ reserva pela aplicação para a data real da banca. Monitorar limites Free, sem
 keep-alive/upgrade. Integração #85→#86→#87→#88→#89→#90→#91, revisões #92/#93 e #94
 continua dependente da autorização separada do proprietário. Homologação ETEC,
 parecer/submissão do TCC e ensaio humano permanecem etapas distintas.
+
+
+## Bloqueios semanais e código didático — 05/11/2026 — PR #97
+
+[PR #97 draft](https://github.com/arthur-amancio/CourtTime/pull/97), branch
+`feat/bloqueios-semanais-didatico`, base funcional #94 `fd5385687fdc49cc815725bc039656900b697f71`.
+Runtime candidato `0e778a2a3c48c9a0389daf53d031b80b9c12c814`; QA final
+`e813b20b255c5f3fa73629713dcec77880d2ab80` (mesmo src/main/src/test/pom/Dockerfile/render.yaml).
+O HEAD documental de entrega é recuperável com fetch e `git rev-parse origin/feat/bloqueios-semanais-didatico`.
+Main `4df490729734d9f45830e15be241cdb66c3f112f` e runtime publicado #94 preservados; sem merge/deploy/Neon alterado.
+
+Uma entidade pequena calcula a recorrência semanal por dia/vigência, sem gerar ocorrências.
+Cadastro/consulta/desativação no painel, validação de proprietário/perfil no fluxo existente,
+e trava da quadra compartilhada com aprovação; aprovada impede nova regra conflitante.
+Mudança funcional em três classes Java existentes; 42 outras somente com comentários úteis.
+[Mapa](../mapa-do-codigo.md), [guia/manutenção/impacto acadêmico e publicação futura](../bloqueios-semanais.md),
+[manifesto com SHAs, hashes e escopos](../bloqueios-semanais-evidencias.json).
+
+Maven local clean verify: 553 declarados, 550 executados, zero falhas/erros, três opcionais S3 ignorados.
+[CI PG16/18 e Docker aprovada no runtime candidato](https://github.com/arthur-amancio/CourtTime/actions/runs/41966950741).
+[Navegador final CI](https://github.com/arthur-amancio/CourtTime/actions/runs/41967193341): 1176 verificações,
+48 varreduras axe sem violações; artefato baixado via conector e hash conferido. Nenhum teste apontou ao Render/Neon.
+Corrigidos corte de motivo longo a 390px e runner Ubuntu 26.04 incompatível com Playwright 1.56.1;
+job de navegador fixado em 24.04, sem atualizar dependências. Falha antiga permanece identificada no manifesto.
+
+Migração `scripts/deploy/20261105-bloqueios-semanais.sql`: aditiva/manual, dez verificações isoladas,
+12 tabelas/dados anteriores preservados por hash/contagem e inicialização com ddl-auto=validate comprovada.
+Candidata tem 13 entidades; monografia de 98 páginas, diagramas, pesquisa/B e slides não foram editados.
+#93/#95/#96 compatíveis em merge-tree somente leitura; #96 apareceu durante a tarefa e é documental.
+**Próxima ação exata:** revisar #97 e SQL; manter a versão online atual. Integração e aplicação no Neon/deploy
+exigem autorização separada e o procedimento do guia. A funcionalidade está implementada/validada, NÃO publicada.

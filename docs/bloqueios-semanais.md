@@ -3,6 +3,16 @@
 Implementação candidata baseada no PR #94. **Não publicada no Render e não aplicada ao Neon.**
 As revisões acadêmicas #93/#95 e a monografia principal de 98 páginas permanecem preservadas.
 
+## Evidências da entrega
+
+[PR #97](https://github.com/arthur-amancio/CourtTime/pull/97): Maven/CI com 550 casos Java
+executados (553 declarados, três opcionais S3 ignorados); navegador com 1176 verificações
+aprovadas e 48 varreduras axe sem violações encontradas; migração com dez verificações isoladas.
+SHAs e escopos no [manifesto](bloqueios-semanais-evidencias.json).
+Capturas sintéticas conferidas: [desktop](evidencias-bloqueios-semanais/lista-desktop.png) e
+[celular](evidencias-bloqueios-semanais/lista-celular.png). O texto de script no motivo é
+uma sonda de escape exibida como texto, sem execução; não é dado de aluno nem funcionalidade.
+
 ## Regra e operação
 
 Administração → Bloqueios → **Novo bloqueio semanal**. Escolher dia, início/fim,
