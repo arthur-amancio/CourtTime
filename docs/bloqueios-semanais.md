@@ -1,7 +1,15 @@
 # Bloqueios semanais — manutenção e publicação futura
 
-Implementação candidata baseada no PR #94. **Não publicada no Render e não aplicada ao Neon.**
-As revisões acadêmicas #92/#93/#95/#96 e a monografia principal de 98 páginas permanecem preservadas.
+Implementação baseada no PR #94, **publicada na demonstração Render/Neon em 06/11/2026**,
+no SHA `ffe12a29f5dc71a60f73432f44268480765ef52a`, sem merge. O runtime online tem 13 entidades.
+As revisões acadêmicas #92/#93/#95/#96 e a monografia principal de 98 páginas permanecem preservadas,
+com a descrição anterior de 12 entidades. Evidência da operação: [publicação de 06/11](evidencias-bloqueios-semanais/publicacao-20261106.json).
+
+A migração foi ensaiada sobre a restauração do estado online e aplicada uma vez. Backup cifrado
+privado, download, decifragem e restauração PostgreSQL/PDF conferidos. Na URL pública, 63 verificações
+e quatro varreduras axe passaram. A regra e o pontual sintéticos foram desativados pela aplicação
+ao terminar; não representam um calendário oficial de aulas. Registros anteriores preservados por
+contagem/hash. A reserva antiga #2, de 05/11, continua fora do alcance da portaria após sua data.
 
 ## Evidências da entrega
 
@@ -82,14 +90,18 @@ Executa quatro varreduras axe nas telas novas (desktop/390 px), sem certificar t
 Os resultados reais desta entrega ficam no checkpoint e em `bloqueios-semanais-evidencias.json`.
 Relatórios XML completos, senhas e dumps de teste não devem ser publicados.
 
-## Migração e futura implantação — requer autorização separada
+## Checklist para futuras operações — requer autorização específica
 
 O Render mantém `ddl-auto=validate`. Não ligar `update`, não substituir o schema inicial
 de 12 entidades e não executar a migração no boot. O script novo cria **somente** tabela,
 identity, FK, checks e índice; não altera ou apaga os dados anteriores. Reaplicação falha
 em vez de ignorar silenciosamente uma tabela existente.
 
-Os itens abaixo são **ações futuras**, todos pendentes de autorização. A revisão não os executou.
+Os itens abaixo orientam **operações futuras**, que exigem autorização própria. A revisão de 05/11
+não os executou; a publicação autorizada de 06/11 está registrada na evidência vinculada acima.
+O serviço permanece Free, auto-deploy desligado e branch configurada no #94. **Não usar
+"Deploy latest commit" dessa branch:** selecionar sempre um SHA que compreenda as 13 entidades.
+"Restart service" e deploy de outro commit são operações diferentes; conferir o SHA nos Events.
 
 ### Integração
 
@@ -175,13 +187,15 @@ não converte recorrências em massa nem falsifica datas para demonstrar funcion
 
 ## Impacto acadêmico identificado
 
-O sistema publicado e a monografia atual documentam **12 entidades**. Esta candidata
-acrescenta a 13ª, `BloqueioSemanalQuadra`, com relação muitos-para-um para `Quadra`.
-Os outros 12 modelos/relacionamentos persistentes permanecem iguais.
+O sistema publicado desde 06/11 tem **13 entidades**. A monografia preservada documenta **12**.
+A 13ª, `BloqueioSemanalQuadra`, tem relação muitos-para-um para `Quadra`.
+Os outros 12 modelos/relacionamentos persistentes permanecem iguais. A publicação é demonstrativa,
+sem homologação institucional da ETEC.
 
 Se o grupo/orientador decidir incorporar esta funcionalidade à versão acadêmica, revisar
 o Capítulo IV (requisito/caso de uso administrativo e disponibilidade), Capítulo V
 (classe/dicionário de atributos), Apêndice A/DER (nova tabela/FK) e Capítulo VII
 (programação, testes e publicação). O [mapa técnico](mapa-do-codigo.md) já distingue a candidata.
-Não editar os DOCX/PDF de 98 páginas, diagramas congelados ou slides como se a funcionalidade
-já estivesse publicada. O Apêndice B e os resultados da pesquisa não mudam por essa adição.
+Esta missão não editou os DOCX/PDF de 98 páginas, diagramas congelados, slides ou Drive.
+A revisão acadêmica em andamento deve receber o SHA/data e essa diferença de modelagem;
+o Apêndice B e os resultados da pesquisa não mudam por essa adição.

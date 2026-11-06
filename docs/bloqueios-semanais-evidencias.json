@@ -298,5 +298,17 @@
     "candidateEntities": 13,
     "publishedAndMonographEntities": 12,
     "nextAction": "Revisar o mesmo PR #97. Integração e operação online só em missão autorizada; seguir checklist e gates de recuperação, sem desativar regras para forçar rollback."
+  },
+  "publication": {
+    "date": "2026-11-06",
+    "runtimeSha": "ffe12a29f5dc71a60f73432f44268480765ef52a",
+    "deploy": "dep-dbmvv56tlv9c73c4i2d0",
+    "status": "live",
+    "entities": 13,
+    "healthStatus": 200,
+    "browserChecks": 63,
+    "axeScans": 4,
+    "backupRestoreVerified": true,
+    "evidence": "evidencias-bloqueios-semanais/publicacao-20261106.json"
   }
 }

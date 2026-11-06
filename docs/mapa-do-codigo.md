@@ -1,6 +1,6 @@
 # Mapa do código do CourtTime
 
-Guia para explicar o código e localizar alterações. A candidata de bloqueios semanais parte do PR #94; não foi publicada no Render. Nesta candidata há 13 entidades; o runtime publicado e a monografia preservada continuam com 12.
+Guia para explicar o código e localizar alterações. Os bloqueios semanais do PR #97 foram publicados na demonstração Render/Neon em 06/11/2026, no SHA `ffe12a29f5dc71a60f73432f44268480765ef52a`, sem merge. O runtime tem 13 entidades; a monografia preservada continua descrevendo 12. Veja as [evidências da publicação](evidencias-bloqueios-semanais/publicacao-20261106.json).
 
 ## As camadas (de fora para dentro)
 

@@ -424,3 +424,35 @@ não novas execuções nem checks do HEAD documental. Dados da revisão no bloco
 Candidata permanece com 13 entidades; runtime publicado e monografia com 12. Sem acesso ao Drive,
 modificação acadêmica, merge, migração online, deploy ou serviço pago.
 **Retomada:** revisar #97 e o checklist; aguardar autorização separada para integração/operação online.
+
+## Publicação demonstrativa do PR #97 — 06/11/2026
+
+Autorizada nesta missão e executada sem merge. Runtime exato `ffe12a29f5dc71a60f73432f44268480765ef52a`,
+Render `dep-dbmvv56tlv9c73c4i2d0`, live em 06/11 às 16:28:17 UTC; `/healthz` 200.
+Serviço existente Free, auto-deploy desligado, perfil `render`/Hibernate `validate` preservados.
+Main `4df4907` intacta. Os commits desta operação registram somente evidências técnicas, não novo runtime.
+
+Neon PG16.15 `courttime_demo`: migração aditiva `20261105-bloqueios-semanais.sql` aplicada uma vez;
+**online agora com 13 entidades**, monografia preservada com a descrição anterior de 12.
+Backup final com serviço suspenso e zero transações abertas: snapshot SQL consistente, catálogo
+conferido, restauração tipada e pg_dump/pg_restore em bancos isolados. Cópia cifrada privada baixada,
+decifrada e restaurada; 41 registros das 12 tabelas, sequências e PDF original conferidos.
+Após migração e navegador, hashes dos registros anteriores permanecem iguais. Sem seed ou mudança de datas.
+
+Na URL pública: **63 verificações aprovadas, quatro axe sem violações encontradas**. Solicitação,
+aprovação, três ocorrências semanais, limites de vigência/dia, conflito com aprovada, pontual,
+desativação, perfis, CSRF e documento antigo verificados. Novas reservas sintéticas #3 (23/11 08h)
+e #4 (01/12 10h, aprovada), documentos #2/#3; conferência e contribuição apenas simuladas.
+Regra semanal #1 e pontual #1 desativados ao terminar. Não se presumiu horário oficial de aulas.
+
+Evidências, limites e hashes no [registro da publicação](../evidencias-bloqueios-semanais/publicacao-20261106.json).
+Java/CI anteriores reutilizados por identidade de fontes/testes; nenhuma suíte idêntica repetida.
+Nenhum DOCX, PDF acadêmico, slide ou arquivo do Drive foi editado. Sincronização acadêmica pendente:
+requisito de bloqueio semanal, classe/dicionário, DER/FK e capítulo de programação/tecnologias/testes.
+Sem homologação institucional. Pacote de recuperação e chave são privados, fora do Git.
+
+**Próxima ação:** o administrador pode cadastrar o calendário confirmado pela instituição pela interface.
+Futuro deploy deve selecionar SHA compatível com 13 entidades; a branch configurada do serviço ainda
+é a do #94, portanto não usar seu "Deploy latest commit". Não retornar ao runtime antigo com regra
+semanal ativa nem restaurar dump por cima do online: seguir o [procedimento de recuperação](../bloqueios-semanais.md).
+Integração dos PRs e alterações acadêmicas continuam sendo decisões separadas.
