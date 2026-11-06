@@ -21,6 +21,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Mantém a lista e sua revisão documental. Dez participantes ALUNO/OUTRO formalizam o pedido;
+ * editar a lista permitida atualiza a revisão que o PDF deve corresponder.
+ */
 @Service
 public class ParticipanteReservaService {
 
@@ -94,6 +98,10 @@ public class ParticipanteReservaService {
                 reserva, CategoriaParticipante.OUTRO);
     }
 
+    /**
+     * Impede usar um PDF de outra revisão da lista ou com lista insuficiente; a conferência de
+     * uma versão antiga não satisfaz a reserva atual.
+     */
     @Transactional(readOnly = true)
     public void validarDocumentoAtual(Reserva reserva, DocumentoReserva documento) {
         if (reserva == null || documento == null) {
@@ -110,6 +118,10 @@ public class ParticipanteReservaService {
         }
     }
 
+    /**
+     * Trava a solicitação do próprio aluno antes de alterar a lista e atualizar seu estado de
+     * rascunho/revisão. Não altera uma lista já protegida pelo fluxo documental.
+     */
     @Transactional
     public ParticipanteReserva adicionar(
             Long reservaId,

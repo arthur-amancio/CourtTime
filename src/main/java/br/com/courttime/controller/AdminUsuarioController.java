@@ -24,6 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * Administra contas sem cadastro público. Mudanças de senha, perfil ou estado são auditadas
+ * pelo serviço e invalidam acessos antigos.
+ */
 @Controller
 @RequestMapping("/admin/usuarios")
 public class AdminUsuarioController {

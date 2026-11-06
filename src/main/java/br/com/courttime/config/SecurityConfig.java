@@ -11,9 +11,17 @@ import org.springframework.security.web.PortMapper;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
+/**
+ * Define autenticação por formulário/sessão, perfis de rota e BCrypt, mantendo CSRF habilitado.
+ * No perfil HTTPS, a sonda interna é exceção restrita; documentos continuam privados.
+ */
 @Configuration
 public class SecurityConfig {
 
+    /**
+     * Aplica os perfis antes dos controllers e mantém os mecanismos de sessão/CSRF do Spring. A
+     * revalidação da conta ocorre antes de autorizar a requisição.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,

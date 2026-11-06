@@ -16,6 +16,10 @@ import jakarta.persistence.Table;
 
 import java.time.Instant;
 
+/**
+ * Histórico administrativo de contas com operador, tipo, perfil e estado anteriores/novos. Não
+ * armazena senhas anteriores ou em texto puro.
+ */
 @Entity
 @Table(name = "auditorias_usuario", indexes = {
         @Index(name = "idx_auditorias_usuario_afetado_data",

@@ -10,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Localiza a quadra institucional existente e sua grade. Não inventa horários oficiais; a
+ * configuração de funcionamento é administrativa.
+ */
 @Service
 public class QuadraService {
 

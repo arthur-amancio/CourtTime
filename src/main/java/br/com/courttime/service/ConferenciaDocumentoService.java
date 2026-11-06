@@ -17,6 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Registra a conferência humana de uma versão documental pela Secretaria. Só a versão mais
+ * recente pode receber uma decisão; a conferência não substitui o verificador externo de
+ * assinatura.
+ */
 @Service
 public class ConferenciaDocumentoService {
 
@@ -92,6 +97,10 @@ public class ConferenciaDocumentoService {
     public static final String MENSAGEM_ASSINATURA_NAO_CONFERIDA =
             "Confirme que conferiu a assinatura gov.br no verificador oficial do ITI antes de validar.";
 
+    /**
+     * Registra a conferência da versão atual e exige a confirmação humana da verificação
+     * gov.br. Não executa validação criptográfica de assinatura.
+     */
     @Transactional
     public ConferenciaDocumento validar(
             Long documentoId, Usuario secretaria, boolean assinaturaGovBrConferida) {
@@ -105,6 +114,10 @@ public class ConferenciaDocumentoService {
                 null);
     }
 
+    /**
+     * Preserva o documento e registra devolução justificada. Um reenvio continua sujeito ao
+     * prazo anterior à utilização da quadra.
+     */
     @Transactional
     public ConferenciaDocumento devolver(
             Long documentoId, Usuario secretaria, String justificativa) {

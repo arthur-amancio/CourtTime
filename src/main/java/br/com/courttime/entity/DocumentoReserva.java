@@ -20,6 +20,10 @@ import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
 
+/**
+ * Metadados de uma versão imutável de PDF, incluindo chave privada, SHA-256 e revisão da lista.
+ * O hash detecta alteração de bytes; não comprova autoria ou assinatura gov.br.
+ */
 @Entity
 @Table(name = "documentos_reserva",
         uniqueConstraints = @UniqueConstraint(

@@ -369,3 +369,90 @@ reserva pela aplicação para a data real da banca. Monitorar limites Free, sem
 keep-alive/upgrade. Integração #85→#86→#87→#88→#89→#90→#91, revisões #92/#93 e #94
 continua dependente da autorização separada do proprietário. Homologação ETEC,
 parecer/submissão do TCC e ensaio humano permanecem etapas distintas.
+
+
+## Bloqueios semanais e código didático — 05/11/2026 — PR #97
+
+[PR #97 draft](https://github.com/arthur-amancio/CourtTime/pull/97), branch
+`feat/bloqueios-semanais-didatico`, base funcional #94 `fd5385687fdc49cc815725bc039656900b697f71`.
+Runtime candidato `0e778a2a3c48c9a0389daf53d031b80b9c12c814`; QA final
+`e813b20b255c5f3fa73629713dcec77880d2ab80` (mesmo src/main/src/test/pom/Dockerfile/render.yaml).
+O HEAD documental de entrega é recuperável com fetch e `git rev-parse origin/feat/bloqueios-semanais-didatico`.
+Main `4df490729734d9f45830e15be241cdb66c3f112f` e runtime publicado #94 preservados; sem merge/deploy/Neon alterado.
+
+Uma entidade pequena calcula a recorrência semanal por dia/vigência, sem gerar ocorrências.
+Cadastro/consulta/desativação no painel, validação de proprietário/perfil no fluxo existente,
+e trava da quadra compartilhada com aprovação; aprovada impede nova regra conflitante.
+Mudança funcional em três classes Java existentes; 42 outras somente com comentários úteis.
+[Mapa](../mapa-do-codigo.md), [guia/manutenção/impacto acadêmico e publicação futura](../bloqueios-semanais.md),
+[manifesto com SHAs, hashes e escopos](../bloqueios-semanais-evidencias.json).
+
+Maven local clean verify: 553 declarados, 550 executados, zero falhas/erros, três opcionais S3 ignorados.
+[CI PG16/18 e Docker aprovada no runtime candidato](https://github.com/arthur-amancio/CourtTime/actions/runs/41966950741).
+[Navegador final CI](https://github.com/arthur-amancio/CourtTime/actions/runs/41967193341): 1176 verificações,
+48 varreduras axe sem violações; artefato baixado via conector e hash conferido. Nenhum teste apontou ao Render/Neon.
+Corrigidos corte de motivo longo a 390px e runner Ubuntu 26.04 incompatível com Playwright 1.56.1;
+job de navegador fixado em 24.04, sem atualizar dependências. Falha antiga permanece identificada no manifesto.
+
+Migração `scripts/deploy/20261105-bloqueios-semanais.sql`: aditiva/manual, dez verificações isoladas,
+12 tabelas/dados anteriores preservados por hash/contagem e inicialização com ddl-auto=validate comprovada.
+Candidata tem 13 entidades; monografia de 98 páginas, diagramas, pesquisa/B e slides não foram editados.
+#93/#95/#96 compatíveis em merge-tree somente leitura; #96 apareceu durante a tarefa e é documental.
+**Próxima ação exata:** revisar #97 e SQL; manter a versão online atual. Integração e aplicação no Neon/deploy
+exigem autorização separada e o procedimento do guia. A funcionalidade está implementada/validada, NÃO publicada.
+
+
+## Estabilização do PR #97 — 05/11/2026
+
+Revisado o HEAD remoto `345340d380258415652f2bb940aa0170bfb84141`, na mesma branch
+`feat/bloqueios-semanais-didatico`, base #94; [PR #97 draft](https://github.com/arthur-amancio/CourtTime/pull/97).
+**Nenhum defeito funcional confirmado e nenhuma alteração de Java, SQL, testes ou dependências.**
+Recorrência, união com pontuais, solicitação/remarcação, revalidação na aprovação, locks e JavaDocs
+conferidos. Não foi feita refatoração sem benefício comprovado. Corrigida a descrição dos records
+no mapa e explicitada a dependência da finalização no teste de navegador semanal.
+
+Checklist específico de integração, migração, deploy e recuperação no [guia](../bloqueios-semanais.md).
+Retorno ao #94 bloqueado enquanto houver regras semanais ativas; manter tabela/histórico,
+não desativar regras para contornar o bloqueio nem sobrescrever o banco com dump antigo.
+
+Árvores `src/main`/`src/test` e hash SQL iguais aos da validação anterior. Não repetidas suítes:
+550 Java executados/553 declarados (três opcionais S3 ignorados), CI PG16/18 e Docker, 1176
+verificações de navegador/48 axe são evidências dos SHAs registrados, reconfirmadas na API,
+não novas execuções nem checks do HEAD documental. Dados da revisão no bloco
+`stabilizationReview` de [bloqueios-semanais-evidencias.json](../bloqueios-semanais-evidencias.json).
+#92/#93/#95/#96 reconfirmados e compatíveis em merge-tree somente leitura. Main `4df4907` intacta.
+Candidata permanece com 13 entidades; runtime publicado e monografia com 12. Sem acesso ao Drive,
+modificação acadêmica, merge, migração online, deploy ou serviço pago.
+**Retomada:** revisar #97 e o checklist; aguardar autorização separada para integração/operação online.
+
+## Publicação demonstrativa do PR #97 — 06/11/2026
+
+Autorizada nesta missão e executada sem merge. Runtime exato `ffe12a29f5dc71a60f73432f44268480765ef52a`,
+Render `dep-dbmvv56tlv9c73c4i2d0`, live em 06/11 às 16:28:17 UTC; `/healthz` 200.
+Serviço existente Free, auto-deploy desligado, perfil `render`/Hibernate `validate` preservados.
+Main `4df4907` intacta. Os commits desta operação registram somente evidências técnicas, não novo runtime.
+
+Neon PG16.15 `courttime_demo`: migração aditiva `20261105-bloqueios-semanais.sql` aplicada uma vez;
+**online agora com 13 entidades**, monografia preservada com a descrição anterior de 12.
+Backup final com serviço suspenso e zero transações abertas: snapshot SQL consistente, catálogo
+conferido, restauração tipada e pg_dump/pg_restore em bancos isolados. Cópia cifrada privada baixada,
+decifrada e restaurada; 41 registros das 12 tabelas, sequências e PDF original conferidos.
+Após migração e navegador, hashes dos registros anteriores permanecem iguais. Sem seed ou mudança de datas.
+
+Na URL pública: **63 verificações aprovadas, quatro axe sem violações encontradas**. Solicitação,
+aprovação, três ocorrências semanais, limites de vigência/dia, conflito com aprovada, pontual,
+desativação, perfis, CSRF e documento antigo verificados. Novas reservas sintéticas #3 (23/11 08h)
+e #4 (01/12 10h, aprovada), documentos #2/#3; conferência e contribuição apenas simuladas.
+Regra semanal #1 e pontual #1 desativados ao terminar. Não se presumiu horário oficial de aulas.
+
+Evidências, limites e hashes no [registro da publicação](../evidencias-bloqueios-semanais/publicacao-20261106.json).
+Java/CI anteriores reutilizados por identidade de fontes/testes; nenhuma suíte idêntica repetida.
+Nenhum DOCX, PDF acadêmico, slide ou arquivo do Drive foi editado. Sincronização acadêmica pendente:
+requisito de bloqueio semanal, classe/dicionário, DER/FK e capítulo de programação/tecnologias/testes.
+Sem homologação institucional. Pacote de recuperação e chave são privados, fora do Git.
+
+**Próxima ação:** o administrador pode cadastrar o calendário confirmado pela instituição pela interface.
+Futuro deploy deve selecionar SHA compatível com 13 entidades; a branch configurada do serviço ainda
+é a do #94, portanto não usar seu "Deploy latest commit". Não retornar ao runtime antigo com regra
+semanal ativa nem restaurar dump por cima do online: seguir o [procedimento de recuperação](../bloqueios-semanais.md).
+Integração dos PRs e alterações acadêmicas continuam sendo decisões separadas.

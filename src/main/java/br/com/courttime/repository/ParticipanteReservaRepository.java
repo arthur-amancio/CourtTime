@@ -10,6 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Consulta a lista de cada reserva e suas contagens. A regra do mínimo, edição documental e
+ * propriedade é aplicada pelo serviço antes da gravação.
+ */
 public interface ParticipanteReservaRepository extends JpaRepository<ParticipanteReserva, Long> {
 
     List<ParticipanteReserva> findByReservaOrderByNomeCompletoAscIdAsc(Reserva reserva);

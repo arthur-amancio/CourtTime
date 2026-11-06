@@ -25,6 +25,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Área do administrador para analisar e cancelar pedidos. As decisões e o acesso aos PDFs são
+ * revalidados pelos serviços, não pelos botões da tela.
+ */
 @Controller
 @RequestMapping("/admin/solicitacoes")
 public class AdminSolicitacaoController {

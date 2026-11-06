@@ -21,6 +21,11 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+/**
+ * Registro de contribuição e crédito associado à reserva e à conferência documental. Valor
+ * devido e efetivamente registrado podem diferir na remarcação; não representa transação
+ * bancária.
+ */
 @Entity
 @Table(name = "contribuicoes_apm",
         uniqueConstraints = {

@@ -9,6 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Conta de acesso com senha codificada, perfil e estado ativo. A versão de acesso permite
+ * rejeitar sessões antigas após alterações administrativas relevantes.
+ */
 @Entity
 @Table(name = "usuarios")
 public class Usuario {

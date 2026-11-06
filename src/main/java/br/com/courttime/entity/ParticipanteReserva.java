@@ -18,6 +18,10 @@ import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
 
+/**
+ * Pessoa vinculada à reserva, categoria/vínculo e presença. Pessoas adicionadas na portaria
+ * permanecem identificadas, preservando o histórico das substituições.
+ */
 @Entity
 @Table(name = "participantes_reserva", indexes = {
         @Index(name = "idx_participantes_reserva", columnList = "reserva_id")

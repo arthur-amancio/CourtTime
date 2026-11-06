@@ -10,6 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Recupera versões e sua conferência, inclusive a mais recente. O filtro por reserva deve ser
+ * precedido da autorização do serviço; IDs não são autorização.
+ */
 public interface DocumentoReservaRepository extends JpaRepository<DocumentoReserva, Long> {
 
     List<DocumentoReserva> findByReservaOrderByVersaoDesc(Reserva reserva);

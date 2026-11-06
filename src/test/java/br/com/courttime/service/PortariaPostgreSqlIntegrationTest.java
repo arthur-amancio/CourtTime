@@ -21,6 +21,7 @@ import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.support.BancoDeTeste;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @EnabledIfEnvironmentVariable(named = "COURTTIME_POSTGRES_TEST", matches = "true")
 class PortariaPostgreSqlIntegrationTest {
+
+    @Autowired
+    private BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
 
     @Autowired private PortariaService portariaService;
     @Autowired private ConsultaSegurancaService consultaSegurancaService;
@@ -321,6 +325,7 @@ class PortariaPostgreSqlIntegrationTest {
         jdbcTemplate.execute("delete from bloqueios_quadra");
         jdbcTemplate.execute("delete from disponibilidades_quadra");
         usuarioRepository.deleteAllInBatch();
+        bloqueioSemanalRepository.deleteAllInBatch();
         quadraRepository.deleteAllInBatch();
     }
 }

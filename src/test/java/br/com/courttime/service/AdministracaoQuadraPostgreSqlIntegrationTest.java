@@ -20,6 +20,7 @@ import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
 import br.com.courttime.support.BancoDeTeste;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -40,6 +41,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @EnabledIfEnvironmentVariable(named = "COURTTIME_POSTGRES_TEST", matches = "true")
 class AdministracaoQuadraPostgreSqlIntegrationTest {
+
+    @Autowired
+    private BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
 
     @Autowired
     private AdministracaoQuadraService administracaoService;
@@ -92,6 +96,7 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
         bloqueioRepository.deleteAllInBatch();
         disponibilidadeRepository.deleteAllInBatch();
         usuarioRepository.deleteAllInBatch();
+        bloqueioSemanalRepository.deleteAllInBatch();
         quadraRepository.deleteAllInBatch();
 
         quadra = new Quadra();
@@ -247,6 +252,64 @@ class AdministracaoQuadraPostgreSqlIntegrationTest {
         assertTrue(calendarioService.consultar(quadra, dataFutura).horarios().stream()
                 .anyMatch(slot -> slot.horarioInicio().equals(LocalTime.of(8, 0))
                         && slot.situacao() == SituacaoHorario.RESERVADO));
+    }
+
+
+    @Test
+    void regraPersistidaBloqueiaInicioMeioEFimDaVigenciaSemGerarBloqueiosPontuais() {
+        administracaoService.cadastrarHorario(administrador, diaSemana, LocalTime.of(8, 0), LocalTime.of(11, 0));
+        var regra = administracaoService.cadastrarBloqueioSemanal(administrador, diaSemana,
+                LocalTime.of(8, 30), LocalTime.of(9, 30), dataFutura, dataFutura.plusWeeks(4), "Aula");
+        for (int semana : List.of(0, 1, 4)) {
+            var consulta = calendarioService.consultar(quadra, dataFutura.plusWeeks(semana));
+            assertEquals(List.of(SituacaoHorario.BLOQUEADO, SituacaoHorario.BLOQUEADO,
+                    SituacaoHorario.DISPONIVEL), consulta.horarios().stream().map(HorarioDisponibilidade::situacao).toList());
+        }
+        for (int semana : List.of(-1, 5)) {
+            assertTrue(calendarioService.consultar(quadra, dataFutura.plusWeeks(semana)).horarios()
+                    .stream().allMatch(HorarioDisponibilidade::isDisponivel));
+        }
+        assertEquals(1, bloqueioSemanalRepository.count());
+        assertEquals(0, bloqueioRepository.count());
+        assertEquals(regra.getId(), administracaoService.listarBloqueiosSemanais(administrador).get(0).getId());
+        assertTrue(bloqueioSemanalRepository.listarAtivosNaData(quadra,
+                DiaSemana.from(dataFutura.plusDays(1).getDayOfWeek()), dataFutura.plusDays(1)).isEmpty());
+        var outra = new Quadra(); outra.setNome("Outra quadra de teste"); outra.setDescricao("Teste");
+        outra = quadraRepository.saveAndFlush(outra);
+        assertTrue(bloqueioSemanalRepository.listarAtivosNaData(outra, diaSemana, dataFutura).isEmpty());
+    }
+
+    @Test
+    void desativarSemanalNaoRemoveBloqueioPontualNemOutraRegraSobreposta() {
+        administracaoService.cadastrarHorario(administrador, diaSemana, LocalTime.of(8, 0), LocalTime.of(11, 0));
+        var primeira = administracaoService.cadastrarBloqueioSemanal(administrador, diaSemana,
+                LocalTime.of(8, 0), LocalTime.of(10, 0), dataFutura, dataFutura.plusWeeks(2), "Aula");
+        var segunda = administracaoService.cadastrarBloqueioSemanal(administrador, diaSemana,
+                LocalTime.of(9, 0), LocalTime.of(10, 0), dataFutura, dataFutura.plusWeeks(2), "Outro uso");
+        administracaoService.cadastrarBloqueio(administrador, dataFutura,
+                LocalTime.of(10, 0), LocalTime.of(11, 0), "Pontual");
+        administracaoService.desativarBloqueioSemanal(primeira.getId(), administrador);
+        var consulta = calendarioService.consultar(quadra, dataFutura);
+        assertTrue(consulta.horarios().get(0).isDisponivel());
+        assertEquals(SituacaoHorario.BLOQUEADO, consulta.horarios().get(1).situacao());
+        assertEquals(SituacaoHorario.BLOQUEADO, consulta.horarios().get(2).situacao());
+        administracaoService.desativarBloqueioSemanal(segunda.getId(), administrador);
+        assertTrue(calendarioService.consultar(quadra, dataFutura).horarios().get(1).isDisponivel());
+        assertFalse(bloqueioSemanalRepository.findById(primeira.getId()).orElseThrow().isAtivo());
+        assertEquals(2, bloqueioSemanalRepository.count());
+        assertEquals(1, bloqueioRepository.count());
+    }
+
+    @Test
+    void aprovadaImpedeSemanalMasOutraSemanaForaDaVigenciaNaoImpede() {
+        salvarReservaAprovada();
+        assertThrows(IllegalStateException.class, () -> administracaoService.cadastrarBloqueioSemanal(
+                administrador, diaSemana, LocalTime.of(8, 0), LocalTime.of(10, 0),
+                dataFutura, dataFutura.plusWeeks(2), "Conflito"));
+        assertEquals(0, bloqueioSemanalRepository.count());
+        administracaoService.cadastrarBloqueioSemanal(administrador, diaSemana,
+                LocalTime.of(8, 0), LocalTime.of(10, 0), dataFutura.plusWeeks(1), dataFutura.plusWeeks(2), "Sem conflito");
+        assertEquals(1, bloqueioSemanalRepository.count());
     }
 
     private Usuario salvarUsuario(String email, Perfil perfil) {

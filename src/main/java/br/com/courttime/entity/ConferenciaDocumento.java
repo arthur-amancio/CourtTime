@@ -19,6 +19,10 @@ import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
 
+/**
+ * Decisão humana sobre uma versão de PDF, com responsável e data. A confirmação da assinatura
+ * externa é separada do resultado e não é um parecer emitido pelo software.
+ */
 @Entity
 @Table(name = "conferencias_documento", indexes = {
         @Index(name = "idx_conferencias_documento_data", columnList = "conferido_em")

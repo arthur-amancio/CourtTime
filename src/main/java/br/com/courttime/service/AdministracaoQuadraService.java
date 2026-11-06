@@ -1,6 +1,7 @@
 package br.com.courttime.service;
 
 import br.com.courttime.entity.BloqueioQuadra;
+import br.com.courttime.entity.BloqueioSemanalQuadra;
 import br.com.courttime.entity.DiaSemana;
 import br.com.courttime.entity.DisponibilidadeQuadra;
 import br.com.courttime.entity.Perfil;
@@ -9,6 +10,7 @@ import br.com.courttime.entity.Reserva;
 import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.BloqueioQuadraRepository;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
@@ -17,11 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.DayOfWeek;
+import java.time.temporal.TemporalAdjusters;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+/** Mantém grade e indisponibilidades sob a mesma trava usada para aprovar reservas. */
 @Service
 public class AdministracaoQuadraService {
 
@@ -31,6 +36,7 @@ public class AdministracaoQuadraService {
     private final QuadraRepository quadraRepository;
     private final DisponibilidadeQuadraRepository disponibilidadeRepository;
     private final BloqueioQuadraRepository bloqueioRepository;
+    private final BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
     private final ReservaRepository reservaRepository;
     private final CalendarioDisponibilidadeService calendarioService;
 
@@ -40,13 +46,15 @@ public class AdministracaoQuadraService {
             DisponibilidadeQuadraRepository disponibilidadeRepository,
             BloqueioQuadraRepository bloqueioRepository,
             ReservaRepository reservaRepository,
-            CalendarioDisponibilidadeService calendarioService) {
+            CalendarioDisponibilidadeService calendarioService,
+            BloqueioSemanalQuadraRepository bloqueioSemanalRepository) {
         this.quadraService = quadraService;
         this.quadraRepository = quadraRepository;
         this.disponibilidadeRepository = disponibilidadeRepository;
         this.bloqueioRepository = bloqueioRepository;
         this.reservaRepository = reservaRepository;
         this.calendarioService = calendarioService;
+        this.bloqueioSemanalRepository = bloqueioSemanalRepository;
     }
 
     @Transactional(readOnly = true)
@@ -179,6 +187,10 @@ public class AdministracaoQuadraService {
                 quadra, calendarioService.obterDataAtual());
     }
 
+    /**
+     * Trava a quadra e recusa sobreposição pontual ou reserva aprovada. O cálculo diário
+     * combina este registro com regras semanais sem modificar os bloqueios existentes.
+     */
     @Transactional
     public BloqueioQuadra cadastrarBloqueio(
             Usuario administrador,
@@ -201,7 +213,7 @@ public class AdministracaoQuadraService {
                 .findByQuadraAndDataOrderByHorarioInicio(quadra, data);
         boolean existeConflito = bloqueiosDaData.stream()
                 .filter(BloqueioQuadra::isAtivo)
-                .anyMatch(bloqueio -> periodosSobrepostos(
+                .anyMatch(bloqueio -> CalendarioDisponibilidadeService.periodosSobrepostos(
                         horarioInicio,
                         horarioFim,
                         bloqueio.getHorarioInicio(),
@@ -214,7 +226,7 @@ public class AdministracaoQuadraService {
                 .findByQuadraAndDataUtilizacaoAndStatusOrderByHorarioInicio(
                         quadra, data, StatusReserva.APROVADA)
                 .stream()
-                .anyMatch(reserva -> periodosSobrepostos(
+                .anyMatch(reserva -> CalendarioDisponibilidadeService.periodosSobrepostos(
                         horarioInicio,
                         horarioFim,
                         reserva.getHorarioInicio(),
@@ -243,6 +255,84 @@ public class AdministracaoQuadraService {
                 .orElseThrow(() -> new IllegalArgumentException("Bloqueio não encontrado"));
         bloqueio.setAtivo(false);
         return bloqueioRepository.save(bloqueio);
+    }
+
+    /** Consulta também regras vencidas/inativas; desativação não apaga o cadastro. */
+    @Transactional(readOnly = true)
+    public List<BloqueioSemanalQuadra> listarBloqueiosSemanais(Usuario administrador) {
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
+        return bloqueioSemanalRepository.findByQuadraOrderByVigenciaInicioDescHorarioInicioAsc(
+                quadraService.obterQuadra());
+    }
+
+    /**
+     * Grava uma única regra. A trava da quadra serializa esta decisão com a
+     * aprovação: uma reserva aprovada nunca é atingida por uma regra nova.
+     * Solicitações ainda pendentes serão revalidadas quando o administrador aprovar.
+     */
+    @Transactional
+    public BloqueioSemanalQuadra cadastrarBloqueioSemanal(
+            Usuario administrador, DiaSemana diaSemana, LocalTime horarioInicio,
+            LocalTime horarioFim, LocalDate vigenciaInicio, LocalDate vigenciaFim, String motivo) {
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
+        validarDiaSemana(diaSemana);
+        validarPeriodo(horarioInicio, horarioFim);
+        validarVigencia(diaSemana, vigenciaInicio, vigenciaFim);
+        String motivoNormalizado = validarMotivo(motivo);
+
+        Quadra quadra = bloquearQuadra();
+        BloqueioSemanalQuadra regra = new BloqueioSemanalQuadra();
+        regra.setQuadra(quadra);
+        regra.setDiaSemana(diaSemana);
+        regra.setHorarioInicio(horarioInicio);
+        regra.setHorarioFim(horarioFim);
+        regra.setVigenciaInicio(vigenciaInicio);
+        regra.setVigenciaFim(vigenciaFim);
+        regra.setMotivo(motivoNormalizado);
+        validarReservasNaoAtingidas(quadra, regra);
+        return bloqueioSemanalRepository.save(regra);
+    }
+
+    /** Desativa a regra inteira, sem alterar reservas, bloqueios pontuais ou histórico. */
+    @Transactional
+    public void desativarBloqueioSemanal(Long id, Usuario administrador) {
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
+        if (id == null) {
+            throw new IllegalArgumentException("O bloqueio semanal é obrigatório");
+        }
+        Quadra quadra = bloquearQuadra();
+        BloqueioSemanalQuadra regra = bloqueioSemanalRepository.findById(id)
+                .filter(item -> Objects.equals(item.getQuadra().getId(), quadra.getId()))
+                .orElseThrow(() -> new IllegalArgumentException("Bloqueio semanal não encontrado"));
+        regra.setAtivo(false);
+        bloqueioSemanalRepository.save(regra);
+    }
+
+    private void validarVigencia(DiaSemana dia, LocalDate inicio, LocalDate fim) {
+        if (inicio == null || fim == null || fim.isBefore(inicio)) {
+            throw new IllegalArgumentException("Informe uma vigência com início e fim em ordem");
+        }
+        LocalDate hoje = calendarioService.obterDataAtual();
+        LocalDate inicioEfetivo = inicio.isBefore(hoje) ? hoje : inicio;
+        LocalDate primeiraOcorrencia = inicioEfetivo.with(
+                TemporalAdjusters.nextOrSame(DayOfWeek.of(dia.ordinal() + 1)));
+        if (primeiraOcorrencia.isAfter(fim)) {
+            throw new IllegalArgumentException("A vigência deve conter uma ocorrência atual ou futura");
+        }
+    }
+
+    private void validarReservasNaoAtingidas(Quadra quadra, BloqueioSemanalQuadra regra) {
+        boolean atingeAprovada = reservaRepository
+                .findByQuadraAndStatusAndDataUtilizacaoGreaterThanEqualOrderByDataUtilizacaoAscHorarioInicioAsc(
+                        quadra, StatusReserva.APROVADA, calendarioService.obterDataAtual())
+                .stream()
+                .filter(reserva -> regra.ocorreEm(reserva.getDataUtilizacao()))
+                .anyMatch(reserva -> CalendarioDisponibilidadeService.periodosSobrepostos(
+                        regra.getHorarioInicio(), regra.getHorarioFim(),
+                        reserva.getHorarioInicio(), reserva.getHorarioFim()));
+        if (atingeAprovada) {
+            throw new IllegalStateException("O bloqueio semanal atinge uma reserva aprovada");
+        }
     }
 
     private Quadra bloquearQuadra() {
@@ -274,7 +364,7 @@ public class AdministracaoQuadraService {
                     && existente.getHorarioFim().equals(fim)) {
                 throw new IllegalStateException("Já existe um horário igual para esse dia");
             }
-            if (ficaraAtivo && existente.isAtiva() && periodosSobrepostos(
+            if (ficaraAtivo && existente.isAtiva() && CalendarioDisponibilidadeService.periodosSobrepostos(
                     inicio, fim, existente.getHorarioInicio(), existente.getHorarioFim())) {
                 throw new IllegalStateException("O período se sobrepõe a outro horário ativo");
             }
@@ -327,8 +417,4 @@ public class AdministracaoQuadraService {
         return normalizado;
     }
 
-    private boolean periodosSobrepostos(
-            LocalTime inicioA, LocalTime fimA, LocalTime inicioB, LocalTime fimB) {
-        return inicioA.isBefore(fimB) && inicioB.isBefore(fimA);
-    }
 }

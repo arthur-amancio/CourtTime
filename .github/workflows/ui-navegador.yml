@@ -23,7 +23,8 @@ concurrency:
 
 jobs:
   navegador:
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1 não oferece Chromium para o ubuntu-latest atual (26.04).
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
 
     services:
@@ -151,6 +152,13 @@ jobs:
         working-directory: qa/playwright
         run: npm run test:finalizacao
 
+      - name: Bloqueios semanais, permissões e coexistência com pontuais
+        working-directory: qa/playwright
+        env:
+          COURTTIME_DB_USERNAME: courttime_e2e
+          PGPASSWORD: e2e_descartavel
+        run: npm run test:bloqueios-semanais
+
       - name: Conferir os PDFs gerados e a ausência do CPF no banco
         if: always()
         env:
@@ -213,6 +221,13 @@ jobs:
             const falhas = r.filter(x => x.status === 'FAIL');
             console.log(`::notice title=Finalização::${r.length - falhas.length} aprovadas | ${falhas.length} reprovadas`);
             falhas.slice(0, 20).forEach(f => console.log(`::error title=Finalização::${f.name} ${f.detail || ''}`.slice(0, 900)));
+          }
+          const semanais = ler('resultados-bloqueios-semanais.json');
+          if (semanais) {
+            const r = semanais.results || [];
+            const falhas = r.filter(x => x.status === 'FAIL');
+            console.log(`::notice title=Bloqueios semanais::${r.length - falhas.length} aprovadas | ${falhas.length} reprovadas | ${semanais.axeScans} varreduras axe`);
+            falhas.slice(0, 20).forEach(f => console.log(`::error title=Bloqueios semanais::${f.name}`.slice(0, 900)));
           }
           const axe = ler('resultados-axe.json');
           if (axe) {

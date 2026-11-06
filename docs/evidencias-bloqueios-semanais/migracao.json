@@ -1,0 +1,57 @@
+{
+  "database": "courttime_migration_test",
+  "port": 55439,
+  "source": "dump sintético sem a nova tabela/sequence; entidades anteriores semanticamente idênticas ao #94",
+  "schemaTablesBefore": 12,
+  "schemaTablesAfter": 13,
+  "migrationSha256": "71db8d5c4ac55481c7410b32f20dea3c744f80b482f9749411fb3eae9e9bac26",
+  "existingTablesUnchanged": true,
+  "results": [
+    {
+      "name": "guard sem confirmação",
+      "pass": true
+    },
+    {
+      "name": "guard banco incorreto",
+      "pass": true
+    },
+    {
+      "name": "migração aditiva aplicada uma vez em schema de 12 entidades",
+      "pass": true
+    },
+    {
+      "name": "contagens e hashes das 12 tabelas anteriores idênticos",
+      "pass": true
+    },
+    {
+      "name": "dia inválido recusado pelo PostgreSQL",
+      "pass": true
+    },
+    {
+      "name": "horários invertidos recusado pelo PostgreSQL",
+      "pass": true
+    },
+    {
+      "name": "vigência invertida recusado pelo PostgreSQL",
+      "pass": true
+    },
+    {
+      "name": "motivo vazio recusado pelo PostgreSQL",
+      "pass": true
+    },
+    {
+      "name": "quadra inexistente recusada por FK",
+      "pass": true
+    },
+    {
+      "name": "reaplicação recusada sem modificar tabelas existentes",
+      "pass": true
+    }
+  ],
+  "hibernateValidate": {
+    "httpHealth": 200,
+    "ddlAuto": "validate",
+    "candidateJar": "target/courttime-0.0.1-SNAPSHOT.jar",
+    "note": "Instância local porta 18083 com schema aditivo manual; não é perfil Render/Neon."
+  }
+}

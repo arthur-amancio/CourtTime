@@ -6,6 +6,12 @@ O sistema possui uma página pública e autenticação por sessão com Spring Se
 
 A consulta diária divide cada intervalo semanal em períodos de uma hora e considera o estado operacional da quadra e bloqueios específicos da data. Períodos fora do funcionamento cadastrado não são apresentados como disponíveis. O sistema utiliza o fuso `America/Sao_Paulo`. Nenhum horário oficial é criado automaticamente.
 
+Nesta branch candidata, o administrador também pode cadastrar/desativar **bloqueios semanais
+com vigência**, além dos pontuais. A recorrência é calculada na consulta e respeitada na
+solicitação/aprovação; regras novas não atingem reservas já aprovadas. Esta funcionalidade
+**ainda não foi publicada** na demonstração online. Veja [manutenção e migração aditiva](docs/bloqueios-semanais.md)
+antes de preparar qualquer publicação; o Neon online e o perfil `ddl-auto=validate` foram preservados.
+
 ## Base de solicitações de reserva
 
 O domínio de reservas registra solicitante, quadra, data, período de uma hora, finalidade e situação. Uma nova reserva é salva como rascunho, com status interno `PENDENTE_DOCUMENTACAO`, e só passa a ser solicitação formal quando a lista atinge dez participantes no total, contando `ALUNO` e `OUTRO`. Enquanto rascunho, o formulário oficial e o envio de PDF ficam bloqueados. O registro presencial da contribuição promove a solicitação para `PENDENTE_ANALISE` somente quando a versão mais recente do PDF está conferida e corresponde à revisão atual da lista. A regra mais recente do grupo ainda diverge da cláusula do modelo oficial, que menciona dez alunos; consulte `docs/regras-etec.md` antes de considerar o fluxo documental homologado.

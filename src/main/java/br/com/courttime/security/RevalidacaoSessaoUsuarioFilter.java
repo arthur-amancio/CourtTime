@@ -15,6 +15,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Antes da autorização, compara a sessão com a conta atual no banco. Desativação ou divergência
+ * de versão, perfil ou email invalida a sessão sem depender de novo login voluntário.
+ */
 @Component
 public class RevalidacaoSessaoUsuarioFilter extends OncePerRequestFilter {
 

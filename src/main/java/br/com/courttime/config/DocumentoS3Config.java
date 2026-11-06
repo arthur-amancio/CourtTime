@@ -15,6 +15,10 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 import java.net.URI;
 import java.time.Duration;
 
+/**
+ * Cria o cliente S3 somente quando esse armazenamento é selecionado. Exige endpoint HTTPS e
+ * credenciais do ambiente; não torna objetos públicos nem os grava no Git.
+ */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(name = "courttime.documentos.storage", havingValue = "s3")
 public class DocumentoS3Config {

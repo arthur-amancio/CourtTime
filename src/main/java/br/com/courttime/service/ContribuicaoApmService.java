@@ -24,6 +24,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Calcula e registra contribuição presencial vinculada à conferência exata do PDF. Na
+ * remarcação aplica crédito da origem e cobra apenas a diferença; ajustes preservam histórico.
+ */
 @Service
 public class ContribuicaoApmService {
 
@@ -109,6 +113,10 @@ public class ContribuicaoApmService {
         return detalhar(contribuicao);
     }
 
+    /**
+     * Sob a trava da reserva, exige a versão conferida e a revisão atual, calcula
+     * crédito/diferença e impede segundo registro. Só então encaminha o pedido à análise.
+     */
     @Transactional
     public DetalheContribuicaoApm registrar(
             Long reservaId,
@@ -168,6 +176,10 @@ public class ContribuicaoApmService {
         return detalhar(contribuicao);
     }
 
+    /**
+     * Corrige um registro com justificativa e histórico anterior/novo. O ajuste não altera
+     * silenciosamente documento, participantes ou o valor devido calculado.
+     */
     @Transactional
     public DetalheContribuicaoApm ajustar(
             Long contribuicaoId,

@@ -26,6 +26,7 @@
                 <a class="botao" th:href="@{/admin/bloqueios/novo}">
                     <svg th:replace="~{fragments/icones :: icone('mais')}"></svg><span>Novo bloqueio</span>
                 </a>
+                <a class="botao botao--secundario" th:href="@{/admin/bloqueios/semanais/novo}">Novo bloqueio semanal</a>
             </div>
         </header>
 
@@ -40,7 +41,7 @@
 
         <section class="painel" aria-labelledby="bloqueios-titulo">
             <div class="painel__cabecalho">
-                <h2 id="bloqueios-titulo">Bloqueios futuros</h2>
+                <h2 id="bloqueios-titulo">Bloqueios pontuais futuros</h2>
                 <p class="campo__ajuda">Um bloqueio que atinja uma reserva aprovada não será aceito.</p>
             </div>
             <div class="vazio" th:if="${#lists.isEmpty(bloqueios)}">
@@ -71,6 +72,32 @@
                             </td>
                         </tr>
                     </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="painel bloco" aria-labelledby="semanais-titulo">
+            <div class="painel__cabecalho">
+                <h2 id="semanais-titulo">Bloqueios semanais</h2>
+                <p class="campo__ajuda">Repetem-se somente no dia e na vigência informados. Desativar encerra a regra inteira; outros bloqueios continuam valendo.</p>
+            </div>
+            <div class="vazio" th:if="${#lists.isEmpty(bloqueiosSemanais)}"><strong>Nenhum bloqueio semanal</strong><p>Nenhuma regra semanal foi cadastrada.</p></div>
+            <div class="tabela-wrapper" th:unless="${#lists.isEmpty(bloqueiosSemanais)}">
+                <table class="tabela tabela--cartoes">
+                    <caption class="visually-hidden">Regras semanais da quadra, incluindo inativas e vencidas</caption>
+                    <thead><tr><th scope="col">Dia</th><th scope="col">Período</th><th scope="col">Vigência</th><th scope="col">Motivo</th><th scope="col">Estado</th><th scope="col">Ação</th></tr></thead>
+                    <tbody><tr th:each="regra : ${bloqueiosSemanais}">
+                        <th scope="row" data-label="Dia" th:text="${regra.diaSemana.descricao}">Segunda-feira</th>
+                        <td data-label="Período" th:text="|${#temporals.format(regra.horarioInicio, 'HH:mm')} – ${#temporals.format(regra.horarioFim, 'HH:mm')}|">08:00 – 10:00</td>
+                        <td data-label="Vigência" th:text="|${#temporals.format(regra.vigenciaInicio, 'dd/MM/yyyy')} a ${#temporals.format(regra.vigenciaFim, 'dd/MM/yyyy')}|">02/11/2026 a 18/12/2026</td>
+                        <td class="celula-quebra" data-label="Motivo" th:text="${regra.motivo}">Aula de Educação Física</td>
+                        <td data-label="Estado"><span class="badge" th:text="${regra.ativo ? 'Ativo' : 'Inativo'}">Ativo</span></td>
+                        <td data-label="Ação" class="acoes-celula">
+                            <form th:if="${regra.ativo}" th:action="@{/admin/bloqueios/semanais/{id}/desativar(id=${regra.id})}" method="post" onsubmit="return confirm('Desativar esta regra semanal inteira?')">
+                                <button class="botao botao--perigo-contorno botao--sm" type="submit">Desativar regra<span class="visually-hidden" th:text="|: ${regra.motivo}, ${regra.diaSemana.descricao}, ${#temporals.format(regra.horarioInicio, 'HH:mm')}|"> semanal</span></button>
+                            </form>
+                            <span th:unless="${regra.ativo}">Sem ação</span>
+                        </td>
+                    </tr></tbody>
                 </table>
             </div>
         </section>

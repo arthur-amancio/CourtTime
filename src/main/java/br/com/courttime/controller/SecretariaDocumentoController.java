@@ -25,6 +25,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Apresenta documentos à Secretaria para decisão humana. A confirmação gov.br é um registro da
+ * conferência externa, não uma validação criptográfica automática.
+ */
 @Controller
 @RequestMapping("/secretaria/documentos")
 public class SecretariaDocumentoController {

@@ -13,6 +13,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Consulta registros financeiros e pedidos com documentação conferida. Registro e ajustes
+ * permanecem nos serviços, que validam a Secretaria e travam a reserva.
+ */
 public interface ContribuicaoApmRepository extends JpaRepository<ContribuicaoApm, Long> {
 
     boolean existsByReserva(Reserva reserva);

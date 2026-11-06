@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CourtTime | Novo bloqueio semanal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <script th:replace="~{fragments/layout :: script}"></script>
+</head>
+<body class="app-autenticado">
+    <a th:replace="~{fragments/layout :: pular}"></a>
+    <header th:replace="~{fragments/layout :: topo}"></header>
+    <aside th:replace="~{fragments/layout :: lateral}"></aside>
+    <main id="conteudo" class="container app-main app-main--narrow">
+        <nav class="breadcrumb" aria-label="Navegação estrutural"><a th:href="@{/inicio}">Início</a><span aria-hidden="true">/</span><a th:href="@{/admin}">Administração</a><span aria-hidden="true">/</span><a th:href="@{/admin/bloqueios}">Bloqueios</a><span aria-hidden="true">/</span><span aria-current="page">Novo</span></nav>
+        <header class="cabecalho-pagina"><div class="cabecalho-pagina__texto"><h1>Novo bloqueio semanal</h1><p>Repita uma indisponibilidade no mesmo dia e horário, dentro da vigência. Não altera reservas já aprovadas.</p></div></header>
+        <form class="painel formulario-painel" th:action="@{/admin/bloqueios/semanais}" th:object="${form}" method="post">
+            <div class="alerta alerta--perigo" role="alert" th:if="${#fields.hasAnyErrors()}"><strong>Revise os dados informados.</strong><ul><li th:each="erro : ${#fields.allErrors()}" th:text="${erro}">Erro de validação</li></ul></div>
+            <div class="campo"><label for="diaSemana">Dia da semana</label><select id="diaSemana" th:field="*{diaSemana}" required><option value="">Selecione</option><option th:each="dia : ${diasSemana}" th:value="${dia}" th:text="${dia.descricao}">Segunda-feira</option></select></div>
+            <div class="campos-linha"><div class="campo"><label for="vigenciaInicio">Início da vigência</label><input id="vigenciaInicio" type="date" th:field="*{vigenciaInicio}" required></div><div class="campo"><label for="vigenciaFim">Fim da vigência</label><input id="vigenciaFim" type="date" th:field="*{vigenciaFim}" required></div></div>
+            <p class="campo__ajuda">As datas inicial e final são incluídas. A vigência deve conter pelo menos uma ocorrência atual ou futura. Horários não atravessam a meia-noite.</p>
+            <div class="campos-linha"><div class="campo"><label for="horarioInicio">Início</label><input id="horarioInicio" type="time" th:field="*{horarioInicio}" required></div><div class="campo"><label for="horarioFim">Fim</label><input id="horarioFim" type="time" th:field="*{horarioFim}" required></div></div>
+            <div class="campo"><label for="motivo">Motivo</label><textarea id="motivo" th:field="*{motivo}" maxlength="200" required aria-describedby="motivo-help"></textarea><p id="motivo-help" class="campo__ajuda">Informe uma justificativa objetiva, com até 200 caracteres.</p></div>
+            <div class="grupo-botoes formulario-painel__acoes"><button class="botao" type="submit">Cadastrar regra semanal</button><a class="botao botao--fantasma" th:href="@{/admin/bloqueios}">Cancelar</a></div>
+        </form>
+    </main>
+    <footer th:replace="~{fragments/layout :: rodape}"></footer>
+</body>
+</html>

@@ -25,6 +25,7 @@ import br.com.courttime.repository.UsuarioRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import br.com.courttime.support.BancoDeTeste;
+import br.com.courttime.repository.BloqueioSemanalQuadraRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -60,6 +61,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @EnabledIfEnvironmentVariable(named = "COURTTIME_POSTGRES_TEST", matches = "true")
 class DocumentoReservaPostgreSqlIntegrationTest {
+
+    @Autowired
+    private BloqueioSemanalQuadraRepository bloqueioSemanalRepository;
 
     private static final Path DIRETORIO = Path.of(
             System.getProperty("java.io.tmpdir"),
@@ -345,6 +349,7 @@ class DocumentoReservaPostgreSqlIntegrationTest {
         bloqueioRepository.deleteAllInBatch();
         disponibilidadeRepository.deleteAllInBatch();
         usuarioRepository.deleteAllInBatch();
+        bloqueioSemanalRepository.deleteAllInBatch();
         quadraRepository.deleteAllInBatch();
     }
 

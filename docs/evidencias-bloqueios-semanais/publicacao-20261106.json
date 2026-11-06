@@ -1,0 +1,553 @@
+{
+  "date": "2026-11-06",
+  "classification": "PUBLICADO E VALIDADO NA DEMONSTRACAO — SEM HOMOLOGACAO INSTITUCIONAL",
+  "url": "https://courttime-demo-k7g9.onrender.com",
+  "pullRequest": "https://github.com/arthur-amancio/CourtTime/pull/97",
+  "runtimeSha": "ffe12a29f5dc71a60f73432f44268480765ef52a",
+  "previousRuntimeSha": "3cdfccc8539d7e09ebaeb7626719b5f727564374",
+  "runtimeSrcMainTree": "a5fc7dae369aeb9066319ea2f1250e4f1e4dff8a",
+  "render": {
+    "service": "srv-dblr3k0m7kps73c2k8jg",
+    "deploy": "dep-dbmvv56tlv9c73c4i2d0",
+    "liveAtUtc": "2026-11-06T16:28:17.756884Z",
+    "plan": "free",
+    "autoDeploy": "no",
+    "configuredBranch": "chore/render-neon-demo-gratuita",
+    "futureDeployRule": "Select an exact compatible SHA; do not deploy the latest commit of the configured old branch.",
+    "healthPath": "/healthz",
+    "healthStatus": 200,
+    "profile": "render",
+    "ddlAuto": "validate",
+    "observedMemoryPeakMiB": 265,
+    "memoryLimitMiB": 512,
+    "memoryScope": "Five 60-second platform samples during functional checks; not a load-capacity certification."
+  },
+  "neon": {
+    "project": "autumn-silence-82807933",
+    "branch": "br-green-frog-beqgq6yr",
+    "database": "courttime_demo",
+    "postgresql": "16.15",
+    "plan": "free",
+    "entitiesBefore": 12,
+    "entitiesAfter": 13
+  },
+  "migration": {
+    "file": "scripts/deploy/20261105-bloqueios-semanais.sql",
+    "sha256": "71db8d5c4ac55481c7410b32f20dea3c744f80b482f9749411fb3eae9e9bac26",
+    "appliedOnce": true,
+    "transport": "Neon transaction connector, explicit database confirmation; exact DO/SET/CREATE statements from the reviewed SQL, BEGIN/COMMIT supplied by the transaction wrapper.",
+    "rehearsalChecks": 11,
+    "finalBackupRehearsalPassed": true,
+    "onlineSchemaEqualsRehearsedSchema": true,
+    "oldTableFingerprintsPreservedImmediatelyAfterMigration": 12,
+    "allOriginalRowsPreservedAfterBrowserChecks": true
+  },
+  "backup": {
+    "sourceQuiesced": true,
+    "otherOpenTransactions": 0,
+    "method": "Single SQL snapshot via Neon connector; exact public catalog comparison; typed restoration of all rows/sequences into isolated PG16; native pg_dump custom archive; encrypted private storage; authenticated download/decryption and fresh pg_restore verification. No native TCP route was configured in this cloud session.",
+    "snapshotAtUtc": "2026-11-06T16:23:27.613727+00:00",
+    "originalTables": 12,
+    "originalRows": 41,
+    "originalPdfCount": 1,
+    "originalPdfBytes": 14269,
+    "allRowsSchemaAndSequencesRestored": true,
+    "privateStorage": "Existing private S3 bucket, encrypted AES-256-GCM; recovery key supplied only in private task artifact.",
+    "encryptedBytes": 27508,
+    "encryptedSha256": "aa6e5d1b017a12686a423376e25c961b779791018af441809b0d13c716c356ab",
+    "dumpSha256": "5974b6ab09d00735bf9f63a4c03bd36841059b81b8e3f9df0f18a6030d4c9e68",
+    "remoteDownloadHashMatches": true,
+    "anonymousGetDenied": true,
+    "pdfMetadataHashAndBytesMatch": true,
+    "restoreToExistingOnlineDatabasePerformed": false
+  },
+  "browser": {
+    "startedAtUtc": "2026-11-06T16:30:08.691Z",
+    "finishedAtUtc": "2026-11-06T16:31:29.833Z",
+    "checksPassed": 63,
+    "checksFailed": 0,
+    "axeScans": 4,
+    "axeViolations": 0,
+    "checks": [
+      {
+        "name": "Login ADMINISTRADOR",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:12.207Z"
+      },
+      {
+        "name": "Login ALUNO",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:14.718Z"
+      },
+      {
+        "name": "Login SECRETARIA",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:17.113Z"
+      },
+      {
+        "name": "Login SEGURANCA",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:20.121Z"
+      },
+      {
+        "name": "Cadastro semanal e pontual disponíveis",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:20.526Z"
+      },
+      {
+        "name": "PDF antigo/hash preservado",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:20.947Z"
+      },
+      {
+        "name": "Reserva antiga aprovada e contribuição preservadas",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:21.513Z"
+      },
+      {
+        "name": "Portaria recusa reserva antiga já vencida",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:21.827Z"
+      },
+      {
+        "name": "Lista antiga preservada para proprietário",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:22.729Z"
+      },
+      {
+        "name": "PDF antigo privado",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:22.882Z"
+      },
+      {
+        "name": "Nova reserva sintética pending",
+        "pass": true,
+        "detail": {
+          "id": 3,
+          "date": "2026-11-23",
+          "time": "08:00"
+        },
+        "at": "2026-11-06T16:30:26.329Z"
+      },
+      {
+        "name": "Dez participantes sintéticos pending",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:45.952Z"
+      },
+      {
+        "name": "Upload sintético privado pending",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:48.509Z"
+      },
+      {
+        "name": "Conferência sintética pending",
+        "pass": true,
+        "detail": "Somente simulação da demonstração; sem assinatura real nem verificação ITI.",
+        "at": "2026-11-06T16:30:49.938Z"
+      },
+      {
+        "name": "Contribuição sintética pending",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:30:51.717Z"
+      },
+      {
+        "name": "Nova reserva sintética approved",
+        "pass": true,
+        "detail": {
+          "id": 4,
+          "date": "2026-12-01",
+          "time": "10:00"
+        },
+        "at": "2026-11-06T16:30:52.949Z"
+      },
+      {
+        "name": "Dez participantes sintéticos approved",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:07.685Z"
+      },
+      {
+        "name": "Upload sintético privado approved",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:09.506Z"
+      },
+      {
+        "name": "Conferência sintética approved",
+        "pass": true,
+        "detail": "Somente simulação da demonstração; sem assinatura real nem verificação ITI.",
+        "at": "2026-11-06T16:31:10.465Z"
+      },
+      {
+        "name": "Contribuição sintética approved",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:12.018Z"
+      },
+      {
+        "name": "Nova aprovação approved",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:13.454Z"
+      },
+      {
+        "name": "Segurança consulta nova reserva futura autorizada",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:13.886Z"
+      },
+      {
+        "name": "Cadastro semanal confirmado",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:14.965Z"
+      },
+      {
+        "name": "Segunda-feira recorrente bloqueada 2026-11-16",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:15.488Z"
+      },
+      {
+        "name": "Horário adjacente disponível 2026-11-16",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:15.489Z"
+      },
+      {
+        "name": "Segunda-feira recorrente bloqueada 2026-11-23",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:16.019Z"
+      },
+      {
+        "name": "Horário adjacente disponível 2026-11-23",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:16.019Z"
+      },
+      {
+        "name": "Segunda-feira recorrente bloqueada 2026-11-30",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:16.615Z"
+      },
+      {
+        "name": "Horário adjacente disponível 2026-11-30",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:16.615Z"
+      },
+      {
+        "name": "Fora da vigência ou dia 2026-11-09",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:17.112Z"
+      },
+      {
+        "name": "Fora da vigência ou dia 2026-12-07",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:17.579Z"
+      },
+      {
+        "name": "Fora da vigência ou dia 2026-11-17",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:18.120Z"
+      },
+      {
+        "name": "Backend recusa solicitação bloqueada",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:18.878Z"
+      },
+      {
+        "name": "Aprovação revalida bloqueio semanal",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:19.443Z"
+      },
+      {
+        "name": "Regra conflitante com aprovada recusada",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:19.803Z"
+      },
+      {
+        "name": "Vigência invertida recusada no backend",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:19.910Z"
+      },
+      {
+        "name": "Cadastro semanal exige CSRF",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:20.003Z"
+      },
+      {
+        "name": "Desativação exige CSRF",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:20.093Z"
+      },
+      {
+        "name": "ALUNO não abre formulário",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:20.344Z"
+      },
+      {
+        "name": "ALUNO não cadastra regra",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:20.705Z"
+      },
+      {
+        "name": "ALUNO não desativa regra",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:20.789Z"
+      },
+      {
+        "name": "SECRETARIA não abre formulário",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:21.044Z"
+      },
+      {
+        "name": "SECRETARIA não cadastra regra",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:21.433Z"
+      },
+      {
+        "name": "SECRETARIA não desativa regra",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:21.551Z"
+      },
+      {
+        "name": "SEGURANCA não abre formulário",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:21.824Z"
+      },
+      {
+        "name": "SEGURANCA não cadastra regra",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:22.191Z"
+      },
+      {
+        "name": "SEGURANCA não desativa regra",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:22.294Z"
+      },
+      {
+        "name": "Anônimo precisa autenticar",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:23.551Z"
+      },
+      {
+        "name": "Bloqueio pontual continua cadastrável",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:24.194Z"
+      },
+      {
+        "name": "lista sem overflow 1440",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:24.825Z"
+      },
+      {
+        "name": "Axe lista 1440",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:25.301Z"
+      },
+      {
+        "name": "formulario sem overflow 1440",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:25.763Z"
+      },
+      {
+        "name": "Axe formulario 1440",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:26.194Z"
+      },
+      {
+        "name": "lista sem overflow 390",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:26.522Z"
+      },
+      {
+        "name": "Axe lista 390",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:26.843Z"
+      },
+      {
+        "name": "formulario sem overflow 390",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:27.256Z"
+      },
+      {
+        "name": "Axe formulario 390",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:27.487Z"
+      },
+      {
+        "name": "Desativação da regra inteira confirmada",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:28.313Z"
+      },
+      {
+        "name": "Desativação restaura disponibilidade 2026-11-16",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:28.781Z"
+      },
+      {
+        "name": "Pontual continua bloqueando após desativação",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:28.782Z"
+      },
+      {
+        "name": "Desativação restaura disponibilidade 2026-11-30",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:29.250Z"
+      },
+      {
+        "name": "Regra inativa permanece no histórico",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:29.605Z"
+      },
+      {
+        "name": "Somente pontual sintético desativado",
+        "pass": true,
+        "detail": null,
+        "at": "2026-11-06T16:31:29.832Z"
+      }
+    ],
+    "scans": [
+      {
+        "name": "lista",
+        "width": 1440,
+        "violations": []
+      },
+      {
+        "name": "formulario",
+        "width": 1440,
+        "violations": []
+      },
+      {
+        "name": "lista",
+        "width": 390,
+        "violations": []
+      },
+      {
+        "name": "formulario",
+        "width": 390,
+        "violations": []
+      }
+    ],
+    "validationAdjustment": "Initial QA expected the old 05/11 reservation to be visible to Security after expiry. Source confirms Security only lists current/future approved reservations; the QA expectation was corrected to 404. No runtime or old reservation was changed.",
+    "financialAndDocumentSteps": "Synthetic conference and contribution only; no real signature/ITI verification or receipt of funds."
+  },
+  "syntheticRecords": {
+    "weeklyRuleId": 1,
+    "weeklyDates": [
+      "2026-11-16",
+      "2026-11-23",
+      "2026-11-30"
+    ],
+    "weeklyHours": "08:00–10:00",
+    "weeklyActiveAtEnd": false,
+    "pointBlockId": 1,
+    "pointActiveAtEnd": false,
+    "pendingReservation": {
+      "id": 3,
+      "date": "2026-11-23",
+      "time": "08:00",
+      "participants": true,
+      "documentId": 2,
+      "checked": true,
+      "paid": true
+    },
+    "approvedReservation": {
+      "id": 4,
+      "date": "2026-12-01",
+      "time": "10:00",
+      "participants": true,
+      "documentId": 3,
+      "checked": true,
+      "paid": true,
+      "approved": true
+    },
+    "existingReservations1And2Unchanged": true,
+    "noOfficialClassScheduleAssumed": true
+  },
+  "reusedCi": {
+    "javaUrl": "https://github.com/arthur-amancio/CourtTime/actions/runs/41966950741",
+    "javaHead": "0e778a2a3c48c9a0389daf53d031b80b9c12c814",
+    "javaExecuted": 550,
+    "javaDeclared": 553,
+    "optionalS3Skipped": 3,
+    "postgresqlMatrix": [
+      16,
+      18
+    ],
+    "browserUrl": "https://github.com/arthur-amancio/CourtTime/actions/runs/41967193341",
+    "browserHead": "e813b20b255c5f3fa73629713dcec77880d2ab80",
+    "browserChecks": 1176,
+    "axeScans": 48,
+    "runtimeAndTestsIdenticalToPublishedSource": true,
+    "identicalJavaSuiteRerun": false
+  },
+  "recovery": {
+    "oldRuntimeRollbackForbiddenWhileAnyWeeklyRuleActive": true,
+    "preserveWeeklyTableAndHistory": true,
+    "neverDeactivateRulesMerelyToAllowRollback": true,
+    "restoreIntoNewDestinationsOnly": true,
+    "reconcilePostBackupWrites": true,
+    "preferCompatible13EntityArtifactOrSuspendForOwnerDecision": true
+  },
+  "academicSyncOnly": [
+    "Capítulo IV: requisito/caso de uso de bloqueio semanal e disponibilidade.",
+    "Capítulo V: classe/dicionário; Apêndice A/DER: tabela e FK quadra_id.",
+    "Capítulo VII: programação/tecnologias/testes e publicação demonstrativa; stack preservada.",
+    "Monografia de 98 páginas, slides, diagramas congelados e Drive não foram editados; pesquisa/Apêndice B não muda."
+  ],
+  "limits": [
+    "No merge/main change, paid service, permission change, data deletion, reseed or SQL date change.",
+    "Free-tier cold start and demo-only hosting limitations remain.",
+    "Repository PR integration and institutional approval remain separate."
+  ]
+}

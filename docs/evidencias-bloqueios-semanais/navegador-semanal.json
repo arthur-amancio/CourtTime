@@ -1,0 +1,222 @@
+{
+  "sha": "e813b20b255c5f3fa73629713dcec77880d2ab80",
+  "inicio": "2027-04-05",
+  "fim": "2027-04-26",
+  "axeScans": 4,
+  "scans": [
+    {
+      "pagina": "/admin/bloqueios",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "pagina": "/admin/bloqueios/semanais/novo",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "pagina": "/admin/bloqueios",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "pagina": "/admin/bloqueios/semanais/novo",
+      "width": 390,
+      "violations": []
+    }
+  ],
+  "results": [
+    {
+      "status": "PASS",
+      "name": "painel oferece cadastro semanal e mantém cadastro pontual"
+    },
+    {
+      "status": "PASS",
+      "name": "link pontual anterior continua acessível"
+    },
+    {
+      "status": "PASS",
+      "name": "cadastro semanal exige CSRF"
+    },
+    {
+      "status": "PASS",
+      "name": "administrador cadastra regra pela interface"
+    },
+    {
+      "status": "PASS",
+      "name": "consulta apresenta dia, vigência, motivo e estado da regra"
+    },
+    {
+      "status": "PASS",
+      "name": "motivo é exibido como texto, sem executar script"
+    },
+    {
+      "status": "PASS",
+      "name": "desativação semanal exige CSRF"
+    },
+    {
+      "status": "PASS",
+      "name": "recorrência bloqueia sobreposições em 2027-04-05"
+    },
+    {
+      "status": "PASS",
+      "name": "intervalo adjacente permanece disponível em 2027-04-05"
+    },
+    {
+      "status": "PASS",
+      "name": "recorrência bloqueia sobreposições em 2027-04-12"
+    },
+    {
+      "status": "PASS",
+      "name": "intervalo adjacente permanece disponível em 2027-04-12"
+    },
+    {
+      "status": "PASS",
+      "name": "recorrência bloqueia sobreposições em 2027-04-26"
+    },
+    {
+      "status": "PASS",
+      "name": "intervalo adjacente permanece disponível em 2027-04-26"
+    },
+    {
+      "status": "PASS",
+      "name": "fora do dia ou vigência permanece livre em 2027-03-29"
+    },
+    {
+      "status": "PASS",
+      "name": "fora do dia ou vigência permanece livre em 2027-05-03"
+    },
+    {
+      "status": "PASS",
+      "name": "fora do dia ou vigência permanece livre em 2027-04-06"
+    },
+    {
+      "status": "PASS",
+      "name": "servidor recusa solicitação forjada em período semanal bloqueado"
+    },
+    {
+      "status": "PASS",
+      "name": "várias consultas mantêm uma única regra persistida"
+    },
+    {
+      "status": "PASS",
+      "name": "consultas não geram ocorrências nem alteram bloqueios pontuais"
+    },
+    {
+      "status": "PASS",
+      "name": "vigência invertida é recusada no servidor"
+    },
+    {
+      "status": "PASS",
+      "name": "vigência sem o dia informado é recusada"
+    },
+    {
+      "status": "PASS",
+      "name": "regra que atinge reserva aprovada é recusada na interface"
+    },
+    {
+      "status": "PASS",
+      "name": "cadastros inválidos não deixam regras persistidas"
+    },
+    {
+      "status": "PASS",
+      "name": "alunoA não abre formulário administrativo"
+    },
+    {
+      "status": "PASS",
+      "name": "alunoA não cadastra regra por POST direto"
+    },
+    {
+      "status": "PASS",
+      "name": "alunoA não desativa regra de outro perfil"
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não abre formulário administrativo"
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não cadastra regra por POST direto"
+    },
+    {
+      "status": "PASS",
+      "name": "secretaria não desativa regra de outro perfil"
+    },
+    {
+      "status": "PASS",
+      "name": "seguranca não abre formulário administrativo"
+    },
+    {
+      "status": "PASS",
+      "name": "seguranca não cadastra regra por POST direto"
+    },
+    {
+      "status": "PASS",
+      "name": "seguranca não desativa regra de outro perfil"
+    },
+    {
+      "status": "PASS",
+      "name": "anônimo precisa autenticar"
+    },
+    {
+      "status": "PASS",
+      "name": "lista sem overflow global em 1440px"
+    },
+    {
+      "status": "PASS",
+      "name": "motivo longo legível dentro da célula em 1440px"
+    },
+    {
+      "status": "PASS",
+      "name": "lista: axe sem violações em 1440px"
+    },
+    {
+      "status": "PASS",
+      "name": "formulario sem overflow global em 1440px"
+    },
+    {
+      "status": "PASS",
+      "name": "formulario: axe sem violações em 1440px"
+    },
+    {
+      "status": "PASS",
+      "name": "lista sem overflow global em 390px"
+    },
+    {
+      "status": "PASS",
+      "name": "motivo longo legível dentro da célula em 390px"
+    },
+    {
+      "status": "PASS",
+      "name": "lista: axe sem violações em 390px"
+    },
+    {
+      "status": "PASS",
+      "name": "formulario sem overflow global em 390px"
+    },
+    {
+      "status": "PASS",
+      "name": "formulario: axe sem violações em 390px"
+    },
+    {
+      "status": "PASS",
+      "name": "desativação inteira confirmada pela interface"
+    },
+    {
+      "status": "PASS",
+      "name": "regra desativada permanece consultável"
+    },
+    {
+      "status": "PASS",
+      "name": "desativação libera a recorrência em 2027-04-05"
+    },
+    {
+      "status": "PASS",
+      "name": "bloqueio pontual permanece após desativação semanal"
+    },
+    {
+      "status": "PASS",
+      "name": "desativação libera a recorrência em 2027-04-26"
+    }
+  ]
+}

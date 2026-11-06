@@ -22,6 +22,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * Mantém contas e auditoria de operações administrativas. Senhas são codificadas e alterações
+ * relevantes incrementam a versão de acesso, invalidando sessões anteriores.
+ */
 @Service
 public class AdministracaoUsuarioService {
 
