@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Fragmentos de layout do CourtTime</title>
+    <title>Fragmentos de layout do Court Time</title>
 </head>
 <body class="app-autenticado">
 <!--
@@ -31,7 +31,7 @@
 <header th:fragment="topo" class="topo-app">
     <a class="marca marca--clara" th:href="@{/inicio}">
         <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
-        <span class="marca__nome">CourtTime</span>
+        <span class="marca__nome">Court Time</span>
     </a>
     <a class="topo-app__menu" href="#menu-principal" data-menu-link>
         <svg th:replace="~{fragments/icones :: icone('menu')}"></svg>
@@ -49,7 +49,7 @@
         <a class="marca marca--clara" th:href="@{/inicio}">
             <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
             <span class="marca__texto">
-                <span class="marca__nome">CourtTime</span>
+                <span class="marca__nome">Court Time</span>
                 <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
             </span>
         </a>
@@ -86,7 +86,7 @@
 <footer th:fragment="rodape" class="rodape-app">
     <img class="logos-institucionais logos-institucionais--sm" th:src="@{/img/logos-etec-cps-governo-sp.png}" src="/img/logos-etec-cps-governo-sp.png"
          width="563" height="89" alt="ETEC Prof. Armando José Farinazzo, Centro Paula Souza e Governo do Estado de São Paulo">
-    <p><strong>CourtTime</strong> · ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
+    <p><strong>Court Time</strong> · ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
     <p>Trabalho de Conclusão de Curso · Técnico em Informática para Internet</p>
 </footer>
 

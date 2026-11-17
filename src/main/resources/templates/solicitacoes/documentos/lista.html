@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CourtTime | Documentos enviados</title>
+    <title>Court Time | Documentos enviados</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
     <script th:replace="~{fragments/layout :: script}"></script>
     <script th:src="@{/js/envio-pdf.js}" src="/js/envio-pdf.js" defer></script>
@@ -37,7 +37,7 @@
             <div class="cabecalho-pagina__texto">
                 <p class="sobretitulo" th:text="|Solicitação #${solicitacao.id}|">Solicitação #16</p>
                 <h1>Documentos enviados</h1>
-                <p>Consulte as versões enviadas para esta solicitação. O CourtTime guarda cada original sem alterações e não valida assinaturas.</p>
+                <p>Consulte as versões enviadas para esta solicitação. O Court Time guarda cada original sem alterações e não valida assinaturas.</p>
             </div>
         </header>
 
@@ -48,10 +48,10 @@
                 </div>
                 <form class="painel__corpo pilha pilha--compacta" method="post"
                       th:action="@{/solicitacoes/{id}/formulario-oficial(id=${solicitacao.id})}">
-                    <p>O CourtTime preenche o formulário original da ETEC com a data, o horário e os participantes cadastrados. Baixe, assine pelo gov.br e envie o PDF assinado logo abaixo.</p>
+                    <p>O Court Time preenche o formulário original da ETEC com a data, o horário e os participantes cadastrados. Baixe, assine pelo gov.br e envie o PDF assinado logo abaixo.</p>
                     <div class="alerta alerta--aviso" role="note">
                         <svg th:replace="~{fragments/icones :: icone('alerta')}"></svg>
-                        <p>A regra atual do CourtTime exige dez participantes no total, contando Aluno e Outro. O modelo oficial disponível ainda menciona dez alunos. Confirme essa divergência com a secretaria antes de assinar ou enviar o formulário.</p>
+                        <p>A regra atual do Court Time exige dez participantes no total, contando Aluno e Outro. O modelo oficial disponível ainda menciona dez alunos. Confirme essa divergência com a secretaria antes de assinar ou enviar o formulário.</p>
                     </div>
                     <div class="campos-linha">
                         <div class="campo">
@@ -87,7 +87,7 @@
                         <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
                         <div>
                             <p><strong>Assinatura pelo gov.br</strong></p>
-                            <p>Assine o PDF pelo gov.br (assinatura eletrônica gratuita da conta gov.br). A secretaria confere a assinatura no verificador oficial. O envio ao CourtTime não comprova nem valida a assinatura.</p>
+                            <p>Assine o PDF pelo gov.br (assinatura eletrônica gratuita da conta gov.br). A secretaria confere a assinatura no verificador oficial. O envio ao Court Time não comprova nem valida a assinatura.</p>
                             <ul>
                                 <li>Antes do envio, confira se a lista do documento corresponde ao cadastro e contém no mínimo dez participantes de qualquer categoria.</li>
                                 <li>Use o formulário oficial da ETEC: gere-o preenchido abaixo ou peça o impresso na secretaria.</li>

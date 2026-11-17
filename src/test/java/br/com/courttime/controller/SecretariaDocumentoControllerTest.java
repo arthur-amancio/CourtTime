@@ -136,7 +136,7 @@ class SecretariaDocumentoControllerTest {
                 .andExpect(content().string(containsString("https://validar.iti.gov.br")))
                 .andExpect(content().string(containsString(
                         "Conferi a assinatura gov.br no verificador oficial do ITI")))
-                .andExpect(content().string(containsString("O CourtTime não verifica a assinatura")));
+                .andExpect(content().string(containsString("O Court Time não verifica a assinatura")));
 
         mockMvc.perform(get("/secretaria/documentos/30/baixar")
                         .with(user(secretaria.getEmail()).roles("SECRETARIA")))

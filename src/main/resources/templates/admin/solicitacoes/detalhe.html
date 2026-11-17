@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CourtTime | Analisar solicitação</title>
+    <title>Court Time | Analisar solicitação</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
     <script th:replace="~{fragments/layout :: script}"></script>
 </head>
@@ -192,7 +192,7 @@
                         </div>
                         <div class="alerta alerta--neutro bloco-espaco">
                             <svg th:replace="~{fragments/icones :: icone('info')}"></svg>
-                            <p><strong>Depois de registrar, avise o aluno pelo WhatsApp.</strong> O CourtTime não envia mensagens.</p>
+                            <p><strong>Depois de registrar, avise o aluno pelo WhatsApp.</strong> O Court Time não envia mensagens.</p>
                         </div>
                         <form method="post" th:action="@{/admin/solicitacoes/{id}/cancelar(id=${detalhe.solicitacao.id})}">
                             <div class="campo">
@@ -214,7 +214,7 @@
                             <div><dt>Responsável</dt><dd th:text="${detalhe.solicitacao.canceladaPor.nome}">Administrador</dd></div>
                             <div><dt>Data do registro</dt><dd th:text="${#temporals.format(detalhe.solicitacao.canceladaEm, 'dd/MM/yyyy HH:mm')}">19/10/2026 10:00</dd></div>
                         </dl>
-                        <p class="campo__ajuda bloco-texto" th:if="${remarcacao == null}">O CourtTime não avisa o aluno: o aviso é feito pelo WhatsApp. Se ele pedir outro horário, a nova solicitação passa por todas as etapas.</p>
+                        <p class="campo__ajuda bloco-texto" th:if="${remarcacao == null}">O Court Time não avisa o aluno: o aviso é feito pelo WhatsApp. Se ele pedir outro horário, a nova solicitação passa por todas as etapas.</p>
                         <p class="bloco-texto" th:if="${remarcacao != null}">
                             O aluno pediu outro horário:
                             <a th:href="@{/admin/solicitacoes/{id}(id=${remarcacao.id})}"

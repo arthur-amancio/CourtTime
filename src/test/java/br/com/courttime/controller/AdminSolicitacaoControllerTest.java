@@ -240,7 +240,7 @@ class AdminSolicitacaoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Interdição da quadra")))
                 .andExpect(content().string(containsString(
-                        "O CourtTime não avisa o aluno: o aviso é feito pelo WhatsApp")));
+                        "O Court Time não avisa o aluno: o aviso é feito pelo WhatsApp")));
     }
 
     @Test
