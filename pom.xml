@@ -11,7 +11,7 @@
     <groupId>br.com.courttime</groupId>
     <artifactId>courttime</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>CourtTime</name>
+    <name>Court Time</name>
     <description>Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas</description>
     <properties>
         <java.version>17</java.version>
