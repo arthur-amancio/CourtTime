@@ -47,7 +47,7 @@ public class SecurityConfig {
         }
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/css/**", "/img/**", "/login", "/healthz").permitAll()
+                        .requestMatchers("/", "/css/**", "/img/**", "/favicon.ico", "/favicon.svg", "/login", "/healthz").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/secretaria/**").hasRole("SECRETARIA")
                         .requestMatchers("/seguranca/**").hasRole("SEGURANCA")
