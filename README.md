@@ -1,4 +1,4 @@
-# CourtTime
+# Court Time
 
 Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas. Trabalho de Conclusão de Curso do Técnico em Informática para Internet da ETEC Professor Armando José Farinazzo, Fernandópolis/SP, 2026.
 
@@ -18,7 +18,7 @@ O domínio de reservas registra solicitante, quadra, data, período de uma hora,
 
 Na aprovação, o backend bloqueia a solicitação e o registro da única quadra durante a transação. Antes de autorizar, revalida o administrador, o documento e sua conferência manual, a revisão e o mínimo total de participantes, a contribuição vinculada à conferência exata, os horários semanais, os bloqueios e as reservas já aprovadas. Essa serialização impede decisões repetidas e aprovações concorrentes para períodos conflitantes.
 
-O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O aluno salva um rascunho, cadastra ao menos dez participantes e então prossegue para a documentação. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Nessa etapa, o aluno pode revisar os participantes da própria solicitação e enviar versões do PDF preparado externamente. O CourtTime preserva cada arquivo original sem modificá-lo e não declara que a assinatura foi validada.
+O formulário do aluno utiliza apenas períodos realmente disponíveis e identifica o solicitante pela sessão autenticada. O aluno salva um rascunho, cadastra ao menos dez participantes e então prossegue para a documentação. O envio não autoriza imediatamente o uso da quadra: a solicitação permanece como `PENDENTE_DOCUMENTACAO`. Nessa etapa, o aluno pode revisar os participantes da própria solicitação e enviar versões do PDF preparado externamente. O Court Time preserva cada arquivo original sem modificá-lo e não declara que a assinatura foi validada.
 
 ## Regras da ETEC
 
@@ -174,7 +174,7 @@ O upload aceita somente arquivos `.pdf` de até 10 MB como limite técnico. O co
 
 Na mesma tela, enquanto a solicitação aguarda documentação, o aluno informa CPF e curso e baixa o **formulário oficial da ETEC preenchido** com o nome do solicitante, a data, o horário, a data de preenchimento e os participantes. O arquivo original (`src/main/resources/modelos/formulario-reserva-quadra.pdf`) é usado como modelo sem alteração: o texto é sobreposto com Apache PDFBox. CPF e curso não são gravados; o CPF é enviado por POST e conferido pelos dígitos verificadores. Acima de 30 participantes, a página oficial de participantes é repetida, sem omitir ninguém. Assinaturas, presença, nome do vigilante e data de aprovação nunca são preenchidos pelo sistema. Detalhes e coordenadas em `docs/integracao-pdf-oficial.md`.
 
-A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. A validação exige que a lista não tenha mudado e contenha ao menos dez participantes no total, conforme a instrução atual do grupo. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência é humana (R07): para validar, a secretaria confirma que conferiu a assinatura gov.br no verificador oficial do ITI (`validar.iti.gov.br`), e essa confirmação fica registrada. O CourtTime não verifica a assinatura sozinho e a validação não aprova a reserva. A política de retenção e descarte dos documentos ainda depende da ETEC; até lá, nada é apagado.
+A secretaria pode conferir somente a versão mais recente, validá-la ou devolvê-la com justificativa. A validação exige que a lista não tenha mudado e contenha ao menos dez participantes no total, conforme a instrução atual do grupo. Cada decisão preserva o PDF e registra resultado, responsável e data. A conferência é humana (R07): para validar, a secretaria confirma que conferiu a assinatura gov.br no verificador oficial do ITI (`validar.iti.gov.br`), e essa confirmação fica registrada. O Court Time não verifica a assinatura sozinho e a validação não aprova a reserva. A política de retenção e descarte dos documentos ainda depende da ETEC; até lá, nada é apagado.
 
 ## Contribuições presenciais
 
@@ -186,7 +186,7 @@ A secretaria não digita o valor: ela confirma o recebimento do valor calculado.
 
 A fila de análise apresenta somente solicitações prontas para análise; as reservas autorizadas atuais e futuras aparecem logo abaixo, e as rejeitadas e canceladas ficam numa terceira lista, para consulta. O painel conta as solicitações por situação, inclusive as canceladas. O detalhe reúne solicitante, data, horário, finalidade, participantes, metadados do PDF e da conferência e a contribuição presencial. O administrador pode baixar o PDF original por uma rota privada, aprovar sem justificativa ou rejeitar com motivo obrigatório. A aprovação revalida todos os pré-requisitos dentro da transação e somente `APROVADA` representa autorização de uso. Depois da decisão, o detalhe mostra o resultado, o responsável, a data e, na rejeição, o motivo informado ao aluno.
 
-O modelo oficial do termo já está no projeto e é usado para gerar o formulário preenchido. O documento é assinado pelo gov.br e conferido pela secretaria (R07): o CourtTime não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
+O modelo oficial do termo já está no projeto e é usado para gerar o formulário preenchido. O documento é assinado pelo gov.br e conferido pela secretaria (R07): o Court Time não modifica PDFs enviados e não afirma realizar validação criptográfica de assinatura.
 
 ## Consulta da segurança
 
