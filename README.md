@@ -1,4 +1,41 @@
-# CourtTime
+# CourtTime — agendamento de quadras da ETEC
+
+**Da solicitação do aluno à conferência na portaria.**
+
+Sistema web acadêmico desenvolvido em equipe como TCC de Informática para Internet na ETEC Prof. Armando José Farinazzo. Organiza o agendamento da quadra, a lista de participantes, a documentação, o registro da contribuição presencial e a autorização de uso.
+
+**Java 17 · Spring Boot · Thymeleaf · Spring Security · PostgreSQL · Apache PDFBox**
+
+[Execução local](docs/desenvolvimento-local-rapido.md) · [Regras da ETEC](docs/regras-etec.md) · [Testes e build](#testes-e-build)
+
+## Visão geral
+
+| Perfil | Participação no processo |
+|---|---|
+| Aluno | Consulta horários, solicita a reserva, organiza participantes e envia o PDF assinado. |
+| Secretaria | Confere a documentação e registra o recebimento presencial da contribuição à APM. |
+| Administração | Analisa as solicitações e gerencia horários, bloqueios e usuários. |
+| Segurança | Consulta reservas autorizadas e registra a presença no dia do uso. |
+
+O fluxo principal é: **solicitação → participantes e PDF → conferência documental → contribuição presencial → análise administrativa → conferência na portaria**.
+
+### Destaques técnicos
+
+- Disponibilidade calculada a partir dos horários cadastrados, bloqueios e reservas aprovadas.
+- Aprovação transacional com revalidação para evitar autorizações conflitantes.
+- PDFs privados, versionados e vinculados à revisão da lista de participantes.
+- Autorização por perfil e proprietário, proteção CSRF e senhas com BCrypt.
+- Testes automatizados e integração com PostgreSQL 16 e 18 no GitHub Actions.
+
+A contribuição é recebida presencialmente. A assinatura é conferida pela secretaria no verificador do ITI. A reserva só autoriza o uso depois da aprovação administrativa.
+
+### Interface documentada
+
+![Consulta da quadra na interface documentada do CourtTime](docs/evidencias/baseline-436b262/aluno-quadra-1440.png)
+
+*Captura da baseline `436b262`, preservada no repositório como evidência de interface; o código atual pode apresentar diferenças.*
+
+## Documentação funcional e técnica
 
 Sistema Web de Gerenciamento e Agendamento de Quadras Esportivas. Trabalho de Conclusão de Curso do Técnico em Informática para Internet da ETEC Professor Armando José Farinazzo, Fernandópolis/SP, 2026.
 
