@@ -52,7 +52,7 @@ class PaginasPublicasTest {
     void homePageIsPublic() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("CourtTime")))
+                .andExpect(content().string(containsString("Court Time")))
                 .andExpect(content().string(containsString(
                         "Consulta e solicitação de uso da quadra")))
                 .andExpect(content().string(containsString("/css/style.css")))
