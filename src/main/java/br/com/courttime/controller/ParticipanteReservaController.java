@@ -9,8 +9,6 @@ import br.com.courttime.security.UsuarioAtual;
 import br.com.courttime.service.ParticipanteReservaService;
 import br.com.courttime.service.ReservaService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -41,18 +38,14 @@ public class ParticipanteReservaController {
             @PathVariable Long reservaId,
             @UsuarioAtual Usuario usuario,
             Model model) {
-        try {
-            Reserva reserva = reservaService.obterSolicitacaoDoUsuario(reservaId, usuario);
-            model.addAttribute("solicitacao", reserva);
-            model.addAttribute("participantes", participanteService.listar(reservaId, usuario));
-            model.addAttribute("resumo", participanteService.resumir(reservaId, usuario));
-            model.addAttribute(
-                    "edicaoPermitida",
-                    participanteService.podeAlterar(reservaId, usuario));
-            return "solicitacoes/participantes/lista";
-        } catch (AccessDeniedException exception) {
-            throw paginaNaoEncontrada();
-        }
+        Reserva reserva = reservaService.obterSolicitacaoDoUsuario(reservaId, usuario);
+        model.addAttribute("solicitacao", reserva);
+        model.addAttribute("participantes", participanteService.listar(reservaId, usuario));
+        model.addAttribute("resumo", participanteService.resumir(reservaId, usuario));
+        model.addAttribute(
+                "edicaoPermitida",
+                participanteService.podeAlterar(reservaId, usuario));
+        return "solicitacoes/participantes/lista";
     }
 
     @GetMapping("/novo")
@@ -103,8 +96,6 @@ public class ParticipanteReservaController {
             return "solicitacoes/participantes/formulario";
         } catch (IllegalStateException exception) {
             return redirecionarErro(reservaId, exception.getMessage(), redirectAttributes);
-        } catch (AccessDeniedException exception) {
-            throw paginaNaoEncontrada();
         }
     }
 
@@ -119,19 +110,15 @@ public class ParticipanteReservaController {
         if (!participanteService.podeAlterar(reservaId, usuario)) {
             return redirecionarEdicaoBloqueada(reservaId, redirectAttributes);
         }
-        try {
-            ParticipanteReserva participante = participanteService.obter(
-                    reservaId, participanteId, usuario);
-            ParticipanteReservaForm form = new ParticipanteReservaForm();
-            form.setNomeCompleto(participante.getNomeCompleto());
-            form.setRmOuRg(participante.getRmOuRg());
-            form.setCategoria(participante.getCategoria());
-            form.setVinculo(participante.getVinculo());
-            prepararFormulario(model, reserva, form, participanteId, "Editar participante");
-            return "solicitacoes/participantes/formulario";
-        } catch (AccessDeniedException exception) {
-            throw paginaNaoEncontrada();
-        }
+        ParticipanteReserva participante = participanteService.obter(
+                reservaId, participanteId, usuario);
+        ParticipanteReservaForm form = new ParticipanteReservaForm();
+        form.setNomeCompleto(participante.getNomeCompleto());
+        form.setRmOuRg(participante.getRmOuRg());
+        form.setCategoria(participante.getCategoria());
+        form.setVinculo(participante.getVinculo());
+        prepararFormulario(model, reserva, form, participanteId, "Editar participante");
+        return "solicitacoes/participantes/formulario";
     }
 
     @PostMapping("/{participanteId}")
@@ -169,8 +156,6 @@ public class ParticipanteReservaController {
             return "solicitacoes/participantes/formulario";
         } catch (IllegalStateException exception) {
             return redirecionarErro(reservaId, exception.getMessage(), redirectAttributes);
-        } catch (AccessDeniedException exception) {
-            throw paginaNaoEncontrada();
         }
     }
 
@@ -187,8 +172,6 @@ public class ParticipanteReservaController {
             return redirecionarLista(reservaId);
         } catch (IllegalStateException exception) {
             return redirecionarErro(reservaId, exception.getMessage(), redirectAttributes);
-        } catch (AccessDeniedException exception) {
-            throw paginaNaoEncontrada();
         }
     }
 
@@ -209,13 +192,8 @@ public class ParticipanteReservaController {
     }
 
     private Reserva obterSolicitacao(Long reservaId, Usuario usuario) {
-        try {
-            return reservaService.obterSolicitacaoDoUsuario(reservaId, usuario);
-        } catch (AccessDeniedException exception) {
-            throw paginaNaoEncontrada();
-        }
+        return reservaService.obterSolicitacaoDoUsuario(reservaId, usuario);
     }
-
 
     private String redirecionarEdicaoBloqueada(
             Long reservaId, RedirectAttributes redirectAttributes) {
@@ -235,7 +213,4 @@ public class ParticipanteReservaController {
         return "redirect:/solicitacoes/" + reservaId + "/participantes";
     }
 
-    private ResponseStatusException paginaNaoEncontrada() {
-        return new ResponseStatusException(HttpStatus.NOT_FOUND);
-    }
 }

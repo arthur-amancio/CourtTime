@@ -6,6 +6,7 @@ import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.AuditoriaUsuarioRepository;
 import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.Permissao;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -237,8 +238,7 @@ public class AdministracaoUsuarioService {
             throw new AccessDeniedException("Usuário sem permissão para gerenciar contas");
         }
         usuarioRepository.findById(informado.getId())
-                .filter(Usuario::isAtivo)
-                .filter(usuario -> usuario.getPerfil() == Perfil.ADMINISTRADOR)
+                .filter(usuario -> Permissao.temPerfil(usuario, Perfil.ADMINISTRADOR))
                 .orElseThrow(() -> new AccessDeniedException(
                         "Usuário sem permissão para gerenciar contas"));
     }

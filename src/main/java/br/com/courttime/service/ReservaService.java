@@ -6,14 +6,15 @@ import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Quadra;
 import br.com.courttime.entity.Reserva;
-import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.ResultadoConferenciaDocumento;
+import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.Permissao;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -257,8 +258,7 @@ public class ReservaService {
             throw new AccessDeniedException("Usuário sem permissão para esta operação");
         }
         return usuarioRepository.findByIdForUpdate(administrador.getId())
-                .filter(Usuario::isAtivo)
-                .filter(usuario -> usuario.getPerfil() == Perfil.ADMINISTRADOR)
+                .filter(usuario -> Permissao.temPerfil(usuario, Perfil.ADMINISTRADOR))
                 .orElseThrow(() -> new AccessDeniedException(
                         "Usuário sem permissão para esta operação"));
     }

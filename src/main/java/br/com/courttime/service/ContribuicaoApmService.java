@@ -14,6 +14,7 @@ import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
 import br.com.courttime.repository.UsuarioRepository;
+import br.com.courttime.security.Permissao;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -226,8 +227,7 @@ public class ContribuicaoApmService {
             throw acessoNegado();
         }
         return usuarioRepository.findById(secretaria.getId())
-                .filter(Usuario::isAtivo)
-                .filter(usuario -> usuario.getPerfil() == Perfil.SECRETARIA)
+                .filter(usuario -> Permissao.temPerfil(usuario, Perfil.SECRETARIA))
                 .orElseThrow(this::acessoNegado);
     }
 

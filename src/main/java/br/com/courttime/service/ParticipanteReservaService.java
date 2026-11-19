@@ -5,13 +5,14 @@ import br.com.courttime.entity.DocumentoReserva;
 import br.com.courttime.entity.ParticipanteReserva;
 import br.com.courttime.entity.Perfil;
 import br.com.courttime.entity.Reserva;
-import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.ResultadoConferenciaDocumento;
+import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.entity.VinculoParticipante;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.security.Permissao;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -155,7 +156,7 @@ public class ParticipanteReservaService {
     }
 
     private Reserva obterReservaDoSolicitante(Long reservaId, Usuario solicitante) {
-        validarSolicitante(solicitante);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         validarReservaId(reservaId);
         return reservaRepository.findByIdAndSolicitante(reservaId, solicitante)
                 .orElseThrow(() -> new AccessDeniedException(
@@ -163,7 +164,7 @@ public class ParticipanteReservaService {
     }
 
     private Reserva obterReservaEditavel(Long reservaId, Usuario solicitante) {
-        validarSolicitante(solicitante);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         validarReservaId(reservaId);
         Reserva reserva = reservaRepository.findByIdAndSolicitanteIdForUpdate(
                         reservaId, solicitante.getId())
@@ -283,15 +284,6 @@ public class ParticipanteReservaService {
             throw new IllegalArgumentException(mensagem);
         }
         return normalizado;
-    }
-
-    private void validarSolicitante(Usuario solicitante) {
-        if (solicitante == null
-                || solicitante.getId() == null
-                || !solicitante.isAtivo()
-                || solicitante.getPerfil() != Perfil.ALUNO) {
-            throw new AccessDeniedException("Usuário sem permissão para gerenciar participantes");
-        }
     }
 
     private void validarReservaId(Long reservaId) {

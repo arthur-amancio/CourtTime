@@ -11,6 +11,7 @@ import br.com.courttime.repository.ContribuicaoApmRepository;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ParticipanteReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.security.Permissao;
 import br.com.courttime.storage.DocumentoStorage;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -43,14 +44,14 @@ public class AnaliseAdministrativaService {
 
     @Transactional(readOnly = true)
     public List<Reserva> listarPendentes(Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         return reservaRepository.listarParaAnaliseAdministrativa(
                 StatusReserva.PENDENTE_ANALISE);
     }
 
     @Transactional(readOnly = true)
     public List<Reserva> listarAutorizadasAtuais(Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         LocalDate dataAtual = LocalDate.now(
                 CalendarioDisponibilidadeService.FUSO_HORARIO);
         return reservaRepository.listarAutorizadasParaAdministracao(
@@ -63,7 +64,7 @@ public class AnaliseAdministrativaService {
      */
     @Transactional(readOnly = true)
     public List<Reserva> listarEncerradas(Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         return reservaRepository.listarEncerradasParaAdministracao(
                 List.of(StatusReserva.REJEITADA, StatusReserva.CANCELADA));
     }
@@ -71,7 +72,7 @@ public class AnaliseAdministrativaService {
     @Transactional(readOnly = true)
     public DetalheAnaliseAdministrativa detalhar(
             Long reservaId, Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         Reserva reserva = obterReserva(reservaId);
         List<ParticipanteReserva> participantes =
                 participanteRepository.listarComPresenca(reserva);
@@ -96,7 +97,7 @@ public class AnaliseAdministrativaService {
     @Transactional(readOnly = true)
     public DownloadDocumento baixar(
             Long reservaId, Long documentoId, Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         Reserva reserva = obterReserva(reservaId);
         if (documentoId == null) {
             throw new IllegalArgumentException("O documento é obrigatório");
@@ -117,15 +118,5 @@ public class AnaliseAdministrativaService {
         }
         return reservaRepository.obterParaConsultaAdministrativa(reservaId)
                 .orElseThrow(() -> new IllegalArgumentException("Solicitação não encontrada"));
-    }
-
-    private void validarAdministrador(Usuario administrador) {
-        if (administrador == null
-                || administrador.getId() == null
-                || !administrador.isAtivo()
-                || administrador.getPerfil() != Perfil.ADMINISTRADOR) {
-            throw new AccessDeniedException(
-                    "Usuário sem permissão para consultar a análise administrativa");
-        }
     }
 }

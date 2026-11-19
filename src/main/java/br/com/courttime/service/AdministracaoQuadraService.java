@@ -12,7 +12,7 @@ import br.com.courttime.repository.BloqueioQuadraRepository;
 import br.com.courttime.repository.DisponibilidadeQuadraRepository;
 import br.com.courttime.repository.QuadraRepository;
 import br.com.courttime.repository.ReservaRepository;
-import org.springframework.security.access.AccessDeniedException;
+import br.com.courttime.security.Permissao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +51,7 @@ public class AdministracaoQuadraService {
 
     @Transactional(readOnly = true)
     public PainelAdministrativo carregarPainel(Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         Quadra quadra = quadraService.obterQuadra();
         LocalDate hoje = calendarioService.obterDataAtual();
         return new PainelAdministrativo(
@@ -73,7 +73,7 @@ public class AdministracaoQuadraService {
 
     @Transactional(readOnly = true)
     public List<DisponibilidadeQuadra> listarHorarios(Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         Quadra quadra = quadraService.obterQuadra();
         return obterHorariosOrdenados(quadra);
     }
@@ -90,7 +90,7 @@ public class AdministracaoQuadraService {
 
     @Transactional(readOnly = true)
     public DisponibilidadeQuadra obterHorario(Long id, Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         return disponibilidadeRepository.findByIdComQuadra(id)
                 .filter(horario -> Objects.equals(
                         horario.getQuadra().getId(), quadraService.obterQuadra().getId()))
@@ -103,7 +103,7 @@ public class AdministracaoQuadraService {
             DiaSemana diaSemana,
             LocalTime horarioInicio,
             LocalTime horarioFim) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         validarPeriodo(horarioInicio, horarioFim);
         validarDiaSemana(diaSemana);
 
@@ -129,7 +129,7 @@ public class AdministracaoQuadraService {
             DiaSemana diaSemana,
             LocalTime horarioInicio,
             LocalTime horarioFim) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         validarPeriodo(horarioInicio, horarioFim);
         validarDiaSemana(diaSemana);
 
@@ -149,7 +149,7 @@ public class AdministracaoQuadraService {
 
     @Transactional
     public DisponibilidadeQuadra alternarHorario(Long id, Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         Quadra quadra = bloquearQuadra();
         DisponibilidadeQuadra horario = obterHorarioDaQuadra(id, quadra);
 
@@ -173,7 +173,7 @@ public class AdministracaoQuadraService {
 
     @Transactional(readOnly = true)
     public List<BloqueioQuadra> listarBloqueiosFuturos(Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         Quadra quadra = quadraService.obterQuadra();
         return bloqueioRepository.findByQuadraAndDataGreaterThanEqualOrderByDataAscHorarioInicioAsc(
                 quadra, calendarioService.obterDataAtual());
@@ -186,7 +186,7 @@ public class AdministracaoQuadraService {
             LocalTime horarioInicio,
             LocalTime horarioFim,
             String motivo) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         if (data == null) {
             throw new IllegalArgumentException("A data do bloqueio é obrigatória");
         }
@@ -236,7 +236,7 @@ public class AdministracaoQuadraService {
 
     @Transactional
     public BloqueioQuadra desativarBloqueio(Long id, Usuario administrador) {
-        validarAdministrador(administrador);
+        Permissao.exigir(administrador, Perfil.ADMINISTRADOR);
         Quadra quadra = bloquearQuadra();
         BloqueioQuadra bloqueio = bloqueioRepository.findById(id)
                 .filter(item -> Objects.equals(item.getQuadra().getId(), quadra.getId()))
@@ -330,11 +330,5 @@ public class AdministracaoQuadraService {
     private boolean periodosSobrepostos(
             LocalTime inicioA, LocalTime fimA, LocalTime inicioB, LocalTime fimB) {
         return inicioA.isBefore(fimB) && inicioB.isBefore(fimA);
-    }
-
-    private void validarAdministrador(Usuario usuario) {
-        if (usuario == null || !usuario.isAtivo() || usuario.getPerfil() != Perfil.ADMINISTRADOR) {
-            throw new AccessDeniedException("Usuário sem permissão para administrar a quadra");
-        }
     }
 }

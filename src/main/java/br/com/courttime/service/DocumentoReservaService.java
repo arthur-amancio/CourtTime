@@ -8,6 +8,7 @@ import br.com.courttime.entity.StatusReserva;
 import br.com.courttime.entity.Usuario;
 import br.com.courttime.repository.DocumentoReservaRepository;
 import br.com.courttime.repository.ReservaRepository;
+import br.com.courttime.security.Permissao;
 import br.com.courttime.storage.DocumentoStorage;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -70,7 +71,7 @@ public class DocumentoReservaService {
             String nomeOriginal,
             String tipoConteudo,
             byte[] conteudo) {
-        validarSolicitante(solicitante);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         if (reservaId == null) {
             throw new IllegalArgumentException("A solicitação é obrigatória");
         }
@@ -161,22 +162,13 @@ public class DocumentoReservaService {
     }
 
     private Reserva obterReservaDoSolicitante(Long reservaId, Usuario solicitante) {
-        validarSolicitante(solicitante);
+        Permissao.exigir(solicitante, Perfil.ALUNO);
         if (reservaId == null) {
             throw new IllegalArgumentException("A solicitação é obrigatória");
         }
         return reservaRepository.findByIdAndSolicitante(reservaId, solicitante)
                 .orElseThrow(() -> new AccessDeniedException(
                         "A solicitação não existe ou não pertence ao usuário autenticado"));
-    }
-
-    private void validarSolicitante(Usuario solicitante) {
-        if (solicitante == null
-                || solicitante.getId() == null
-                || !solicitante.isAtivo()
-                || solicitante.getPerfil() != Perfil.ALUNO) {
-            throw new AccessDeniedException("Usuário sem permissão para acessar documentos");
-        }
     }
 
     private String validarNome(String nomeOriginal) {

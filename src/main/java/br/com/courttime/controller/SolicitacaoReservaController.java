@@ -13,8 +13,6 @@ import br.com.courttime.service.ReservaService;
 import br.com.courttime.service.SituacaoSolicitacaoService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -77,8 +74,6 @@ public class SolicitacaoReservaController {
             // Remarcação: só a partir de uma reserva cancelada do próprio aluno.
             try {
                 reservaCancelada = reservaService.obterParaRemarcacao(origem, usuario);
-            } catch (AccessDeniedException exception) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             } catch (IllegalStateException exception) {
                 redirectAttributes.addFlashAttribute("mensagemErro", exception.getMessage());
                 return "redirect:/solicitacoes/" + origem;
@@ -140,8 +135,6 @@ public class SolicitacaoReservaController {
             bindingResult.reject("solicitacao.invalida", exception.getMessage());
             prepararFormulario(model, dataSelecionada, reservaCancelada);
             return "solicitacoes/formulario";
-        } catch (AccessDeniedException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -151,29 +144,21 @@ public class SolicitacaoReservaController {
         if (form.getOrigemId() == null) {
             return null;
         }
-        try {
-            return reservaService.obterSolicitacaoDoUsuario(
-                    form.getOrigemId(), usuario);
-        } catch (AccessDeniedException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        return reservaService.obterSolicitacaoDoUsuario(
+                form.getOrigemId(), usuario);
     }
 
     @GetMapping("/{id}")
     public String detalhar(
             @PathVariable Long id, @UsuarioAtual Usuario usuario, Model model) {
-        try {
-            Reserva solicitacao = reservaService.obterSolicitacaoDoUsuario(id, usuario);
-            model.addAttribute("solicitacao", solicitacao);
-            model.addAttribute("situacao", situacaoService.descrever(solicitacao));
-            // Vínculos de remarcação, nos dois sentidos.
-            model.addAttribute("remarcacao",
-                    reservaService.obterRemarcacao(solicitacao).orElse(null));
-            model.addAttribute("reservaRemarcada",
-                    reservaService.obterReservaRemarcada(solicitacao, usuario).orElse(null));
-        } catch (AccessDeniedException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        Reserva solicitacao = reservaService.obterSolicitacaoDoUsuario(id, usuario);
+        model.addAttribute("solicitacao", solicitacao);
+        model.addAttribute("situacao", situacaoService.descrever(solicitacao));
+        // Vínculos de remarcação, nos dois sentidos.
+        model.addAttribute("remarcacao",
+                reservaService.obterRemarcacao(solicitacao).orElse(null));
+        model.addAttribute("reservaRemarcada",
+                reservaService.obterReservaRemarcada(solicitacao, usuario).orElse(null));
         return "solicitacoes/detalhe";
     }
 
