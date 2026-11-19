@@ -1,0 +1,14 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+Reserva [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>reservas</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+DocumentoReserva [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>documentos_reserva</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>FK reserva_id: bigint NN<BR ALIGN="LEFT"/>versao: integer NN<BR ALIGN="LEFT"/>revisao_participantes: integer NN<BR ALIGN="LEFT"/> UQ chave_armazenamento: varchar NN<BR ALIGN="LEFT"/>FK enviado_por_id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+ConferenciaDocumento [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>conferencias_documento</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>FK UQ documento_id: bigint NN<BR ALIGN="LEFT"/>resultado: varchar / enum NN<BR ALIGN="LEFT"/>FK conferido_por_id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+ContribuicaoApm [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>contribuicoes_apm</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>FK UQ reserva_id: bigint NN<BR ALIGN="LEFT"/>FK UQ conferencia_documento_id: bigint NN<BR ALIGN="LEFT"/>valor: numeric(12,2) NN<BR ALIGN="LEFT"/>FK registrada_por_id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+Reserva -> DocumentoReserva [label="reserva_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+DocumentoReserva -> ConferenciaDocumento [label="documento_id" dir=none taillabel="1" headlabel="0..1" labeldistance=1.8 ];
+ConferenciaDocumento -> ContribuicaoApm [label="conferencia_documento_id" dir=none taillabel="1" headlabel="0..1" labeldistance=1.8 ];
+Reserva -> ContribuicaoApm [label="reserva_id" dir=none taillabel="1" headlabel="0..1" labeldistance=1.8 ];
+
+}

@@ -1,0 +1,15 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+Usuario [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>usuarios</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+AuditoriaUsuario [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>auditorias_usuario</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>FK operador_id: bigint NN<BR ALIGN="LEFT"/>FK usuario_afetado_id: bigint NN<BR ALIGN="LEFT"/>operacao: varchar / enum NN<BR ALIGN="LEFT"/>realizada_em: timestamptz NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+ContribuicaoApm [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>contribuicoes_apm</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+AjusteContribuicaoApm [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ajustes_contribuicao_apm</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>FK contribuicao_id: bigint NN<BR ALIGN="LEFT"/>valor_anterior: numeric(12,2) NN<BR ALIGN="LEFT"/>valor_novo: numeric(12,2) NN<BR ALIGN="LEFT"/>motivo: varchar NN<BR ALIGN="LEFT"/>FK ajustada_por_id: bigint NN<BR ALIGN="LEFT"/>ajustada_em: timestamptz NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+Usuario -> AuditoriaUsuario [label="operador_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+UsuarioAfetado [shape=box,label="usuarios\n(referência ao afetado)"];
+UsuarioAfetado -> AuditoriaUsuario [label="usuario_afetado_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+ContribuicaoApm -> AjusteContribuicaoApm [label="contribuicao_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+Usuario -> AjusteContribuicaoApm [label="ajustada_por_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+
+}

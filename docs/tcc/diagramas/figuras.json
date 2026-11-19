@@ -1,0 +1,236 @@
+[
+  {
+    "id": "01a-casos-geral",
+    "title": "Casos de uso: visão geral",
+    "chapter": "IV",
+    "before": "A figura apresenta as responsabilidades dos atores no recorte indicado do CourtTime. As operações pertencem à solução final pretendida, cujo estágio de implementação é discriminado no relatório.",
+    "after": "O aluno inicia e acompanha o pedido; a secretaria realiza a conferência e o registro financeiro; a administração decide sobre o uso; e a segurança atua na portaria. Crédito e registro de presença ainda são planejados na base analisada. Os diagramas seguintes detalham estas finalidades sem conceder competências entre perfis.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 22
+  },
+  {
+    "id": "01b-casos-acesso",
+    "title": "Casos de uso: acesso e consulta",
+    "chapter": "IV",
+    "before": "A figura apresenta as responsabilidades dos atores no recorte indicado do CourtTime. As operações pertencem à solução final pretendida, cujo estágio de implementação é discriminado no relatório.",
+    "after": "Usuário autenticado é uma abstração dos quatro perfis, sem criar um quinto valor em Perfil. A consulta do calendário exige autenticação na base verificada; o visitante acessa apenas a página pública e o login. As demais operações exigem autorização específica.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 23
+  },
+  {
+    "id": "01c-casos-aluno",
+    "title": "Casos de uso: solicitação pelo aluno",
+    "chapter": "IV",
+    "before": "A figura apresenta as responsabilidades dos atores no recorte indicado do CourtTime. As operações pertencem à solução final pretendida, cujo estágio de implementação é discriminado no relatório.",
+    "after": "A remarcação inclui a criação de uma nova solicitação. O aluno escolhe se copia os participantes; o novo pedido exige novo documento e aprovação. A assinatura gov.br ocorre fora da fronteira do sistema. O mínimo é de dez ALUNOS, e não dez participantes de qualquer categoria.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 24
+  },
+  {
+    "id": "01d-casos-instituicao",
+    "title": "Casos de uso: secretaria e administração",
+    "chapter": "IV",
+    "before": "A figura apresenta as responsabilidades dos atores no recorte indicado do CourtTime. As operações pertencem à solução final pretendida, cujo estágio de implementação é discriminado no relatório.",
+    "after": "A conferência da assinatura é humana, com uso externo do ITI. O registro presencial não aprova a solicitação. A decisão administrativa reconfere conflitos e elegibilidade. O cancelamento conserva as evidências; a comunicação por WhatsApp é manual. Aplicar crédito é uma evolução planejada de R04.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 25
+  },
+  {
+    "id": "01e-casos-portaria",
+    "title": "Casos de uso: presença e consulta administrativa",
+    "chapter": "IV",
+    "before": "A figura apresenta as responsabilidades dos atores no recorte indicado do CourtTime. As operações pertencem à solução final pretendida, cujo estágio de implementação é discriminado no relatório.",
+    "after": "A consulta de autorizações já existe. As escritas de presença e o registro adicional são planejados. Registrar uma pessoa extra não concede entrada; o responsável por autorizar e o modo de registrar essa autorização aguardam D3. A segurança não recebe acesso a PDFs, contribuições ou decisões administrativas.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 26
+  },
+  {
+    "id": "04a-atividade-solicitacao",
+    "title": "Atividades: criação e participantes",
+    "chapter": "IV",
+    "before": "O fluxo inicia com a seleção de um período de uma hora e a criação de uma solicitação preliminar. A preparação do documento depende da lista de participantes.",
+    "after": "A guarda do dia anterior representa R01 e o PR #70; não se inventa horário como 17h. O prazo vale também para correções. A assinatura é externa. O upload valida formato técnico, autorização e versão, sem comprovar autenticidade criptográfica. A indicação de mínimo antes da geração é uma regra final do fluxo.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 27
+  },
+  {
+    "id": "04a2-atividade-envio",
+    "title": "Atividades: assinatura e envio",
+    "chapter": "IV",
+    "before": "O fluxo inicia com a seleção de um período de uma hora e a criação de uma solicitação preliminar. A preparação do documento depende da lista de participantes.",
+    "after": "A guarda do dia anterior representa R01 e o PR #70; não se inventa horário como 17h. O prazo vale também para correções. A assinatura é externa. O upload valida formato técnico, autorização e versão, sem comprovar autenticidade criptográfica. A indicação de mínimo antes da geração é uma regra final do fluxo.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 28
+  },
+  {
+    "id": "04b-atividade-conferencia",
+    "title": "Atividades: conferência e contribuição",
+    "chapter": "IV",
+    "before": "A secretaria decide se a versão mais recente atende às exigências documentais. A conferência humana é registrada independentemente da autorização de uso.",
+    "after": "R07 acrescenta a confirmação explícita de conferência gov.br. A devolução mantém o histórico e só permite reenvio dentro do prazo. A contribuição de R$ 2,00 por participante por hora é presencial; o crédito segue o fluxo específico. Falhas de revisão ou autorização recusam a operação sem avançar o estado.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 29
+  },
+  {
+    "id": "04c-atividade-aprovacao",
+    "title": "Atividades: decisão administrativa",
+    "chapter": "IV",
+    "before": "A análise administrativa é uma decisão humana, complementada por revalidações transacionais na tentativa de aprovação.",
+    "after": "Solicitações preliminares podem disputar o mesmo horário: somente a aprovação autoriza e ocupa a agenda. O bloqueio pessimista da quadra serializa aprovações e alterações conflitantes. A rejeição exige justificativa. A aprovação é permitida no dia do uso, desde que o período ainda não tenha começado.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 30
+  },
+  {
+    "id": "05a-atividade-cancelamento",
+    "title": "Atividades: cancelamento institucional",
+    "chapter": "IV",
+    "before": "O cancelamento institucional registra o motivo e conserva a aprovação anterior e as evidências. A remarcação depende de nova iniciativa do aluno.",
+    "after": "O contato por WhatsApp é uma ação humana, sem API. A origem é bloqueada durante a criação; a unicidade impede duas sucessoras. O aluno pode copiar os participantes, mas deve revisar a lista e obter novo documento. Falha de prazo ou disponibilidade recusa a nova solicitação.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 31
+  },
+  {
+    "id": "05a2-atividade-remarcacao",
+    "title": "Atividades: criação da remarcação",
+    "chapter": "IV",
+    "before": "O cancelamento institucional registra o motivo e conserva a aprovação anterior e as evidências. A remarcação depende de nova iniciativa do aluno.",
+    "after": "O contato por WhatsApp é uma ação humana, sem API. A origem é bloqueada durante a criação; a unicidade impede duas sucessoras. O aluno pode copiar os participantes, mas deve revisar a lista e obter novo documento. Falha de prazo ou disponibilidade recusa a nova solicitação.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 32
+  },
+  {
+    "id": "05b-atividade-credito",
+    "title": "Atividades: cálculo e aplicação de crédito",
+    "chapter": "IV",
+    "before": "O aproveitamento financeiro é parte da versão final planejada. O cálculo não dispensa documentos nem substitui a análise administrativa.",
+    "after": "A implementação deve serializar aplicação e ajuste da contribuição de origem; repetição ou disputa é recusada com rollback. O excedente fica registrado sem destino enquanto D2 estiver aberta. Nenhum novo recebimento ocorre quando a diferença é zero. Se a análise rejeitar, não se presume liberação, reembolso ou novo uso: a regra não está definida. C = valor da origem após ajustes + crédito aplicado anteriormente; D = 2,00 × participantes × 1 h; diferença = máx(D − C, 0); aplicado = mín(C, D); excedente = máx(C − D, 0).",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 33
+  },
+  {
+    "id": "06-atividade-presenca",
+    "title": "Atividades: consulta e identificação",
+    "chapter": "IV",
+    "before": "A segurança consulta as reservas autorizadas e, na evolução planejada, registra presenças, ausências e comparecimentos adicionais.",
+    "after": "Ausência de marcação permanece não registrada, não equivale a AUSENTE. A janela apenas no dia é proposta técnica ainda pendente. D3 impede presumir quem autoriza a pessoa extra: até a definição, não há autorização automática. A segurança não acessa PDFs, pagamentos, horários administrativos ou aprovação.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 34
+  },
+  {
+    "id": "06b-atividade-registro",
+    "title": "Atividades: registro de presença",
+    "chapter": "IV",
+    "before": "A segurança consulta as reservas autorizadas e, na evolução planejada, registra presenças, ausências e comparecimentos adicionais.",
+    "after": "Ausência de marcação permanece não registrada, não equivale a AUSENTE. A janela apenas no dia é proposta técnica ainda pendente. D3 impede presumir quem autoriza a pessoa extra: até a definição, não há autorização automática. A segurança não acessa PDFs, pagamentos, horários administrativos ou aprovação.",
+    "status": "Modelo final planejado; consultar situação de implementação no relatório.",
+    "number": 35
+  },
+  {
+    "id": "02a-classes-reservas",
+    "title": "Classes: núcleo de reservas",
+    "chapter": "V",
+    "before": "O núcleo relaciona a solicitação a um usuário e à quadra. A lista de participantes constitui informação do pedido e não uma coleção de contas de acesso.",
+    "after": "Cada reserva possui um solicitante e uma quadra; pode ainda não ter participantes durante o preenchimento. A autorrelação remarcacaoDe é opcional e única: uma cancelada admite no máximo uma sucessora. Associações simples não pressupõem exclusão em cascata.",
+    "status": "IMPLEMENTADO em 7b40dcb; atributos selecionados.",
+    "number": 36
+  },
+  {
+    "id": "02b-classes-agenda",
+    "title": "Classes: agenda da quadra",
+    "chapter": "V",
+    "before": "A disponibilidade é formada por intervalos semanais, aos quais se aplicam bloqueios de datas específicas e reservas aprovadas.",
+    "after": "Os dois tipos de intervalo pertencem a uma quadra. O calendário divide a grade em períodos de uma hora. Os métodos de intervalo verificam a ordem dos horários, enquanto a prevenção de conflitos depende também dos serviços e das transações.",
+    "status": "IMPLEMENTADO em 7b40dcb.",
+    "number": 37
+  },
+  {
+    "id": "02c-classes-documentacao",
+    "title": "Classes: documentos e contribuição",
+    "chapter": "V",
+    "before": "A documentação enviada possui versões independentes. A conferência humana e a contribuição estão vinculadas a registros específicos para permitir a rastreabilidade.",
+    "after": "Cada documento admite no máximo uma conferência. Uma contribuição referencia exatamente uma reserva e uma conferência, com unicidade em ambos os vínculos. O hash representa integridade dos bytes, sem validar a assinatura. As associações dos operadores são detalhadas no dicionário.",
+    "status": "IMPLEMENTADO em 7b40dcb; operadores detalhados no dicionário.",
+    "number": 38
+  },
+  {
+    "id": "02d-classes-auditoria",
+    "title": "Classes: auditoria e ajustes",
+    "chapter": "V",
+    "before": "O modelo distingue a auditoria de contas dos ajustes de contribuição. Cada registro preserva o operador e o momento da alteração.",
+    "after": "AuditoriaUsuario não é um log genérico de todos os eventos. As decisões da reserva ficam na própria Reserva; os ajustes mantêm antes, depois e motivo. O dicionário registra também as observações anteriores e novas.",
+    "status": "IMPLEMENTADO em 7b40dcb.",
+    "number": 39
+  },
+  {
+    "id": "02e-classes-extensoes",
+    "title": "Classes: extensões da versão final",
+    "chapter": "V",
+    "before": "As estruturas desta figura complementam o modelo implementado, seguindo as etapas do plano institucional. Os atributos são propostas ou alterações ainda não integradas.",
+    "after": "Não são criadas classes Crédito e Remarcação: o crédito estende ContribuicaoApm e a remarcação usa Reserva.remarcacaoDe. PessoaAdicionalReserva é nome proposto, condicionado a D3. saldoExcedente explicita uma lacuna do plano. As multiplicidades entre colchetes indicam valores opcionais, sem atribuir anotação JPA a estruturas ainda não implementadas.",
+    "status": "PLANEJADO, exceto valorDevido EM DESENVOLVIMENTO no PR #71.",
+    "number": 40
+  },
+  {
+    "id": "02f-enumeracoes",
+    "title": "Enumerações do domínio",
+    "chapter": "V",
+    "before": "As enumerações delimitam os perfis, situações e categorias usados pelas entidades persistidas.",
+    "after": "Os nomes reproduzem o Java. Os vínculos de OUTRO e os estados de presença pertencem à extensão planejada: o plano usa PRESENTE, AUSENTE e nulo para não registrado; a lista provisória de vínculos exige reconciliação com o termo oficial.",
+    "status": "IMPLEMENTADO em 7b40dcb.",
+    "number": 41
+  },
+  {
+    "id": "03a-der-reservas",
+    "title": "DER lógico-relacional: reservas",
+    "chapter": "V",
+    "before": "O DER foi derivado dos mapeamentos JPA da base verificada. Ele expressa as chaves e as cardinalidades relacionais sem presumir introspecção de um banco em produção.",
+    "after": "PK identifica chave primária; FK, referência; UQ, unicidade; NN, campo obrigatório. A unicidade de remarcacao_de_id admite valores nulos. Não há UQ composto de reserva e RM/RG: a não duplicação é uma validação do serviço, executada com bloqueio da reserva.",
+    "status": "IMPLEMENTADO em JPA; tipos físicos esperados, não inspecionados em banco vivo.",
+    "number": 42
+  },
+  {
+    "id": "03b-der-agenda",
+    "title": "DER lógico-relacional: agenda",
+    "chapter": "V",
+    "before": "As tabelas de agenda armazenam faixas semanais e bloqueios específicos. Ambas referenciam a quadra.",
+    "after": "Não existe constraint SQL de exclusão de sobreposição demonstrada nesta base. As regras de conflitos são protegidas por consultas e bloqueios pessimistas nos serviços. Portanto, uma ligação no DER não representa, isoladamente, prevenção de reservas conflitantes.",
+    "status": "IMPLEMENTADO em JPA; esquema gerenciado por Hibernate update.",
+    "number": 43
+  },
+  {
+    "id": "03c-der-documentos",
+    "title": "DER lógico-relacional: documentos e APM",
+    "chapter": "V",
+    "before": "As versões dos documentos e os registros da secretaria mantêm referências obrigatórias ao contexto de origem.",
+    "after": "Há UQ composto em documentos_reserva(reserva_id, versao), UQ em chave_armazenamento e documento_id, e UQ em cada vínculo de contribuicoes_apm com reserva e conferência. enviado_por_id, conferido_por_id e registrada_por_id referenciam usuarios(id), conforme o inventário completo.",
+    "status": "IMPLEMENTADO em JPA; operadores estão no inventário.",
+    "number": 44
+  },
+  {
+    "id": "03d-der-auditoria",
+    "title": "DER lógico-relacional: rastreabilidade",
+    "chapter": "V",
+    "before": "A rastreabilidade usa registros de auditoria de usuários e de ajustes financeiros, sem sobrescrever os valores históricos do evento.",
+    "after": "Cada ajuste referencia uma contribuição e um operador. Cada auditoria referencia um operador e um usuário afetado. O mapeamento não estabelece exclusão em cascata. As contas são desativadas logicamente para preservar essas referências.",
+    "status": "IMPLEMENTADO em JPA.",
+    "number": 45
+  },
+  {
+    "id": "03e-der-extensoes",
+    "title": "DER: alterações propostas para a versão final",
+    "chapter": "V",
+    "before": "As alterações são apresentadas em separado para não confundir o esquema existente com a evolução prevista. Campos novos aceitam nulo para distinguir registros legados.",
+    "after": "As FKs de operadores apontam para usuarios(id); reserva_id aponta para reservas(id); contribuicao_origem_id aponta para contribuicoes_apm(id). A UQ nesta última FK e saldo_excedente são propostas técnicas adicionais ao plano. Relação de origem financeira: zero ou uma origem e no máximo um uso direto. A tabela de adicionais depende de D3.",
+    "status": "PLANEJADO; nomes SQL novos e restrições são propostas, exceto valor_devido no PR #71.",
+    "number": 46
+  },
+  {
+    "id": "07-arquitetura",
+    "title": "Arquitetura do CourtTime",
+    "chapter": "VII",
+    "before": "A aplicação utiliza renderização de páginas no servidor e organiza o processamento em controllers, serviços e repositórios.",
+    "after": "O navegador envia requisições submetidas ao Spring Security. Os serviços aplicam regras e transações; JPA/Hibernate acessa o PostgreSQL. PDFBox preenche o formulário oficial. Arquivos assinados ficam no diretório privado e são servidos após autorização. gov.br, ITI e WhatsApp são usos humanos externos, sem integrações automáticas. Não há Flyway nesta base.",
+    "status": "IMPLEMENTADO em 7b40dcb; sem integração externa automática.",
+    "number": 47
+  }
+]

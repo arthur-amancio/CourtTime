@@ -1,0 +1,25 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+browser [shape=box, label="Navegador\nHTML / CSS / JavaScript" ];
+sec [shape=box, label="Spring Security\nsessão, perfis, CSRF, BCrypt\nRevalidacaoSessaoUsuarioFilter" ];
+mvc [shape=box, label="Spring MVC\nControllers" ];
+svc [shape=box, label="Serviços de negócio\nregras, autorização por dono\ne transações" ];
+repo [shape=box, label="Spring Data JPA / Hibernate\nRepositories e entidades" ];
+db [shape=cylinder, label="PostgreSQL\ndados e bloqueios transacionais" ];
+view [shape=box, label="Thymeleaf\nrenderização no servidor" ];
+pdf [shape=box, label="PDFBox\nFormularioOficialService\nFormularioReservaPdf" ];
+storage [shape=folder, label="DocumentoStorageLocal\nPDFs em diretório privado" ];
+browser -> sec [label="HTTP" ];
+sec -> mvc [label="requisição autorizada" ];
+mvc -> svc [label="chamada" ];
+svc -> repo [label="persistência / consulta" ];
+repo -> db [label="SQL" ];
+mvc -> view [label="modelo + template" ];
+view -> browser [label="HTML" constraint=false];
+svc -> pdf [label="gerar formulário" ];
+svc -> storage [label="guardar / baixar PDF" ];
+{rank=same;repo;storage;}
+
+}

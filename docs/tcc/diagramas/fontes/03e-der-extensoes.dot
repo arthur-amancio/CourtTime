@@ -1,0 +1,10 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+p [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>participantes_reserva «alteração planejada»</B></TD></TR><TR><TD ALIGN="LEFT">vinculo: varchar NULL<BR ALIGN="LEFT"/>presenca: varchar NULL<BR ALIGN="LEFT"/>presenca_registrada_por_id: bigint FK NULL<BR ALIGN="LEFT"/>presenca_registrada_em: timestamptz NULL<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+c [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>conferencias_documento «alteração planejada»</B></TD></TR><TR><TD ALIGN="LEFT">assinatura_gov_br_conferida: boolean NULL<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+a [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>contribuicoes_apm «alteração planejada»</B></TD></TR><TR><TD ALIGN="LEFT">valor_devido: numeric(12,2) NULL {PR #71}<BR ALIGN="LEFT"/>credito_aplicado: numeric(12,2) NULL<BR ALIGN="LEFT"/>contribuicao_origem_id: bigint FK UQ NULL<BR ALIGN="LEFT"/>saldo_excedente: numeric(12,2) NULL {proposta}<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+x [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>pessoas_adicionais_reserva «tabela proposta»</B></TD></TR><TR><TD ALIGN="LEFT">id: bigint PK<BR ALIGN="LEFT"/>reserva_id: bigint FK NN<BR ALIGN="LEFT"/>nome_completo: varchar NN<BR ALIGN="LEFT"/>rm_ou_rg: varchar NN<BR ALIGN="LEFT"/>vinculo: varchar NN<BR ALIGN="LEFT"/>registrada_por_id: bigint FK NN<BR ALIGN="LEFT"/>registrada_em: timestamptz NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+p -> c -> a -> x [style=invis];
+}

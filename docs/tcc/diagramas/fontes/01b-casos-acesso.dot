@@ -1,0 +1,19 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [rankdir=LR];
+v [shape=box, label="«actor»\nVISITANTE" fillcolor="#eeeeee"];
+u [shape=box, label="«actor»\nUsuário autenticado" fillcolor="#eeeeee"];
+subgraph cluster_system { label="CourtTime"; color="#222222";
+home [shape=ellipse, label="Consultar página pública" ];
+login [shape=ellipse, label="Autenticar-se" ];
+cal [shape=ellipse, label="Consultar quadra\ne horários" ];
+logout [shape=ellipse, label="Encerrar sessão" ];
+}
+v -> home [label="" dir=none];
+v -> login [label="" dir=none];
+u -> cal [label="" dir=none];
+u -> logout [label="" dir=none];
+
+}

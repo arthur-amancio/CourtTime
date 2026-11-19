@@ -1,0 +1,14 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+Usuario [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>usuarios</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/> UQ email: varchar NN<BR ALIGN="LEFT"/>perfil: varchar / enum NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+Quadra [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>quadras</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>nome: varchar NN<BR ALIGN="LEFT"/>ativa: boolean NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+Reserva [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>reservas</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>FK quadra_id: bigint NN<BR ALIGN="LEFT"/>FK solicitante_id: bigint NN<BR ALIGN="LEFT"/>data_utilizacao: date NN<BR ALIGN="LEFT"/>horario_inicio: time NN<BR ALIGN="LEFT"/>horario_fim: time NN<BR ALIGN="LEFT"/>status: varchar / enum NN<BR ALIGN="LEFT"/>FK UQ remarcacao_de_id: bigint NULL<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+ParticipanteReserva [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>participantes_reserva</B></TD></TR><TR><TD ALIGN="LEFT">PK id: bigint NN<BR ALIGN="LEFT"/>FK reserva_id: bigint NN<BR ALIGN="LEFT"/>nome_completo: varchar NN<BR ALIGN="LEFT"/>rm_ou_rg: varchar NN<BR ALIGN="LEFT"/>categoria: varchar / enum NN<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+Usuario -> Reserva [label="solicitante_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+Quadra -> Reserva [label="quadra_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+Reserva -> ParticipanteReserva [label="reserva_id" dir=none taillabel="1" headlabel="0..N" labeldistance=1.8 ];
+Reserva -> Reserva [label="remarcacao_de_id" dir=none taillabel="0..1" headlabel="0..1" labeldistance=1.8 ];
+{rank=same;Usuario;Quadra;}
+}

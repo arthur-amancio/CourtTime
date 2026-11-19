@@ -1,0 +1,58 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [nodesep=0.14, ranksep=0.14, newrank=true];
+subgraph cluster_l0 { label="ALUNO"; style=solid; color="#777777";
+s [shape=box, label="De 04a: assinar no gov.br\ne enviar PDF" style="dashed,rounded"];
+blank0_1 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_2 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_3 [shape=box, label="" style=invis width=0.4 height=0.02];
+cor [shape=box, label="Corrigir arquivo;\nrepetir envio dentro do\nprazo" style="rounded,filled"];
+blank0_5 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_6 [shape=box, label="" style=invis width=0.4 height=0.02];
+}
+subgraph cluster_l1 { label="COURTTIME"; style=solid; color="#777777";
+blank1_0 [shape=box, label="" style=invis width=0.4 height=0.02];
+t [shape=diamond, label="Antes do dia de\nuso?" ];
+no [shape=box, label="Recusar envio; prazo\nencerrado" style="rounded,filled"];
+v [shape=diamond, label="PDF e versão\npermitidos?" ];
+blank1_4 [shape=box, label="" style=invis width=0.4 height=0.02];
+e [shape=box, label="Guardar nova versão\nprivada,\nhash e revisão da lista" style="rounded,filled"];
+r [shape=box, label="Seguir para 04b" style="dashed,rounded"];
+}
+{rank=same;s;blank1_0;}
+s -> blank1_0 [style=invis weight=100];
+s -> blank0_1 [label="" style=invis weight=10];
+blank1_0 -> t [label="" style=invis weight=10];
+{rank=same;blank0_1;t;}
+blank0_1 -> t [style=invis weight=100];
+blank0_1 -> blank0_2 [label="" style=invis weight=10];
+t -> no [label="" style=invis weight=10];
+{rank=same;blank0_2;no;}
+blank0_2 -> no [style=invis weight=100];
+blank0_2 -> blank0_3 [label="" style=invis weight=10];
+no -> v [label="" style=invis weight=10];
+{rank=same;blank0_3;v;}
+blank0_3 -> v [style=invis weight=100];
+blank0_3 -> cor [label="" style=invis weight=10];
+v -> blank1_4 [label="" style=invis weight=10];
+{rank=same;cor;blank1_4;}
+cor -> blank1_4 [style=invis weight=100];
+cor -> blank0_5 [label="" style=invis weight=10];
+blank1_4 -> e [label="" style=invis weight=10];
+{rank=same;blank0_5;e;}
+blank0_5 -> e [style=invis weight=100];
+blank0_5 -> blank0_6 [label="" style=invis weight=10];
+e -> r [label="" style=invis weight=10];
+{rank=same;blank0_6;r;}
+blank0_6 -> r [style=invis weight=100];
+s -> t [label="" constraint=false];
+t -> no [label="[não]" constraint=false];
+t -> v [label="[sim]" constraint=false];
+v -> cor [label="[não]" constraint=false];
+cor -> s [label="" constraint=false];
+v -> e [label="[sim]" constraint=false];
+e -> r [label="" constraint=false];
+
+}

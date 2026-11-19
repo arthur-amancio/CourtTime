@@ -1,0 +1,11 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+q [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>Quadra</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- nome: String<BR ALIGN="LEFT"/>- ativa: boolean<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+d [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>DisponibilidadeQuadra</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- diaSemana: DiaSemana<BR ALIGN="LEFT"/>- horarioInicio: LocalTime<BR ALIGN="LEFT"/>- horarioFim: LocalTime<BR ALIGN="LEFT"/>- ativa: boolean<BR ALIGN="LEFT"/></TD></TR><TR><TD ALIGN="LEFT">+ isIntervaloValido(): boolean<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+b [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>BloqueioQuadra</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- data: LocalDate<BR ALIGN="LEFT"/>- horarioInicio: LocalTime<BR ALIGN="LEFT"/>- horarioFim: LocalTime<BR ALIGN="LEFT"/>- motivo: String<BR ALIGN="LEFT"/>- ativo: boolean<BR ALIGN="LEFT"/></TD></TR><TR><TD ALIGN="LEFT">+ isIntervaloValido(): boolean<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+q -> d [label="quadra" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+q -> b [label="quadra" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+{rank=same;d;b;}
+}

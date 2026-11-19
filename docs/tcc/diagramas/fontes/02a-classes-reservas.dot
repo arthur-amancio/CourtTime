@@ -1,0 +1,15 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+u [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>Usuario</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- nome: String<BR ALIGN="LEFT"/>- perfil: Perfil<BR ALIGN="LEFT"/>- ativo: boolean<BR ALIGN="LEFT"/></TD></TR><TR><TD ALIGN="LEFT">+ incrementarVersaoAcesso(): void<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+q [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>Quadra</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- nome: String<BR ALIGN="LEFT"/>- ativa: boolean<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+r [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>Reserva</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- dataUtilizacao: LocalDate<BR ALIGN="LEFT"/>- horarioInicio: LocalTime<BR ALIGN="LEFT"/>- horarioFim: LocalTime<BR ALIGN="LEFT"/>- status: StatusReserva<BR ALIGN="LEFT"/>- revisaoParticipantes: int<BR ALIGN="LEFT"/></TD></TR><TR><TD ALIGN="LEFT">+ isIntervaloValido(): boolean<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+p [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ParticipanteReserva</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- nomeCompleto: String<BR ALIGN="LEFT"/>- rmOuRg: String<BR ALIGN="LEFT"/>- categoria: CategoriaParticipante<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+u -> r [label="solicitante" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+q -> r [label="quadra" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+r -> p [label="reserva" dir=none taillabel="1" headlabel="0..*" labeldistance=1.8 ];
+r -> r [label="remarcacaoDe" dir=none taillabel="0..1" headlabel="0..1" labeldistance=1.8 ];
+{rank=same;u;q;}
+
+}

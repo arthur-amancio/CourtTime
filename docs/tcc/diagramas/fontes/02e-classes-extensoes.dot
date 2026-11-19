@@ -1,0 +1,11 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+p [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ParticipanteReserva «extensão planejada»</B></TD></TR><TR><TD ALIGN="LEFT">- vinculo: VinculoParticipante [0..1]<BR ALIGN="LEFT"/>- presenca: enum proposto [0..1]<BR ALIGN="LEFT"/>- presencaRegistradaPor: Usuario [0..1]<BR ALIGN="LEFT"/>- presencaRegistradaEm: Instant [0..1]<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+c [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ConferenciaDocumento «extensão planejada»</B></TD></TR><TR><TD ALIGN="LEFT">- assinaturaGovBrConferida: Boolean [0..1]<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+a [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>ContribuicaoApm «extensão»</B></TD></TR><TR><TD ALIGN="LEFT">- valorDevido: BigDecimal [0..1] {PR #71}<BR ALIGN="LEFT"/>- creditoAplicado: BigDecimal [0..1] {planejado}<BR ALIGN="LEFT"/>- contribuicaoOrigem: ContribuicaoApm [0..1]<BR ALIGN="LEFT"/>- saldoExcedente: BigDecimal [0..1] {proposta}<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+x [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>PessoaAdicionalReserva «proposta»</B></TD></TR><TR><TD ALIGN="LEFT">- id: Long<BR ALIGN="LEFT"/>- reserva: Reserva<BR ALIGN="LEFT"/>- nomeCompleto: String<BR ALIGN="LEFT"/>- rmOuRg: String<BR ALIGN="LEFT"/>- vinculo: String<BR ALIGN="LEFT"/>- registradaPor: Usuario<BR ALIGN="LEFT"/>- registradaEm: Instant<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+p -> c [style=invis]; c -> a [style=invis]; a -> x [style=invis];
+
+}

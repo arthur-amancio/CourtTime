@@ -1,0 +1,58 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [nodesep=0.14, ranksep=0.14, newrank=true];
+subgraph cluster_l0 { label="SEGURANCA"; style=solid; color="#777777";
+g [shape=diamond, label="De 06: listado?" ];
+yes [shape=box, label="Marcar presente ou\nausente" style="rounded,filled"];
+ex [shape=box, label="Registrar pessoa extra;\nsem autorizar entrada;\nencaminhar à instituição\n(D3)" style="rounded,filled"];
+blank0_3 [shape=box, label="" style=invis width=0.4 height=0.02];
+loop [shape=diamond, label="Mais conferências?" ];
+r [shape=box, label="Retomar identificação em\n06" style="dashed,rounded"];
+blank0_6 [shape=box, label="" style=invis width=0.4 height=0.02];
+}
+subgraph cluster_l1 { label="COURTTIME"; style=solid; color="#777777";
+blank1_0 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank1_1 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank1_2 [shape=box, label="" style=invis width=0.4 height=0.02];
+s [shape=box, label="Gravar responsável e\nmomento;\nnulo significa não\nregistrado" style="rounded,filled"];
+blank1_4 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank1_5 [shape=box, label="" style=invis width=0.4 height=0.02];
+end [shape=box, label="Administração consulta\nregistros" style="rounded,filled"];
+}
+{rank=same;g;blank1_0;}
+g -> blank1_0 [style=invis weight=100];
+g -> yes [label="" style=invis weight=10];
+blank1_0 -> blank1_1 [label="" style=invis weight=10];
+{rank=same;yes;blank1_1;}
+yes -> blank1_1 [style=invis weight=100];
+yes -> ex [label="" style=invis weight=10];
+blank1_1 -> blank1_2 [label="" style=invis weight=10];
+{rank=same;ex;blank1_2;}
+ex -> blank1_2 [style=invis weight=100];
+ex -> blank0_3 [label="" style=invis weight=10];
+blank1_2 -> s [label="" style=invis weight=10];
+{rank=same;blank0_3;s;}
+blank0_3 -> s [style=invis weight=100];
+blank0_3 -> loop [label="" style=invis weight=10];
+s -> blank1_4 [label="" style=invis weight=10];
+{rank=same;loop;blank1_4;}
+loop -> blank1_4 [style=invis weight=100];
+loop -> r [label="" style=invis weight=10];
+blank1_4 -> blank1_5 [label="" style=invis weight=10];
+{rank=same;r;blank1_5;}
+r -> blank1_5 [style=invis weight=100];
+r -> blank0_6 [label="" style=invis weight=10];
+blank1_5 -> end [label="" style=invis weight=10];
+{rank=same;blank0_6;end;}
+blank0_6 -> end [style=invis weight=100];
+g -> yes [label="[sim]" constraint=false];
+g -> ex [label="[não]" constraint=false];
+yes -> s [label="" constraint=false];
+ex -> s [label="" constraint=false];
+s -> loop [label="" constraint=false];
+loop -> r [label="[sim]" constraint=false];
+loop -> end [label="[não]" constraint=false];
+
+}

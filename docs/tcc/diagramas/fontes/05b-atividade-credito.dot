@@ -1,0 +1,58 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [nodesep=0.14, ranksep=0.14, newrank=true];
+subgraph cluster_l0 { label="SECRETARIA"; style=solid; color="#777777";
+st [shape=box, label="Remarcação com novo PDF\nconferido" style="dashed,rounded"];
+blank0_1 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_2 [shape=box, label="" style=invis width=0.4 height=0.02];
+p [shape=box, label="Receber apenas a\ndiferença" style="rounded,filled"];
+z [shape=box, label="Aplicar crédito;\nsem novo recebimento" style="rounded,filled"];
+blank0_5 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank0_6 [shape=box, label="" style=invis width=0.4 height=0.02];
+}
+subgraph cluster_l1 { label="COURTTIME"; style=solid; color="#777777";
+blank1_0 [shape=box, label="" style=invis width=0.4 height=0.02];
+lock [shape=box, label="Bloquear origem e\ndestino;\nvalidar uso único;\ncalcular\ncrédito, devido e\ndiferença" style="rounded,filled"];
+g [shape=diamond, label="Diferença > 0?" ];
+blank1_3 [shape=box, label="" style=invis width=0.4 height=0.02];
+blank1_4 [shape=box, label="" style=invis width=0.4 height=0.02];
+save [shape=box, label="Gravar crédito e origem;\nexcedente\nsem destino; conferência,\nautor e data" style="rounded,filled"];
+r [shape=box, label="PENDENTE_ANALISE;\nnova decisão em 04c" style="dashed,rounded"];
+}
+{rank=same;st;blank1_0;}
+st -> blank1_0 [style=invis weight=100];
+st -> blank0_1 [label="" style=invis weight=10];
+blank1_0 -> lock [label="" style=invis weight=10];
+{rank=same;blank0_1;lock;}
+blank0_1 -> lock [style=invis weight=100];
+blank0_1 -> blank0_2 [label="" style=invis weight=10];
+lock -> g [label="" style=invis weight=10];
+{rank=same;blank0_2;g;}
+blank0_2 -> g [style=invis weight=100];
+blank0_2 -> p [label="" style=invis weight=10];
+g -> blank1_3 [label="" style=invis weight=10];
+{rank=same;p;blank1_3;}
+p -> blank1_3 [style=invis weight=100];
+p -> z [label="" style=invis weight=10];
+blank1_3 -> blank1_4 [label="" style=invis weight=10];
+{rank=same;z;blank1_4;}
+z -> blank1_4 [style=invis weight=100];
+z -> blank0_5 [label="" style=invis weight=10];
+blank1_4 -> save [label="" style=invis weight=10];
+{rank=same;blank0_5;save;}
+blank0_5 -> save [style=invis weight=100];
+blank0_5 -> blank0_6 [label="" style=invis weight=10];
+save -> r [label="" style=invis weight=10];
+{rank=same;blank0_6;r;}
+blank0_6 -> r [style=invis weight=100];
+st -> lock [label="" constraint=false];
+lock -> g [label="[origem elegível]" constraint=false];
+g -> p [label="[sim]" constraint=false];
+g -> z [label="[não]" constraint=false];
+p -> save [label="" constraint=false];
+z -> save [label="" constraint=false];
+save -> r [label="" constraint=false];
+
+}

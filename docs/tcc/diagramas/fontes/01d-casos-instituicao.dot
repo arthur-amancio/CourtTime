@@ -1,0 +1,27 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+graph [rankdir=LR];
+s [shape=box, label="«actor»\nSECRETARIA" fillcolor="#eeeeee"];
+a [shape=box, label="«actor»\nADMINISTRADOR" fillcolor="#eeeeee"];
+subgraph cluster_system { label="CourtTime"; color="#222222";
+doc [shape=ellipse, label="Conferir / devolver PDF" ];
+apm [shape=ellipse, label="Registrar contribuição\npresencial" ];
+aj [shape=ellipse, label="Ajustar registro\ncom justificativa" ];
+cr [shape=ellipse, label="Aplicar crédito\nde remarcação" ];
+an [shape=ellipse, label="Aprovar / rejeitar\nsolicitação" ];
+can [shape=ellipse, label="Cancelar reserva\ncom motivo" ];
+age [shape=ellipse, label="Gerenciar horários\ne bloqueios" ];
+us [shape=ellipse, label="Gerenciar usuários" ];
+}
+s -> doc [label="" dir=none];
+s -> apm [label="" dir=none];
+s -> aj [label="" dir=none];
+s -> cr [label="" dir=none];
+a -> an [label="" dir=none];
+a -> can [label="" dir=none];
+a -> age [label="" dir=none];
+a -> us [label="" dir=none];
+
+}

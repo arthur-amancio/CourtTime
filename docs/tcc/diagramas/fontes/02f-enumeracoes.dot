@@ -1,0 +1,12 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.55, fontname="Arial", fontsize=18];
+node [fontname="Arial", fontsize=16, color="#222222", penwidth=1.2, margin="0.14,0.10", style="filled", fillcolor="white"];
+edge [fontname="Arial", fontsize=13, color="#333333", arrowsize=0.75];
+p [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>«enumeration» Perfil</B></TD></TR><TR><TD ALIGN="LEFT">ALUNO<BR ALIGN="LEFT"/>ADMINISTRADOR<BR ALIGN="LEFT"/>SECRETARIA<BR ALIGN="LEFT"/>SEGURANCA<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+s [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>«enumeration» StatusReserva</B></TD></TR><TR><TD ALIGN="LEFT">PENDENTE_DOCUMENTACAO<BR ALIGN="LEFT"/>PENDENTE_ANALISE<BR ALIGN="LEFT"/>APROVADA<BR ALIGN="LEFT"/>REJEITADA<BR ALIGN="LEFT"/>CANCELADA<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+c [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>«enumeration» CategoriaParticipante</B></TD></TR><TR><TD ALIGN="LEFT">ALUNO<BR ALIGN="LEFT"/>OUTRO<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+r [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>«enumeration» ResultadoConferenciaDocumento</B></TD></TR><TR><TD ALIGN="LEFT">VALIDADO<BR ALIGN="LEFT"/>DEVOLVIDO_CORRECAO<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+d [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>«enumeration» DiaSemana</B></TD></TR><TR><TD ALIGN="LEFT">SEGUNDA, TERCA, QUARTA<BR ALIGN="LEFT"/>QUINTA, SEXTA, SABADO, DOMINGO<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+o [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#eeeeee"><B>«enumeration» OperacaoAuditoriaUsuario</B></TD></TR><TR><TD ALIGN="LEFT">CADASTRO, EDICAO, ATIVACAO<BR ALIGN="LEFT"/>DESATIVACAO, REDEFINICAO_SENHA<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+{rank=same;p;s;} {rank=same;c;r;} {rank=same;d;o;} p->c->d [style=invis]; s->r->o [style=invis];
+}
