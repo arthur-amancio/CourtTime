@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${'CourtTime | ' + titulo}">CourtTime | Participante</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}" href="/img/favicon.svg">
     <script th:replace="~{fragments/layout :: script}"></script>
 </head>
 <body class="app-autenticado">
@@ -81,13 +82,13 @@
                 </div>
 
                 <div class="campo">
-                    <label for="vinculo">Vínculo com a ETEC (somente na categoria Outro)</label>
+                    <label for="vinculo">Vínculo com a Etec (somente na categoria Outro)</label>
                     <select id="vinculo" th:field="*{vinculo}" aria-describedby="vinculo-ajuda">
                         <option value="">Não se aplica (Aluno)</option>
                         <option th:each="opcao : ${vinculos}" th:value="${opcao.name()}"
-                                th:text="${opcao.descricao}">Ex-aluno da ETEC</option>
+                                th:text="${opcao.descricao}">Ex-aluno da Etec</option>
                     </select>
-                    <p id="vinculo-ajuda" class="campo__ajuda">Na categoria Outro só entram ex-alunos da ETEC, pai ou mãe e irmãos de alunos, e professores da ETEC. Amigos e convidados sem esse vínculo não podem participar.</p>
+                    <p id="vinculo-ajuda" class="campo__ajuda">Na categoria Outro só entram ex-alunos da Etec, pai ou mãe e irmãos de alunos, e professores da Etec. Amigos e convidados sem esse vínculo não podem participar.</p>
                 </div>
 
                 <div class="alerta alerta--info campo--espacado">

@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Gerenciamento da quadra</title>
-    <meta name="description" content="Consulta e solicitação de uso da quadra da ETEC Prof. Armando José Farinazzo.">
+    <meta name="description" content="Consulta e solicitação de uso da quadra da Etec Prof. Armando José Farinazzo.">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}" href="/img/favicon.svg">
 </head>
 <body class="pagina-publica">
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -15,7 +16,7 @@
                 <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
                 <span class="marca__texto">
                     <span class="marca__nome">CourtTime</span>
-                    <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
+                    <span class="marca__escola">Etec Prof. Armando José Farinazzo</span>
                 </span>
             </a>
             <nav class="topo-publico__nav" aria-label="Navegação pública">
@@ -33,8 +34,8 @@
                     <svg th:replace="~{fragments/icones :: icone('bandeira')}"></svg>
                     <span>Fernandópolis/SP · Centro Paula Souza</span>
                 </p>
-                <h1 id="page-title">Consulta e solicitação de uso da quadra <span>da ETEC</span></h1>
-                <p class="apresentacao__lead">O CourtTime reúne os horários da Quadra Poliesportiva da ETEC Professor Armando José Farinazzo e acompanha cada solicitação, do pedido do aluno até a decisão da administração.</p>
+                <h1 id="page-title">Consulta e solicitação de uso da quadra <span>da Etec</span></h1>
+                <p class="apresentacao__lead">O CourtTime reúne os horários da Quadra Poliesportiva da Etec Professor Armando José Farinazzo e acompanha cada solicitação, do pedido do aluno até a decisão da administração.</p>
                 <div class="grupo-botoes">
                     <a class="botao botao--lg" th:href="@{/login}">
                         <span>Entrar no sistema</span>
@@ -52,15 +53,15 @@
                 <img th:src="@{/img/etec-vista-aerea-960.jpg}" src="/img/etec-vista-aerea-960.jpg"
                      th:srcset="@{/img/etec-vista-aerea-960.jpg} + ' 960w, ' + @{/img/etec-vista-aerea-1600.jpg} + ' 1600w'"
                      sizes="(max-width: 1024px) 100vw, 50vw" width="960" height="720"
-                     alt="Vista aérea do prédio da ETEC Prof. Armando José Farinazzo, na esquina de duas ruas de Fernandópolis.">
-                <figcaption>ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</figcaption>
+                     alt="Vista aérea do prédio da Etec Prof. Armando José Farinazzo, na esquina de duas ruas de Fernandópolis.">
+                <figcaption>Etec Prof. Armando José Farinazzo · Fernandópolis/SP</figcaption>
             </figure>
         </section>
 
         <section class="faixa-info" aria-label="Resumo do funcionamento">
             <div>
                 <svg th:replace="~{fragments/icones :: icone('quadra')}"></svg>
-                <p><strong>Uma quadra</strong><span>Quadra Poliesportiva da ETEC</span></p>
+                <p><strong>Uma quadra</strong><span>Quadra Poliesportiva da Etec</span></p>
             </div>
             <div>
                 <svg th:replace="~{fragments/icones :: icone('relogio')}"></svg>
@@ -141,8 +142,7 @@
 
     <footer class="rodape-publico">
         <div class="container rodape-publico__inner">
-            <img class="logos-institucionais" th:src="@{/img/logos-etec-cps-governo-sp.png}" src="/img/logos-etec-cps-governo-sp.png"
-                 width="563" height="89" alt="ETEC Prof. Armando José Farinazzo, Centro Paula Souza e Governo do Estado de São Paulo">
+            <ul th:replace="~{fragments/layout :: regua('')}"></ul>
             <p><strong>CourtTime</strong> · Trabalho de Conclusão de Curso · Técnico em Informática para Internet</p>
         </div>
     </footer>

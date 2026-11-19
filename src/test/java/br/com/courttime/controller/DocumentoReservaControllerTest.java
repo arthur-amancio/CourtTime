@@ -81,7 +81,7 @@ class DocumentoReservaControllerTest {
         Quadra quadra = new Quadra();
         quadra.setId(1L);
         quadra.setNome("Quadra Poliesportiva");
-        quadra.setDescricao("Quadra esportiva da ETEC.");
+        quadra.setDescricao("Quadra esportiva da Etec.");
         quadra.setAtiva(true);
 
         reserva = new Reserva();
@@ -125,7 +125,7 @@ class DocumentoReservaControllerTest {
                 .andExpect(content().string(containsString(
                         "não comprova nem valida a assinatura")))
                 .andExpect(content().string(containsString(
-                        "Use o formulário oficial da ETEC")))
+                        "Use o formulário oficial da Etec")))
                 .andExpect(content().string(not(containsString("Assinatura validada"))));
     }
 

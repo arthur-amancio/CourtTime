@@ -57,14 +57,26 @@ class PaginasPublicasTest {
                         "Consulta e solicitação de uso da quadra")))
                 .andExpect(content().string(containsString("/css/style.css")))
                 .andExpect(content().string(containsString("/img/etec-vista-aerea-960.jpg")))
-                .andExpect(content().string(containsString("/img/logos-etec-cps-governo-sp.png")));
+                .andExpect(content().string(containsString("/img/logos/etec-fernandopolis.svg")))
+                .andExpect(content().string(containsString("/img/logos/cps.svg")))
+                .andExpect(content().string(containsString("/img/logos/governo-sp.svg")))
+                .andExpect(content().string(containsString("/img/favicon.svg")));
     }
 
     @Test
     void schoolImagesArePublic() throws Exception {
         mockMvc.perform(get("/img/etec-vista-aerea-960.jpg")).andExpect(status().isOk());
         mockMvc.perform(get("/img/etec-fachada-1200.jpg")).andExpect(status().isOk());
-        mockMvc.perform(get("/img/logos-etec-cps-governo-sp.png")).andExpect(status().isOk());
+        mockMvc.perform(get("/img/logos/etec-fernandopolis.svg")).andExpect(status().isOk());
+        mockMvc.perform(get("/img/logos/cps.svg")).andExpect(status().isOk());
+        mockMvc.perform(get("/img/logos/governo-sp.svg")).andExpect(status().isOk());
+        mockMvc.perform(get("/img/favicon.svg")).andExpect(status().isOk());
+    }
+
+    @Test
+    void fonteDoSistemaEPublica() throws Exception {
+        // O login também usa a fonte, então ela não pode exigir sessão.
+        mockMvc.perform(get("/css/fonts/noto-sans-latin.woff2")).andExpect(status().isOk());
     }
 
     @Test

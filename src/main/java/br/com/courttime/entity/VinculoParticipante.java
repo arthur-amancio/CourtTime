@@ -5,10 +5,10 @@ package br.com.courttime.entity;
  * Amigos ou convidados sem um destes vínculos não podem participar.
  */
 public enum VinculoParticipante {
-    EX_ALUNO("Ex-aluno da ETEC", "Ex-aluno da ETEC"),
+    EX_ALUNO("Ex-aluno da Etec", "Ex-aluno da Etec"),
     PAI_OU_MAE("Pai ou mãe de aluno", "Pai/mãe de aluno"),
     IRMAO_OU_IRMA("Irmão ou irmã de aluno", "Irmão(ã) de aluno"),
-    PROFESSOR("Professor da ETEC", "Professor da ETEC");
+    PROFESSOR("Professor da Etec", "Professor da Etec");
 
     private final String descricao;
     private final String textoFormulario;

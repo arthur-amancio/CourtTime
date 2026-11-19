@@ -23,7 +23,7 @@ public class QuadraInitializer implements ApplicationRunner {
 
         Quadra quadra = new Quadra();
         quadra.setNome("Quadra Poliesportiva");
-        quadra.setDescricao("Quadra esportiva da ETEC.");
+        quadra.setDescricao("Quadra esportiva da Etec.");
         quadra.setAtiva(true);
         quadraRepository.save(quadra);
     }

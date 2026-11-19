@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Histórico da contribuição</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}" href="/img/favicon.svg">
     <script th:replace="~{fragments/layout :: script}"></script>
 </head>
 <body class="app-autenticado">
@@ -58,7 +59,7 @@
                             </div>
                             <th:block th:if="${contribuicao.creditoAplicado != null}">
                                 <div><dt>Crédito da remarcação</dt><dd th:text="|R$ ${#numbers.formatDecimal(contribuicao.creditoAplicado, 1, 'POINT', 2, 'COMMA')}, da reserva cancelada nº ${detalhe.reservaOrigemId}|">R$ 22,00, da reserva cancelada nº 3</dd></div>
-                                <div th:if="${detalhe.saldoExcedente != null and detalhe.saldoExcedente.signum() > 0}"><dt>Saldo excedente</dt><dd th:text="|R$ ${#numbers.formatDecimal(detalhe.saldoExcedente, 1, 'POINT', 2, 'COMMA')} — pendente de decisão da ETEC|">R$ 4,00 — pendente de decisão da ETEC</dd></div>
+                                <div th:if="${detalhe.saldoExcedente != null and detalhe.saldoExcedente.signum() > 0}"><dt>Saldo excedente</dt><dd th:text="|R$ ${#numbers.formatDecimal(detalhe.saldoExcedente, 1, 'POINT', 2, 'COMMA')} — pendente de decisão da Etec|">R$ 4,00 — pendente de decisão da Etec</dd></div>
                             </th:block>
                             <div><dt>Valor recebido</dt><dd th:text="|R$ ${#numbers.formatDecimal(contribuicao.valor, 1, 'POINT', 2, 'COMMA')}|">R$ 22,00</dd></div>
                             <div><dt>Documento conferido</dt><dd th:text="|Versão ${contribuicao.conferenciaDocumento.documento.versao}|">Versão 1</dd></div>

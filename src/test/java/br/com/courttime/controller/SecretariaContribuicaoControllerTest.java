@@ -150,7 +150,7 @@ class SecretariaContribuicaoControllerTest {
                 .andExpect(content().string(containsString("da reserva cancelada nº 3")))
                 .andExpect(content().string(containsString("R$ 0,00")))
                 .andExpect(content().string(containsString("Aplicar crédito")))
-                .andExpect(content().string(containsString("R$ 2,00 — pendente de decisão da ETEC")));
+                .andExpect(content().string(containsString("R$ 2,00 — pendente de decisão da Etec")));
     }
 
     @Test

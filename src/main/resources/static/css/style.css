@@ -1,3 +1,16 @@
+/* Noto Sans (SIL Open Font License, ver css/fonts/OFL-noto-sans.txt): uma das
+   tipologias indicadas no Manual de Identidade Visual do CPS (2026). Arquivo
+   hospedado no próprio sistema, sem CDN; Verdana, a fonte principal do manual,
+   fica como alternativa. Só o subconjunto latino, que cobre o português. */
+@font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("fonts/noto-sans-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
     --page: #f4f6f4;
     --surface: #ffffff;
@@ -31,7 +44,7 @@ body {
     flex-direction: column;
     background: var(--page);
     color: var(--text);
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: "Noto Sans", Verdana, system-ui, sans-serif;
     font-size: 1rem;
     line-height: 1.6;
 }
@@ -716,8 +729,6 @@ body.app-autenticado {
     font-weight: 700;
 }
 /* Faixa oficial ETEC, Centro Paula Souza e Governo de SP. Fundo branco proprio. */
-.logos-institucionais { display: block; width: min(100%, 280px); height: auto; }
-.logos-institucionais--sm { width: min(100%, 210px); }
 .faixa-info {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1180,3 +1191,21 @@ a.dia:hover { background: var(--cor-primaria-suave); border-color: var(--verde-2
 .opcao-marcavel { display: flex; align-items: flex-start; gap: var(--esp-3); cursor: pointer; }
 .presenca { display: flex; flex-wrap: wrap; gap: var(--esp-2) var(--esp-4); margin: 0; padding: 0; border: 0; }
 .opcao-marcavel input[type="checkbox"], .opcao-marcavel input[type="radio"] { flex: none; width: 1.25rem; height: 1.25rem; min-height: 0; margin: .15rem 0 0; padding: 0; accent-color: var(--cor-primaria); }
+
+/* ==========================================================================
+   CourtTime V2 — FASE G1: tipografia e marca.
+   Régua de logotipos conforme o Manual de Identidade Visual do CPS (2026):
+   cores e proporções originais, sem efeito, Governo do Estado sempre à
+   direita, alinhados pelo eixo central e com respiro entre as marcas.
+   ========================================================================== */
+.regua-logos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-4) var(--esp-6); margin: 0; padding: var(--esp-2) 0; list-style: none; }
+.regua-logos img { display: block; width: auto; }
+.regua-logos__etec { height: 48px; }
+.regua-logos__cps { height: 46px; }
+.regua-logos__governo { height: 34px; }
+.regua-logos--sm .regua-logos__etec { height: 42px; }
+.regua-logos--sm .regua-logos__cps { height: 46px; }
+.regua-logos--sm .regua-logos__governo { height: 30px; }
+
+/* Números com largura fixa: horários e datas alinham em listas e tabelas. */
+.slot, .tabela, .dia, .dia-chip, .indicador__valor, .data-bloco, .dados dd { font-variant-numeric: tabular-nums; }

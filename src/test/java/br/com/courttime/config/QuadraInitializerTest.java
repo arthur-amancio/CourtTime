@@ -31,7 +31,7 @@ class QuadraInitializerTest {
         verify(quadraRepository).save(quadraCaptor.capture());
         Quadra quadra = quadraCaptor.getValue();
         assertEquals("Quadra Poliesportiva", quadra.getNome());
-        assertEquals("Quadra esportiva da ETEC.", quadra.getDescricao());
+        assertEquals("Quadra esportiva da Etec.", quadra.getDescricao());
         assertTrue(quadra.isAtiva());
     }
 

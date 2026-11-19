@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Entrar</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}" href="/img/favicon.svg">
 </head>
 <body class="pagina-login">
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -14,14 +15,14 @@
                 <span class="marca__simbolo"><svg th:replace="~{fragments/icones :: icone('quadra')}"></svg></span>
                 <span class="marca__texto">
                     <span class="marca__nome">CourtTime</span>
-                    <span class="marca__escola">ETEC Prof. Armando José Farinazzo</span>
+                    <span class="marca__escola">Etec Prof. Armando José Farinazzo</span>
                 </span>
             </a>
             <div class="login__frase">
                 <p class="login__slogan">Pedido, documento e autorização no mesmo lugar.</p>
                 <p>Cada etapa da solicitação fica registrada para que a quadra seja usada com organização e segurança.</p>
             </div>
-            <p class="login__local">ETEC Prof. Armando José Farinazzo · Fernandópolis/SP</p>
+            <p class="login__local">Etec Prof. Armando José Farinazzo · Fernandópolis/SP</p>
             <img class="login__foto" th:src="@{/img/etec-fachada-1200.jpg}" src="/img/etec-fachada-1200.jpg"
                  th:srcset="@{/img/etec-fachada-720.jpg} + ' 720w, ' + @{/img/etec-fachada-1200.jpg} + ' 1200w'"
                  sizes="(max-width: 860px) 100vw, 50vw" width="1200" height="674" alt="">

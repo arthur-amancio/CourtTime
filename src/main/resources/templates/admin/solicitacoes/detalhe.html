@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CourtTime | Analisar solicitação</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}" href="/img/favicon.svg">
     <script th:replace="~{fragments/layout :: script}"></script>
 </head>
 <body class="app-autenticado">
@@ -124,7 +125,7 @@
                                     <td data-label="RM ou RG" th:text="${participante.rmOuRg}">RM-123</td>
                                     <td data-label="Categoria">
                                         <span th:text="${participante.categoria.name() == 'ALUNO' ? 'Aluno' : 'Outro'}">Aluno</span>
-                                        <span class="campo__ajuda" th:if="${participante.descricaoVinculo != null}" th:text="|(${participante.descricaoVinculo})|">(Ex-aluno da ETEC)</span>
+                                        <span class="campo__ajuda" th:if="${participante.descricaoVinculo != null}" th:text="|(${participante.descricaoVinculo})|">(Ex-aluno da Etec)</span>
                                     </td>
                                     <td data-label="Presença">
                                         <span th:if="${participante.presenca == null}">Não marcada</span>

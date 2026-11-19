@@ -76,7 +76,7 @@ class ParticipanteReservaControllerTest {
         Quadra quadra = new Quadra();
         quadra.setId(1L);
         quadra.setNome("Quadra Poliesportiva");
-        quadra.setDescricao("Quadra esportiva da ETEC.");
+        quadra.setDescricao("Quadra esportiva da Etec.");
         quadra.setAtiva(true);
 
         reserva = new Reserva();
@@ -193,10 +193,10 @@ class ParticipanteReservaControllerTest {
         mockMvc.perform(get("/solicitacoes/20/participantes/novo")
                         .with(user(aluno.getEmail()).roles("ALUNO")))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Ex-aluno da ETEC")))
+                .andExpect(content().string(containsString("Ex-aluno da Etec")))
                 .andExpect(content().string(containsString("Pai ou mãe de aluno")))
                 .andExpect(content().string(containsString("Irmão ou irmã de aluno")))
-                .andExpect(content().string(containsString("Professor da ETEC")))
+                .andExpect(content().string(containsString("Professor da Etec")))
                 .andExpect(content().string(not(containsString("value=\"AMIGO\""))));
 
         mockMvc.perform(post("/solicitacoes/20/participantes")

@@ -27,7 +27,7 @@ public class ParticipanteReservaService {
     public static final int MINIMO_DE_ALUNOS = 10;
 
     public static final String MENSAGEM_VINCULO_OBRIGATORIO =
-            "Na categoria Outro, escolha o vínculo: ex-aluno, pai ou mãe, irmão ou irmã de aluno, ou professor da ETEC";
+            "Na categoria Outro, escolha o vínculo: ex-aluno, pai ou mãe, irmão ou irmã de aluno, ou professor da Etec";
     public static final String MENSAGEM_VINCULO_SOMENTE_OUTRO =
             "O vínculo só é informado na categoria Outro";
 
